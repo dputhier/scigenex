@@ -1,2 +1,2 @@
 # dbfmcl
-This repository stores the R library implementing the DBFMCL algorithm
+This repository stores the R library implementing the DBFMCL algorithm.
