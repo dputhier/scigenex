@@ -1,10 +1,10 @@
-# rtools4tb
+# dbfmcl
 
 ## Installation
 
-     R CMD INSTALL RTools4TB
+     R CMD INSTALL dbfmcl
      
      # In R
      
-     library(RTools4TB)
+     library(dbfmcl)
      ## see DBFMCL examples.
