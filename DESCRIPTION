@@ -1,4 +1,4 @@
-Package: RTools4TB
+Package: dbfmcl
 Type: Package
 Title: Data mining of public microarray data through connections to the TranscriptomeBrowser database.
 Version: 1.2.0
