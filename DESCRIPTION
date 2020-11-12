@@ -7,10 +7,10 @@ Author: Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud and Den
 Maintainer: Aurelie Bergon <bergon@tagc.univ-mrs.fr>
 Depends: R (>= 2.5.1), Biobase, limma, methods
 Collate: script_RTools4TB.R zzz.R 
-Description:  TranscriptomeBrowser (TBrowser) hosts a large collection of transcriptional signatures (TS)  automatically extracted from the Gene Expression Omnibus (GEO) database. Each GEO experiment (GSE) was processed so that a subset of the original expression matrix containing the most relevant/informative genes was kept and organized into a set of homogeneous signatures. Each signature was tested for functional  enrichment using annotations terms obtained from numerous ontologies or curated databases (Gene Ontology, KEGG, BioCarta, Swiss-Prot, BBID, SMART, NIH Genetic Association DB, COG/KOG...) using the DAVID knowledgebase. The RTools4TB package can be used to perform complexe queries to the database. Thereby, RTools4TB can be helpful (i) to define the biological contexts (i.e, experiments) in which a set of genes are co-expressed and (ii) to define their most frequent neighbors. In addition, RTools4TB comes with a new algoritm, "Density Based Filtering And Markov Clustering" (DBF-MCL), whose goal is to partition large and noisy datasets. DBF-MCL is a tree-step adaptative algorithm that (i) find elements located in dense areas (ie. clusters) (ii) uses selected items to construct a graph and (iii) performs graph partitioning using MCL. This algorithm is implemented in the RTools4TB package although it requires a UNIX-like systems. 
-biocViews: Microarray, OneChannel, TwoChannel, Clustering, Classification, DataImport, Annotation, GeneExpression
+Description: The DBFMCL package (Density Based Filtering And Markov Clustering) implement a method for filtering and partionning a noisy dataset. DBF-MCL is a tree-step adaptative algorithm that (i) find elements located in dense areas (ie. clusters) (ii) uses selected items to construct a graph and (iii) performs graph partitioning using MCL. 
+biocViews: Clustering, Classification
 License: LGPL
-Suggests: RColorBrewer, biocGraph, ALL 
+Suggests: RColorBrewer, biocGraph
 LazyLoad: yes
 URL: http://tagc.univ-mrs.fr/tbrowser/
 Packaged: 2009-10-28 09:39:36 UTC; biocbuild
