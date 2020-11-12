@@ -1,8 +1,8 @@
 Package: dbfmcl
 Type: Package
-Title: Data mining of public microarray data through connections to the TranscriptomeBrowser database.
+Title: The DBFMCL algorithm
 Version: 1.2.0
-Date: 2009-10-08
+Date: 2020-12-11
 Author: Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud and Denis Puthier 
 Maintainer: Aurelie Bergon <bergon@tagc.univ-mrs.fr>
 Depends: R (>= 2.5.1), Biobase, limma, methods
