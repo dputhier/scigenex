@@ -1,7 +1,7 @@
 if(.Platform$OS.type == "windows"){
-	useDynLib("RTools4TB.dll")
+	useDynLib("dbfml.dll")
 }else{
-	useDynLib("RTools4TB")
+	useDynLib("dbfmcl")
 }
 
 
