@@ -2,7 +2,7 @@
 \alias{DBFMCL}
 
 \title{The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).}
-\description{DBF-MCL is a tree-steps adaptative algorithm (\url{http://tagc.univ-mrs.fr/tbrowser/}) that \emph{(i)}find elements located in dense areas (DBF), \emph{(ii)}uses selected items to construct a graph, \emph{(iii)}performs graph partitioning using the Markov CLustering Algorithm (MCL). 
+\description{DBF-MCL is a tree-steps adaptative algorithm that \emph{(i)}find elements located in dense areas (DBF), \emph{(ii)}uses selected items to construct a graph, \emph{(iii)}performs graph partitioning using the Markov CLustering Algorithm (MCL).
 
 This function requires installation of the mcl program (\url{http://www.micans.org/mcl}). See "Warnings" section for more informations.
 }
@@ -14,7 +14,7 @@ DBFMCL(data = NULL, filename = NULL, path = ".", name = NULL, distance.method = 
 }
 
 \arguments{
-  \item{data}{a \code{matrix}, \code{data.frame} or \code{ExpressionSet} object.}
+  \item{data}{a \code{matrix}, \code{data.frame} or \code{Seurat} object.}
   \item{filename}{a character string representing the file name.}
   \item{name}{a prefix for the names of the intermediary files created by DBF and MCL.}
   \item{path}{a character string representing the data directory where intermediary files are to be stored. Default to current working directory.}

@@ -4,7 +4,6 @@
 ## Authors : BERGON A, J. BAVAIS
 ##  with the collaboration of LOPEZ F., TEXTORIS J. and PUTHIER D.
 ##
-## R package require : Biobase, tools
 ##
 ## R CMD SHLIB dbf.c -o dbf
 ##
@@ -78,7 +77,7 @@ setMethod("show", signature("DBFMCLresult"),
 
 #################################################################
 ##    PRINCIPAL METHOD WICH ALLOWS TO RUN DBF-MCL
-##   take an ExpressionSet, a data.frame, a file or a matrix 
+##   take a Seurat object, a data.frame, a file or a matrix
 ##   (convertion into matrix format)
 #################################################################
 
@@ -328,14 +327,14 @@ getData4DBFMCL <- function(data=NULL, filename=NULL, path="."){
 
     ## getting matrix (probesID vs SamplesID) 
     if(!is.null(data)){
-        if(inherits(data, "ExpressionSet")){
-            data <- as.matrix(exprs(data))
+        if(inherits(data, "Seurat")){
+            data <- as.data.frame(data@assays$RNA@data)
         }
         else if(is.data.frame(data)){
             data <- as.matrix(data)
         }
         if(!is.matrix(data)){
-            stop("Please provide an ExpressionSet, a data.frame", 
+            stop("Please provide a Seurat object, a data.frame",
                 " or a matrix.\n")
         }
         name <- NULL
@@ -347,7 +346,7 @@ getData4DBFMCL <- function(data=NULL, filename=NULL, path="."){
             name <- unlist(strsplit(filename, "\\."))[1]
         }
         else{
-            stop("Please provide an ExpressionSet, a data.frame, ", 
+            stop("Please provide a Seurat object, a data.frame, ",
                 "a matrix or a tabular file\n")
         }
     }
@@ -601,9 +600,9 @@ clusterEisen <- function (filename, median.center=FALSE, silent=FALSE){
                     file.path(getwd(), paste(name, ".atr", sep="")),
                     "\n\n")
         }else{
-            stop("Please install cluster (command-line version)",
+            stop("Please install cluster 3.0 (command-line version)",
                 " on your computer...\nYou can download it from :",
-                "'http://rana.lbl.gov/EisenSoftware.htm'\n\n")
+                "'http://bonsai.hgc.jp/~mdehoon/software/cluster/software.htm'\n\n")
         }
     }
     else{
@@ -891,79 +890,8 @@ matplotProfiles <- function(data, imgName, saveHTML=FALSE,
 
 
 
-#########################################################
-##                    createGraph4BioC
-#########################################################
-
-createGraph4BioC <- function(request=NULL, prop=50){
-
-    if(!is.null(request)){
-        
-        ## Getting signature list corresponding to the request
-        reqSign <- getSignatures(field="gene", value=request)
-        nbSign <- length(reqSign)
-        listsGenes <- new.env()
-        totaleList <- NULL
-        ## Composition of these signatures
-        for(i in 1:nbSign){
-            ## Getting genes falling into a signature
-            reqGenes <- getExpressionMatrix(signatureID = reqSign[i], 
-                            verbose = FALSE, save = FALSE)
-            listsGenes[[as.character(reqSign[i])]] <- unique(reqGenes[, 2])
-            totaleList <- unique(c(totaleList, reqGenes))
-        }
-        listsGenes <- as.list(listsGenes)
-        cat(length(totaleList), 
-            " differents genes.\n")
-
-        ## list of the most frequent genes
-        ## to build the adjacent matrix
-        genes <- unlist(listsGenes)
-        tabCount <- sort(
-                        table(genes)[table(genes) >= round(nbSign*prop/100)])
-        cat(length(tabCount), 
-            "genes fall in more than ", 
-            round(nbSign*prop / 100), 
-            " signatures...\n")
-        conservedGenes <- rownames(tabCount)
-        nbGenes <- length(conservedGenes)
-
-        ## build the boolean matrix : 
-        ## conserved genes in the signatures? (1==TRUE et 0==FALSE)
-        corrSign <- matrix(0, nc=nbSign, nr=nbGenes)
-        rownames(corrSign) <- conservedGenes
-        colnames(corrSign) <- reqSign
-        for(i in 1:nbSign){
-            corrSign[conservedGenes%in%listsGenes[[i]], i] <- 1
-        }
-
-        ##build adjacence matrix
-        adjMat <- matrix(NA, nc=nbGenes, nr=nbGenes)
-        rownames(adjMat) <- conservedGenes
-        colnames(adjMat) <- conservedGenes
-        for(i in 1:nbGenes){
-            for(j in 1:nbGenes){
-                if(i == j){
-                    adjMat[i, j] <- 0 
-                }else{
-                    tabC <- table(corrSign[i, ] == corrSign[j, ])
-                    if(length(grep("TRUE", unlist(dimnames(tabC))))>0)
-                        adjMat[i, j] <-
-                            tabC[[grep("TRUE", unlist(dimnames(tabC)))]]
-                    else adjMat[i, j] <- 0
-                }
-            }
-        }
-        ## delete gene which correspond to "NA"
-        adjMat <- adjMat[-grep("N/A", rownames(adjMat)),
-                        -grep("N/A", colnames(adjMat))]
-        return(adjMat)
-    }else{
-        stop("Please provide a query to the TBrowser database...\n")
-    }
-}
 
 
 #########################################################
-##      END PACKAGE RTools4TB
+##      END PACKAGE DBFMCL
 #########################################################

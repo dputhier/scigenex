@@ -14,10 +14,8 @@ clusterEisen(filename, median.center = FALSE, silent = FALSE)
   \item{silent}{if set to TRUE, the progression of clustering is not displayed.}
 }
 \details{
-Cluster was originally written by Michael Eisen (\url{http://rana.lbl.gov/EisenSoftware.htm}) The command line version of Cluster version 3.0 (for Windows, Mac OS X, Unix, and Linux) was created by Michiel de Hoon, together with Seiya Imoto and Satoru Miyano. 
-
+Cluster was originally written by Michael Eisen. The command line version of Cluster version 3.0 (for Windows, Mac OS X, Unix, and Linux) was created by Michiel de Hoon, together with Seiya Imoto and Satoru Miyano.
 }
-
 
 \section{Warnings}{
 Only tested on UNIX-alikes plateforms.

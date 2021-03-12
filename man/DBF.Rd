@@ -6,13 +6,13 @@
 This function is an internal function used by \code{\link{DBFMCL}} to detect informative elements (\emph{i.e.}, those that belong to dense regions). User should not use this function. Instead they can use the \code{\link{DBFMCL}} function with \code{clustering} argument set to \code{FALSE}.}
 
 \usage{
-DBF(data, name = NULL, distance.method = c("spearman", "pearson", "euclidean", "spm", "spgm"), silent = FALSE, k = 100, random = 3, fdr = 10, memory.used = 1024, set.seed = 123, returnRank = FALSE)
+DBF(data, name = NULL, distance.method = c("spearman", "pearson", "euclidean"), silent = FALSE, k = 100, random = 3, fdr = 10, memory.used = 1024, set.seed = 123, returnRank = FALSE)
 }
 
 \arguments{
   \item{data}{a matrix or data.frame}
   \item{name}{a prefix for the file name}
- \item{distance.method}{a method to compute the distance to the k-th nearest neighbor. One of "pearson" (Pearson's correlation coefficient-based distance), "spearman" (Spearman's rho-based distance), "euclidean", "spm" or "spgm". Note that the "spm" distance corresponds to the arithmetic mean of pearson- and spearman-based distance : ("pearson"+"spearman")/2 whereas "spgm" computes their geometric mean : sqrt("pearson"*"spearman").}
+ \item{distance.method}{a method to compute the distance to the k-th nearest neighbor. One of "pearson" (Pearson's correlation coefficient-based distance), "spearman" (Spearman's rho-based distance) or "euclidean".}
   \item{silent}{if set to TRUE (default), the progression of distance matrix calculation is not displayed.}
   \item{k}{the neighborhood size.}
   \item{random}{the number of simulated distributions S to compute. By default \code{random = FALSE}.}

@@ -3,14 +3,14 @@ Type: Package
 Title: The DBFMCL algorithm
 Version: 1.2.0
 Date: 2020-12-11
-Author: Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud and Denis Puthier 
-Maintainer: Aurelie Bergon <bergon@tagc.univ-mrs.fr>
-Depends: R (>= 2.5.1), Biobase, limma, methods
-Collate: script_RTools4TB.R zzz.R 
+Author: Aurelie Bergon, J. Bavais, Fabrice Lopez, Julien Textoris, Samuel Granjeaud and Denis Puthier
+Maintainer: D. Puthier <denis.puthier@univ-amu.fr>
+Depends: R (>= 3.6.1), methods
+Collate: dbfmcl_main.R zzz.R
 Description: The DBFMCL package (Density Based Filtering And Markov Clustering) implement a method for filtering and partionning a noisy dataset. DBF-MCL is a tree-step adaptative algorithm that (i) find elements located in dense areas (ie. clusters) (ii) uses selected items to construct a graph and (iii) performs graph partitioning using MCL. 
 biocViews: Clustering, Classification
 License: LGPL
-Suggests: RColorBrewer, biocGraph
+Suggests: RColorBrewer
 LazyLoad: yes
-URL: http://tagc.univ-mrs.fr/tbrowser/
+URL: https://github.com/dputhier/dbfmcl
 Packaged: 2009-10-28 09:39:36 UTC; biocbuild

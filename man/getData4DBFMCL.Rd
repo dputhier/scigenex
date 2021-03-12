@@ -1,8 +1,8 @@
 \name{getData4DBFMCL}
 \alias{getData4DBFMCL}
 
-\title{Fetch an expression matrix from a file or an ExpressionSet object}
-\description{This function retrieves the expression matrix from a file or an \code{ExpressionSet} object. This is an internal function called by createSignatures4TB that should not be used directly.}
+\title{Fetch an expression matrix from a file or a Seurat object}
+\description{This function retrieves the expression matrix from a file or a \code{Seurat} object. This is an internal function called by createSignatures4TB that should not be used directly.}
 \usage{
 getData4DBFMCL(data = NULL, filename = NULL, path = ".")
 }
@@ -14,7 +14,7 @@ getData4DBFMCL(data = NULL, filename = NULL, path = ".")
 }
 
 \section{Warnings}{
-Convert data.frame, expressionSet or tab-delimited file to matrix class object. The input data must contain an expression matrix with gene as rows and samples as columns. Note that space characters inside gene names are not allowed (as they are not supported by the mcl command-line program).
+Convert data.frame, Seurat object or tab-delimited file to matrix class object. The input data must contain an expression matrix with gene as rows and samples as columns. Note that space characters inside gene names are not allowed (as they are not supported by the mcl command-line program).
 }
 
 \value{
