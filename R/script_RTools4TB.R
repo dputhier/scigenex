@@ -1,36 +1,13 @@
 ################################################################
-##        Main script of the R PACKAGE : RTools4TB
+##        Main script of the R PACKAGE : DBFMCL
 ##
-## Date : 8 / 10 / 2008
-## Authors : BERGON A. 
-##  with the collaboration of LOPEZ F., TEXTORIS J., GRANJEAUD S. and PUTHIER D.
-## Laboratory : TAGC / INSERM U928
-##              163, Avenue de Luminy, case 928
-##              13 288 Marseille cedex 09 - FRANCE
+## Authors : BERGON A, J. BAVAIS
+##  with the collaboration of LOPEZ F., TEXTORIS J. and PUTHIER D.
 ##
 ## R package require : Biobase, tools
 ##
 ## R CMD SHLIB dbf.c -o dbf
 ##
-## Package version : 1.1.3
-## Last modification : 30 / 06 / 2009
-## News :
-##   * 1.1.0 to 1.1.1
-##      o Add spm and spgm distance methods
-##      o Add 'fac' argument into heatmapFromCDT and plotGeneExpProfiles
-##   * 1.1.1 to 1.1.2
-##      o Extract (limma's) normalizeQuantiles function from the library code
-##   * 1.1.2 to 1.1.3
-##	    o Modification of the name of 2 methods:
-##		    cluster ==> clusterEisen
-##		    getInfo ==> getTBInfo
-##   * 1.1.3 to 1.1.4
-##      o Reduce time to process vignette
-##      o Correction of a bug in 'DBFMCLresult-class.Rd'
-#################################################################
-## verification que la longueur de la ligne est inferieur a 80 caracteres
-## perl -ne 'chomp; print length $_,"\t",$_,"\n" if(length $_ > 80) ;'  new.R
-
 #################################################################
 ##    DEFINITION OF A SPECIFIC CLASS OBJECT : DBFMCLresult
 #################################################################
@@ -107,9 +84,9 @@ setMethod("show", signature("DBFMCLresult"),
 
 createSignatures4TB <- function(data=NULL, filename=NULL, path=".", 
             name=NULL, 
-            normalization=c("rank", "gaussian", "quantiles", "none"), 
-            distance.method=c("spearman", "pearson", "euclidean", "spm", "spgm"), 
-            silent=FALSE, verbose=TRUE, k=150, random=3, memory.used=1024, 
+            normalization=c("none", "quantiles", "gaussian", "rank"),
+            distance.method=c("spearman", "pearson", "euclidean"),
+            silent=FALSE, verbose=TRUE, k=150, random=3, memory.used=1024,
             fdr=10, inflation=2.0, median.center=FALSE, set.seed=123, 
             returnRank=FALSE){
 
@@ -239,18 +216,7 @@ DBFMCL <- function(data=NULL, filename=NULL, path=".", name=NULL,
         }
         ## writting all parameters 
         if(verbose){
-#             cat("\nThe working directory is: ", getwd(), "\n\n")
-#             cat("The following parameters will be used:",
-#                 "\n\tName: ", name,
-#                 "\n\tCorrelation method: ", distance.method,
-#                 "\n\tNumber of neighbors: ", k,
-#                 "\n\tNumber of randomizations: ", random,
-#                 "\n\tFDR: ", fdr, "%",
-#                 "\n\tVisualize standard outputs from mcl ",
-#                         "and cluster commands: ", silent,
-#                 "\n\tMemory used: ", memory.used,
-#                 "\n\n")
-            
+
             cat("The following parameters will be used :",
                 "\n\tWorking directory: ", getwd(),
                 "\n\tName: ", name,
@@ -445,8 +411,6 @@ DBF <- function (data, name=NULL,
                 " and associated FDR values... \n")
             outfile <- paste(name, ".dbf_out.txt", sep="")
 
-            
-
             ## launching DBF
             a <- .C("DBF", 
                     data, 
@@ -540,58 +504,6 @@ MCL <- function(name, inflation=2.0, silent=FALSE){
 }
 
 
-
-################################################################
-## This is the normalizeQuantiles function from the marray Bioconductor library.
-################################################################
-# 
-# 
-# normalizeQuantiles <- function ( A, ties=TRUE){
-# 
-#     n <- dim(A)
-#     if (is.null(n))
-#         return(A)
-#     if (n[2] == 1)
-#         return(A)
-#     O <- S <- array(, n)
-#     nobs <- rep(n[1], n[2])
-#     i <- (0:(n[1] - 1))/(n[1] - 1)
-#     for (j in 1:n[2]) {
-#         Si <- sort(A[, j], method="quick", index.return=TRUE)
-#         nobsj <- length(Si$x)
-#         if (nobsj < n[1]) {
-#             nobs[j] <- nobsj
-#             isna <- is.na(A[, j])
-#             S[, j] <- approx((0:(nobsj - 1))/(nobsj - 1), Si$x,
-#                 i, ties="ordered")$y
-#             O[!isna, j] <- ((1:n[1])[!isna])[Si$ix]
-#         }
-#         else {
-#             S[, j] <- Si$x
-#             O[, j] <- Si$ix
-#         }
-#     }
-#     m <- rowMeans(S)
-#     for (j in 1:n[2]) {
-#         if (ties)
-#             r <- rank(A[, j])
-#         if (nobs[j] < n[1]) {
-#             isna <- is.na(A[, j])
-#             if (ties)
-#                 A[!isna, j] <- approx(i, m, (r[!isna] - 1)/(nobs[j] -
-#                   1), ties="ordered")$y
-#             else A[O[!isna, j], j] <- approx(i, m, (0:(nobs[j] -
-#                 1))/(nobs[j] - 1), ties="ordered")$y
-#         }
-#         else {
-#             if (ties)
-#                 A[, j] <- approx(i, m, (r - 1)/(n[1] - 1), ties="ordered")$y
-#             else A[O[, j], j] <- m
-#         }
-#     }
-#     return(A)
-# }
-
 #######################################################################
 ##    Normal score transformation.
 #######################################################################
@@ -618,38 +530,7 @@ doNormalScore <- function (sdata, set.seed=123){
     return(sdata)
 }
 
-# #######################################################################
-# #     MCL2biolayout
-# #######################################################################
-# 
-# 
-# MCL2biolayout <- function(name){
-# 
-#     ## lecture des deux fichiers a analyser
-#     mclCluster <- as.vector(readLines(paste(name,".MCLclusters.txt",sep="")))
-#     heartsData <- as.vector(readLines(paste(name,".hearts.txt", sep="")))
-#     dataout <- heartsData
-#     ## formatage des donnees que l'on souhaite avoir en sortie
-#     ## cad mettre a la fin du fichier contenant les cluster de MCL des lignes telles que :
-#     ## //NODECLASS    sonde_id    num_cluster
-# 
-#     for( i in 1:length(mclCluster)){
-#         h <- unlist(strsplit(mclCluster[i], "\t"))
-#         if(length(h)>=10){
-#             for( j in 1: length(h)){
-#                 dataout <- c(dataout, paste("//NODECLASS\t",h[j],"\t",i,"\n", sep=""))
-#             }
-#         }
-#     }
-# 
-#     ## inserer ici les cmd perl pour le traitement des nouveaux resultats
-# 
-# 
-#     ## fichier de sortie des donnees processees
-#     writeLines(dataout, paste(name,".heartsClustered.txt",sep=""))
-#     cat("\t--> creating file : ",paste(getwd(),"/",name, ".heartsClustered.txt", sep=""),"\n\n")
-# 
-# }
+
 #######################################################################
 ##        sortBySignatures
 #######################################################################
@@ -729,7 +610,6 @@ clusterEisen <- function (filename, median.center=FALSE, silent=FALSE){
         stop("A unix-like OS is required to launch mcl and cluster programs.")
     }
 }
-
 
 #######################################################################
 ##        Parser *.cdt files to allow a visualization by the heatmap method
@@ -1009,209 +889,6 @@ matplotProfiles <- function(data, imgName, saveHTML=FALSE,
     return(myOut)
 }
 
-#########################################################
-##      getSignatures
-#########################################################
-getSignatures <- function(
-            field=c("gene", "probe", "platform", "experiment", "annotation"),
-            value=NULL, qValue=NULL, nbMin=NULL, verbose=TRUE,
-            save=FALSE){
-    ## Web service address
-    url <- "http://tagc.univ-mrs.fr/tB/TBWS/servlets/TBWS?"
-    if(!is.null(value)){
-        ## data processing before request
-        tab <- NULL
-        field <- match.arg(field)
-        if(field == "platform") field <- "GPL"
-        if(field == "experiment") field <- "GSE"
-        request <- value
-        if((field == "gene")||(field == "probe")||(field == "GPL")||
-            (field == "GSE")||(field == "annotation")){
-            if((field == "gene")||(field == "probe")){
-                if(length(unlist(strsplit(value, " "))) > 1){
-                    str <- unlist(strsplit(value, " "))
-                    value <- str[1]
-                    for(i in 2: length(str)){
-                        if(length(unlist(strsplit(value, "[&|!]"))) > 1){
-                                    value <- paste(value, str[i], sep="")
-                        }else{
-                            value <- paste(value, str[i], sep="%20")
-                        }
-                    } 
-                }
-                if(length(unlist(strsplit(value, "&"))) > 1){
-                    str <- unlist(strsplit(value, "&"))
-                    value <- str[1]
-                    for(i in 2: length(str)){
-                        value <- paste(value, "*", str[i], sep="")
-                    } 
-                }
-            }
-            if(field == "annotation"){
-                while(length(unlist(strsplit(value, "&"))) > 1){
-                    value <- sub("&", "^*^", value)
-                }
-                value <- paste("^", value, "^", sep="")
-                value <- unlist(strsplit(value, "|", fixed=TRUE))
-                text <- value[1]
-                if(length(value) > 1){
-                    for(i in 2:length(value)) 
-                        text <- paste(text, value[i], sep="^|^")
-                }
-                value <- text
-                while(length(unlist(strsplit(value, " "))) > 1){
-                    value <- sub(" ", "%20", value)
-                }
-                if(is.null(qValue)) qValue <- 0
-                filename <- paste("TBRequest__", field, "_", request, sep="")
-                url <- paste(url, "type=", field, "&request=", value, 
-                "&qValue=", qValue, sep="")
-            }
-            else{
-                if(!is.null(nbMin) && field == "gene"){
-                    filename <- paste("TBRequest__", field, "_", value,
-                                    "nbMin", nbMin, sep="")
-                    url <- paste(url, "type=", field, "&request=", value,
-                                "&nbMin=", nbMin, sep="")
-                }
-                else{
-                    filename <- paste("TBRequest__", field, "_", value, sep="")
-                    url <- paste(url, "type=", field, "&request=", value,sep="")
-                }
-            }
-            if(save){
-                download.file(url, destfile=filename, cacheOK=FALSE,
-                            quiet=!verbose)
-            }
-            if(length(readLines(url)) > 0){
-                ## perform request
-                if(is.null(nbMin))tab <- readLines(url)
-                else {
-                    tab <- read.table(url, sep="\t", quote="")
-                    colnames(tab) <- c("Signature", "nb.Genes")
-                }
-                if(verbose){
-                    if(is.null(nbMin)) cat(length(tab))
-                    else cat(nrow(tab))
-                    cat(" signatures were found for the request:\n",
-                            field, " = ", request)
-                    if(!is.null(nbMin)) cat(" and nbMin = ", nbMin)
-                    cat("\n\n")
-                }
-            }
-            else{
-                if(verbose){
-                    cat("No result were found for :",
-                    field, " = ", request, "\n\n")
-                }
-            }
-        }
-        else{
-            stop("WARNING...Field should be one of : 'gene', 'probe', 'data', 
-                'platform', 'experiment' and 'annotation' \n\n")
-        }
-    }
-    else{
-        stop("WARNING... ",
-            "Please provide a query to the TBrowser database...\n\n")
-    }
-    return(tab)
-}
-
-#########################################################
-##      getData
-#########################################################
-
-getExpressionMatrix <- function(signatureID=NULL, verbose=TRUE, save=FALSE){
-    ## Web service address
-    url <- "http://tagc.univ-mrs.fr/tB/TBWS/servlets/TBWS?"
-    if(!is.null(signatureID)){
-        ## data processing before request
-        tab <- NULL
-        filename <- paste("Expression_Matrix_signatureID_", signatureID, sep="")
-        url <- paste(url, "type=data&request=", signatureID, sep="")
-        if(save){
-            download.file(url, destfile=filename, cacheOK=FALSE, quiet=!verbose)
-        }
-        if(readLines(url)[1]!= "ERROR : Invalid request"){
-            ## request
-            PG <- readLines(url)[1:2]
-            probes <- unlist(strsplit(PG[1], "\t"))
-            genes <- unlist(strsplit(PG[2], "\t"))
-            tab <- cbind(probes, genes, 
-                        read.table(url, quote="", sep="\t",
-                                    head=TRUE, skip=2))
-            if(verbose){
-                cat("Downloading expression matrix for",
-                "transcriptional signature: ", signatureID, 
-                "(",
-                length(colnames(tab))-2, "samples x",
-                nrow(tab), "probes)\n")
-            }
-        }
-        else{ 
-            if(verbose){
-                cat("The transcriptional signature ",signatureID, 
-                "doesn\'t exist\n")
-            }
-        }
-    }
-    else{
-        stop("WARNING... ",
-            "Please provide a transcriptional signature ID",
-            " from the TBrowser database...\n")
-    }
-    return(tab)
-}
-
-#########################################################
-##      getTBInfo
-#########################################################
-getTBInfo <- function(field=c("platform", "experiment", "signature", "samples"),
-    value=NULL, verbose=TRUE, save=FALSE){
-    ## Web service address
-    url <- "http://tagc.univ-mrs.fr/tB/TBWS/servlets/TBWS?"
-    if(!is.null(value)){
-        ## Processing data before request
-        tab <- NULL
-        field <- match.arg(field)
-        filename <- paste("Info__", field, "_", value, sep="")
-        url <- paste(url, "type=", field, "&request=", value,sep="")
-        if(save){
-            download.file(url, destfile=filename, cacheOK=FALSE, quiet=!verbose)
-        }
-        if(readLines(url)[1]!= "ERROR : Invalid request"){
-            ## Request
-            if(field == "samples"){
-                tab <- read.table(url, quote="", sep="\t", head=FALSE)
-                tab <- as.matrix(tab)
-                colnames(tab) <- c("sampleID", "Title", "Description", "Source")
-            }
-            else{
-                tab <- read.table(url, quote="", sep="\t", head=FALSE)
-                view <- paste(tab[, 1], " = ", tab[, 2])
-                if(verbose){
-                    cat("A result was found for :",
-                            field, " = ", value, "\n")
-                    writeLines(strwrap(view, width=80, exdent=5))
-                }
-                tab <- as.matrix(tab)
-                row.names(tab) <- tab[, 1]
-                tab <- as.matrix(tab[, 2])
-            }
-        }
-        else{
-            if(verbose){
-                cat("This", field, "is not in the TBrowser database\n\n")
-            }
-        }
-    }
-    else{
-        stop("WARNING... ",
-            "Please provide a query to the TBrowser database...\n\n")
-    }
-    return(tab)
-}
 
 
 #########################################################
