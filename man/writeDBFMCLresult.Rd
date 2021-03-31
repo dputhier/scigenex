@@ -28,11 +28,10 @@ flexible toolbox to explore productively the transcriptional landscape of the Ge
 \seealso{\code{\link{DBFMCLresult-class}}, \code{\link{DBFMCL}} }
 \examples{
 \dontrun{
-library(ALL)
-data(ALL)
-ALLnorm <- doNormalScore(exprs(ALL))
-res <- DBFMCL(data=ALLnorm, name="ALLout")
-plotGeneExpProfiles(res)
+m <- matrix(rnorm(80000), nc=20)
+m[1:100,1:10] <- m[1:100,1:10] + 4
+m[101:200,11:20] <- m[101:200,11:20] + 3
+m[201:300,5:15] <- m[201:300,5:15] + -2
 writeDBFMCLresult(res, "ALL.sign.txt")
 }
 

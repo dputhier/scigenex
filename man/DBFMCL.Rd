@@ -66,13 +66,10 @@ MCL should be installed. One can used the following command lines in a terminal:
 
 
 \references{
-Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful and 
-flexible toolbox to explore productively the transcriptional landscape of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
-
 Van Dongen S. (2000) A cluster algorithm for graphs. National Research Institute for Mathematics and Computer Science in the 1386-3681.
 }
 
-\author{Bergon A., Lopez F., Textoris J., Granjeaud S. and Puthier D.}
+\author{Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier D.}
 \seealso{\code{\link{createSignatures4TB}}}
 \examples{
 \dontrun{
@@ -82,44 +79,8 @@ m <- matrix(rnorm(80000), nc=20)
 m[1:100,1:10] <- m[1:100,1:10] + 4
 m[101:200,11:20] <- m[101:200,11:20] + 3
 m[201:300,5:15] <- m[201:300,5:15] + -2
-
-res <- DBFMCL(data = m, distance.method = "pearson", clustering = TRUE, k = 25)
-plotGeneExpProfiles(res)
-plotGeneExpProfiles(res,signatures=1)
-
-## with a real dataset
-library(ALL)
-data(ALL)
-sub <- exprs(ALL)[1:3000,]
-
-#First, we will normalize the data set using the doNormalScore function. 
-subNorm <- doNormalScore(sub)
-res <- DBFMCL(subNorm, distance.method="pearson", memory=512)
-
-#The results are stored in an instance of class DBFMCLresult.
-class(res)
-res
-
-# The expression matrix is stored in the data slot. 
-# This matrix contains only genes detected as informative (that is falling into a cluster).
-head(res@data[,1:2])
-
-# The partitioning results are stored in the cluster slot.
-slotNames(res)
-
-# Here, 3 TS were found.
-res@size
-
-# The following instruction can be used to get the expression matrix corresponding to the first TS. 
-res@data[res@cluster ==1,]
-
-# The high level function plotGeneExpProfilescan be used to visualize, 
-# for instance, gene expression profiles corresponding to the first signature.
-plotGeneExpProfiles(res, sign=1)
-
-#To stored the partitioning results onto disk (as a tab-delimited file), 
-# use the writeDBFMCLresult function as show below.
-writeDBFMCLresult(res, filename.out="ALL.sign.txt")
+plot_profile(res)
+write_clusters(res, filename.out="ALL.sign.txt")
 
 }
 }

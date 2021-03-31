@@ -32,6 +32,6 @@ Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud S., Imbert J. , N
 flexible toolbox to explore productively the transcriptional landscape of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
 
-\author{Bergon A., Lopez F., Textoris J., Granjeaud S. and Puthier D.}
+\author{Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier D.}
 \seealso{\code{\link{DBFMCL}}, \code{\link{createSignatures4TB}}}
 \keyword{manip}

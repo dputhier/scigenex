@@ -8,27 +8,17 @@ importClassesFrom(methods, character, list, matrix, vector)
 
 importMethodsFrom(methods, show)
 
-importFrom(graphics, lines, matplot, title)
-importFrom(grDevices, col2rgb, dev.off, png, rainbow, rgb, X11)
+#importFrom(grDevices, col2rgb, dev.off, png, rainbow, rgb, X11)
 importFrom(stats, dist, hclust, heatmap, median, rnorm)
-importFrom(utils, browseURL, download.file, object.size, read.table,
-           write.table)
-
-
+#importFrom(utils, browseURL, download.file, object.size, read.table,
+#           write.table)
 
 exportClasses("DBFMCLresult")
 
-export(createSignatures4TB,
-	DBFMCL,
-	getData4DBFMCL,
-	doRankTransformation,
-	DBF,
-	MCL,
-	doNormalScore,
-	writeDBFMCLresult,
-	clusterEisen,
-	heatmapFromCDT,
-	colorScale,
-	plotGeneExpProfiles,
-	matplotProfiles)
+export(DBFMCL,
+        DBF,
+        MCL,
+        getData4DBFMCL,
+        plot_profile,
+        write_clusters)
 
