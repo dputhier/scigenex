@@ -47,5 +47,8 @@ Data can be found here: https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_fi
     pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc_df <- as.data.frame(pbmc@assays$RNA@data)
     dbf <- DBFMCL(pbmc_df, clustering = TRUE, k=30)
-    plot_profile(dbf)
-    writeDBFMCLresult(res, "ALL.sign.txt")
+    p <- plot_profile(dbf)
+    # Very long...
+    # saveWidget(ggplotly(p), file = "test.html");
+    # Faster 
+    ggsave(p, height=max(dbf@cluster)*1, filename="test.png")

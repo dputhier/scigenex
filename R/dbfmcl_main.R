@@ -66,11 +66,11 @@ setMethod("show", signature("DBFMCLresult"),
 ##    Define the plot_profile for class DBFMCLresult
 #################################################################
 
-setGeneric("plot_profile", function(object) {
+setGeneric("plot_profile", function(object, type=c("line", "tile")) {
   standardGeneric("plot_profile")
 })
 
-setMethod("plot_profile", signature(object = "DBFMCLresult"), function(object) {
+setMethod("plot_profile", signature(object = "DBFMCLresult"), function(object, type=c("line", "tile")) {
 
         ## getting matrix
         nb <- length(object@size)
@@ -99,19 +99,28 @@ setMethod("plot_profile", signature(object = "DBFMCLresult"), function(object) {
 
 
         ## ploting
-        p <- ggplot(data=m_melt,
-                    aes(x=samples,
-                        y=value))
+
+        if(type == "line"){
+        p <- ggplot(data=m_melt, aes(x=samples,
+                                     y=value))
         p <- p + geom_line(color="gray", aes(group=gene))
         p <- p + facet_grid(cluster~.)
-        p <- p + theme_bw()
-        p <- p + theme(strip.text.y = element_text(angle=0))
-
         p <- p +  geom_line(data=m_melt %>%
                              group_by(cluster, samples)  %>%
                              summarise(cluster_mean=mean(value)),
                         aes(x = samples, y = cluster_mean, group=cluster),
                         color="black")
+        }else if(type == "tile"){
+            p <- ggplot(data=m_melt, aes(x=samples,
+                             y=gene, fill=value))
+            p <- p + geom_tile()
+        }
+
+        p <- p + facet_grid(cluster~., scales = "free_y")
+        p <- p + theme_bw()
+        p <- p + theme(strip.text.y = element_text(angle=0),
+                       axis.text.x = element_text(angle=90),
+                       axis.text.y=element_blank())
 
         return(p)
 })
@@ -121,6 +130,7 @@ setMethod("plot_profile", signature(object = "DBFMCLresult"), function(object) {
 #################################################################
 ##    Define the write function for class DBFMCLresult
 #################################################################
+
 setGeneric("write_clusters", function(object, filename.out=NULL, path=".",
                 verbose=TRUE) {
   standardGeneric("write_clusters")
