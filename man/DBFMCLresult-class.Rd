@@ -1,6 +1,6 @@
-\name{DBFMCLresult-class}
+\name{DBFMCLresult}
 \docType{class}
-\alias{DBFMCLresult-class}
+\alias{DBFMCLresult}
 \alias{DBFMCLresult}
 \alias{show,DBFMCLresult-method}
 \title{Class to store DBFMCL results.}
@@ -29,6 +29,8 @@ Objects can be created by calls of the form
 \section{Methods}{
   \describe{
     \item{show}{\code{signature(object = "DBFMCLresult")}, provides informations about the object.}
+    \item{plot_dbf}{\code{signature(object = "DBFMCLresult")}, plot a DBFMCLresult.}
+    \item{write_dbf}{\code{signature(object = "DBFMCLresult")}, write a DBFMCLresult.}
 	 }
 }
 
@@ -40,7 +42,7 @@ flexible toolbox to explore productively the transcriptional landscape of the Ge
 
 
 
-\seealso{\code{\link{writeDBFMCLresult}}, \code{\link{DBFMCL}}}
+\seealso{\code{\link{DBFMCL}}}
 \examples{
 obj <- new("DBFMCLresult")
 obj

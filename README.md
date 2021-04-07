@@ -17,11 +17,17 @@ To install from a private repo, generate a personal access token (PAT) in https:
      library(devtools)
      install_github("dputhier/dbfmcl", auth_token="...", ref="develop")
 
-To install from a tar.
+To install from a tar in the terminal
 
     tar xvfz dbfmcl.tar.gz
     R CMD INSTALL dbfmcl
     
+Or using the R interpreter:
+
+    library(devtools)
+    install("/path/to/the/package")
+    library("dbfmcl")
+
 ## Example
 
 ### Quick example on artificial data
@@ -31,7 +37,7 @@ To install from a tar.
     m[101:200,11:20] <- m[101:200,11:20] + 3
     m[201:300,5:15] <- m[201:300,5:15] + -2
     plot_profile(res)
-    writeDBFMCLresult(res, "ALL.sign.txt")
+    write_dbf(res, "ALL.sign.txt")
     
 ### With a subset of a seurat object
 
@@ -47,8 +53,8 @@ Data can be found here: https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_fi
     pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc_df <- as.data.frame(pbmc@assays$RNA@data)
     dbf <- DBFMCL(pbmc_df, clustering = TRUE, k=30)
-    p <- plot_profile(dbf)
+    p <- plot_dbf(dbf)
     # Very long...
     # saveWidget(ggplotly(p), file = "test.html");
     # Faster 
-    ggsave(p, height=max(dbf@cluster)*1, filename="test.png")
+    ggsave(p, height=max(dbf@cluster), filename="test.png")

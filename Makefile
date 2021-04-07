@@ -16,8 +16,9 @@ help:
 	@echo ""
 
 check:
-	@rm -f src/*.o src/*.so
-	@R CMD check .
+	@rm -f src/*.o src/*.so; rm -f dbfmcl.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck
+	@rm -rf /tmp/dbfmcl; mkdir -p /tmp/dbfmcl; cp -r ./* /tmp/dbfmcl
+	@R CMD check /tmp/dbfmcl
 
 install:
 	@rm -f src/*.o src/*.so
