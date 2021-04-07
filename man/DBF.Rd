@@ -3,12 +3,6 @@
 \name{DBF}
 \alias{DBF}
 \title{Density-Based Filtering.}
-\description{
-This function is an internal function used by \code{\link{DBFMCL}} to detect
-informative elements (\emph{i.e.}, those that belong to dense regions). User
-should not use this function. Instead they can use the \code{\link{DBFMCL}}
-function with \code{clustering} argument set to \code{FALSE}.
-}
 \usage{
 DBF(
   data,
@@ -19,8 +13,7 @@ DBF(
   random = 3,
   fdr = 10,
   memory.used = 1024,
-  set.seed = 123,
-  returnRank = FALSE
+  set.seed = 123
 )
 }
 \arguments{
@@ -48,7 +41,12 @@ the k-th nearest neighbor (see detail section).}
 
 \item{set.seed}{specify seeds for random number generator.}
 }
-
+\description{
+This function is an internal function used by \code{\link{DBFMCL}} to detect
+informative elements (\emph{i.e.}, those that belong to dense regions). User
+should not use this function. Instead they can use the \code{\link{DBFMCL}}
+function with \code{clustering} argument set to \code{FALSE}.
+}
 \details{
 See \code{\link{DBFMCL}}
 }
@@ -62,9 +60,8 @@ S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
 and flexible toolbox to explore productively the transcriptional landscape
 of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
-
 \seealso{
-\code{\link{DBFMCL}}
+\code{\link{DBFMCL}}, \code{\link{createSignatures4TB}}
 }
 \author{
 Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier

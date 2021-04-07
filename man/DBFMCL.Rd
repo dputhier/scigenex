@@ -68,7 +68,6 @@ clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 good results for microarray data when k is set between 70 and 250.}
 
 \item{set.seed}{specify seeds for random number generator.}
-
 }
 \value{
 a DBFMCLresults class object.
@@ -134,6 +133,10 @@ m <- matrix(rnorm(80000), nc=20)
 m[1:100,1:10] <- m[1:100,1:10] + 4
 m[101:200,11:20] <- m[101:200,11:20] + 3
 m[201:300,5:15] <- m[201:300,5:15] + -2
+res <- DBFMCL(data=m,
+               distance.method="pearson",
+               clustering=TRUE,
+               k=25)
 plot_profile(res)
 write_clusters(res, filename.out="ALL.sign.txt")
 
@@ -144,7 +147,9 @@ write_clusters(res, filename.out="ALL.sign.txt")
 Van Dongen S. (2000) A cluster algorithm for graphs. National
 Research Institute for Mathematics and Computer Science in the 1386-3681.
 }
-
+\seealso{
+\code{\link{createSignatures4TB}}
+}
 \author{
 Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 D.

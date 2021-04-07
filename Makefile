@@ -23,3 +23,6 @@ check:
 install:
 	@rm -f src/*.o src/*.so
 	@R CMD Install .
+	
+test:
+	@echo "devtools::test()" | R --slave

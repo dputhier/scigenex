@@ -36,6 +36,10 @@ Or using the R interpreter:
     m[1:100,1:10] <- m[1:100,1:10] + 4
     m[101:200,11:20] <- m[101:200,11:20] + 3
     m[201:300,5:15] <- m[201:300,5:15] + -2
+    res <- DBFMCL(data=m,
+               distance.method="pearson",
+               clustering=TRUE,
+               k=25)
     plot_profile(res)
     write_dbf(res, "ALL.sign.txt")
     
