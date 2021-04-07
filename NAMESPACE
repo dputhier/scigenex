@@ -4,42 +4,29 @@ if(.Platform$OS.type == "windows"){
 	useDynLib("dbfmcl")
 }
 
-
-#Imports: Biobase, graphics, grDevices, limma, methods, stats, utils
-
 importClassesFrom(methods, character, list, matrix, vector)
 
-importMethodsFrom(Biobase, exprs)
 importMethodsFrom(methods, show)
 
-importFrom(Biobase, isUnique)
-importFrom(graphics, lines, matplot, title)
-importFrom(grDevices, col2rgb, dev.off, png, rainbow, rgb, X11)
-importFrom(limma, normalizeQuantiles)
-#importFrom(methods, "@<-", new, slot, slotNames)
-importFrom(stats, dist, hclust, heatmap, median, rnorm)
-importFrom(utils, browseURL, download.file, object.size, read.table,
-           write.table)
 
 
-
+importFrom("grDevices", "colorRampPalette")
+importFrom("methods", "new", "slot", "slotNames")
+importFrom("stats", "sd", dist, hclust, heatmap, median, rnorm)
+importFrom("utils", "object.size", "read.table", "write.table")
+importFrom(dplyr, summarise, group_by)
+importFrom(ggplot2, ggplot, theme_bw,
+            facet_grid, geom_line, aes,
+            theme, scale_fill_gradientn, geom_tile,
+            element_text, element_blank)
+importFrom(reshape2, melt)
+importFrom(magrittr, '%>%')
 exportClasses("DBFMCLresult")
 
-export(createSignatures4TB,
-	DBFMCL,
-	getData4DBFMCL,
-	doRankTransformation,
-	DBF,
-	MCL,
-	doNormalScore,
-	writeDBFMCLresult,
-	clusterEisen,
-	heatmapFromCDT,
-	colorScale,
-	plotGeneExpProfiles,
-	matplotProfiles,
-	getSignatures,
-	getExpressionMatrix,
-	getTBInfo,
-	createGraph4BioC)
+export(DBFMCL,
+        DBF,
+        MCL,
+        getData4DBFMCL,
+        plot_dbf,
+        write_dbf)
 
