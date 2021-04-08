@@ -9,7 +9,7 @@ DBFMCL(
   filename = NULL,
   path = ".",
   name = NULL,
-  distance.method = c("pearson", "spearman", "euclidean", "spm", "spgm"),
+  distance.method = c("pearson", "spearman", "euclidean"),
   clustering = TRUE,
   silent = FALSE,
   verbose = TRUE,
@@ -129,17 +129,12 @@ successfully with the 06-058 version).}
 \dontrun{
 ## with an artificial dataset
 
-m <- matrix(rnorm(80000), nc=20)
-m[1:100,1:10] <- m[1:100,1:10] + 4
-m[101:200,11:20] <- m[101:200,11:20] + 3
-m[201:300,5:15] <- m[201:300,5:15] + -2
-res <- DBFMCL(data=m,
-               distance.method="pearson",
-               clustering=TRUE,
-               k=25)
+m <- matrix(rnorm(80000), nc = 20)
+m[1:100, 1:10] <- m[1:100, 1:10] + 4
+m[101:200, 11:20] <- m[101:200, 11:20] + 3
+m[201:300, 5:15] <- m[201:300, 5:15] + -2
 plot_profile(res)
-write_clusters(res, filename.out="ALL.sign.txt")
-
+write_clusters(res, filename.out = "ALL.sign.txt")
 }
 
 }

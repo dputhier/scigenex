@@ -7,7 +7,7 @@
 DBF(
   data,
   name = NULL,
-  distance.method = c("spearman", "pearson", "euclidean", "spm", "spgm"),
+  distance.method = c("spearman", "pearson", "euclidean"),
   silent = FALSE,
   k = 100,
   random = 3,

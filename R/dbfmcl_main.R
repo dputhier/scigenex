@@ -71,6 +71,7 @@ setMethod(
 ##    Define the plot_profile for class DBFMCLresult
 #################################################################
 
+
 setGeneric("plot_dbf", function(object,
                                 type = c("line", "tile"),
                                 to_log2 = TRUE,
@@ -80,6 +81,7 @@ setGeneric("plot_dbf", function(object,
   standardGeneric("plot_dbf")
 })
 
+#' @rdname myGeneric
 setMethod(
   "plot_dbf",
   signature(object = "DBFMCLresult"),
@@ -308,9 +310,7 @@ setMethod(
 #' intermediary files are to be stored. Default to current working directory.
 #' @param distance.method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
-#' distance), "spearman" (Spearman's rho-based distance), "euclidean". The
-#' "spm" distance corresponds to the arithmetic mean :("pearson"+"spearman")/2
-#' whereas "spgm" is the geometric mean : sqrt("pearson"*"spearman).
+#' distance), "spearman" (Spearman's rho-based distance), "euclidean".
 #' @param clustering indicates whether partitioning step (MCL) should be
 #' applied to the data. If \code{clustering = FALSE}, the function returns a
 #' \code{DBFMCLresult} object that contains informative elements (as detected
@@ -372,7 +372,7 @@ setMethod(
 #'
 #' @export DBFMCL
 DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
-                   distance.method = c("pearson", "spearman", "euclidean", "spm", "spgm"),
+                   distance.method = c("pearson", "spearman", "euclidean"),
                    clustering = TRUE, silent = FALSE, verbose = TRUE, k = 150,
                    random = 3, memory.used = 1024, fdr = 10, inflation = 2.0,
                    set.seed = 123) {
@@ -547,7 +547,7 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 #' @keywords manip
 #' @export DBF
 DBF <- function(data, name = NULL,
-                distance.method = c("spearman", "pearson", "euclidean", "spm", "spgm"),
+                distance.method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
                 random = 3,
