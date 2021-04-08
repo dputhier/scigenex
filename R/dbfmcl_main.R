@@ -129,7 +129,6 @@ setMethod(
 
 
     ## melting
-
     m_melt <- as.data.frame(m)
     m_melt$cluster <- object@cluster
     m_melt$gene <- row.names(object@data)
@@ -141,7 +140,6 @@ setMethod(
 
 
     ## ploting
-
     col <- unlist(strsplit("#67001f,#b2182b,#d6604d,#f4a582,#fddbc7,#f7f7f7,#d1e5f0,#92c5de,#4393c3,#2166ac,#053061", ","))
     color.ramp <- colorRampPalette(col)(10)
     # Note that samples, value, gene, cluster
@@ -153,7 +151,7 @@ setMethod(
         x = samples,
         y = value
       ))
-      p <- p + geom_line(color = "gray", aes(group = gene))
+      p <- p + geom_line(color = "azure3", aes(group = gene), size=0.1)
       p <- p + theme_bw()
       p <- p + facet_grid(cluster ~ .)
       p <- p + geom_line(
@@ -165,7 +163,8 @@ setMethod(
           y = cluster_mean,
           group = cluster
         ),
-        color = "black"
+        color = "skyblue4",
+	size=0.8
       )
 
       p <- p + theme(
