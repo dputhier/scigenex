@@ -26,7 +26,8 @@ exportClasses("DBFMCLresult")
 export(DBFMCL,
         DBF,
         MCL,
-        getData4DBFMCL,
+        get_data_4_DBFMCL,
         plot_dbf,
         write_dbf)
+
 

@@ -9,13 +9,13 @@ DBFMCL(
   filename = NULL,
   path = ".",
   name = NULL,
-  distance.method = c("pearson", "spearman", "euclidean"),
+  distance_method = c("pearson", "spearman", "euclidean"),
   clustering = TRUE,
   silent = FALSE,
   verbose = TRUE,
   k = 150,
   random = 3,
-  memory.used = 1024,
+  memory_used = 1024,
   fdr = 10,
   inflation = 2,
   set.seed = 123
@@ -32,11 +32,9 @@ intermediary files are to be stored. Default to current working directory.}
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
 
-\item{distance.method}{a method to compute the distance to the k-th nearest
+\item{distance_method}{a method to compute the distance to the k-th nearest
 neighbor. One of "pearson" (Pearson's correlation coefficient-based
-distance), "spearman" (Spearman's rho-based distance), "euclidean". The
-"spm" distance corresponds to the arithmetic mean :("pearson"+"spearman")/2
-whereas "spgm" is the geometric mean : sqrt("pearson"*"spearman).}
+distance), "spearman" (Spearman's rho-based distance), "euclidean".}
 
 \item{clustering}{indicates whether partitioning step (MCL) should be
 applied to the data. If \code{clustering = FALSE}, the function returns a
@@ -53,7 +51,7 @@ is not displayed.}
 \item{random}{the number of simulated distributions S to compute. By default
 \code{random = 3}.}
 
-\item{memory.used}{size of the memory used to store part of the distance
+\item{memory_used}{size of the memory used to store part of the distance
 matrix. The subsequent sub-matrix is used to computed simulated distances to
 the k-th nearest neighbor (see detail section).}
 
@@ -134,7 +132,7 @@ m[1:100, 1:10] <- m[1:100, 1:10] + 4
 m[101:200, 11:20] <- m[101:200, 11:20] + 3
 m[201:300, 5:15] <- m[201:300, 5:15] + -2
 plot_profile(res)
-write_clusters(res, filename.out = "ALL.sign.txt")
+write_clusters(res, filename_out = "ALL.sign.txt")
 }
 
 }

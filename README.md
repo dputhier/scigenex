@@ -37,7 +37,7 @@ Or using the R interpreter:
     m[101:200,11:20] <- m[101:200,11:20] + 3
     m[201:300,5:15] <- m[201:300,5:15] + -2
     res <- DBFMCL(data=m,
-               distance.method="pearson",
+               distance_method="pearson",
                clustering=TRUE,
                k=25)
     plot_profile(res)

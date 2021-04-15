@@ -22,7 +22,8 @@ check:
 
 install:
 	@rm -f src/*.o src/*.so
+	@echo "library(roxygen2); roxygen2::roxygenise()" | R --slave
 	@R CMD Install .
-	
+
 test:
 	@echo "devtools::test()" | R --slave

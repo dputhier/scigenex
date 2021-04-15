@@ -42,6 +42,7 @@ setMethod(
   "show", signature("DBFMCLresult"),
 
   function(object) {
+    
     cat("\t\tAn object of class DBFMCLresult\n")
     cat("\t\tName:", slot(object, "name"), "\n")
     cat("\t\tMemory used: ", object.size(object), "\n")
@@ -72,16 +73,32 @@ setMethod(
 #################################################################
 
 
-setGeneric("plot_dbf", function(object,
-                                type = c("line", "tile"),
-                                to_log2 = TRUE,
-                                color_palette = NULL,
-                                standardizing = FALSE,
-                                centering = TRUE) {
-  standardGeneric("plot_dbf")
+#' Title
+#' Plot the results (heatmap or profiles) contained in a DBFMCLresult object.
+#' @param object A DBFMCLresult object.
+#' @param type The type of diagram.
+#' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
+#' @param color_palette A color palette.
+#' @param standardizing Whether rows should be divided by standard deviation.
+#' @param centering Whether rows should be centered. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+setGeneric("plot_dbf", 
+           
+           function(object,
+                    type = c("line", "tile"),
+                    to_log2 = TRUE,
+                    color_palette = NULL,
+                    standardizing = FALSE,
+                    centering = TRUE) {
+             
+              standardGeneric("plot_dbf")
 })
 
-#' @rdname myGeneric
+#' @rdname plot_dbf
 setMethod(
   "plot_dbf",
   signature(object = "DBFMCLresult"),
@@ -206,23 +223,39 @@ setMethod(
 ##    Define the write function for class DBFMCLresult
 #################################################################
 
-setGeneric("write_dbf", function(object, filename.out = NULL, path = ".",
-                                 verbose = TRUE) {
-  standardGeneric("write_dbf")
+#' Title
+#' Write a DBFMCLresult into a flat file.
+#' @param object DBFMCLresult. 
+#' @param filename_out The outfile name.
+#' @param path The path to the file.
+#' @param verbose Whether verbosity should be activated.
+#' @return
+#' @export
+#'
+#' @examples
+setGeneric("write_dbf", 
+           
+           function(object, 
+                    filename_out = NULL,
+                    path = ".",
+                    verbose = TRUE) {
+                standardGeneric("write_dbf")
 })
 
+
+#' @rdname write_dbf
 setMethod(
   "write_dbf",
   signature(object = "DBFMCLresult"),
   function(object,
-           filename.out = NULL,
+           filename_out = NULL,
            path = ".",
            verbose = TRUE) {
+           
     if (path == ".") path <- getwd()
 
-
-    if (is.null(filename.out)) {
-      filename.out <- "exprs.dataMods.txt"
+    if (is.null(filename_out)) {
+      filename_out <- "exprs.dataMods.txt"
     }
 
     data <- object@data
@@ -251,13 +284,14 @@ setMethod(
     }
 
     ## exporting results
-    write.table(dataT, file.path(path, filename.out),
+    write.table(dataT, file.path(path, filename_out),
       col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE
     )
+
     if (verbose) {
       cat(
         "\t--> creating file : ",
-        file.path(path, filename.out), "\n\n"
+        file.path(path, filename_out), "\n\n"
       )
     }
   }
@@ -266,8 +300,6 @@ setMethod(
 #################################################################
 ##    DBF-MCL
 #################################################################
-
-
 
 #' The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).
 #'
@@ -307,7 +339,7 @@ setMethod(
 #' and MCL.
 #' @param path a character string representing the data directory where
 #' intermediary files are to be stored. Default to current working directory.
-#' @param distance.method a method to compute the distance to the k-th nearest
+#' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance), "euclidean".
 #' @param clustering indicates whether partitioning step (MCL) should be
@@ -320,7 +352,7 @@ setMethod(
 #' @param k the neighborhood size.
 #' @param random the number of simulated distributions S to compute. By default
 #' \code{random = 3}.
-#' @param memory.used size of the memory used to store part of the distance
+#' @param memory_used size of the memory used to store part of the distance
 #' matrix. The subsequent sub-matrix is used to computed simulated distances to
 #' the k-th nearest neighbor (see detail section).
 #' @param fdr an integer value corresponding to the false discovery rate
@@ -366,26 +398,35 @@ setMethod(
 #' m[101:200, 11:20] <- m[101:200, 11:20] + 3
 #' m[201:300, 5:15] <- m[201:300, 5:15] + -2
 #' plot_profile(res)
-#' write_clusters(res, filename.out = "ALL.sign.txt")
+#' write_clusters(res, filename_out = "ALL.sign.txt")
 #' }
 #'
 #' @export DBFMCL
-DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
-                   distance.method = c("pearson", "spearman", "euclidean"),
-                   clustering = TRUE, silent = FALSE, verbose = TRUE, k = 150,
-                   random = 3, memory.used = 1024, fdr = 10, inflation = 2.0,
+DBFMCL <- function(data = NULL, 
+                   filename = NULL, 
+                   path = ".", 
+                   name = NULL,
+                   distance_method = c("pearson", "spearman", "euclidean"),
+                   clustering = TRUE, 
+                   silent = FALSE, 
+                   verbose = TRUE, 
+                   k = 150,
+                   random = 3, 
+                   memory_used = 1024,
+                   fdr = 10, 
+                   inflation = 2.0,
                    set.seed = 123) {
 
   ## testing the system
   if (.Platform$OS.type != "windows") {
 
     ## getting parameters
-    dataSource <- getData4DBFMCL(data = data, filename = filename, path = path)
-    m <- dataSource$data
-    if (is.null(name)) name <- dataSource$name
+    data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
+    m <- data_source$data
+    if (is.null(name)) name <- data_source$name
     if (is.null(name)) name <- "exprs"
 
-    distance.method <- match.arg(distance.method)
+    distance_method <- match.arg(distance_method)
     if (clustering) {
       if (is.null(inflation)) inflation <- 2.0
       txt <- paste("\n\tInflation: ", inflation, sep = "")
@@ -399,24 +440,24 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
         "The following parameters will be used :",
         "\n\tWorking directory: ", getwd(),
         "\n\tName: ", name,
-        "\n\tDistance method: ", distance.method,
+        "\n\tDistance method: ", distance_method,
         "\n\tNumber of neighbors: ", k,
         "\n\tNumber of randomizations: ", random,
         "\n\tFDR: ", fdr, "%",
         "\n\tPerform clustering: ", clustering, txt,
         "\n\tVisualize standard outputs from both mcl and cluster",
         "commands: ", silent,
-        "\n\tMemory used : ", memory.used, "\n\n"
+        "\n\tMemory used : ", memory_used, "\n\n"
       )
     }
 
     ## DBF algorithm, returns a DBFMCLresult object
     obj <- DBF(m, name,
-      distance.method = distance.method,
+      distance_method = distance_method,
       silent = silent,
       k = k,
       random = random,
-      memory.used = memory.used,
+      memory_used = memory_used,
       fdr = fdr,
       set.seed = set.seed
     )
@@ -475,7 +516,7 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 
           ## add DBFMCL parameters used to build this object
           obj@parameters <- list(
-            distanceMethod = distance.method,
+            distance_method = distance_method,
             k = k,
             random = random,
             fdr = fdr,
@@ -487,7 +528,7 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
       else {
         ## add only DBF parameters used to build this object
         obj@parameters <- list(
-          distanceMethod = distance.method,
+          distance_method = distance_method,
           k = k,
           random = random,
           fdr = fdr,
@@ -510,7 +551,6 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 ##    COMPUTE DBF algorithm
 ###############################################################
 
-
 #' Density-Based Filtering.
 #'
 #' This function is an internal function used by \code{\link{DBFMCL}} to detect
@@ -522,7 +562,7 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 #'
 #' @param data a matrix or data.frame
 #' @param name a prefix for the file name
-#' @param distance.method a method to compute the distance to the k-th nearest
+#' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance) or "euclidean".
 #' @param silent if set to TRUE (default), the progression of distance matrix
@@ -531,7 +571,7 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 #' @param random the number of simulated distributions S to compute. By default
 #' \code{random = FALSE}.
 #' @param fdr a value for the false discovery rate.
-#' @param memory.used size of the memory used to store part of the distance
+#' @param memory_used size of the memory used to store part of the distance
 #' matrix. The subsequent sub-matrix is used to computed simulated distances to
 #' the k-th nearest neighbor (see detail section).
 #' @param set.seed specify seeds for random number generator.
@@ -546,12 +586,12 @@ DBFMCL <- function(data = NULL, filename = NULL, path = ".", name = NULL,
 #' @keywords manip
 #' @export DBF
 DBF <- function(data, name = NULL,
-                distance.method = c("spearman", "pearson", "euclidean"),
+                distance_method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
                 random = 3,
                 fdr = 10,
-                memory.used = 1024,
+                memory_used = 1024,
                 set.seed = 123) {
 
   ## testing the system
@@ -559,10 +599,10 @@ DBF <- function(data, name = NULL,
     if (!is.null(data)) {
       ## getting data and parameters
       if (is.null(name)) name <- "exprs"
-      data <- getData4DBFMCL(data = data)$data
+      data <- get_data_4_DBFMCL(data = data)$data
       row <- rownames(data)
       col <- colnames(data)
-      distance.method <- match.arg(distance.method)
+      distance_method <- match.arg(distance_method)
 
       ## transforming data into double
       data <- apply(data, 2, as.double)
@@ -582,11 +622,11 @@ DBF <- function(data, name = NULL,
         as.integer(ncol(data)),
         row,
         col,
-        distance.method,
+        distance_method,
         as.integer(k),
         as.integer(random),
         as.integer(!silent),
-        as.integer(memory.used),
+        as.integer(memory_used),
         as.integer(fdr),
         as.integer(!silent),
         m2 = vector(length = nrow(data), mode = "character"),
@@ -708,12 +748,30 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
 }
 
 
-
 #################################################################
 ##    Getting data
 #################################################################
 
-getData4DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
+#' Title
+#' Fetch an expression matrix from a file, dataframe or Seurat object.
+#' @param data A \code{matrix}, \code{data.frame} or \code{Seurat} object.
+#' @param filename A character string representing the file name.
+#' @param path A character string representing the data directory where
+#' intermediary files are to be stored. Default to current working directory.
+#'
+#' @return A list containing a matrix and the filename (if filename argument is used).
+#' @export get_data_4_DBFMCL
+#'
+#' @examples
+#' 
+#' #' \dontrun{
+#' ## with an artificial dataset
+#'
+#' m <- matrix(rnorm(80000), nc = 20)
+#' res <- get_data_4_DBFMCL(data=m)
+#' }
+#' 
+get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
 
   ## getting matrix (probesID vs SamplesID)
   if (!is.null(data)) {

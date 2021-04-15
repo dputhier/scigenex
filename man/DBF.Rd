@@ -7,12 +7,12 @@
 DBF(
   data,
   name = NULL,
-  distance.method = c("spearman", "pearson", "euclidean"),
+  distance_method = c("spearman", "pearson", "euclidean"),
   silent = FALSE,
   k = 100,
   random = 3,
   fdr = 10,
-  memory.used = 1024,
+  memory_used = 1024,
   set.seed = 123
 )
 }
@@ -21,7 +21,7 @@ DBF(
 
 \item{name}{a prefix for the file name}
 
-\item{distance.method}{a method to compute the distance to the k-th nearest
+\item{distance_method}{a method to compute the distance to the k-th nearest
 neighbor. One of "pearson" (Pearson's correlation coefficient-based
 distance), "spearman" (Spearman's rho-based distance) or "euclidean".}
 
@@ -35,7 +35,7 @@ calculation is not displayed.}
 
 \item{fdr}{a value for the false discovery rate.}
 
-\item{memory.used}{size of the memory used to store part of the distance
+\item{memory_used}{size of the memory used to store part of the distance
 matrix. The subsequent sub-matrix is used to computed simulated distances to
 the k-th nearest neighbor (see detail section).}
 

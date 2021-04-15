@@ -23,7 +23,7 @@ Objects can be created by calls of the form
     \item{\code{cluster}:}{Object of class \code{"vector"}, a vector of integers indicating the cluster to which each point is allocated.}
     \item{\code{size}:}{Object of class \code{"vector"}, the number of points in each cluster.}
     \item{\code{center}:}{Object of class \code{"matrix"}, a matrix of cluster centres.}
-    \item{\code{parameters}:}{Object of class \code{"list"}, a list of all used DBFMCL parameters: normalizationMethod, distanceMethod, k, random, fdr, set.seed, inflation.}
+    \item{\code{parameters}:}{Object of class \code{"list"}, a list of all used DBFMCL parameters: normalizationMethod, distance_method, k, random, fdr, set.seed, inflation.}
   }
 }
 \section{Methods}{
