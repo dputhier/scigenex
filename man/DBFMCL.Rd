@@ -140,9 +140,6 @@ write_clusters(res, filename_out = "ALL.sign.txt")
 Van Dongen S. (2000) A cluster algorithm for graphs. National
 Research Institute for Mathematics and Computer Science in the 1386-3681.
 }
-\seealso{
-\code{\link{createSignatures4TB}}
-}
 \author{
 Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 D.

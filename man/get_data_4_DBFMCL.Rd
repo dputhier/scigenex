@@ -22,3 +22,13 @@ A list containing a matrix and the filename (if filename argument is used).
 Title
 Fetch an expression matrix from a file, dataframe or Seurat object.
 }
+\examples{
+
+\dontrun{
+## with an artificial dataset
+
+m <- matrix(rnorm(80000), nc = 20)
+res <- get_data_4_DBFMCL(data=m)
+}
+
+}

@@ -61,7 +61,7 @@ and flexible toolbox to explore productively the transcriptional landscape
 of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
 \seealso{
-\code{\link{DBFMCL}}, \code{\link{createSignatures4TB}}
+\code{\link{DBFMCL}}
 }
 \author{
 Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier

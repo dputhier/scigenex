@@ -20,7 +20,7 @@ write_dbf(object, filename_out = NULL, path = ".", verbose = TRUE)
 \item{verbose}{Whether verbosity should be activated.}
 }
 \value{
-
+Write a file.
 }
 \description{
 Title

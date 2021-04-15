@@ -21,6 +21,7 @@ importFrom(ggplot2, ggplot, theme_bw,
             element_text, element_blank)
 importFrom(reshape2, melt)
 importFrom(magrittr, '%>%')
+importFrom(testthat, expect_equal)
 exportClasses("DBFMCLresult")
 
 export(DBFMCL,

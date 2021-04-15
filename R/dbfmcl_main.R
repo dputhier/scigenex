@@ -10,11 +10,38 @@
 #################################################################
 ##    DEFINITION OF A SPECIFIC CLASS OBJECT : DBFMCLresult
 #################################################################
+ 
 library(Biobase)
 library(ggplot2)
 library(reshape2)
 library(dplyr)
 
+#' Title
+#' This class represents the results of the \code{\link{DBFMCL}} algorithm.
+#' @slot name character. The original input file name (if applicable).
+#' @slot data matrix. The matrix containing the filtered/partitionned data.
+#' @slot cluster vector. Mapping of row/genes to clusters.
+#' @slot size vector. The size of each cluster.
+#' @slot center matrix. The centers of each clusters.
+#' @slot parameters list. The parameter used.
+#'
+#' @return A DBFMCLresult object.
+#' @export
+#'
+#' @examples
+#' 
+#' \dontrun{
+#'   m <- matrix(rnorm(80000), nc=20)
+#'   m[1:100,1:10] <- m[1:100,1:10] + 4
+#'   m[101:200,11:20] <- m[101:200,11:20] + 3
+#'   m[201:300,5:15] <- m[201:300,5:15] + -2
+#'   res <- DBFMCL(data=m,
+#'                 distance_method="pearson",
+#'                 clustering=FALSE,
+#'                 k=25)
+#' is(res) 
+#' }
+#'               
 setClass("DBFMCLresult",
   representation = list(
     name = "character",
@@ -82,7 +109,7 @@ setMethod(
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param centering Whether rows should be centered. 
 #'
-#' @return
+#' @return A ggplot diagram.
 #' @export
 #'
 #' @examples
@@ -229,7 +256,7 @@ setMethod(
 #' @param filename_out The outfile name.
 #' @param path The path to the file.
 #' @param verbose Whether verbosity should be activated.
-#' @return
+#' @return Write a file.
 #' @export
 #'
 #' @examples
@@ -384,7 +411,6 @@ setMethod(
 #' \code{mcl -h}
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 #' D.
-#' @seealso \code{\link{createSignatures4TB}}
 #' @references Van Dongen S. (2000) A cluster algorithm for graphs. National
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #' @keywords manip
@@ -578,7 +604,7 @@ DBFMCL <- function(data = NULL,
 #' @section Warnings: Works only on UNIX-alikes platforms.
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 #' D.
-#' @seealso \code{\link{DBFMCL}}, \code{\link{createSignatures4TB}}
+#' @seealso \code{\link{DBFMCL}}
 #' @references Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud
 #' S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
 #' and flexible toolbox to explore productively the transcriptional landscape
@@ -764,7 +790,7 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
 #'
 #' @examples
 #' 
-#' #' \dontrun{
+#' \dontrun{
 #' ## with an artificial dataset
 #'
 #' m <- matrix(rnorm(80000), nc = 20)

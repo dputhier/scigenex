@@ -39,7 +39,7 @@ plot_dbf(
 \item{centering}{Whether rows should be centered.}
 }
 \value{
-
+A ggplot diagram.
 }
 \description{
 Title

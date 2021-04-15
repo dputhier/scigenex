@@ -9,5 +9,5 @@ test_that("Cheking DBFMCL is providing the right number of genes", {
                 clustering=FALSE,
                 k=25)
   expect_equal(length(res@size), 1)
-  expect_equal(res@size, 298)
+  expect_equal(res@size, 309)
 })
