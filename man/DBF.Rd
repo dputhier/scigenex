@@ -3,24 +3,17 @@
 \name{DBF}
 \alias{DBF}
 \title{Density-Based Filtering.}
-\description{
-This function is an internal function used by \code{\link{DBFMCL}} to detect
-informative elements (\emph{i.e.}, those that belong to dense regions). User
-should not use this function. Instead they can use the \code{\link{DBFMCL}}
-function with \code{clustering} argument set to \code{FALSE}.
-}
 \usage{
 DBF(
   data,
   name = NULL,
-  distance.method = c("spearman", "pearson", "euclidean", "spm", "spgm"),
+  distance_method = c("spearman", "pearson", "euclidean"),
   silent = FALSE,
   k = 100,
   random = 3,
   fdr = 10,
-  memory.used = 1024,
-  set.seed = 123,
-  returnRank = FALSE
+  memory_used = 1024,
+  set.seed = 123
 )
 }
 \arguments{
@@ -28,7 +21,7 @@ DBF(
 
 \item{name}{a prefix for the file name}
 
-\item{distance.method}{a method to compute the distance to the k-th nearest
+\item{distance_method}{a method to compute the distance to the k-th nearest
 neighbor. One of "pearson" (Pearson's correlation coefficient-based
 distance), "spearman" (Spearman's rho-based distance) or "euclidean".}
 
@@ -42,13 +35,18 @@ calculation is not displayed.}
 
 \item{fdr}{a value for the false discovery rate.}
 
-\item{memory.used}{size of the memory used to store part of the distance
+\item{memory_used}{size of the memory used to store part of the distance
 matrix. The subsequent sub-matrix is used to computed simulated distances to
 the k-th nearest neighbor (see detail section).}
 
 \item{set.seed}{specify seeds for random number generator.}
 }
-
+\description{
+This function is an internal function used by \code{\link{DBFMCL}} to detect
+informative elements (\emph{i.e.}, those that belong to dense regions). User
+should not use this function. Instead they can use the \code{\link{DBFMCL}}
+function with \code{clustering} argument set to \code{FALSE}.
+}
 \details{
 See \code{\link{DBFMCL}}
 }
@@ -62,7 +60,6 @@ S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
 and flexible toolbox to explore productively the transcriptional landscape
 of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
-
 \seealso{
 \code{\link{DBFMCL}}
 }
