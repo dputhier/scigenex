@@ -95,10 +95,13 @@ setMethod(
   }
 )
 
+
+
+
+
 #################################################################
 ##    Define the plot_profile for class DBFMCLresult
 #################################################################
-
 
 #' Title
 #' Plot the results (heatmap or profiles) contained in a DBFMCLresult object.
@@ -496,17 +499,17 @@ DBFMCL <- function(data = NULL,
 
 
         ## getting mcl results into the DBFMCLresult object
-        mclCluster <- readLines(paste(name, ".mcl_out.txt", sep = ""))
-        sondeList <- NULL
+        mcl_cluster <- readLines(paste(name, ".mcl_out.txt", sep = ""))
+        gene_list <- NULL
         clusters <- NULL
         size <- NULL
         nb <- 0
 
-        for (i in 1:length(mclCluster)) {
-          h <- unlist(strsplit(mclCluster[i], "\t"))
+        for (i in 1:length(mcl_cluster)) {
+          h <- unlist(strsplit(mcl_cluster[i], "\t"))
           if (length(h) >= 10) {
             nb <- nb + 1
-            sondeList <- c(sondeList, h)
+            gene_list <- c(gene_list, h)
             clusters <- c(clusters, rep(nb, length(h)))
             if (is.null(size)) {
               size <- length(h)
@@ -526,7 +529,7 @@ DBFMCL <- function(data = NULL,
         ## build DBFMCLresult object
         if (nb > 0) {
           obj@name <- name
-          obj@data <- as.matrix(m[sondeList, ])
+          obj@data <- as.matrix(m[gene_list, ])
           obj@cluster <- clusters
           obj@size <- size
 
