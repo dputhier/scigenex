@@ -372,10 +372,10 @@ setMethod(
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance), "euclidean".
-#' @param clustering indicates whether partitioning step (MCL) should be
-#' applied to the data. If \code{clustering = FALSE}, the function returns a
-#' \code{DBFMCLresult} object that contains informative elements (as detected
-#' by the DBF step) coerced into a single cluster.
+#' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
+#' clusters in which correlation is influenced/supported by very few samples (typically 1).
+#' @param min_cluster_size Minimum number of element inside a cluster. MCL tend to create lots of clusters with
+#' very few (e.g 2) objects.
 #' @param silent if set to TRUE, the progression of distance matrix calculation
 #' is not displayed.
 #' @param verbose if set to TRUE the function runs verbosely.
@@ -436,7 +436,8 @@ DBFMCL <- function(data = NULL,
                    path = ".", 
                    name = NULL,
                    distance_method = c("pearson", "spearman", "euclidean"),
-                   clustering = TRUE, 
+                   av_dot_prod_min=2,
+                   min_cluster_size=10,
                    silent = FALSE, 
                    verbose = TRUE, 
                    k = 150,
@@ -447,132 +448,135 @@ DBFMCL <- function(data = NULL,
                    set.seed = 123) {
 
   ## testing the system
-  if (.Platform$OS.type != "windows") {
+  if (.Platform$OS.type == "windows") {
+    stop("A unix-like OS is required to launch mcl and cluster programs.")
+  }
 
-    ## getting parameters
-    data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
-    m <- data_source$data
-    if (is.null(name)) name <- data_source$name
-    if (is.null(name)) name <- "exprs"
+  ## getting parameters
+  data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
+  m <- data_source$data
 
-    distance_method <- match.arg(distance_method)
-    if (clustering) {
-      if (is.null(inflation)) inflation <- 2.0
-      txt <- paste("\n\tInflation: ", inflation, sep = "")
-    }
-    else {
-      txt <- ""
-    }
-    ## writting all parameters
-    if (verbose) {
-      cat(
-        "The following parameters will be used :",
-        "\n\tWorking directory: ", getwd(),
-        "\n\tName: ", name,
-        "\n\tDistance method: ", distance_method,
-        "\n\tNumber of neighbors: ", k,
-        "\n\tNumber of randomizations: ", random,
-        "\n\tFDR: ", fdr, "%",
-        "\n\tPerform clustering: ", clustering, txt,
-        "\n\tVisualize standard outputs from both mcl and cluster",
-        "commands: ", silent,
-        "\n\tMemory used : ", memory_used, "\n\n"
-      )
-    }
+  # A simple function to create a random string
+  create_rand_str <- function() {
+      v = c(sample(LETTERS, 3, replace = TRUE),
+            sample(0:9, 4, replace = TRUE),
+            sample(letters, 3, replace = TRUE))
+      return(paste0(sample(v),collapse = ""))
+  }
 
-    ## DBF algorithm, returns a DBFMCLresult object
-    obj <- DBF(m, name,
-      distance_method = distance_method,
-      silent = silent,
-      k = k,
-      random = random,
-      memory_used = memory_used,
-      fdr = fdr,
-      set.seed = set.seed
+  if (is.null(name)) name <- data_source$name
+  if (is.null(name)) name <- create_rand_str()
+
+  distance_method <- match.arg(distance_method)
+  txt <- paste("\n\tInflation: ", inflation, sep = "")
+
+  ## writting all parameters
+  if (verbose) {
+    cat(
+      "The following parameters will be used :",
+      "\n\tWorking directory: ", getwd(),
+      "\n\tName: ", name,
+      "\n\tDistance method: ", distance_method,
+      "\n\tMinimum average dot product for clusters: ", av_dot_prod_min,
+      "\n\tMinimum cluster size: ", min_cluster_size,
+      "\n\tNumber of neighbors: ", k,
+      "\n\tNumber of randomizations: ", random,
+      "\n\tFDR: ", fdr, "%", txt,
+      "\n\tVisualize standard outputs from both mcl and cluster",
+      "commands: ", silent,
+      "\n\tMemory used : ", memory_used, "\n\n"
     )
-    if (length(readLines(paste(name, ".dbf_out.txt", sep = ""))) > 0) {
-      ## RUN MCL ???
-      if (clustering) {
-        ## Launching mcl
-        if (is.null(inflation)) inflation <- 2.0
-        MCL(name, inflation = inflation, silent = silent)
+  }
 
+  ## DBF algorithm, returns a DBFMCLresult object
+  obj <- DBF(m,
+             name,
+             distance_method = distance_method,
+             silent = silent,
+             k = k,
+             random = random,
+             memory_used = memory_used,
+             fdr = fdr,
+             set.seed = set.seed
+  )
 
-        ## getting mcl results into the DBFMCLresult object
-        mcl_cluster <- readLines(paste(name, ".mcl_out.txt", sep = ""))
-        gene_list <- NULL
-        clusters <- NULL
-        size <- NULL
-        nb <- 0
+  if (length(readLines(paste(name, ".dbf_out.txt", sep = ""))) > 0) {
 
-        for (i in 1:length(mcl_cluster)) {
-          h <- unlist(strsplit(mcl_cluster[i], "\t"))
-          if (length(h) >= 10) {
-            nb <- nb + 1
-            gene_list <- c(gene_list, h)
-            clusters <- c(clusters, rep(nb, length(h)))
-            if (is.null(size)) {
-              size <- length(h)
-            }
-            else {
-              size <- c(size, length(h))
-            }
+      ## Launching mcl
+      if (is.null(inflation)) inflation <- 2.0
+      MCL(name, inflation = inflation, silent = silent)
+
+      ## getting mcl results into the DBFMCLresult object
+      mcl_cluster <- readLines(paste(name, ".mcl_out.txt", sep = ""))
+      gene_list <- NULL
+      clusters <- NULL
+      size <- NULL
+      nb <- 0
+      nb_cluster_deleted <- 0
+
+      for (i in 1:length(mcl_cluster)) {
+        h <- unlist(strsplit(mcl_cluster[i], "\t"))
+        cur_clust <- m[h,]
+        cur_clust[cur_clust > 0 ] <- 1
+        cur_dot_prod <- cur_clust %*% t(cur_clust)
+
+        if(mean(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+
+          nb <- nb + 1
+          gene_list <- c(gene_list, h)
+          clusters <- c(clusters, rep(nb, length(h)))
+          if (is.null(size)) {
+            size <- length(h)
           }
-        }
-        if (verbose) {
-          cat(
-            nb, " signatures containing at least ",
-            "10 probes will be conserved\n\n"
-          )
-        }
-
-        ## build DBFMCLresult object
-        if (nb > 0) {
-          obj@name <- name
-          obj@data <- as.matrix(m[gene_list, ])
-          obj@cluster <- clusters
-          obj@size <- size
-
-          centers <- matrix(ncol = ncol(m), nrow = nb)
-          ## calcul of the mean profils
-          for (i in 1:nb) {
-            centers[i, ] <- apply(obj@data[obj@cluster == i, ],
-              2, mean,
-              na.rm = TRUE
-            )
+          else {
+            size <- c(size, length(h))
           }
-          obj@center <- centers
-
-          ## add DBFMCL parameters used to build this object
-          obj@parameters <- list(
-            distance_method = distance_method,
-            k = k,
-            random = random,
-            fdr = fdr,
-            set.seed = set.seed,
-            inflation = inflation
-          )
+        }else{
+          nb_cluster_deleted <- nb_cluster_deleted + 1
         }
       }
-      else {
-        ## add only DBF parameters used to build this object
+      if (verbose) {
+        cat(
+          nb, " clusters conserved after MCL partitioning\n\n"
+        )
+        cat(
+          nb_cluster_deleted, " clusters deleted after MCL partitioning\n\n"
+        )
+      }
+
+      ## build DBFMCLresult object
+      if (nb > 0) {
+        obj@name <- name
+        obj@data <- as.matrix(m[gene_list, ])
+        obj@cluster <- clusters
+        obj@size <- size
+
+        centers <- matrix(ncol = ncol(m), nrow = nb)
+        ## calcul of the mean profils
+        for (i in 1:nb) {
+          centers[i, ] <- apply(obj@data[obj@cluster == i, ],
+            2, mean,
+            na.rm = TRUE
+          )
+        }
+        obj@center <- centers
+
+        ## add DBFMCL parameters used to build this object
         obj@parameters <- list(
           distance_method = distance_method,
           k = k,
           random = random,
           fdr = fdr,
-          set.seed = set.seed
+          set.seed = set.seed,
+          inflation = inflation
         )
       }
-    }
-    else {
-      stop("There is no conserved gene.\n\n")
-    }
-    return(obj)
   }
   else {
-    stop("A unix-like OS is required to launch mcl and cluster programs.")
+    stop("There is no conserved gene.\n\n")
   }
+  return(obj)
+
 }
 
 
