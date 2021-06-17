@@ -37,7 +37,6 @@ library(dplyr)
 #'   m[201:300,5:15] <- m[201:300,5:15] + -2
 #'   res <- DBFMCL(data=m,
 #'                 distance_method="pearson",
-#'                 clustering=FALSE,
 #'                 k=25)
 #' is(res) 
 #' }
@@ -96,19 +95,75 @@ setMethod(
 )
 
 
+#################################################################
+##    REDEFINE dim/ncol/nrow METHOD FOR CLASS OBJECT : DBFMCLresult
+#################################################################
 
 
+setMethod(
+  "ncol", signature("DBFMCLresult"),
 
+  function(x) {
+
+      return(ncol(x@data))
+
+      }
+)
+
+setMethod(
+  "nrow", signature("DBFMCLresult"),
+
+  function(x) {
+
+      return(nrow(x@data))
+
+      }
+)
+setMethod(
+  "dim", signature("DBFMCLresult"),
+
+  function(x) {
+
+      return(dim(x@data))
+
+      }
+)
+
+#################################################################
+##    Define the nclust function for class DBFMCLresult
+#################################################################
+
+#' nclust
+#' returns the number of clusters contained in a DBFMCLresult object.
+#' @param object A DBFMCLresult object.
+#'
+#' @return the number of clusters.
+#' @export
+#'
+#' @examples
+setGeneric("nclust",
+           function(object) {
+              standardGeneric("nclust")
+})
+
+#' @rdname nclust
+setMethod(
+  "nclust",
+  signature(object = "DBFMCLresult"),
+  function(object) {
+    return(sort(unique(object@cluster)))
+  }
+)
 #################################################################
 ##    Define the plot_profile for class DBFMCLresult
 #################################################################
 
-#' Title
+#' plot_dbf
 #' Plot the results (heatmap or profiles) contained in a DBFMCLresult object.
 #' @param object A DBFMCLresult object.
 #' @param type The type of diagram.
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
-#' @param color_palette A color palette.
+#' @param colo  r_palette A color palette.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param centering Whether rows should be centered. 
 #'
@@ -120,7 +175,7 @@ setGeneric("plot_dbf",
            
            function(object,
                     type = c("line", "tile"),
-                    to_log2 = TRUE,
+                    to_log2 = FALSE,
                     color_palette = NULL,
                     standardizing = FALSE,
                     centering = TRUE) {
@@ -134,7 +189,7 @@ setMethod(
   signature(object = "DBFMCLresult"),
   function(object,
            type = c("line", "tile"),
-           to_log2 = TRUE,
+           to_log2 = FALSE,
            color_palette = "#0000BF,#0000FF,#0080FF,#00FFFF,#40FFBF,#80FF80,#BFFF40,#FFFF00,#FF8000,#FF0000,#BF0000",
            standardizing = FALSE,
            centering = TRUE) {
@@ -253,11 +308,12 @@ setMethod(
 ##    Define the write function for class DBFMCLresult
 #################################################################
 
-#' Title
+#' write_dbf
 #' Write a DBFMCLresult into a flat file.
 #' @param object DBFMCLresult. 
 #' @param filename_out The outfile name.
 #' @param path The path to the file.
+#' @param nb_na_row Number of separating rows (containing NAs).
 #' @param verbose Whether verbosity should be activated.
 #' @return Write a file.
 #' @export
@@ -268,6 +324,7 @@ setGeneric("write_dbf",
            function(object, 
                     filename_out = NULL,
                     path = ".",
+                    nb_na_row=3,
                     verbose = TRUE) {
                 standardGeneric("write_dbf")
 })
@@ -280,6 +337,7 @@ setMethod(
   function(object,
            filename_out = NULL,
            path = ".",
+           nb_na_row=5,
            verbose = TRUE) {
            
     if (path == ".") path <- getwd()
@@ -297,20 +355,15 @@ setMethod(
       if (verbose) {
         cat("\n\tCluster ", i, " --> ", object@size[i], " probes")
       }
-      if (object@size[i] > 9) {
-        subData <- data[object@cluster == i, ]
-        subData <- cbind(rownames(subData), subData)
-        intLine <- matrix(c("NA", rep(NA, ncol(data))), nrow = 1)
+
+      subData <- data[object@cluster == i, ]
+      subData <- cbind(rownames(subData), subData)
+      if (nb_na_row > 0){
+        intLine <- matrix(rep(NA, (ncol(data) + 1)*nb_na_row), nrow = nb_na_row)
         dataT <- rbind(dataT, subData, intLine)
-        nb <- nb + 1
       }
-    }
-    if (verbose) {
-      cat(
-        "\n\n ", nb,
-        " signatures containing at least 10 probes",
-        "will be kept.\n\n"
-      )
+      nb <- nb + 1
+
     }
 
     ## exporting results
@@ -319,10 +372,8 @@ setMethod(
     )
 
     if (verbose) {
-      cat(
-        "\t--> creating file : ",
-        file.path(path, filename_out), "\n\n"
-      )
+      cat("\n\t--> Creating file : ",
+        file.path(path, filename_out), "\n\n")
     }
   }
 )
@@ -333,9 +384,9 @@ setMethod(
 
 #' The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).
 #'
-#' DBF-MCL is a tree-steps adaptative algorithm that \emph{(i)}find elements
-#' located in dense areas (DBF), \emph{(ii)}uses selected items to construct a
-#' graph, \emph{(iii)}performs graph partitioning using the Markov CLustering
+#' DBF-MCL is a tree-steps adaptative algorithm that \emph{(i)} find elements
+#' located in dense areas (DBF), \emph{(ii)} uses selected items to construct a
+#' graph, \emph{(iii)} performs graph partitioning using the Markov CLustering
 #' Algorithm (MCL).
 #'
 #' This function requires installation of the mcl program
@@ -426,6 +477,9 @@ setMethod(
 #' m[1:100, 1:10] <- m[1:100, 1:10] + 4
 #' m[101:200, 11:20] <- m[101:200, 11:20] + 3
 #' m[201:300, 5:15] <- m[201:300, 5:15] + -2
+#'   res <- DBFMCL(data=m,
+#'                 distance_method="pearson",
+#'                 k=25)
 #' plot_profile(res)
 #' write_clusters(res, filename_out = "ALL.sign.txt")
 #' }
@@ -449,7 +503,7 @@ DBFMCL <- function(data = NULL,
 
   ## testing the system
   if (.Platform$OS.type == "windows") {
-    stop("A unix-like OS is required to launch mcl and cluster programs.")
+    stop("\t--> A unix-like OS is required to launch mcl and cluster programs.")
   }
 
   ## getting parameters
@@ -537,10 +591,10 @@ DBFMCL <- function(data = NULL,
       }
       if (verbose) {
         cat(
-          nb, " clusters conserved after MCL partitioning\n\n"
+          "\t--> ", nb, " clusters conserved after MCL partitioning\n\n"
         )
         cat(
-          nb_cluster_deleted, " clusters deleted after MCL partitioning\n\n"
+          "\t--> ", nb_cluster_deleted, " clusters deleted after MCL partitioning\n\n"
         )
       }
 
@@ -573,7 +627,7 @@ DBFMCL <- function(data = NULL,
       }
   }
   else {
-    stop("There is no conserved gene.\n\n")
+    stop("\t--> There is no conserved gene.\n\n")
   }
   return(obj)
 
@@ -642,7 +696,7 @@ DBF <- function(data, name = NULL,
 
       if (silent) {
         cat(
-          "Computing distances to the kth-nearest neighbors",
+          "\t--> Computing distances to the kth-nearest neighbors",
           " and associated FDR values... \n"
         )
       }
@@ -686,11 +740,11 @@ DBF <- function(data, name = NULL,
       }
       return(obj)
     } else {
-      stop("Please provide a matrix...\n\n")
+      stop("\t--> Please provide a matrix...\n\n")
     }
   }
   else {
-    stop("A unix-like OS is required to launch mcl and cluster programs.")
+    stop("\t--> A unix-like OS is required to launch mcl and cluster programs.")
   }
 }
 
@@ -761,7 +815,7 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
       ))
 
       if (!silent) {
-        cat("Done.\n\n")
+        cat("\t-->  Done.\n\n")
         cat(
           "\t--> creating file : ",
           file.path(getwd(), paste(name, ".mcl_out.txt", sep = "")),
@@ -770,8 +824,8 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
       }
     } else {
       stop(
-        "Please install mcl on your computer...\n",
-        "You can download it from : 'http://www.micans.org/mcl/'\n\n"
+        "\t--> Please install mcl on your computer...\n",
+        "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
       )
     }
   }
@@ -816,7 +870,7 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
     }
     if (!is.matrix(data)) {
       stop(
-        "Please provide a Seurat Object, a data.frame",
+        "\t--> Please provide a Seurat Object, a data.frame",
         " or a matrix.\n"
       )
     }
@@ -831,7 +885,7 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
     }
     else {
       stop(
-        "Please provide an ExpressionSet, a data.frame, ",
+        "\t--> Please provide an ExpressionSet, a data.frame, ",
         "a matrix or a tabular file\n"
       )
     }
