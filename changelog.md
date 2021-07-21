@@ -17,6 +17,7 @@
 
 ### Code changes
 
+*   Several code changes which were not clearly traced at the moment... Sry.
 
 ### New Features
 

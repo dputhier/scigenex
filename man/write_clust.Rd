@@ -5,16 +5,16 @@
 \alias{write_clust,ClusterSet-method}
 \title{write_clust}
 \usage{
-write_clust(object, filename_out = NULL, path = ".", nb_na_row = 3)
+write_clust(object, filename_out = NULL, out_path = ".", nb_na_row = 3)
 
-\S4method{write_clust}{ClusterSet}(object, filename_out = NULL, path = ".", nb_na_row = 5)
+\S4method{write_clust}{ClusterSet}(object, filename_out = NULL, out_path = ".", nb_na_row = 5)
 }
 \arguments{
 \item{object}{ClusterSet.}
 
 \item{filename_out}{The outfile name.}
 
-\item{path}{The path to the file.}
+\item{out_path}{The path to the file.}
 
 \item{nb_na_row}{Number of separating rows (containing NAs).}
 }

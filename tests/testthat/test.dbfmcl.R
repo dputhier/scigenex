@@ -7,9 +7,10 @@ test_that("Cheking DBFMCL is providing the right number of genes", {
   res <- DBFMCL(data=m,
                 distance_method="pearson",
                 av_dot_prod_min = 0,
-                inflation = 2.0,
-                k=150,
+                inflation = 1.2,
+                k=25,
                 fdr = 10)
-  #expect_equal(length(res@size), 2)
-  #expect_equal(res@size, 309)
+  #plot_clust(res, ceil = 10, floor = -10)
+  expect_equal(length(res@size), 3)
+  expect_equal(res@size, c(115, 113, 81))
 })

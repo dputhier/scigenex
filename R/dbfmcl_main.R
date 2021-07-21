@@ -57,13 +57,19 @@ library(amap)
 #' 
 #' \dontrun{
 #'   m <- matrix(rnorm(80000), nc=20)
-#'   m[1:100,1:10] <- m[1:100,1:10] + 4
-#'   m[101:200,11:20] <- m[101:200,11:20] + 3
-#'   m[201:300,5:15] <- m[201:300,5:15] + -2
-#'   res <- DBFMCL(data=m,
-#'                 distance_method="pearson",
-#'                 k=25)
-#' is(res) 
+#'    m[1:100,1:10] <- m[1:100,1:10] + 4
+#'    m[101:200,11:20] <- m[101:200,11:20] + 3
+#'    m[201:300,5:15] <- m[201:300,5:15] + -2
+#'    res <- DBFMCL(data=m,
+#'                  distance_method="pearson",
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
+#'                  k=25,
+#'                  fdr = 10)
+#' plot_clust(res, ceil = 10, floor = -10)
+#' plot_clust(res, type="tile", ceil = 10, floor = -10)
+#' write_clust(res, filename_out = "ALL.sign.txt")
+#'   is(res)
 #' }
 #'               
 setClass("ClusterSet",
@@ -146,13 +152,16 @@ setMethod(
 #'
 #' \dontrun{
 #'   m <- matrix(rnorm(80000), nc=20)
-#'   m[1:100,1:10] <- m[1:100,1:10] + 4
-#'   m[101:200,11:20] <- m[101:200,11:20] + 3
-#'   m[201:300,5:15] <- m[201:300,5:15] + -2
-#'   res <- DBFMCL(data=m,
+#'    m[1:100,1:10] <- m[1:100,1:10] + 4
+#'    m[101:200,11:20] <- m[101:200,11:20] + 3
+#'    m[201:300,5:15] <- m[201:300,5:15] + -2
+#'    res <- DBFMCL(data=m,
 #'                 distance_method="pearson",
-#'                 k=25)
-#' ncol(res)
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
+#'                  k=25,
+#'                  fdr = 10)
+#'   ncol(res)
 #' }
 #'
 setMethod(
@@ -177,13 +186,16 @@ setMethod(
 #'
 #' \dontrun{
 #'   m <- matrix(rnorm(80000), nc=20)
-#'   m[1:100,1:10] <- m[1:100,1:10] + 4
-#'   m[101:200,11:20] <- m[101:200,11:20] + 3
-#'   m[201:300,5:15] <- m[201:300,5:15] + -2
-#'   res <- DBFMCL(data=m,
-#'                 distance_method="pearson",
-#'                 k=25)
-#' nrows(res)
+#'    m[1:100,1:10] <- m[1:100,1:10] + 4
+#'    m[101:200,11:20] <- m[101:200,11:20] + 3
+#'    m[201:300,5:15] <- m[201:300,5:15] + -2
+#'    res <- DBFMCL(data=m,
+#'                  distance_method="pearson",
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
+#'                  k=25,
+#'                  fdr = 10)
+#'   nrow(res)
 #' }
 #'
 setMethod(
@@ -209,13 +221,16 @@ setMethod(
 #'
 #' \dontrun{
 #'   m <- matrix(rnorm(80000), nc=20)
-#'   m[1:100,1:10] <- m[1:100,1:10] + 4
-#'   m[101:200,11:20] <- m[101:200,11:20] + 3
-#'   m[201:300,5:15] <- m[201:300,5:15] + -2
+#'    m[1:100,1:10] <- m[1:100,1:10] + 4
+#'    m[101:200,11:20] <- m[101:200,11:20] + 3
+#'    m[201:300,5:15] <- m[201:300,5:15] + -2
 #'   res <- DBFMCL(data=m,
-#'                 distance_method="pearson",
-#'                 k=25)
-#' dim(res)
+#'                  distance_method="pearson",
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
+#'                  k=25,
+#'                 fdr = 10)
+#'   dim(res)
 #' }
 #'
 setMethod(
@@ -501,7 +516,7 @@ setMethod(
 #' Write a ClusterSet into a flat file.
 #' @param object ClusterSet. 
 #' @param filename_out The outfile name.
-#' @param path The path to the file.
+#' @param out_path The path to the file.
 #' @param nb_na_row Number of separating rows (containing NAs).
 #' @return Write a file.
 #' @export
@@ -512,7 +527,7 @@ setGeneric("write_clust",
            
            function(object, 
                     filename_out = NULL,
-                    path = ".",
+                    out_path = ".",
                     nb_na_row=3) {
                 standardGeneric("write_clust")
 })
@@ -524,10 +539,10 @@ setMethod(
   signature(object = "ClusterSet"),
   function(object,
            filename_out = NULL,
-           path = ".",
+           out_path = ".",
            nb_na_row=5) {
            
-    if (path == ".") path <- getwd()
+    if (out_path == ".") out_path <- getwd()
 
     if (is.null(filename_out)) {
       filename_out <- "exprs.dataMods.txt"
@@ -555,20 +570,18 @@ setMethod(
 
     ## exporting results
     print_msg("Exporting results", msg_type="DEBUG")
-    write.table(dataT, file.path(path, filename_out),
+    write.table(dataT, file.path(out_path, filename_out),
       col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE
     )
 
       print_msg(paste("\t\t--> Creating file : ",
-        file.path(path, filename_out)))
+        file.path(out_path, filename_out)))
   }
 )
 
 #################################################################
 ##    DBF-MCL
 #################################################################
-
-
 
 #' @title
 #' The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).
@@ -659,16 +672,18 @@ setMethod(
 #' @examples
 #'
 #' \dontrun{
-#' ## with an artificial dataset
-#'
-#' m <- matrix(rnorm(80000), nc = 20)
-#' m[1:100, 1:10] <- m[1:100, 1:10] + 4
-#' m[101:200, 11:20] <- m[101:200, 11:20] + 3
-#' m[201:300, 5:15] <- m[201:300, 5:15] + -2
-#' res <- DBFMCL(data=m,
-#'               distance_method="pearson",
-#'               k=25)
-#' plot_clust(res)
+#'   m <- matrix(rnorm(80000), nc=20)
+#'   m[1:100,1:10] <- m[1:100,1:10] + 4
+#'    m[101:200,11:20] <- m[101:200,11:20] + 3
+#'    m[201:300,5:15] <- m[201:300,5:15] + -2
+#'    res <- DBFMCL(data=m,
+#'                  distance_method="pearson",
+#'                 av_dot_prod_min = 0,
+#'                 inflation = 1.2,
+#'                  k=25,
+#'                 fdr = 10)
+#' plot_clust(res, ceil = 10, floor = -10)
+#' plot_clust(res, type="tile", ceil = 10, floor = -10)
 #' write_clust(res, filename_out = "ALL.sign.txt")
 #' }
 #'
