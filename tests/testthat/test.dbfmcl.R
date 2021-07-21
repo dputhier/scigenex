@@ -6,7 +6,10 @@ test_that("Cheking DBFMCL is providing the right number of genes", {
   m[201:300,5:15] <- m[201:300,5:15] + -2
   res <- DBFMCL(data=m,
                 distance_method="pearson",
-                k=25)
-  #expect_equal(length(res@size), 1)
+                av_dot_prod_min = 0,
+                inflation = 2.0,
+                k=150,
+                fdr = 10)
+  #expect_equal(length(res@size), 2)
   #expect_equal(res@size, 309)
 })

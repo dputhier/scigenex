@@ -346,7 +346,9 @@ setMethod(
 
     nb <- length(object@size)
     m <- object@data
-    m <- m[, object@cell_order]
+    if(length(object@cell_order) != 0){
+      m <- m[, object@cell_order]
+    }
 
     if (to_log2) {
       m <- log2(m + 1)
@@ -388,10 +390,14 @@ setMethod(
       variable.name = "samples"
     )
 
+    print_msg("Storing cell types.", msg_type="DEBUG")
     ## Storing cell types:
 
     if(!is.null(object@cell_types)){
       m_melt$cell_types <- as.character(object@cell_types[as.character(m_melt$samples)])
+    }else{
+      print_msg("Warning: cell type is undefined.", msg_type="WARNING")
+        m_melt$cell_types <- "unknown_cell_type"
     }
 
     ## plotting
