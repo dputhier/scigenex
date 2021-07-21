@@ -15,7 +15,7 @@
 To install from a private repo, generate a personal access token (PAT) in https://github.com/settings/tokens and supply to the *auth_token* argument. 
 
      library(devtools)
-     install_github("dputhier/dbfmcl", auth_token="...", ref="develop")
+     install_github("JulieBvs/dbfmcl", auth_token="...", ref="develop")
 
 To install from a tar in the terminal
 
@@ -40,7 +40,7 @@ Or using the R interpreter:
                distance_method="pearson",
                clustering=TRUE,
                k=25)
-    plot_profile(res)
+    plot_dbf(res)
     write_dbf(res, "ALL.sign.txt")
     
 ### With a subset of a seurat object

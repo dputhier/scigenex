@@ -2,46 +2,60 @@
 % Please edit documentation in R/dbfmcl_main.R
 \name{plot_dbf}
 \alias{plot_dbf}
-\alias{plot_dbf,DBFMCLresult-method}
-\title{Title
-Plot the results (heatmap or profiles) contained in a DBFMCLresult object.}
+\alias{plot_dbf,ClusterSet-method}
+\title{plot_dbf
+Plot the results (heatmap or profiles) contained in a ClusterSet object.}
 \usage{
 plot_dbf(
   object,
   type = c("line", "tile"),
-  to_log2 = TRUE,
+  to_log2 = FALSE,
   color_palette = NULL,
+  average_only = FALSE,
+  average_line_color = "skyblue4",
   standardizing = FALSE,
+  ceil = 1,
+  floor = -1,
   centering = TRUE
 )
 
-\S4method{plot_dbf}{DBFMCLresult}(
+\S4method{plot_dbf}{ClusterSet}(
   object,
   type = c("line", "tile"),
-  to_log2 = TRUE,
+  to_log2 = FALSE,
  
     color_palette = "#0000BF,#0000FF,#0080FF,#00FFFF,#40FFBF,#80FF80,#BFFF40,#FFFF00,#FF8000,#FF0000,#BF0000",
+  average_only = FALSE,
+  average_line_color = "skyblue4",
   standardizing = FALSE,
+  ceil = 1,
+  floor = -1,
   centering = TRUE
 )
 }
 \arguments{
-\item{object}{A DBFMCLresult object.}
+\item{object}{A ClusterSet object.}
 
-\item{type}{The type of diagram.}
+\item{type}{The type of diagram ("line or "tile").}
 
 \item{to_log2}{Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).}
 
-\item{color_palette}{A color palette.}
+\item{average_only}{Only display the average gene expression profile (if type="line").}
 
 \item{standardizing}{Whether rows should be divided by standard deviation.}
 
+\item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
+
+\item{floor}{A floor value (NULL for no ceiling). flooring is performed after log transformation, centering and standardization.}
+
 \item{centering}{Whether rows should be centered.}
+
+\item{colo}{r_palette A color palette.}
 }
 \value{
 A ggplot diagram.
 }
 \description{
-Title
-Plot the results (heatmap or profiles) contained in a DBFMCLresult object.
+plot_dbf
+Plot the results (heatmap or profiles) contained in a ClusterSet object.
 }

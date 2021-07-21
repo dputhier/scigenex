@@ -2,27 +2,27 @@
 % Please edit documentation in R/dbfmcl_main.R
 \name{write_dbf}
 \alias{write_dbf}
-\alias{write_dbf,DBFMCLresult-method}
-\title{Title
-Write a DBFMCLresult into a flat file.}
+\alias{write_dbf,ClusterSet-method}
+\title{write_dbf
+Write a ClusterSet into a flat file.}
 \usage{
-write_dbf(object, filename_out = NULL, path = ".", verbose = TRUE)
+write_dbf(object, filename_out = NULL, path = ".", nb_na_row = 3)
 
-\S4method{write_dbf}{DBFMCLresult}(object, filename_out = NULL, path = ".", verbose = TRUE)
+\S4method{write_dbf}{ClusterSet}(object, filename_out = NULL, path = ".", nb_na_row = 5)
 }
 \arguments{
-\item{object}{DBFMCLresult.}
+\item{object}{ClusterSet.}
 
 \item{filename_out}{The outfile name.}
 
 \item{path}{The path to the file.}
 
-\item{verbose}{Whether verbosity should be activated.}
+\item{nb_na_row}{Number of separating rows (containing NAs).}
 }
 \value{
 Write a file.
 }
 \description{
-Title
-Write a DBFMCLresult into a flat file.
+write_dbf
+Write a ClusterSet into a flat file.
 }
