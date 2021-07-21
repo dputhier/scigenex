@@ -10,14 +10,14 @@ DBFMCL(
   path = ".",
   name = NULL,
   distance_method = c("pearson", "spearman", "euclidean"),
-  clustering = TRUE,
+  av_dot_prod_min = 2,
+  min_cluster_size = 10,
   silent = FALSE,
-  verbose = TRUE,
-  k = 150,
+  k = 50,
   random = 3,
   memory_used = 1024,
   fdr = 10,
-  inflation = 2,
+  inflation = 8,
   set.seed = 123
 )
 }
@@ -36,15 +36,14 @@ and MCL.}
 neighbor. One of "pearson" (Pearson's correlation coefficient-based
 distance), "spearman" (Spearman's rho-based distance), "euclidean".}
 
-\item{clustering}{indicates whether partitioning step (MCL) should be
-applied to the data. If \code{clustering = FALSE}, the function returns a
-\code{DBFMCLresult} object that contains informative elements (as detected
-by the DBF step) coerced into a single cluster.}
+\item{av_dot_prod_min}{Any cluster with average dot product below this value is discarded. This allow to delete
+clusters in which correlation is influenced/supported by very few samples (typically 1).}
+
+\item{min_cluster_size}{Minimum number of element inside a cluster. MCL tend to create lots of clusters with
+very few (e.g 2) objects.}
 
 \item{silent}{if set to TRUE, the progression of distance matrix calculation
 is not displayed.}
-
-\item{verbose}{if set to TRUE the function runs verbosely.}
 
 \item{k}{the neighborhood size.}
 
@@ -68,15 +67,14 @@ good results for microarray data when k is set between 70 and 250.}
 \item{set.seed}{specify seeds for random number generator.}
 }
 \value{
-a DBFMCLresults class object.
+a ClusterSets class object.
 }
 \description{
-DBF-MCL is a tree-steps adaptative algorithm that \emph{(i)}find elements
-located in dense areas (DBF), \emph{(ii)}uses selected items to construct a
-graph, \emph{(iii)}performs graph partitioning using the Markov CLustering
+DBFMCL is a tree-steps adaptative algorithm that \emph{(i)} find elements
+located in dense areas (DBF), \emph{(ii)} uses selected items to construct a
+graph, \emph{(iii)} performs graph partitioning using the Markov CLustering
 Algorithm (MCL).
-}
-\details{
+
 This function requires installation of the mcl program
 (\url{http://www.micans.org/mcl}). See "Warnings" section for more
 informations.
@@ -125,14 +123,19 @@ successfully with the 06-058 version).}
 \examples{
 
 \dontrun{
-## with an artificial dataset
-
-m <- matrix(rnorm(80000), nc = 20)
-m[1:100, 1:10] <- m[1:100, 1:10] + 4
-m[101:200, 11:20] <- m[101:200, 11:20] + 3
-m[201:300, 5:15] <- m[201:300, 5:15] + -2
-plot_profile(res)
-write_clusters(res, filename_out = "ALL.sign.txt")
+  m <- matrix(rnorm(80000), nc=20)
+  m[1:100,1:10] <- m[1:100,1:10] + 4
+   m[101:200,11:20] <- m[101:200,11:20] + 3
+   m[201:300,5:15] <- m[201:300,5:15] + -2
+   res <- DBFMCL(data=m,
+                 distance_method="pearson",
+                av_dot_prod_min = 0,
+                inflation = 1.2,
+                 k=25,
+                fdr = 10)
+plot_clust(res, ceil = 10, floor = -10)
+plot_clust(res, type="tile", ceil = 10, floor = -10)
+write_clust(res, filename_out = "ALL.sign.txt")
 }
 
 }

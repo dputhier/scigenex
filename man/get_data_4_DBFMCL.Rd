@@ -2,8 +2,7 @@
 % Please edit documentation in R/dbfmcl_main.R
 \name{get_data_4_DBFMCL}
 \alias{get_data_4_DBFMCL}
-\title{Title
-Fetch an expression matrix from a file, dataframe or Seurat object.}
+\title{Fetch an expression matrix from a file, dataframe or Seurat object.}
 \usage{
 get_data_4_DBFMCL(data = NULL, filename = NULL, path = ".")
 }
@@ -19,8 +18,7 @@ intermediary files are to be stored. Default to current working directory.}
 A list containing a matrix and the filename (if filename argument is used).
 }
 \description{
-Title
-Fetch an expression matrix from a file, dataframe or Seurat object.
+This function fetchs an expression matrix from a file, dataframe or Seurat object.
 }
 \examples{
 

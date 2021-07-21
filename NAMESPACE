@@ -22,13 +22,15 @@ importFrom(ggplot2, ggplot, theme_bw,
 importFrom(reshape2, melt)
 importFrom(magrittr, '%>%')
 importFrom(testthat, expect_equal)
-exportClasses("DBFMCLresult")
+exportClasses("ClusterSet")
 
 export(DBFMCL,
         DBF,
         MCL,
         get_data_4_DBFMCL,
-        plot_dbf,
-        write_dbf)
+        plot_clust,
+        load_seurat,
+        write_clust,
+        VERBOSITY_DBFMCL)
 
 

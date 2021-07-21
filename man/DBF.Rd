@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbfmcl_main.R
 \name{DBF}
 \alias{DBF}
-\title{Density-Based Filtering.}
+\title{DBF}
 \usage{
 DBF(
   data,
@@ -46,8 +46,7 @@ This function is an internal function used by \code{\link{DBFMCL}} to detect
 informative elements (\emph{i.e.}, those that belong to dense regions). User
 should not use this function. Instead they can use the \code{\link{DBFMCL}}
 function with \code{clustering} argument set to \code{FALSE}.
-}
-\details{
+
 See \code{\link{DBFMCL}}
 }
 \section{Warnings}{
