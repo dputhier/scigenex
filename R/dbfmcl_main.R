@@ -35,7 +35,9 @@ library(reshape2)
 library(dplyr)
 library(amap)
 
-#' Title
+#' @title
+#' ClusterSet
+#' @description
 #' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
@@ -43,7 +45,11 @@ library(amap)
 #' @slot size vector. The size of each cluster.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
-#'
+#' @slot algorithm vector. The algorithm used to produce the clusters.
+#' @slot cell_types vector. The cell types.
+#' @slot cell_colors vector. The cell types to color mapping.
+#' @slot cell_order vector. How cell should be ordered.
+#' @slot cluster_annotations list. Functional annotation of clusters.
 #' @return A ClusterSet object.
 #' @export
 #'
@@ -128,7 +134,27 @@ setMethod(
 ##    REDEFINE dim/ncol/nrow METHOD FOR CLASS OBJECT : ClusterSet
 #################################################################
 
-
+#' @title
+#' ncol
+#' @description
+#' The number of columns of a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @return The number of columns.
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#'   m <- matrix(rnorm(80000), nc=20)
+#'   m[1:100,1:10] <- m[1:100,1:10] + 4
+#'   m[101:200,11:20] <- m[101:200,11:20] + 3
+#'   m[201:300,5:15] <- m[201:300,5:15] + -2
+#'   res <- DBFMCL(data=m,
+#'                 distance_method="pearson",
+#'                 k=25)
+#' ncol(res)
+#' }
+#'
 setMethod(
   "ncol", signature("ClusterSet"),
 
@@ -139,6 +165,27 @@ setMethod(
       }
 )
 
+#' @title
+#' nrow
+#' @description
+#' The number of rows of a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @return The number of rows.
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#'   m <- matrix(rnorm(80000), nc=20)
+#'   m[1:100,1:10] <- m[1:100,1:10] + 4
+#'   m[101:200,11:20] <- m[101:200,11:20] + 3
+#'   m[201:300,5:15] <- m[201:300,5:15] + -2
+#'   res <- DBFMCL(data=m,
+#'                 distance_method="pearson",
+#'                 k=25)
+#' nrows(res)
+#' }
+#'
 setMethod(
   "nrow", signature("ClusterSet"),
 
@@ -148,6 +195,29 @@ setMethod(
 
       }
 )
+
+
+#' @title
+#' dim
+#' @description
+#' The number of rows/columns of a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @return The number of rows/columns.
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#'   m <- matrix(rnorm(80000), nc=20)
+#'   m[1:100,1:10] <- m[1:100,1:10] + 4
+#'   m[101:200,11:20] <- m[101:200,11:20] + 3
+#'   m[201:300,5:15] <- m[201:300,5:15] + -2
+#'   res <- DBFMCL(data=m,
+#'                 distance_method="pearson",
+#'                 k=25)
+#' dim(res)
+#' }
+#'
 setMethod(
   "dim", signature("ClusterSet"),
 
@@ -159,12 +229,13 @@ setMethod(
 )
 
 
-
 #################################################################
 ##    Define the load_seurat function for class ClusterSet
 #################################################################
 
+#' @title
 #' load_seurat
+#' @description
 #' Load a seurat object into a DBFMCL. At the moment the objective is mainly
 #' to store cell identity (i.e cell types/groups to barcode mapping) and
 #' cell type to color mapping.
@@ -176,6 +247,7 @@ setMethod(
 #' @export
 #'
 #' @examples
+#' # see online examples
 setGeneric("load_seurat",
     function(object,
             seurat_obj=NULL,
@@ -195,22 +267,19 @@ setMethod("load_seurat",
       if (!inherits(dimplot_obj, "patchwork")) {
         stop("Please provide a Seurat and patchwork object.")
       }
-      if(ncol(object) != ncol(pbmc_dbf)){
-        stop("The number of cells is not the same in DBFMCL and Seurat Object.")
-      }
-      if(ncol(object) != ncol(pbmc_dbf)){
+      if(ncol(object) != ncol(seurat_obj)){
         stop("The number of cells is not the same in DBFMCL and Seurat Object.")
       }
 
-      g <- ggplot_build(dimplot_obj)
-      tmp_mat <- distinct(as.data.frame(cbind(g$data[[1]]$colour,
+      g <- ggplot2::ggplot_build(dimplot_obj)
+      tmp_mat <- dplyr::distinct(as.data.frame(cbind(g$data[[1]]$colour,
                                               as.character(g$plot$data$ident))))
       cell_col_tmp <- tmp_mat[,1]
       cell_grp_tmp <- tmp_mat[,2]
-      object@cell_colors <- setNames(as.character(cell_col_tmp), cell_grp_tmp)
+      object@cell_colors <- stats::setNames(as.character(cell_col_tmp), cell_grp_tmp)
 
-      tmp_mat <- distinct(as.data.frame(cbind(rownames(g$plot$data), as.character(g$plot$data$ident))))
-      object@cell_types <- setNames(as.character(tmp_mat[,2]), tmp_mat[,1])
+      tmp_mat <- dplyr::distinct(as.data.frame(cbind(rownames(g$plot$data), as.character(g$plot$data$ident))))
+      object@cell_types <- stats::setNames(as.character(tmp_mat[,2]), tmp_mat[,1])
 
       object@cell_order <- rownames(g$plot$data)[order(g$plot$data$ident)]
 
@@ -222,13 +291,15 @@ setMethod("load_seurat",
 ##    Define the plot_profile for class ClusterSet
 #################################################################
 
-#' plot_dbf
+#' @title
+#' plot_clust
+#' @description
 #' Plot the results (heatmap or profiles) contained in a ClusterSet object.
 #' @param object A ClusterSet object.
 #' @param type The type of diagram ("line or "tile").
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
 #' @param average_only Only display the average gene expression profile (if type="line").
-#' @param colo  r_palette A color palette.
+#' @param average_line_color The color of the average profile.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A floor value (NULL for no ceiling). flooring is performed after log transformation, centering and standardization.
@@ -238,12 +309,12 @@ setMethod("load_seurat",
 #' @export
 #'
 #' @examples
-setGeneric("plot_dbf", 
+#' # see online examples
+setGeneric("plot_clust",
            
            function(object,
                     type = c("line", "tile"),
                     to_log2 = FALSE,
-                    color_palette = NULL,
                     average_only=FALSE,
                     average_line_color="skyblue4",
                     standardizing = FALSE,
@@ -251,17 +322,16 @@ setGeneric("plot_dbf",
                     floor=-1,
                     centering = TRUE) {
              
-              standardGeneric("plot_dbf")
+              standardGeneric("plot_clust")
 })
 
-#' @rdname plot_dbf
+#' @rdname plot_clust
 setMethod(
-  "plot_dbf",
+  "plot_clust",
   signature(object = "ClusterSet"),
   function(object,
            type = c("line", "tile"),
            to_log2 = FALSE,
-           color_palette = "#0000BF,#0000FF,#0080FF,#00FFFF,#40FFBF,#80FF80,#BFFF40,#FFFF00,#FF8000,#FF0000,#BF0000",
            average_only=FALSE,
            average_line_color="skyblue4",
            standardizing = FALSE,
@@ -339,18 +409,19 @@ setMethod(
       ## displaying cell types:
       if(length(object@cell_types) > 0 & length(object@cell_colors) > 0){
         print_msg("Adding cell populations to the diagram.", msg_type="DEBUG")
-        p <- p + geom_vline(aes(xintercept= samples, color=cell_types))
-        p <- p + scale_color_manual(values=object@cell_colors,  guide = guide_legend(override.aes = list(size = 5)))
+        cell_types <- NULL # Avoid "no visible binding for global variable" inn R check.
+        p <- p + ggplot2::geom_vline(aes(xintercept= samples, color=cell_types))
+        p <- p + ggplot2::scale_color_manual(values=object@cell_colors,  guide = ggplot2::guide_legend(override.aes = list(size = 5)))
       }
 
       if(! average_only){
         print_msg("Adding gene profile.", msg_type="DEBUG")
-        p <- p + geom_line(color = "azure3", aes(group = gene), size=0.1)
+        p <- p + ggplot2::geom_line(color = "azure3", aes(group = gene), size=0.1)
       }
 
       print_msg("Adding average profile.", msg_type="DEBUG")
 
-      p <- p + geom_line(
+      p <- p + ggplot2::geom_line(
         data = m_melt %>%
           group_by(cluster, samples) %>%
           summarise(cluster_mean = mean(value)),
@@ -417,7 +488,10 @@ setMethod(
 ##    Define the write function for class ClusterSet
 #################################################################
 
-#' write_dbf
+
+#' @title
+#' write_clust
+#' @description
 #' Write a ClusterSet into a flat file.
 #' @param object ClusterSet. 
 #' @param filename_out The outfile name.
@@ -427,19 +501,20 @@ setMethod(
 #' @export
 #'
 #' @examples
-setGeneric("write_dbf", 
+#' # see online help.
+setGeneric("write_clust",
            
            function(object, 
                     filename_out = NULL,
                     path = ".",
                     nb_na_row=3) {
-                standardGeneric("write_dbf")
+                standardGeneric("write_clust")
 })
 
 
-#' @rdname write_dbf
+#' @rdname write_clust
 setMethod(
-  "write_dbf",
+  "write_clust",
   signature(object = "ClusterSet"),
   function(object,
            filename_out = NULL,
@@ -487,9 +562,12 @@ setMethod(
 ##    DBF-MCL
 #################################################################
 
+
+
+#' @title
 #' The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).
-#'
-#' DBF-MCL is a tree-steps adaptative algorithm that \emph{(i)} find elements
+#' @description
+#' DBFMCL is a tree-steps adaptative algorithm that \emph{(i)} find elements
 #' located in dense areas (DBF), \emph{(ii)} uses selected items to construct a
 #' graph, \emph{(iii)} performs graph partitioning using the Markov CLustering
 #' Algorithm (MCL).
@@ -584,8 +662,8 @@ setMethod(
 #' res <- DBFMCL(data=m,
 #'               distance_method="pearson",
 #'               k=25)
-#' plot_dbf(res)
-#' write_dbf(res, filename_out = "ALL.sign.txt")
+#' plot_clust(res)
+#' write_clust(res, filename_out = "ALL.sign.txt")
 #' }
 #'
 #' @export DBFMCL
@@ -736,8 +814,10 @@ DBFMCL <- function(data = NULL,
 ##    COMPUTE DBF algorithm
 ###############################################################
 
-#' Density-Based Filtering.
-#'
+
+#' @title
+#' DBF
+#' @description
 #' This function is an internal function used by \code{\link{DBFMCL}} to detect
 #' informative elements (\emph{i.e.}, those that belong to dense regions). User
 #' should not use this function. Instead they can use the \code{\link{DBFMCL}}
@@ -851,13 +931,13 @@ DBF <- function(data, name = NULL,
 ##    MCL
 ##############################################################
 
+
+#' @title
 #' Invokes the Markov CLustering algorithm (MCL).
-#'
-#' This function invokes the mcl system command. MCL is a clustering algorithm
+#' @description
+#'  This function invokes the mcl system command. MCL is a clustering algorithm
 #' for graphs that was developped by Stijn van Dongen (see references for
 #' further informations).
-#'
-#'
 #' @param name a character string corresponding to the file name.
 #' @param inflation the main control of MCL. Inflation affects cluster
 #' granularity. It is usually chosen somewhere in the range \code{[1.2-5.0]}.
@@ -938,8 +1018,10 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
 ##    Getting data
 #################################################################
 
-#' Title
+#' @title
 #' Fetch an expression matrix from a file, dataframe or Seurat object.
+##' @description
+#' This function fetchs an expression matrix from a file, dataframe or Seurat object.
 #' @param data A \code{matrix}, \code{data.frame} or \code{Seurat} object.
 #' @param filename A character string representing the file name.
 #' @param path A character string representing the data directory where
