@@ -40,8 +40,8 @@ Or using the R interpreter:
                distance_method="pearson",
                clustering=TRUE,
                k=25)
-    plot_dbf(res)
-    write_dbf(res, "ALL.sign.txt")
+    plot_clust(res)
+    write_clust(res, "ALL.sign.txt")
     
 ### With a subset of a seurat object
 
@@ -57,7 +57,7 @@ Data can be found here: https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_fi
     pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc_df <- as.data.frame(pbmc@assays$RNA@data)
     dbf <- DBFMCL(pbmc_df, clustering = TRUE, k=30)
-    p <- plot_dbf(dbf)
+    p <- plot_clust(dbf)
     # Very long...
     # saveWidget(ggplotly(p), file = "test.html");
     # Faster 

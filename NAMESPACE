@@ -28,9 +28,9 @@ export(DBFMCL,
         DBF,
         MCL,
         get_data_4_DBFMCL,
-        plot_dbf,
+        plot_clust,
         load_seurat,
-        write_dbf,
+        write_clust,
         VERBOSITY_DBFMCL)
 
 
