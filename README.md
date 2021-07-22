@@ -1,5 +1,7 @@
 # dbfmcl
 
+WARNING: dbfmcl library is still in beta version. 
+
 ## Installation
 
 ### In the terminal
@@ -12,10 +14,10 @@
      
 ### From R
 
-To install from a private repo, generate a personal access token (PAT) in https://github.com/settings/tokens and supply to the *auth_token* argument. 
+The dbfmcl library is currently not available in CRAN or Bioc. To install from github, use:
 
      library(devtools)
-     install_github("JulieBvs/dbfmcl", auth_token="...", ref="develop")
+     install_github("dputhier/dbfmcl")
 
 To install from a tar in the terminal
 
@@ -32,16 +34,18 @@ Or using the R interpreter:
 
 ### Quick example on artificial data
 
-    m <- matrix(rnorm(80000), nc=20)
-    m[1:100,1:10] <- m[1:100,1:10] + 4
-    m[101:200,11:20] <- m[101:200,11:20] + 3
-    m[201:300,5:15] <- m[201:300,5:15] + -2
-    res <- DBFMCL(data=m,
-               distance_method="pearson",
-               clustering=TRUE,
-               k=25)
-    plot_clust(res)
-    write_clust(res, "ALL.sign.txt")
+      m <- matrix(rnorm(80000), nc=20)
+      m[1:100,1:10] <- m[1:100,1:10] + 4
+      m[101:200,11:20] <- m[101:200,11:20] + 3
+      m[201:300,5:15] <- m[201:300,5:15] + -2
+      res <- DBFMCL(data=m,
+                    distance_method="pearson",
+                    av_dot_prod_min = 0,
+                    inflation = 1.2,
+                    k=25,
+                    fdr = 10)
+      plot_clust(res, ceil = 10, floor = -10)
+      write_clust(res, "ALL.sign.txt")
     
 ### With a subset of a seurat object
 
