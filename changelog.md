@@ -1,6 +1,23 @@
 
 # Changelog
 
+
+## v0.1.6
+
+### Bug Fixes
+
+### API/CLI Changes
+
+*   Now provides a support for R MCL library (not recommended).
+
+
+### Code changes
+
+
+### New Features
+
+
+
 ## v0.1.4
 
 ### Bug Fixes

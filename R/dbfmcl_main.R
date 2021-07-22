@@ -556,7 +556,7 @@ setMethod(
     ## processing data
     for (i in 1:length(object@size)) {
 
-      print_msg(paste("\t\tCluster ", i, " --> ", object@size[i], " probes"), msg_type="INFO")
+      print_msg(paste("Cluster ", i, " --> ", object@size[i], " probes"), msg_type="INFO")
 
       subData <- data[object@cluster == i, ]
       subData <- cbind(rownames(subData), subData)
@@ -575,7 +575,7 @@ setMethod(
       col.names = FALSE, row.names = FALSE, sep = "\t", quote = FALSE
     )
 
-      print_msg(paste("\t\t--> Creating file : ",
+      print_msg(paste("--> Creating file : ",
                       file.path(out_path, filename_out)),
                 msg_type="DEBUG")
   }
@@ -788,7 +788,7 @@ DBFMCL <- function(data = NULL,
         print_msg(mcl_out_file, msg_type="DEBUG")
 
         for(i in 1:length(cluster_to_genes)){
-          write.table(paste(cluster_to_genes[[i]], collapse=" "),
+          write.table(paste(cluster_to_genes[[i]], collapse="\t"),
                       file=mcl_out_file,
                       append=TRUE,
                       col.names=FALSE,
@@ -808,9 +808,7 @@ DBFMCL <- function(data = NULL,
       nb_cluster_deleted <- 0
 
       for (i in 1:length(mcl_cluster)) {
-        h <- unlist(strsplit(mcl_cluster[i], " "))
-        print(h)
-        print(h[length(h)])
+        h <- unlist(strsplit(mcl_cluster[i], "\t"))
         cur_clust <- data_matrix[h,]
         cur_clust[cur_clust > 0 ] <- 1
         cur_dot_prod <- cur_clust %*% t(cur_clust)
@@ -830,12 +828,9 @@ DBFMCL <- function(data = NULL,
           nb_cluster_deleted <- nb_cluster_deleted + 1
         }
       }
-      print_msg(paste("\t--> ",
-                      nb,
-                      " clusters conserved after MCL partitioning."),
+      print_msg(paste(nb, " clusters conserved after MCL partitioning."),
                 msg_type="INFO")
-      print_msg(paste("\t--> ",
-                      nb_cluster_deleted,
+      print_msg(paste(nb_cluster_deleted,
                       " clusters filtered out from MCL partitioning (size and mean dot product)."),
                 msg_type="INFO")
 
@@ -937,10 +932,10 @@ DBF <- function(data, name = NULL,
       data <- apply(data, 2, as.double)
 
       if (silent) {
-        cat(
-          "\t--> Computing distances to the kth-nearest neighbors",
-          " and associated FDR values... \n"
-        )
+        print_msg(paste0("Computing distances to the kth-nearest neighbors ",
+                         "and associated FDR values... \n"),
+                  msg_type = "INFO")
+
       }
       outfile <- paste(name, ".dbf_out.txt", sep = "")
 
@@ -1064,12 +1059,10 @@ mcl_system_cmd <- function(name, inflation = 2.0, silent = FALSE, threads=1) {
 
       system(cmd)
       if (!silent) {
-        cat("\t-->  Done.\n\n")
-        cat(
-          "\t--> creating file : ",
-          file.path(getwd(), paste(name, ".mcl_out.txt", sep = "")),
-          "\n\n"
-        )
+        print_msg("Done", msg_type="INFO")
+        print_msg(paste0("creating file : ",
+                        file.path(getwd(), paste(name, ".mcl_out.txt", sep = ""))),
+                  msg_type="INFO")
       }
     } else {
       stop(
@@ -1079,7 +1072,7 @@ mcl_system_cmd <- function(name, inflation = 2.0, silent = FALSE, threads=1) {
     }
   }
   else {
-    stop("A unix-like OS is required to launch mcl and cluster programs.")
+    stop("--> A unix-like OS is required to launch mcl and cluster programs.")
   }
 }
 
