@@ -26,7 +26,7 @@ exportClasses("ClusterSet")
 
 export(DBFMCL,
         DBF,
-        MCL,
+        mcl_system_cmd,
         get_data_4_DBFMCL,
         plot_clust,
         load_seurat,

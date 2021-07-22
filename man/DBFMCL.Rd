@@ -8,6 +8,8 @@ DBFMCL(
   data = NULL,
   filename = NULL,
   path = ".",
+  mcl_cmd_line = FALSE,
+  mcl_cmd_line_threads = 1,
   name = NULL,
   distance_method = c("pearson", "spearman", "euclidean"),
   av_dot_prod_min = 2,
@@ -28,6 +30,10 @@ DBFMCL(
 
 \item{path}{a character string representing the data directory where
 intermediary files are to be stored. Default to current working directory.}
+
+\item{mcl_cmd_line}{Boolean. Whether to use the fast MCL version through command line.}
+
+\item{mcl_cmd_line_threads}{If mcl_cmd_line is TRUE, how many threads should be used (integer).}
 
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
