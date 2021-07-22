@@ -1,12 +1,12 @@
 Package: dbfmcl
 Type: Package
 Title: The DBFMCL algorithm
-Version: 0.1.5
-Date: 2020-07-21
+Version: 0.1.6
+Date: 2020-07-22
 Author: Aurelie Bergon, J. Bavais, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
 Maintainer: D. Puthier <denis.puthier@univ-amu.fr>
 Depends: R (>= 3.6.1), methods, testthat
-Imports: reshape2, ggplot2, magrittr, dplyr
+Imports: reshape2, ggplot2, magrittr, dplyr, igraph, MCL
 Collate: dbfmcl_main.R zzz.R
 Description: The dbfmcl package (Density Based Filtering And Markov Clustering) implement a method for filtering and partionning a noisy dataset. DBF-MCL is a tree-step adaptative algorithm that (i) find elements located in dense areas (ie. clusters) (ii) uses selected items to construct a graph and (iii) performs graph partitioning using MCL.
 biocViews: Clustering, Classification

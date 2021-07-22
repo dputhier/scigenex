@@ -33,7 +33,8 @@ library(Biobase)
 library(ggplot2)
 library(reshape2)
 library(dplyr)
-library(amap)
+library(MCL)
+library(igraph)
 
 #' @title
 #' ClusterSet
@@ -575,7 +576,8 @@ setMethod(
     )
 
       print_msg(paste("\t\t--> Creating file : ",
-        file.path(out_path, filename_out)))
+                      file.path(out_path, filename_out)),
+                msg_type="DEBUG")
   }
 )
 
@@ -622,6 +624,8 @@ setMethod(
 #' and MCL.
 #' @param path a character string representing the data directory where
 #' intermediary files are to be stored. Default to current working directory.
+#' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
+#' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance), "euclidean".
@@ -690,7 +694,9 @@ setMethod(
 #' @export DBFMCL
 DBFMCL <- function(data = NULL, 
                    filename = NULL, 
-                   path = ".", 
+                   path = ".",
+                   mcl_cmd_line=FALSE,
+                   mcl_cmd_line_threads=1,
                    name = NULL,
                    distance_method = c("pearson", "spearman", "euclidean"),
                    av_dot_prod_min=2,
@@ -710,7 +716,7 @@ DBFMCL <- function(data = NULL,
 
   ## getting parameters
   data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
-  m <- data_source$data
+  data_matrix <- data_source$data
 
   # A simple function to create a random string
   create_rand_str <- function() {
@@ -745,7 +751,7 @@ DBFMCL <- function(data = NULL,
 
 
   ## DBF algorithm, returns a ClusterSet object
-  obj <- DBF(m,
+  obj <- DBF(data_matrix,
              name,
              distance_method = distance_method,
              silent = silent,
@@ -756,14 +762,45 @@ DBFMCL <- function(data = NULL,
              set.seed = set.seed
   )
 
-  if (length(readLines(paste(name, ".dbf_out.txt", sep = ""))) > 0) {
+  dbf_out_file <- paste0(name, ".dbf_out.txt")
+  mcl_out_file <- paste0(name, ".mcl_out.txt")
+
+  print_msg("DBF completed. Starting MCL step.", msg_type="DEBUG")
+
+  if (length(readLines(dbf_out_file)) > 0) {
 
       ## Launching mcl
-      if (is.null(inflation)) inflation <- 2.0
-      MCL(name, inflation = inflation, silent = silent)
+
+      if(mcl_cmd_line){
+        print_msg("Running MCL through the command line for best performance.")
+        mcl_system_cmd(name, inflation = inflation, silent = silent, threads=mcl_cmd_line_threads)
+      }else{
+        print_msg("You are using the R implementation of MCL.", msg_type="WARNING")
+        print_msg("Use the command line version for best performance (mcl_cmd_line)", msg_type="WARNING")
+        print_msg(paste("Reading : ", dbf_out_file), msg_type="WARNING")
+        graph_tab <- read.csv(dbf_out_file, sep=" ", header=F)
+        colnames(graph_tab) <- c("source", "dest", "weight")
+        graph_igraph <-  igraph::graph_from_data_frame(graph_tab, directed=F)
+        graph_adj <- igraph::as_adj(graph_igraph, attr='weight')
+        mcl_res <- MCL::mcl(graph_adj,  expansion = 2, inflation = 8, allow1 = TRUE, addLoops = FALSE)
+        cluster_to_genes <- split(rownames(graph_adj), mcl_res$Cluster)
+        print_msg("Writing gene clusters", msg_type="INFO")
+        print_msg(mcl_out_file, msg_type="DEBUG")
+
+        for(i in 1:length(cluster_to_genes)){
+          write.table(paste(cluster_to_genes[[i]], collapse=" "),
+                      file=mcl_out_file,
+                      append=TRUE,
+                      col.names=FALSE,
+                      row.names=FALSE,
+                      quote=FALSE)
+        }
+      }
+
+      print_msg(paste0("Reading MCL output: ", mcl_out_file), msg_type="DEBUG")
 
       ## getting mcl results into the ClusterSet object
-      mcl_cluster <- readLines(paste(name, ".mcl_out.txt", sep = ""))
+      mcl_cluster <- readLines(mcl_out_file)
       gene_list <- NULL
       clusters <- NULL
       size <- NULL
@@ -771,8 +808,10 @@ DBFMCL <- function(data = NULL,
       nb_cluster_deleted <- 0
 
       for (i in 1:length(mcl_cluster)) {
-        h <- unlist(strsplit(mcl_cluster[i], "\t"))
-        cur_clust <- m[h,]
+        h <- unlist(strsplit(mcl_cluster[i], " "))
+        print(h)
+        print(h[length(h)])
+        cur_clust <- data_matrix[h,]
         cur_clust[cur_clust > 0 ] <- 1
         cur_dot_prod <- cur_clust %*% t(cur_clust)
 
@@ -791,18 +830,24 @@ DBFMCL <- function(data = NULL,
           nb_cluster_deleted <- nb_cluster_deleted + 1
         }
       }
-      print_msg(paste("\t--> ", nb, " clusters conserved after MCL partitioning.", type="INFO"))
-      print_msg(paste("\t--> ", nb_cluster_deleted, " clusters filtered out from MCL partitioning (size and mean dot product)."))
+      print_msg(paste("\t--> ",
+                      nb,
+                      " clusters conserved after MCL partitioning."),
+                msg_type="INFO")
+      print_msg(paste("\t--> ",
+                      nb_cluster_deleted,
+                      " clusters filtered out from MCL partitioning (size and mean dot product)."),
+                msg_type="INFO")
 
 
       ## build ClusterSet object
       if (nb > 0) {
         obj@name <- name
-        obj@data <- as.matrix(m[gene_list, ])
+        obj@data <- as.matrix(data_matrix[gene_list, ])
         obj@cluster <- clusters
         obj@size <- size
 
-        centers <- matrix(ncol = ncol(m), nrow = nb)
+        centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
         ## calcul of the mean profils
         for (i in 1:nb) {
           centers[i, ] <- apply(obj@data[obj@cluster == i, ],
@@ -830,11 +875,9 @@ DBFMCL <- function(data = NULL,
 
 }
 
-
 ###############################################################
 ##    COMPUTE DBF algorithm
 ###############################################################
-
 
 #' @title
 #' DBF
@@ -954,7 +997,7 @@ DBF <- function(data, name = NULL,
 
 
 #' @title
-#' Invokes the Markov CLustering algorithm (MCL).
+#' Invokes the command line version of Markov CLustering algorithm (MCL).
 #' @description
 #'  This function invokes the mcl system command. MCL is a clustering algorithm
 #' for graphs that was developped by Stijn van Dongen (see references for
@@ -968,6 +1011,7 @@ DBF <- function(data, name = NULL,
 #' good results for microarray data when k is set around 100.
 #' @param silent if set to TRUE, the progression of the MCL partitionning is
 #' not displayed.
+#' @param threads The number of threads to use.
 #' @return Returns a file with the ".mcl\_out.txt" extension.
 #' @section warning: Works only on UNIX-like plateforms. MCL should be
 #' installed. The following command lines can be used for installation.
@@ -989,8 +1033,8 @@ DBF <- function(data, name = NULL,
 #' Science in the Netherlands, Amsterdam, May 2000.
 #' \url{http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z}
 #' @keywords manip
-#' @export MCL
-MCL <- function(name, inflation = 2.0, silent = FALSE) {
+#' @export mcl_system_cmd
+mcl_system_cmd <- function(name, inflation = 2.0, silent = FALSE, threads=1) {
   ## testing the system
   if (.Platform$OS.type != "windows") {
 
@@ -1001,19 +1045,24 @@ MCL <- function(name, inflation = 2.0, silent = FALSE) {
         verb <- ""
       }
       else {
-        verb <- "-V all"
+        verb <- "-V all "
       }
       if (inflation != 2) {
         i <- paste("-I ", as.character(round(inflation, 1)), sep = "")
       } else {
         i <- "-I 2.0"
       }
+      threads <- paste("-te", threads, sep = " ")
       ## launching mcl program
-      system(paste("mcl ", name, ".dbf_out.txt ", i, " --abc -o ",
-        name, ".mcl_out.txt ", verb,
-        sep = ""
-      ))
+      cmd <- paste0("mcl ",
+                   name, ".dbf_out.txt ",
+                   i,
+                   " --abc -o ",
+                   name, ".mcl_out.txt ",
+                   verb,
+                   threads)
 
+      system(cmd)
       if (!silent) {
         cat("\t-->  Done.\n\n")
         cat(
@@ -1094,9 +1143,11 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
   }
   ## adding dimnames if not provided
   if (is.null(rownames(data))) {
+    print_msg("Row names not provided. Adding.", msg_type = "DEBUG")
     rownames(data) <- paste("gene", 1:nrow(data), sep = "")
   }
   if (is.null(colnames(data))) {
+    print_msg("Colum names not provided. Adding.", msg_type = "DEBUG")
     colnames(data) <- paste("sample", 1:ncol(data), sep = "")
   }
 

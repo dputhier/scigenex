@@ -1,5 +1,5 @@
-test_that("Cheking DBFMCL is providing the right number of genes", {
-  set.seed(123)
+test_that("Checking write_clust is working properly", {
+
   m <- matrix(rnorm(80000), nc=20)
   m[1:100,1:10] <- m[1:100,1:10] + 4
   m[101:200,11:20] <- m[101:200,11:20] + 3
@@ -7,10 +7,11 @@ test_that("Cheking DBFMCL is providing the right number of genes", {
   res <- DBFMCL(data=m,
                 distance_method="pearson",
                 av_dot_prod_min = 0,
-                inflation = 0.5,
-                k=100,
+                inflation = 1.2,
+                k=25,
                 fdr = 10)
-  #plot_clust(res, ceil = 10, floor = -10)
-  expect_equal(length(res@size), 3)
-  expect_equal(res@size, c(115, 113, 81))
+  write_clust(object = res,
+              out_path = "/tmp",
+              filename_out = "ALL.sign.txt")
+  expect_equal(ncol(read.table("/tmp/ALL.sign.txt")), 21)
 })
