@@ -1,8 +1,8 @@
 Package: dbfmcl
 Type: Package
 Title: The DBFMCL algorithm
-Version: 0.1.5
-Date: 2020-07-21
+Version: 0.1.6
+Date: 2020-07-22
 Author: Aurelie Bergon, J. Bavais, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
 Maintainer: D. Puthier <denis.puthier@univ-amu.fr>
 Depends: R (>= 3.6.1), methods, testthat
