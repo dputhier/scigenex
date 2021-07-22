@@ -1,5 +1,7 @@
 # dbfmcl
 
+WARNING: dbfmcl library is still in beta version. 
+
 ## Installation
 
 ### In the terminal
@@ -12,10 +14,10 @@
      
 ### From R
 
-To install from a private repo, generate a personal access token (PAT) in https://github.com/settings/tokens and supply to the *auth_token* argument. 
+The dbfmcl library is currently not available in CRAN or Bioc. To install from github, use:
 
      library(devtools)
-     install_github("JulieBvs/dbfmcl", auth_token="...", ref="develop")
+     install_github("dputhier/dbfmcl")
 
 To install from a tar in the terminal
 
