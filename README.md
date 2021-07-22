@@ -47,22 +47,6 @@ Or using the R interpreter:
       plot_clust(res, ceil = 10, floor = -10)
       write_clust(res, "ALL.sign.txt")
     
-### With a subset of a seurat object
+### Documentation
 
-The Read10X()function reads in the output of the cellranger pipeline from 10X, returning a unique molecular identified (UMI) count matrix.
-Data can be found here: https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz 
-
-    library(Seurat)
-    library(dbfmcl)
-
-    setwd("~/Downloads/")
-    pbmc.data <- Read10X(data.dir = "filtered_gene_bc_matrices/hg19/")
-    pbmc <- CreateSeuratObject(counts = pbmc.data, project = "pbmc3k", min.cells = 3, min.features = 200)
-    pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
-    pbmc_df <- as.data.frame(pbmc@assays$RNA@data)
-    dbf <- DBFMCL(pbmc_df, clustering = TRUE, k=30)
-    p <- plot_clust(dbf)
-    # Very long...
-    # saveWidget(ggplotly(p), file = "test.html");
-    # Faster 
-    ggsave(p, height=max(dbf@cluster), filename="test.png")
+Documentation (in progress) is available at [https://dputhier.github.io/dbfmcl/](https://dputhier.github.io/dbfmcl/).
