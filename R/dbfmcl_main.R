@@ -624,6 +624,8 @@ setMethod(
 #' and MCL.
 #' @param path a character string representing the data directory where
 #' intermediary files are to be stored. Default to current working directory.
+#' @param output_path a character string representing the data directory where
+#' output files are to be stored. Default to current working directory.
 #' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
 #' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
 #' @param distance_method a method to compute the distance to the k-th nearest
@@ -682,10 +684,10 @@ setMethod(
 #'    m[201:300,5:15] <- m[201:300,5:15] + -2
 #'    res <- DBFMCL(data=m,
 #'                  distance_method="pearson",
-#'                 av_dot_prod_min = 0,
-#'                 inflation = 1.2,
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
 #'                  k=25,
-#'                 fdr = 10)
+#'                  fdr = 10)
 #' plot_clust(res, ceil = 10, floor = -10)
 #' plot_clust(res, type="tile", ceil = 10, floor = -10)
 #' write_clust(res, filename_out = "ALL.sign.txt")
@@ -695,6 +697,7 @@ setMethod(
 DBFMCL <- function(data = NULL, 
                    filename = NULL, 
                    path = ".",
+                   output_path = ".",
                    mcl_cmd_line=FALSE,
                    mcl_cmd_line_threads=1,
                    name = NULL,
@@ -762,8 +765,8 @@ DBFMCL <- function(data = NULL,
              set.seed = set.seed
   )
 
-  dbf_out_file <- paste0(name, ".dbf_out.txt")
-  mcl_out_file <- paste0(name, ".mcl_out.txt")
+  dbf_out_file <- paste0(output_path, name, ".dbf_out.txt")
+  mcl_out_file <- paste0(output_path, name, ".mcl_out.txt")
 
   print_msg("DBF completed. Starting MCL step.", msg_type="DEBUG")
 
