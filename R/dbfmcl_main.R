@@ -624,6 +624,8 @@ setMethod(
 #' and MCL.
 #' @param path a character string representing the data directory where
 #' intermediary files are to be stored. Default to current working directory.
+#' @param output_path a character string representing the data directory where
+#' output files will be stored. Default to current working directory.
 #' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
 #' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
 #' @param distance_method a method to compute the distance to the k-th nearest
@@ -682,10 +684,10 @@ setMethod(
 #'    m[201:300,5:15] <- m[201:300,5:15] + -2
 #'    res <- DBFMCL(data=m,
 #'                  distance_method="pearson",
-#'                 av_dot_prod_min = 0,
-#'                 inflation = 1.2,
+#'                  av_dot_prod_min = 0,
+#'                  inflation = 1.2,
 #'                  k=25,
-#'                 fdr = 10)
+#'                  fdr = 10)
 #' plot_clust(res, ceil = 10, floor = -10)
 #' plot_clust(res, type="tile", ceil = 10, floor = -10)
 #' write_clust(res, filename_out = "ALL.sign.txt")
@@ -695,6 +697,7 @@ setMethod(
 DBFMCL <- function(data = NULL, 
                    filename = NULL, 
                    path = ".",
+                   output_path = ".",
                    mcl_cmd_line=FALSE,
                    mcl_cmd_line_threads=1,
                    name = NULL,
@@ -728,15 +731,30 @@ DBFMCL <- function(data = NULL,
 
   if (is.null(name)) name <- data_source$name
   if (is.null(name)) name <- create_rand_str()
-
+  
+  # Put the current working directory in output_path or path
+  if(path == ".") {
+    path <- getwd()
+  }
+  if(output_path == ".") {
+    output_path <- getwd()
+  }
+  # Check if output directory exists. If not stop the command.
+  if(!file.exists(output_path)){
+    stop("Output directory provided does not exist.")
+  }
+  
+  
+  
   distance_method <- match.arg(distance_method)
   txt <- paste("\n\tInflation: ", inflation, sep = "")
-
+  
   ## writting all parameters
 
   cat(
     "The following parameters will be used :",
-    "\n\tWorking directory: ", getwd(),
+    "\n\tWorking directory: ", path,
+    "\n\tOuput directory: ", output_path,
     "\n\tName: ", name,
     "\n\tDistance method: ", distance_method,
     "\n\tMinimum average dot product for clusters: ", av_dot_prod_min,
@@ -752,6 +770,7 @@ DBFMCL <- function(data = NULL,
 
   ## DBF algorithm, returns a ClusterSet object
   obj <- DBF(data_matrix,
+             output_path = output_path,
              name,
              distance_method = distance_method,
              silent = silent,
@@ -762,8 +781,10 @@ DBFMCL <- function(data = NULL,
              set.seed = set.seed
   )
 
-  dbf_out_file <- paste0(name, ".dbf_out.txt")
-  mcl_out_file <- paste0(name, ".mcl_out.txt")
+  dbf_out_file <- paste0(output_path, "/", name, ".dbf_out.txt")
+  dbf_out_file <- gsub(pattern = "//", replacement = "/", x = dbf_out_file)
+  mcl_out_file <- paste0(output_path, "/", name, ".mcl_out.txt")
+  mcl_out_file <- gsub(pattern = "//", replacement = "/", x = mcl_out_file)
 
   print_msg("DBF completed. Starting MCL step.", msg_type="DEBUG")
 
@@ -773,7 +794,7 @@ DBFMCL <- function(data = NULL,
 
       if(mcl_cmd_line){
         print_msg("Running MCL through the command line for best performance.")
-        mcl_system_cmd(name, inflation = inflation, silent = silent, threads=mcl_cmd_line_threads)
+        mcl_system_cmd(name, inflation = inflation, input_path = output_path, silent = silent, threads = mcl_cmd_line_threads)
       }else{
         print_msg("You are using the R implementation of MCL.", msg_type="WARNING")
         print_msg("Use the command line version for best performance (mcl_cmd_line)", msg_type="WARNING")
@@ -885,6 +906,8 @@ DBFMCL <- function(data = NULL,
 #' See \code{\link{DBFMCL}}
 #'
 #' @param data a matrix or data.frame
+#' @param output_path a character string representing the data directory where
+#' output files will be stored. Default to current working directory.
 #' @param name a prefix for the file name
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
@@ -909,7 +932,9 @@ DBFMCL <- function(data = NULL,
 #' of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 #' @keywords manip
 #' @export DBF
-DBF <- function(data, name = NULL,
+DBF <- function(data,
+                output_path = ".",
+                name = NULL,
                 distance_method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
@@ -922,6 +947,7 @@ DBF <- function(data, name = NULL,
   if (.Platform$OS.type != "windows") {
     if (!is.null(data)) {
       ## getting data and parameters
+      if (output_path == ".") {output_path <- getwd()}
       if (is.null(name)) name <- "exprs"
       data <- get_data_4_DBFMCL(data = data)$data
       row <- rownames(data)
@@ -937,7 +963,8 @@ DBF <- function(data, name = NULL,
                   msg_type = "INFO")
 
       }
-      outfile <- paste(name, ".dbf_out.txt", sep = "")
+      outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
+      outfile <- gsub(pattern = "//", replacement = "/", x = outfile)
 
       ## launching DBF
       a <- .C("DBF",
@@ -1004,6 +1031,8 @@ DBF <- function(data, name = NULL,
 #' whereas \code{inflation = 1.2} will tend to result in very coarse grained
 #' clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 #' good results for microarray data when k is set around 100.
+#' @param input_path a character string representing the directory path of 
+#' the input file used by mcl. Default is the current working directory.
 #' @param silent if set to TRUE, the progression of the MCL partitionning is
 #' not displayed.
 #' @param threads The number of threads to use.
@@ -1029,7 +1058,7 @@ DBF <- function(data, name = NULL,
 #' \url{http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z}
 #' @keywords manip
 #' @export mcl_system_cmd
-mcl_system_cmd <- function(name, inflation = 2.0, silent = FALSE, threads=1) {
+mcl_system_cmd <- function(name, inflation = 2.0, input_path = ".", silent = FALSE, threads=1) {
   ## testing the system
   if (.Platform$OS.type != "windows") {
 
@@ -1050,14 +1079,15 @@ mcl_system_cmd <- function(name, inflation = 2.0, silent = FALSE, threads=1) {
       threads <- paste("-te", threads, sep = " ")
       ## launching mcl program
       cmd <- paste0("mcl ",
-                   name, ".dbf_out.txt ",
+                   input_path, "/", name, ".dbf_out.txt ",
                    i,
                    " --abc -o ",
-                   name, ".mcl_out.txt ",
+                   input_path, "/", name, ".mcl_out.txt ",
                    verb,
                    threads)
-
+      cmd <- gsub(pattern = "//", replacement = "/", x = cmd)
       system(cmd)
+
       if (!silent) {
         print_msg("Done", msg_type="INFO")
         print_msg(paste0("creating file : ",
