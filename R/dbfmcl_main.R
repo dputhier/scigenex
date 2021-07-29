@@ -733,12 +733,17 @@ DBFMCL <- function(data = NULL,
   if (is.null(name)) name <- create_rand_str()
   
   # Put the current working directory in output_path or path
-  if(output_path == ".") {
-    output_path <- getwd()
-  }
   if(path == ".") {
     path <- getwd()
   }
+  if(output_path == ".") {
+    output_path <- getwd()
+  }
+  # Check if output directory exists. If not stop the command.
+  if(!file.exists(output_path)){
+    stop("Output directory provided does not exist.")
+  }
+  
   
   
   distance_method <- match.arg(distance_method)
