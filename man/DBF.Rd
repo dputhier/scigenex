@@ -6,6 +6,7 @@
 \usage{
 DBF(
   data,
+  output_path = ".",
   name = NULL,
   distance_method = c("spearman", "pearson", "euclidean"),
   silent = FALSE,
@@ -18,6 +19,9 @@ DBF(
 }
 \arguments{
 \item{data}{a matrix or data.frame}
+
+\item{output_path}{a character string representing the data directory where
+output files will be stored. Default to current working directory.}
 
 \item{name}{a prefix for the file name}
 
