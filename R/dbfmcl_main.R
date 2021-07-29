@@ -625,7 +625,7 @@ setMethod(
 #' @param path a character string representing the data directory where
 #' intermediary files are to be stored. Default to current working directory.
 #' @param output_path a character string representing the data directory where
-#' output files are to be stored. Default to current working directory.
+#' output files will be stored. Default to current working directory.
 #' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
 #' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
 #' @param distance_method a method to compute the distance to the k-th nearest
@@ -901,6 +901,8 @@ DBFMCL <- function(data = NULL,
 #' See \code{\link{DBFMCL}}
 #'
 #' @param data a matrix or data.frame
+#' @param output_path a character string representing the data directory where
+#' output files will be stored. Default to current working directory.
 #' @param name a prefix for the file name
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
@@ -1024,7 +1026,8 @@ DBF <- function(data,
 #' whereas \code{inflation = 1.2} will tend to result in very coarse grained
 #' clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 #' good results for microarray data when k is set around 100.
-#' @param input_path The directory path of the input file used by mcl.
+#' @param input_path a character string representing the directory path of 
+#' the input file used by mcl. Default is the current working directory.
 #' @param silent if set to TRUE, the progression of the MCL partitionning is
 #' not displayed.
 #' @param threads The number of threads to use.
