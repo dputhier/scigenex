@@ -909,6 +909,9 @@ DBFMCL <- function(data = NULL,
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
 #' @param name a prefix for the file name
+#' @param optional_output if TRUE then DBF generate optional output file in the
+#' specified output_path directory. This file contains observed and simulated 
+#' distances, cutting threshold, number of kept genes and FDR value.
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance) or "euclidean".
@@ -935,6 +938,7 @@ DBFMCL <- function(data = NULL,
 DBF <- function(data,
                 output_path = ".",
                 name = NULL,
+                optional_output = TRUE,
                 distance_method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
@@ -963,9 +967,23 @@ DBF <- function(data,
                   msg_type = "INFO")
 
       }
+      
+      # Directory and name of the principal output
       outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
       outfile <- gsub(pattern = "//", replacement = "/", x = outfile)
-
+      
+      # Directory and name of the optional outputs
+      path_optional_output <- paste0(output_path, "/extra_output")
+      
+      # Add options for the DBF function (C++)
+      if(optional_output) {
+        # Character string containing all the options refered in the fprint_selected function in the C++ code
+        options <- c( "dists,thresholds")
+      } else {
+        options <- NULL
+      }
+      
+      
       ## launching DBF
       a <- .C("DBF",
         data,
@@ -982,7 +1000,10 @@ DBF <- function(data,
         as.integer(!silent),
         m2 = vector(length = nrow(data), mode = "character"),
         outfile,
-        as.integer(set.seed)
+        as.integer(set.seed),
+        0,
+        options,
+        path_optional_output
       )
 
       ## creation of the ClusterSet object
