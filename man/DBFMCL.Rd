@@ -9,6 +9,7 @@ DBFMCL(
   filename = NULL,
   path = ".",
   output_path = ".",
+  optional_output = TRUE,
   mcl_cmd_line = FALSE,
   mcl_cmd_line_threads = 1,
   name = NULL,
@@ -34,6 +35,10 @@ intermediary files are to be stored. Default to current working directory.}
 
 \item{output_path}{a character string representing the data directory where
 output files will be stored. Default to current working directory.}
+
+\item{optional_output}{if TRUE then DBF generate optional output file in the
+specified output_path directory. This file contains observed and simulated 
+distances, cutting threshold, number of kept genes and FDR value.}
 
 \item{mcl_cmd_line}{Boolean. Whether to use the fast MCL version through command line.}
 
