@@ -626,6 +626,9 @@ setMethod(
 #' intermediary files are to be stored. Default to current working directory.
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
+#' @param optional_output if TRUE then DBF generate optional output file in the
+#' specified output_path directory. This file contains observed and simulated 
+#' distances, cutting threshold, number of kept genes and FDR value.
 #' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
 #' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
 #' @param distance_method a method to compute the distance to the k-th nearest
