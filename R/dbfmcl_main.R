@@ -526,83 +526,82 @@ setMethod(
 #'
 #' @examples
 #' # see online examples
-#' 
+
 #' @rdname plot_dist
 
-setMethod(
-  "plot_dist",
-  function(file_name,
-           path = ".") {
-    
-    if (path == ".") path <- getwd()
-    
-    file_path <- file.path(path, paste0(file_name, "-dbfAll.txt"))
-    file_path <- gsub(pattern = "//", replacement = "/", x = file_path)
-    opt_data <- readLines(file_path)
-    
-    
-    
-    # Extract cutting threshold value
-    dknn <- opt_data[(which(opt_data == ">>thresholds")+1):length(opt_data)]
-    dknn <- as.numeric(dknn[1])
-    
-    # Extract distances values 
-    dist <- opt_data[(which(opt_data == ">>dists")+1):(which(opt_data == ">>thresholds")-1)]
-    dist <- strsplit(dist, "\t")
-    dist <- do.call(rbind, dist)
-    # Convert it in dataframe
-    dist <- as.data.frame(dist)
-    
-    # Modify column names 
-    dist_name <- c("Observed")
-    for (i in 1:(ncol(dist)-1)) {
-      dist_name_temp <- paste0("simulation_", i, "_distance")
-      dist_name <- c(dist_name, dist_name_temp)
-    }
-    names(dist) <- dist_name
-    
-    # Convert column from factor to numeric
-    dist <- sapply(dist[1:4], function(x) as.numeric(as.character(x)))
-    dist <- as.data.frame(dist)
-    
-    # Prepare dataframe for ggplot
-    dist_p <- melt(dist, variable.name = "type", value.name = "distance_value", id.vars = NULL)
-    
-    dist_p[,"type"] <- as.character(dist_p[,"type"])
-    dist_p[grep(dist_p[,"type"], pattern = "sim*"), "type"] <- "Simulated"
-    
-    # plot density of distance values for the observed and simulated conditions
-    p <- ggplot(data = dist_p, aes(x = distance_value, color = type)) +
-      stat_density(aes(linetype = type, size = type), geom = "line", position = "identity") +
-      scale_linetype_manual(breaks = c("Observed", "Simulated"), values = c("solid", "longdash")) +
-      scale_size_manual(values = c(1, 0.8)) +
-      scale_color_manual(values = c("#006D77", "#83C5BE")) +
-      theme_bw() +
-      theme(panel.grid.minor = element_blank(),
-            panel.grid.major = element_blank(),
-            axis.line = element_line(colour = "black"),
-            panel.border = element_blank(),
-            legend.title = element_text("Distance with KNN"),
-            axis.title = element_text(size = 15),
-            axis.text = element_text(size = 10)) +
-      xlab(label = "Distance with KNN") +
-      ylab(label = "Density") +
-      geom_vline(aes(xintercept = dknn),
-                 color = "#E29578",
-                 linetype = "dotdash",
-                 size = 0.5) +
-      geom_text(mapping = aes(x = dknn,
-                              y = 0,
-                              label = "Critical distance with KNN",
-                              hjust = -0.5,
-                              vjust = -1,
-                              angle = 90),
-                color = "#E29758")
-    
-    return(p)
-    
+
+plot_dist <-  function(file_name,
+                       path = ".") {
+  
+  if (path == ".") path <- getwd()
+  
+  file_path <- file.path(path, paste0(file_name, "-dbfAll.txt"))
+  file_path <- gsub(pattern = "//", replacement = "/", x = file_path)
+  opt_data <- readLines(file_path)
+  
+  
+  
+  # Extract cutting threshold value
+  dknn <- opt_data[(which(opt_data == ">>thresholds")+1):length(opt_data)]
+  dknn <- as.numeric(dknn[1])
+  
+  # Extract distances values 
+  dist <- opt_data[(which(opt_data == ">>dists")+1):(which(opt_data == ">>thresholds")-1)]
+  dist <- strsplit(dist, "\t")
+  dist <- do.call(rbind, dist)
+  # Convert it in dataframe
+  dist <- as.data.frame(dist)
+  
+  # Modify column names 
+  dist_name <- c("Observed")
+  for (i in 1:(ncol(dist)-1)) {
+    dist_name_temp <- paste0("simulation_", i, "_distance")
+    dist_name <- c(dist_name, dist_name_temp)
   }
-)  
+  names(dist) <- dist_name
+  
+  # Convert column from factor to numeric
+  dist <- sapply(dist[1:4], function(x) as.numeric(as.character(x)))
+  dist <- as.data.frame(dist)
+  
+  # Prepare dataframe for ggplot
+  dist_p <- melt(dist, variable.name = "type", value.name = "distance_value", id.vars = NULL)
+  
+  dist_p[,"type"] <- as.character(dist_p[,"type"])
+  dist_p[grep(dist_p[,"type"], pattern = "sim*"), "type"] <- "Simulated"
+  
+  # plot density of distance values for the observed and simulated conditions
+  p <- ggplot(data = dist_p, aes(x = distance_value, color = type)) +
+    stat_density(aes(linetype = type, size = type), geom = "line", position = "identity") +
+    scale_linetype_manual(breaks = c("Observed", "Simulated"), values = c("solid", "longdash")) +
+    scale_size_manual(values = c(1, 0.8)) +
+    scale_color_manual(values = c("#006D77", "#83C5BE")) +
+    theme_bw() +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_blank(),
+          axis.line = element_line(colour = "black"),
+          panel.border = element_blank(),
+          legend.title = element_text("Distance with KNN"),
+          axis.title = element_text(size = 15),
+          axis.text = element_text(size = 10)) +
+    xlab(label = "Distance with KNN") +
+    ylab(label = "Density") +
+    geom_vline(aes(xintercept = dknn),
+               color = "#E29578",
+               linetype = "dotdash",
+               size = 0.5) +
+    geom_text(mapping = aes(x = dknn,
+                            y = 0,
+                            label = "Critical distance with KNN",
+                            hjust = -0.5,
+                            vjust = -1,
+                            angle = 90),
+              color = "#E29758")
+  
+  return(p)
+  
+}
+
 
 
 
