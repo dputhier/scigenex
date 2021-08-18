@@ -517,7 +517,9 @@ setMethod(
 #' plot_dist
 #' @description
 #' Plot the observed and simulated distance with the Kth nearest neighbors.
-#' @param object A ClusterSet object.
+#' @param file_name The name of the input file containing distance and threshold values.
+#' @param path a character string representing the data directory where
+#' input file is stored. Default to current working directory.
 #'
 #' @return A ggplot diagram.
 #' @export
