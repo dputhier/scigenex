@@ -535,7 +535,7 @@ plot_dist <-  function(file_name,
   
   if (path == ".") path <- getwd()
   
-  file_path <- file.path(path, paste0(file_name, "-dbfAll.txt"))
+  file_path <- file.path(path, file_name)
   file_path <- gsub(pattern = "//", replacement = "/", x = file_path)
   opt_data <- readLines(file_path)
   
