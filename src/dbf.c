@@ -1110,11 +1110,12 @@ data		:	une matrice de double, selon R
 void DBF(double *data, int *nb_genes, int *nb_samples,
 	char **list_genes, char **list_samples,
 	char **dm, int *knn, int *nbr, int *verb, int *memory, int *FDR,
-	int *p_dist, char **out, char **gf, int *set_seed)
+	int *p_dist, char **out, char **gf, int *set_seed,
+		int *lnn, char **out_format, char **file_root )
 {
-	int lnn = 0;
+/* 	int lnn = 0;
 	char *out_format = "";
-	char *fr = "";
+	char *fr = *file_root; */
 
 	// Convert R matrix in C format
 	double **mat = read_double_matrix( *nb_genes, *nb_samples, data );
@@ -1123,7 +1124,7 @@ void DBF(double *data, int *nb_genes, int *nb_samples,
 		list_genes, list_samples,
 		dm, knn, nbr, verb, memory, FDR,
 		p_dist, out, gf, set_seed,
-		&lnn, &out_format, &fr );
+		lnn, out_format, file_root );
 	//
 	free(mat);
 }

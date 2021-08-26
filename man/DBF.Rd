@@ -6,7 +6,9 @@
 \usage{
 DBF(
   data,
+  output_path = ".",
   name = NULL,
+  optional_output = TRUE,
   distance_method = c("spearman", "pearson", "euclidean"),
   silent = FALSE,
   k = 100,
@@ -19,7 +21,14 @@ DBF(
 \arguments{
 \item{data}{a matrix or data.frame}
 
+\item{output_path}{a character string representing the data directory where
+output files will be stored. Default to current working directory.}
+
 \item{name}{a prefix for the file name}
+
+\item{optional_output}{if TRUE then DBF generate optional output file in the
+specified output_path directory. This file contains observed and simulated 
+distances, cutting threshold, number of kept genes and FDR value.}
 
 \item{distance_method}{a method to compute the distance to the k-th nearest
 neighbor. One of "pearson" (Pearson's correlation coefficient-based

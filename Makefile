@@ -24,13 +24,16 @@ check: clean
 	@R CMD check /tmp/dbfmcl
 
 doc:
+	@echo ">>> Creating a package documentation"
 	@echo "library(roxygen2); roxygen2::roxygenise()" | R --slave
 
 install:
+	@echo ">>> Installing..."
 	@rm -f src/*.o src/*.so
-	@R CMD Install .
+	@R CMD INSTALL .
 
 test:
+	@echo ">>> Testing package"
 	@echo "devtools::test()" | R --slave
 
 all: doc install check test

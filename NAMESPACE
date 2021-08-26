@@ -13,7 +13,7 @@ importMethodsFrom(methods, show)
 importFrom("grDevices", "colorRampPalette")
 importFrom("methods", "new", "slot", "slotNames")
 importFrom("stats", "sd", dist, hclust, heatmap, median, rnorm)
-importFrom("utils", "object.size", "read.table", "write.table")
+importFrom("utils", "object.size", "read.table", "write.table", "read.csv")
 importFrom(dplyr, summarise, group_by)
 importFrom(ggplot2, ggplot, theme_bw,
             facet_grid, geom_line, aes,
