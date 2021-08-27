@@ -31,6 +31,6 @@ export(DBFMCL,
         plot_clust,
         load_seurat,
         write_clust,
-        VERBOSITY_DBFMCL)
+        VERBOSITY_SCIGENEX)
 
 
