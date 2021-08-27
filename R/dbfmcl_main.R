@@ -1,7 +1,7 @@
 ################################################################
-##        Main script of the R PACKAGE : DBFMCL
+##        Main script of the R PACKAGE : scigenex
 ##
-## Authors : BERGON A, J. BAVAIS
+## Authors : J. BAVAIS, BERGON A, 
 ##  with the collaboration of LOPEZ F., TEXTORIS J. and PUTHIER D.
 ##
 ##
@@ -13,14 +13,14 @@
 # 1 : info
 # 2 : DEBUG
 
-VERBOSITY_DBFMCL = 3
+VERBOSITY_SCIGENEX = 3
 
 print_msg <- function(msg, msg_type="INFO"){
   if(msg_type == "INFO")
-    if(VERBOSITY_DBFMCL > 0)
+    if(VERBOSITY_SCIGENEX > 0)
       cat(paste("|-- ", msg, "\n"))
   if(msg_type == "DEBUG")
-    if(VERBOSITY_DBFMCL > 1)
+    if(VERBOSITY_SCIGENEX > 1)
       cat(paste("|-- ", msg, "\n"))
   if(msg_type == "WARNING")
       cat(paste("|-- ", msg, "\n"))
@@ -252,7 +252,7 @@ setMethod(
 #' @title
 #' load_seurat
 #' @description
-#' Load a seurat object into a DBFMCL. At the moment the objective is mainly
+#' Load a seurat object into a ClusterSet object. At the moment the objective is mainly
 #' to store cell identity (i.e cell types/groups to barcode mapping) and
 #' cell type to color mapping.
 #' @param object A ClusterSet object.
@@ -284,7 +284,7 @@ setMethod("load_seurat",
         stop("Please provide a Seurat and patchwork object.")
       }
       if(ncol(object) != ncol(seurat_obj)){
-        stop("The number of cells is not the same in DBFMCL and Seurat Object.")
+        stop("The number of cells is not the same in ClusterSet object and Seurat object.")
       }
 
       g <- ggplot2::ggplot_build(dimplot_obj)
@@ -774,9 +774,14 @@ setMethod(
 #' \code{mcl -h}
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 #' D.
-#' @references Van Dongen S. (2000) A cluster algorithm for graphs. National
+#' @references
+#' - Van Dongen S. (2000) A cluster algorithm for graphs. National
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
-#' @keywords manip
+#' - Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud
+#' S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
+#' and flexible toolbox to explore productively the transcriptional landscape
+#' of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
+#' @keywords clustering, gene expression, classification, MCL.
 #' @examples
 #'
 #' \dontrun{
@@ -1302,5 +1307,5 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
   return(list(data = data, name = name))
 }
 #########################################################
-##      END PACKAGE DBFMCL
+##      END PACKAGE scigenex
 #########################################################
