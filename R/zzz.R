@@ -1,3 +1,3 @@
 # .First.lib <- function(lib,pkg) {
-#    library.dynam("dbfmcl",pkg,lib)
+#    library.dynam("scigenex",pkg,lib)
 # }

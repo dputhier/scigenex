@@ -1,14 +1,11 @@
 if(.Platform$OS.type == "windows"){
-	useDynLib("dbfml.dll")
+	useDynLib("scigenex.dll")
 }else{
-	useDynLib("dbfmcl")
+	useDynLib("scigenex")
 }
 
 importClassesFrom(methods, character, list, matrix, vector)
-
 importMethodsFrom(methods, show)
-
-
 
 importFrom("grDevices", "colorRampPalette")
 importFrom("methods", "new", "slot", "slotNames")
@@ -31,6 +28,6 @@ export(DBFMCL,
         plot_clust,
         load_seurat,
         write_clust,
-        VERBOSITY_DBFMCL)
+        VERBOSITY_SCIGENEX)
 
 

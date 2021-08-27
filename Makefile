@@ -16,12 +16,12 @@ help:
 	@echo ""
 
 clean:
-	@rm -f src/*.o src/*.so; rm -f dbfmcl.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck
+	@rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck
 	@rm -rf /tmp/dbfmcl; 
 
 check: clean
-	@mkdir -p /tmp/dbfmcl; cp -r ./* /tmp/dbfmcl
-	@R CMD check /tmp/dbfmcl
+	@mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex
+	@R CMD check /tmp/scigenex
 
 doc:
 	@echo ">>> Creating a package documentation"
