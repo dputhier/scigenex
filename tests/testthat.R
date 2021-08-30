@@ -1,4 +1,4 @@
 library(testthat)
-library(dbfmcl)
+library(scigenex)
 
-test_check("dbfmcl")
+test_check("scigenex")

@@ -29,6 +29,7 @@ test_that("Checking DBF is writting the output in the correct directory...", {
   m[101:200,11:20] <- m[101:200,11:20] + 3
   m[201:300,5:15] <- m[201:300,5:15] + -2
   #Create an output directory in the current folder
+  unlink("tmp_output", recursive = TRUE)
   dir.create(path = "tmp_output")
   #Run DBF
   res <- DBF(data = m,
@@ -45,5 +46,5 @@ test_that("Checking DBF is writting the output in the correct directory...", {
   expect_equal(out, TRUE)
   #Remove temporary files
   file.remove("tmp_output/test_.dbf_out.txt")
-  file.remove("tmp_output")
+  unlink("tmp_output", recursive = TRUE)
 })
