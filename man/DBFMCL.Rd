@@ -155,11 +155,19 @@ write_clust(res, filename_out = "ALL.sign.txt")
 
 }
 \references{
-Van Dongen S. (2000) A cluster algorithm for graphs. National
+- Van Dongen S. (2000) A cluster algorithm for graphs. National
 Research Institute for Mathematics and Computer Science in the 1386-3681.
+- Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud
+S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
+and flexible toolbox to explore productively the transcriptional landscape
+of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
 \author{
 Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 D.
 }
-\keyword{manip}
+\keyword{MCL.}
+\keyword{classification,}
+\keyword{clustering,}
+\keyword{expression,}
+\keyword{gene}

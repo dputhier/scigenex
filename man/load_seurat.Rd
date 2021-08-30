@@ -20,7 +20,7 @@ load_seurat(object, seurat_obj = NULL, dimplot_obj = NULL)
 A ClusterSet object.
 }
 \description{
-Load a seurat object into a DBFMCL. At the moment the objective is mainly
+Load a seurat object into a ClusterSet object. At the moment the objective is mainly
 to store cell identity (i.e cell types/groups to barcode mapping) and
 cell type to color mapping.
 }
