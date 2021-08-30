@@ -28,8 +28,7 @@ print_msg <- function(msg, msg_type="INFO"){
 #################################################################
 ##    DEFINITION OF A SPECIFIC CLASS OBJECT : ClusterSet
 #################################################################
- 
-library(Biobase)
+
 library(ggplot2)
 library(reshape2)
 library(dplyr)
