@@ -34,6 +34,7 @@ install:
 
 test:
 	@echo ">>> Testing package"
+	@rm -rf tests/testthat 
 	@echo "devtools::test()" | R --slave
 
 all: doc install check test
