@@ -1,6 +1,19 @@
 
 # Changelog
 
+## v2.0.1
+
+### Bug Fixes
+
+### API/CLI Changes
+
+*   Scigenex now depends on R 4.0.0
+*   No more reference to Biobase in the code.
+
+### Code changes
+
+### New Features
+
 
 ## v0.1.7
 
