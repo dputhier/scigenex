@@ -34,7 +34,7 @@ install:
 
 test:
 	@echo ">>> Testing package"
-	@rm -rf `ls tests/testthat/| grep -v \R$`
+	@rm -rf `ls tests/testthat/| grep -v \R$$`
 	@echo "devtools::test()" | R --slave
 
 all: doc install check test
