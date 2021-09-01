@@ -804,7 +804,7 @@ DBFMCL <- function(data = NULL,
                    filename = NULL, 
                    path = ".",
                    output_path = ".",
-                   optional_output = FALSE,
+                   optional_output = TRUE,
                    mcl_cmd_line=FALSE,
                    mcl_cmd_line_threads=1,
                    name = NULL,
@@ -1046,7 +1046,7 @@ DBFMCL <- function(data = NULL,
 DBF <- function(data,
                 output_path = ".",
                 name = NULL,
-                optional_output = FALSE,
+                optional_output = TRUE,
                 distance_method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
@@ -1088,7 +1088,7 @@ DBF <- function(data,
         # Character string containing all the options refered in the fprint_selected function in the C++ code
         options <- c( "dists,thresholds")
       } else {
-        options <- FALSE
+        options <- ""
       }
       
       
