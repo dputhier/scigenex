@@ -1,7 +1,12 @@
 
 # Changelog
 
-## v2.0.1
+## v1.0.2
+
+*   Fix fprint_selected function in C code byt changing type of len varibale to size_t
+*   Set default optional_output parameter of DBF and DBFMCL function to TRUE
+
+## v1.0.1
 
 ### Bug Fixes
 
