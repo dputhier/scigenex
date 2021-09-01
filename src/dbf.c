@@ -520,7 +520,7 @@ void fprint_selected( char *options, char *fr, int verbose,
 	char *option = NULL;
 	char *outputFN = NULL;
 	FILE *fd;
-	char len = 0;
+	size_t len = 0;
 
 	// Output file naming and opening
 	len = strlen( fr ) + 30;

@@ -1088,7 +1088,7 @@ DBF <- function(data,
         # Character string containing all the options refered in the fprint_selected function in the C++ code
         options <- c( "dists,thresholds")
       } else {
-        options <- NULL
+        options <- ""
       }
       
       
