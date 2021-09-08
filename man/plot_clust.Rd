@@ -44,7 +44,7 @@ plot_clust(
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
 
-\item{floor}{A floor value (NULL for no ceiling). flooring is performed after log transformation, centering and standardization.}
+\item{floor}{A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.}
 
 \item{centering}{Whether rows should be centered.}
 }
