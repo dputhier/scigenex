@@ -286,15 +286,15 @@ setMethod("load_seurat",
         stop("The number of cells is not the same in ClusterSet object and Seurat object.")
       }
 
-      g <- ggplot2::ggplot_build(dimplot_obj)
-      tmp_mat <- dplyr::distinct(as.data.frame(cbind(g$data[[1]]$colour,
+      g <- ggplot_build(dimplot_obj)
+      tmp_mat <- distinct(as.data.frame(cbind(g$data[[1]]$colour,
                                               as.character(g$plot$data$ident))))
       cell_col_tmp <- tmp_mat[,1]
       cell_grp_tmp <- tmp_mat[,2]
-      object@cell_colors <- stats::setNames(as.character(cell_col_tmp), cell_grp_tmp)
+      object@cell_colors <- setNames(as.character(cell_col_tmp), cell_grp_tmp)
 
-      tmp_mat <- dplyr::distinct(as.data.frame(cbind(rownames(g$plot$data), as.character(g$plot$data$ident))))
-      object@cell_types <- stats::setNames(as.character(tmp_mat[,2]), tmp_mat[,1])
+      tmp_mat <- distinct(as.data.frame(cbind(rownames(g$plot$data), as.character(g$plot$data$ident))))
+      object@cell_types <- setNames(as.character(tmp_mat[,2]), tmp_mat[,1])
 
       object@cell_order <- rownames(g$plot$data)[order(g$plot$data$ident)]
 
@@ -431,18 +431,18 @@ setMethod(
       if(length(object@cell_types) > 0 & length(object@cell_colors) > 0){
         print_msg("Adding cell populations to the diagram.", msg_type="DEBUG")
         cell_types <- NULL # Avoid "no visible binding for global variable" inn R check.
-        p <- p + ggplot2::geom_vline(aes(xintercept= samples, color=cell_types))
-        p <- p + ggplot2::scale_color_manual(values=object@cell_colors,  guide = ggplot2::guide_legend(override.aes = list(size = 5)))
+        p <- p + geom_vline(aes(xintercept= samples, color=cell_types))
+        p <- p + scale_color_manual(values=object@cell_colors,  guide = guide_legend(override.aes = list(size = 5)))
       }
 
       if(! average_only){
         print_msg("Adding gene profile.", msg_type="DEBUG")
-        p <- p + ggplot2::geom_line(color = "azure3", aes(group = gene), size=0.1)
+        p <- p + geom_line(color = "azure3", aes(group = gene), size=0.1)
       }
 
       print_msg("Adding average profile.", msg_type="DEBUG")
 
-      p <- p + ggplot2::geom_line(
+      p <- p + geom_line(
         data = m_melt %>%
           group_by(cluster, samples) %>%
           summarise(cluster_mean = mean(value)),
@@ -909,9 +909,9 @@ DBFMCL <- function(data = NULL,
         print_msg(paste("Reading : ", dbf_out_file), msg_type="WARNING")
         graph_tab <- read.csv(dbf_out_file, sep=" ", header=F)
         colnames(graph_tab) <- c("source", "dest", "weight")
-        graph_igraph <-  igraph::graph_from_data_frame(graph_tab, directed=F)
-        graph_adj <- igraph::as_adj(graph_igraph, attr='weight')
-        mcl_res <- MCL::mcl(graph_adj,  expansion = 2, inflation = 8, allow1 = TRUE, addLoops = FALSE)
+        graph_igraph <-  graph_from_data_frame(graph_tab, directed=F)
+        graph_adj <- as_adj(graph_igraph, attr='weight')
+        mcl_res <- mcl(graph_adj,  expansion = 2, inflation = 8, allow1 = TRUE, addLoops = FALSE)
         cluster_to_genes <- split(rownames(graph_adj), mcl_res$Cluster)
         print_msg("Writing gene clusters", msg_type="INFO")
         print_msg(mcl_out_file, msg_type="DEBUG")
