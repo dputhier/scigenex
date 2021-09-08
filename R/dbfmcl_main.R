@@ -34,6 +34,7 @@ library(reshape2)
 library(dplyr)
 library(MCL)
 library(igraph)
+library(iheatmapr)
 
 #' @title
 #' ClusterSet
