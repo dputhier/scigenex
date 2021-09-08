@@ -605,6 +605,134 @@ plot_dist <-  function(file_name,
 
 
 #################################################################
+##    Define the plot_heatmap
+#################################################################
+
+#' @title
+#' plot_heatmap
+#' @description
+#' Plot the observed and simulated distance with the Kth nearest neighbors.
+#' @param data A ClusterSet object.
+#'
+#' @return Iheatmap-class object, which can be printed to generate an interactive graphic
+#' @export
+#'
+#' @examples
+#' m <- matrix(rnorm(6000), nc=20)
+#' m[1:100,1:10] <- m[1:100,1:10] + 4
+#' m[101:200,11:20] <- m[101:200,11:20] + 3
+#' m[201:300,5:15] <- m[201:300,5:15] + -2
+#' plot_heatmap(data = m, name = "Expression", colors = c("green", "black", "red"))
+#' 
+
+#' @rdname plot_heatmap
+
+plot_heatmap <- function(object,
+                         center = TRUE,
+                         ceil = 2,
+                         floor = -2,
+                         cell_order = NULL,
+                         cell_ordering_method = "hclust",
+                         name = NULL,
+                         xlab = NULL,
+                         ylab = NULL,
+                         legend_name = "Expression level",
+                         show_legend = TRUE,
+                         colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
+                         row_labels = TRUE,
+                         col_labels = FALSE,
+                         line_size = 15
+) {
+  
+  m <- object@data
+  
+  # Centering
+  if(center){
+    print_msg("Centering matrix.", msg_type="DEBUG")
+    m <- t(scale(t(m), center = TRUE, scale = FALSE))
+  }
+  
+  
+  # Cell order
+  if (!is.null(cell_order)){
+    print_msg("Ordering cells.", msg_type="DEBUG")
+    m <- m[,cell_order]
+  } else {
+    if (cell_ordering_method == "hclust"){
+      print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
+      m_dist <- as.dist(1 - cor(m, method = 'pearson'))
+      m_clust <- hclust(m_dist, method = 'average')
+      m <- m[,m_clust$order]
+    }
+  }
+  
+  # Ceiling and flooring
+  if(!is.null(ceil)){
+    print_msg("Ceiling matrix.", msg_type="DEBUG")
+    m[m > ceil] <- ceil
+  }
+  
+  if(!is.null(floor)){
+    print_msg("Flooring matrix.", msg_type="DEBUG")
+    m[m < floor] <- floor
+  }  
+  
+  
+  # Add blank row to separate feature clusters in heatmap
+  ## Create blank row
+  blank_row <- data.frame()
+  blank_row[1:line_size, 1:ncol(object@data)] <- NA
+  colnames(blank_row) <- colnames(object@data)
+  
+  ## Insert blank row in matrix
+  m_blank <- data.frame()
+  for (i in 1:length(object@size)) {
+    row_start <- sum(object@size[0:(i-1)])+1
+    row_end <- sum(object@size[1:i])
+    m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
+    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- NA
+    m_blank <- rbind(m_blank, m_blank_loop)
+  }
+  m <- as.matrix(m_blank)
+  
+  
+  
+  ####### Heatmap #######
+  # Main heatmap
+  print_msg("Plotting heatmap.", msg_type="DEBUG")
+  
+  htmp <- main_heatmap(data = m,
+                       name = legend_name,
+                       show_colorbar = show_legend,
+                       colors = colors,
+                       row_order = seq_len(nrow(m)))
+  
+  htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
+  
+  # Add labels
+  if(row_labels){
+    htmp <- htmp %>% add_row_labels(font = list(size = 7))}
+  if(col_labels){
+    htmp <- htmp %>% add_col_labels(font = list(size = 7))}
+  
+  
+  # Add titles
+  if(!is.null(ylab)){
+    htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
+  if(!is.null(xlab)){
+    htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))}
+  if(!is.null(name)){
+    htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
+  
+  
+  
+  return(htmp)
+}
+
+
+
+
+#################################################################
 ##    Define the write function for class ClusterSet
 #################################################################
 
