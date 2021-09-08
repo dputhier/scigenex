@@ -317,7 +317,7 @@ setMethod("load_seurat",
 #' @param average_line_color The color of the average profile.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
-#' @param floor A floor value (NULL for no ceiling). flooring is performed after log transformation, centering and standardization.
+#' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
 #'
 #' @return A ggplot diagram.
@@ -612,9 +612,23 @@ plot_dist <-  function(file_name,
 #' plot_heatmap
 #' @description
 #' Plot the observed and simulated distance with the Kth nearest neighbors.
-#' @param data A ClusterSet object.
+#' @param object A ClusterSet object.
+#' @param center A logical to indicate whether to center row.. 
+#' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed centering.
+#' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
+#' @param cell_order A vector of cell names already ordered.
+#' @param cell_ordering_method The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.
+#' @param name A title for the heatmap.
+#' @param xlab A title for the x axis.
+#' @param ylab A title for the y axis.
+#' @param colorbar_name A title for the colorbar.
+#' @param show_legend A logical to indicate whether to show colorbar.
+#' @param colors A vector of colors.
+#' @param row_labels A logical to indicate whether to show row labels.
+#' @param col_labels A logical to indicate whether to show col labels.
+#' @param line_size An integer for the horizontal white line size.
 #'
-#' @return Iheatmap-class object, which can be printed to generate an interactive graphic
+#' @return Iheatmap-class object
 #' @export
 #'
 #' @examples
@@ -622,7 +636,16 @@ plot_dist <-  function(file_name,
 #' m[1:100,1:10] <- m[1:100,1:10] + 4
 #' m[101:200,11:20] <- m[101:200,11:20] + 3
 #' m[201:300,5:15] <- m[201:300,5:15] + -2
-#' plot_heatmap(data = m, name = "Expression", colors = c("green", "black", "red"))
+#' 
+#' res <- DBFMCL(data=m,
+#' distance_method="pearson",
+#' av_dot_prod_min = 0,
+#' inflation = 1.2,
+#' k=25,
+#' fdr = 10,
+#' mcl_cmd_line = TRUE)
+#' 
+#' plot_heatmap(object = res)
 #' 
 
 #' @rdname plot_heatmap
@@ -636,13 +659,12 @@ plot_heatmap <- function(object,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
-                         legend_name = "Expression level",
+                         colorbar_name = "Expression level",
                          show_legend = TRUE,
                          colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
                          row_labels = TRUE,
                          col_labels = FALSE,
-                         line_size = 15
-) {
+                         line_size = 15) {
   
   m <- object@data
   
@@ -702,7 +724,7 @@ plot_heatmap <- function(object,
   print_msg("Plotting heatmap.", msg_type="DEBUG")
   
   htmp <- main_heatmap(data = m,
-                       name = legend_name,
+                       name = colorbar_name,
                        show_colorbar = show_legend,
                        colors = colors,
                        row_order = seq_len(nrow(m)))
