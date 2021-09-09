@@ -6,7 +6,7 @@
 #' 
 #' @importFrom methods new slot slotNames setClass signature setMethod setGeneric
 #' @importFrom grDevices colorRampPalette
-#' @importFrom stats sd dist hclust heatmap median rnorm setNames
+#' @importFrom stats sd dist hclust heatmap median rnorm setNames as.dist hclust
 #' @importFrom utils object.size read.table write.table read.csv
 #' @importFrom dplyr summarise group_by distinct
 #' @importFrom ggplot2 ggplot geom_line aes geom_tile geom_vline geom_text
@@ -17,6 +17,7 @@
 #' @importFrom testthat expect_equal
 #' @importFrom igraph graph_from_data_frame as_adj
 #' @importFrom MCL mcl
+#' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_row_title add_col_title
 #' 
 #' 
 NULL
