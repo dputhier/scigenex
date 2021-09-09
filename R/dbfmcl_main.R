@@ -665,6 +665,7 @@ plot_heatmap <- function(object,
                          colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
                          row_labels = TRUE,
                          col_labels = FALSE,
+                         label_size = 9,
                          line_size = 15) {
   
   m <- object@data
@@ -705,6 +706,7 @@ plot_heatmap <- function(object,
   ## Create blank row
   blank_row <- data.frame()
   blank_row[1:line_size, 1:ncol(object@data)] <- NA
+  row.names(blank_row) <- make.names(rep("w_line", line_size), unique=TRUE)
   colnames(blank_row) <- colnames(object@data)
   
   ## Insert blank row in matrix
@@ -734,9 +736,9 @@ plot_heatmap <- function(object,
   
   # Add labels
   if(row_labels){
-    htmp <- htmp %>% add_row_labels(font = list(size = 7))}
+    htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
   if(col_labels){
-    htmp <- htmp %>% add_col_labels(font = list(size = 7))}
+    htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
   
   
   # Add titles
