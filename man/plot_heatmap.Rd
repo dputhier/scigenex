@@ -7,8 +7,8 @@
 plot_heatmap(
   object,
   center = TRUE,
-  ceil = 2,
-  floor = -2,
+  ceil = 1,
+  floor = -1,
   cell_order = NULL,
   cell_ordering_method = "hclust",
   name = NULL,
@@ -19,6 +19,7 @@ plot_heatmap(
   colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
   row_labels = TRUE,
   col_labels = FALSE,
+  label_size = 9,
   line_size = 15
 )
 }
@@ -50,6 +51,8 @@ plot_heatmap(
 \item{row_labels}{A logical to indicate whether to show row labels.}
 
 \item{col_labels}{A logical to indicate whether to show col labels.}
+
+\item{label_size}{A value for label font size.}
 
 \item{line_size}{An integer for the horizontal white line size.}
 }
