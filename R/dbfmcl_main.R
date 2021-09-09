@@ -627,6 +627,7 @@ plot_dist <-  function(file_name,
 #' @param colors A vector of colors.
 #' @param row_labels A logical to indicate whether to show row labels.
 #' @param col_labels A logical to indicate whether to show col labels.
+#' @param label_size A value for label font size.
 #' @param line_size An integer for the horizontal white line size.
 #'
 #' @return Iheatmap-class object
@@ -662,7 +663,7 @@ plot_heatmap <- function(object,
                          ylab = NULL,
                          colorbar_name = "Expression level",
                          show_legend = TRUE,
-                         colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
+                         colors = c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"),
                          row_labels = TRUE,
                          col_labels = FALSE,
                          label_size = 9,
@@ -715,7 +716,7 @@ plot_heatmap <- function(object,
     row_start <- sum(object@size[0:(i-1)])+1
     row_end <- sum(object@size[1:i])
     m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
-    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- NA
+    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
     m_blank <- rbind(m_blank, m_blank_loop)
   }
   m <- as.matrix(m_blank)
