@@ -1,4 +1,7 @@
 # @importClassesFrom methods character list matrix vector numeric
+#' 
+#' @useDynLib scigenex
+#' 
 #' @importMethodsFrom methods show
 #' 
 #' @importFrom methods new slot slotNames setClass signature setMethod setGeneric
