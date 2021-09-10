@@ -41,6 +41,7 @@ library(iheatmapr)
 #' @description
 #' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
+#' @slot opt_name character. The name is file containing distance and threshold cut-off.
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
@@ -76,6 +77,7 @@ library(iheatmapr)
 setClass("ClusterSet",
   representation = list(
     name = "character",
+    opt_name = "character",
     data = "matrix",
     cluster = "vector",
     size = "vector",
@@ -1274,6 +1276,7 @@ DBF <- function(data,
 
       informative <- a$m2[a$m2 != ""]
       if (length(informative) > 0) {
+        obj@opt_name <- "extra_output-dbfAll.txt"
         obj@data <- as.matrix(data[a[[4]] %in% informative, ])
         obj@cluster <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)

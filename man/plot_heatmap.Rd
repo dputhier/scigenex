@@ -16,7 +16,7 @@ plot_heatmap(
   ylab = NULL,
   colorbar_name = "Expression level",
   show_legend = TRUE,
-  colors = c("#FFCA3A", "#B2182B", "#000000", "#2166AC", "#A9D6E5"),
+  colors = c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"),
   row_labels = TRUE,
   col_labels = FALSE,
   label_size = 9,
