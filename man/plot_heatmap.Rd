@@ -11,6 +11,7 @@ plot_heatmap(
   floor = -1,
   cell_order = NULL,
   cell_ordering_method = "hclust",
+  use_top_genes = FALSE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -35,6 +36,8 @@ plot_heatmap(
 \item{cell_order}{A vector of cell names already ordered.}
 
 \item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
+
+\item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
 \item{name}{A title for the heatmap.}
 
