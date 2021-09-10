@@ -44,7 +44,7 @@ library(iheatmapr)
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
-#' @slot top_genes dataframe. The highly co-expressed genes of each gene clusters.
+#' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
 #' @slot algorithm vector. The algorithm used to produce the clusters.
@@ -1492,12 +1492,12 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
 top_genes <- function(object,
                       top = 10) {
   
-  
+  # Initialization for the for loop
   cluster <- object@cluster
-
   l_cor_means <- list()
   genes_top <- matrix(ncol = top)
   
+  # Extract top co-expressed genes for each gene cluster
   for (i in 1: length(object@size)) {
     #Extract gene names in cluster i
     genes <- names(cluster[which(cluster == i)])
@@ -1509,17 +1509,19 @@ top_genes <- function(object,
     cor_means <- colMeans(cor_genes)
     cor_means <- cor_means[order(cor_means, decreasing = TRUE)]
     
-    #Extract n_top genes with the highest coorelation mean
+    #Extract top genes with the highest correlation mean
     genes_top <- rbind(genes_top, names(cor_means[1:top]))
   }
+  
+  # Prepare genes_top matrix
   genes_top <- genes_top[2:(length(object@size)+1),]
-  colnames(genes_top) <- make.names(rep("gene.top", n_top+1), unique=TRUE)[2:(top+1)]
+  colnames(genes_top) <- make.names(rep("gene.top", top+1), unique=TRUE)[2:(top+1)]
   rownames(genes_top) <- make.names(rep("cluster", length(object@size)+1), unique=TRUE)[2:(length(object@size)+1)]
   
-  
+  # Put genes_top matrix in object@top_genes
   object@top_genes <- genes_top
   
-  
+  return(object)
 }
 
 
