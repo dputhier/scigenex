@@ -41,7 +41,7 @@ library(iheatmapr)
 #' @description
 #' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
-#' @slot opt_name character. The name is file containing distance and threshold cut-off.
+#' @slot opt_name character. The name is file containing distance and cutting threshold.
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
@@ -519,9 +519,10 @@ setMethod(
 #' plot_dist
 #' @description
 #' Plot the observed and simulated distance with the Kth nearest neighbors.
-#' @param file_name The name of the input file containing distance and threshold values.
-#' @param path a character string representing the data directory where
-#' input file is stored. Default to current working directory.
+#' @param object A ClusterSet object.
+#' @param path A character string representing the data directory where
+#' input file containing distances and cutting threshold is stored. 
+#' Default to current working directory.
 #'
 #' @return A ggplot diagram.
 #' @export
@@ -532,16 +533,18 @@ setMethod(
 #' @rdname plot_dist
 
 
-plot_dist <-  function(file_name,
+plot_dist <-  function(object,
                        path = ".") {
+  #Extract name of the file containing distance and cutting threshold.
+  file_name <- object@opt_name
   
+  #Path to the file containg distance and cutting threshold.
   if (path == ".") path <- getwd()
-  
   file_path <- file.path(path, file_name)
   file_path <- gsub(pattern = "//", replacement = "/", x = file_path)
+  
+  #Read file containing distance and cutting threshold.
   opt_data <- readLines(file_path)
-  
-  
   
   # Extract cutting threshold value
   dknn <- opt_data[(which(opt_data == ">>thresholds")+1):length(opt_data)]
