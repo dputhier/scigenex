@@ -1475,8 +1475,8 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
 #' @description
 #' Extract the highly co-expressed genes of each gene cluster.
 #' @param object A \code{ClusterSet} object.
-#' @param top A value
-#' @param cluster A vector
+#' @param top A value for the number of the most similar genes in gene clusters.
+#' @param cluster A vector of gene cluster identity.
 #'
 #' @return 
 #' @export top_genes
