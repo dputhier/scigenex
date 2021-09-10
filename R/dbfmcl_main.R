@@ -44,6 +44,7 @@ library(iheatmapr)
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
+#' @slot top_genes dataframe. The highly co-expressed genes of each gene clusters.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
 #' @slot algorithm vector. The algorithm used to produce the clusters.
@@ -79,6 +80,7 @@ setClass("ClusterSet",
     data = "matrix",
     cluster = "vector",
     size = "vector",
+    top_genes = "matrix",
     center = "matrix",
     parameters = "list",
     algorithm = "vector",
@@ -92,6 +94,7 @@ setClass("ClusterSet",
     data = matrix(nr = 0, nc = 0),
     cluster = numeric(),
     size = numeric(),
+    top_genes = matrix(),
     center = matrix(nc = 0, nr = 0),
     parameters = list(),
     algorithm = character(),
@@ -1122,6 +1125,7 @@ DBFMCL <- function(data = NULL,
       if (nb > 0) {
         obj@name <- name
         obj@data <- as.matrix(data_matrix[gene_list, ])
+        names(clusters) <- rownames(obj@data)
         obj@cluster <- clusters
         obj@size <- size
 
@@ -1459,6 +1463,72 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
 
   return(list(data = data, name = name))
 }
+
+
+
+#################################################################
+##    Define top_genes function for ClusterSet object
+#################################################################
+
+#' @title
+#' Best co-expressed genes from each gene cluster
+#' @description
+#' Extract the highly co-expressed genes of each gene cluster.
+#' @param object A \code{ClusterSet} object.
+#'
+#' @return 
+#' @export top_genes
+#'
+#' @examples
+#' 
+#' \dontrun{
+#' ## with an artificial dataset
+#'
+#' m <- matrix(rnorm(80000), nc = 20)
+#' res <- get_data_4_DBFMCL(data=m)
+#' }
+#' 
+
+top_genes <- function(object,
+                      top = 10) {
+  
+  
+  cluster <- object@cluster
+
+  l_cor_means <- list()
+  genes_top <- matrix(ncol = top)
+  
+  for (i in 1: length(object@size)) {
+    #Extract gene names in cluster i
+    genes <- names(cluster[which(cluster == i)])
+    
+    #Compute correlations between genes in cluster i
+    cor_genes <- cor(t(object@data[genes,]), method = "pearson") # /!\ UTILISER LA DISTANCE CONTENU DANS LE ClusterSet OBJECT /!\ res_gene@parameters$distance_method
+    
+    #Compute mean correlation for each gene in cluster i
+    cor_means <- colMeans(cor_genes)
+    cor_means <- cor_means[order(cor_means, decreasing = TRUE)]
+    
+    #Extract n_top genes with the highest coorelation mean
+    genes_top <- rbind(genes_top, names(cor_means[1:top]))
+  }
+  genes_top <- genes_top[2:(length(object@size)+1),]
+  colnames(genes_top) <- make.names(rep("gene.top", n_top+1), unique=TRUE)[2:(top+1)]
+  rownames(genes_top) <- make.names(rep("cluster", length(object@size)+1), unique=TRUE)[2:(length(object@size)+1)]
+  
+  
+  object@top_genes <- genes_top
+  
+  
+}
+
+
+
+
+
+
+
+
 #########################################################
 ##      END PACKAGE scigenex
 #########################################################
