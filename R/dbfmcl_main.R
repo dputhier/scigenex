@@ -627,6 +627,7 @@ plot_dist <-  function(object,
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_order A vector of cell names already ordered.
 #' @param cell_ordering_method The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.
+#' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
@@ -666,6 +667,7 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_order = NULL,
                          cell_ordering_method = "hclust",
+                         use_top_genes = FALSE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
@@ -729,6 +731,16 @@ plot_heatmap <- function(object,
   }
   m <- as.matrix(m_blank)
   
+  # Reduce m rows to only keep genes from top_genes
+  if(use_top_genes) {
+    if (nrow(object@top_genes) == 1 &
+        ncol(object@top_genes) == 1 &
+        is.na(object@top_genes[1,1])) {
+      stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
+    }
+    genes_top <- unlist(as.data.frame(t(object@top_genes)), use.names = FALSE)
+    m <- m[genes_top,]
+  }
   
   
   ####### Heatmap #######
