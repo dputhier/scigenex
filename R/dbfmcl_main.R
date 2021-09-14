@@ -739,6 +739,7 @@ plot_heatmap <- function(object,
       stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
     }
     genes_top <- unlist(as.data.frame(t(object@top_genes)), use.names = FALSE)
+    genes_top <- genes_top[!is.na(genes_top)]
     m <- m[genes_top,]
   }
   
