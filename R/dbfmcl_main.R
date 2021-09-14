@@ -1527,8 +1527,13 @@ top_genes <- function(object,
                       top = 20,
                       cluster = "all") {
   
+   if(unique(cluster == "all")) {
+    cluster <- c(1:length(object@size))
+   }
+  
+  # Display a warning message if there is less than n top genes in a gene cluster
   loop <- 0
-  for (size in object@size){
+  for (size in object@size[cluster]){
     loop <- 1 + loop
     if(top > size) {
       warning(paste0("Number of top genes is greater than the number of genes in cluster ", loop, ". All genes will be use and order by similarity rank."))
@@ -1539,10 +1544,6 @@ top_genes <- function(object,
   clusters <- object@cluster
   l_cor_means <- list()
   genes_top <- matrix(ncol = top)
-  
-  if(unique(cluster == "all")) {
-    cluster <- c(1:length(object@size))
-  }
   
   # Extract top co-expressed genes for each gene cluster
   for (i in cluster) {
