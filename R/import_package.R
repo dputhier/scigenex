@@ -18,6 +18,7 @@
 #' @importFrom igraph graph_from_data_frame as_adj
 #' @importFrom MCL mcl
 #' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_row_title add_col_title
+#' @importFrom gprofiler2 gost gostplot
 #' 
 #' 
 NULL
