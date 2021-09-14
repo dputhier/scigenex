@@ -2,6 +2,8 @@
 
 export(DBF)
 export(DBFMCL)
+export(enrich_analysis)
+export(enrich_viz)
 export(get_data_4_DBFMCL)
 export(load_seurat)
 export(mcl_system_cmd)
