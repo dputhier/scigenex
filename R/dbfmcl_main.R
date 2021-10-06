@@ -40,7 +40,7 @@ library(igraph)
 #' @description
 #' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
-#' @slot data matrix. The matrix containing the filtered/partitionned data.
+#' @slot data matrix. The matrix containing the filtered/partitioned data.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
 #' @slot center matrix. The centers of each clusters.
@@ -50,6 +50,7 @@ library(igraph)
 #' @slot cell_colors vector. The cell types to color mapping.
 #' @slot cell_order vector. How cell should be ordered.
 #' @slot cluster_annotations list. Functional annotation of clusters.
+#' @slot plot_annotations list. Plot from functional enrichment analysis.
 #' @return A ClusterSet object.
 #' @export
 #'
@@ -84,7 +85,8 @@ setClass("ClusterSet",
     cell_types = "vector",
     cell_colors = "vector",
     cell_order = "vector",
-    cluster_annotations = "list"
+    cluster_annotations = "list",
+    plot_annotations = "list"
   ),
   prototype = list(
     name = character(),
@@ -97,7 +99,8 @@ setClass("ClusterSet",
     cell_types = vector(),
     cell_colors = vector(),
     cell_order = vector(),
-    cluster_annotations = list()
+    cluster_annotations = list(),
+    plot_annotations = list()
   )
 )
 
@@ -1409,6 +1412,7 @@ setMethod("enrich_viz",
                                       interactive = TRUE)
               plot_enrich <- plot_enrich %>% layout(title = paste0("Cluster ", cur_cluster),
                                                     xaxis = list(title = 'Database'))
+              object@plot_annotations <- plot_enrich
               print(plot_enrich)
             }
           }
