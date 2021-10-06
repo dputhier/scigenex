@@ -1360,8 +1360,8 @@ setMethod("enrich_analysis",
 ##' @description
 #' Retrieve enrichment analysis results from a ClusterSet object and draw a Manhattan-like-plot.
 #' @param object A \code{ClusterSet} object.
-#' @param interactive A boolean specifiying if the plot should be interactive.
-#' @param clusters  A vector of cluster names to plot
+#' @param clusters  A vector of cluster id to plot.
+#' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
 #' @export enrich_viz
@@ -1375,26 +1375,43 @@ setMethod("enrich_analysis",
 #' }
 
 setGeneric("enrich_viz",
-    function(object,
-            interactive=TRUE,
-            clusters = 1) {
-      standardGeneric("enrich_viz")
-})
+           function(object,
+                    clusters = "all",
+                    verbose = TRUE) {
+             standardGeneric("enrich_viz")
+           })
 
 #' @rdname enrich_viz
 setMethod("enrich_viz",
-    signature(object = "ClusterSet"),
-    function(object,
-            interactive=TRUE,
-            clusters = 1) {
-        if(length(clusters) >= 2){
-          print("Error, you provided more than 1 cluster. For now, the package can't draw enrichment analysis results for more than one cluster.")
-        }else if (length(clusters) == 0) {
-          print("Error, you did not specified any cluster.")
-        }else{
-          gostplot(object@cluster_annotations[[clusters]], interactive = interactive)
-        }
-    }
+          signature(object = "ClusterSet"),
+          function(object,
+                   clusters = "all",
+                   verbose = TRUE) {
+            
+            if (clusters == "all"){
+              clusters <- unique(object@cluster)
+            }
+            
+            for (cur_cluster in clusters) {
+              # Verify if the current cluster id provided exists
+              if (!(cur_cluster %in% unique(object@cluster))) {
+                stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
+              }
+              
+              # Print an informative message to announce plot of the results of the current cluster
+              if (verbose) {
+                print_msg(msg_type = "INFO",
+                          msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
+              }
+              
+              # Create a plotly result plot
+              plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
+                                      interactive = TRUE)
+              plot_enrich <- plot_enrich %>% layout(title = paste0("Cluster ", cur_cluster),
+                                                    xaxis = list(title = 'Database'))
+              print(plot_enrich)
+            }
+          }
 )
 
 #########################################################
