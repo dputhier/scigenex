@@ -50,7 +50,6 @@ library(igraph)
 #' @slot cell_colors vector. The cell types to color mapping.
 #' @slot cell_order vector. How cell should be ordered.
 #' @slot cluster_annotations list. Functional annotation of clusters.
-#' @slot plot_annotations list. Plot from functional enrichment analysis.
 #' @return A ClusterSet object.
 #' @export
 #'
@@ -85,8 +84,7 @@ setClass("ClusterSet",
     cell_types = "vector",
     cell_colors = "vector",
     cell_order = "vector",
-    cluster_annotations = "list",
-    plot_annotations = "list"
+    cluster_annotations = "list"
   ),
   prototype = list(
     name = character(),
@@ -99,8 +97,7 @@ setClass("ClusterSet",
     cell_types = vector(),
     cell_colors = vector(),
     cell_order = vector(),
-    cluster_annotations = list(),
-    plot_annotations = list()
+    cluster_annotations = list()
   )
 )
 
@@ -1391,9 +1388,12 @@ setMethod("enrich_viz",
                    clusters = "all",
                    verbose = TRUE) {
             
-            if (clusters == "all"){
-              clusters <- unique(object@cluster)
+            if (length(clusters) == 1){
+              if (clusters == "all"){
+                clusters <- unique(object@cluster)
+              }
             }
+            
             
             for (cur_cluster in clusters) {
               # Verify if the current cluster id provided exists
@@ -1410,11 +1410,12 @@ setMethod("enrich_viz",
               # Create a plotly result plot
               plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
                                       interactive = TRUE)
-              plot_enrich <- plot_enrich %>% layout(title = paste0("Cluster ", cur_cluster),
-                                                    xaxis = list(title = 'Database'))
-              object@plot_annotations <- plot_enrich
+              plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
+                                                            xaxis = list(title = 'Database'))
+              object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
               print(plot_enrich)
             }
+            return(object)
           }
 )
 
