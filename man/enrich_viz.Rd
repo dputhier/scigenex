@@ -5,16 +5,16 @@
 \alias{enrich_viz,ClusterSet-method}
 \title{Manhattan-like-plot of enrichment analysis results}
 \usage{
-enrich_viz(object, interactive = TRUE, clusters = 1)
+enrich_viz(object, clusters = "all", verbose = TRUE)
 
-\S4method{enrich_viz}{ClusterSet}(object, interactive = TRUE, clusters = 1)
+\S4method{enrich_viz}{ClusterSet}(object, clusters = "all", verbose = TRUE)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
-\item{interactive}{A boolean specifiying if the plot should be interactive.}
+\item{clusters}{A vector of cluster id to plot.}
 
-\item{clusters}{A vector of cluster names to plot}
+\item{verbose}{Whether or not to print progression in the console.}
 }
 \value{
 A \code{ClusterSet} object

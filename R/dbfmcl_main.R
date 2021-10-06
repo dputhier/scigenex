@@ -1412,9 +1412,18 @@ setMethod("enrich_viz",
                                       interactive = TRUE)
               plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
                                                             xaxis = list(title = 'Database'))
+              
+              # Store the plot in the cluster_annotation slot
               object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
               print(plot_enrich)
             }
+            
+            # Print a message to inform which slot contains the results
+            if (verbose){
+              print_msg(msg_type = "INFO",
+                        msg = paste("Plots are stored in object@cluster_annotations[[<cluster>]]$plot"))
+            }
+            
             return(object)
           }
 )
