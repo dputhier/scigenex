@@ -15,7 +15,7 @@ This class is a representation of a partitioning algorithm and is intented to st
 \describe{
 \item{\code{name}}{character. The original input file name (if applicable).}
 
-\item{\code{data}}{matrix. The matrix containing the filtered/partitionned data.}
+\item{\code{data}}{matrix. The matrix containing the filtered/partitioned data.}
 
 \item{\code{cluster}}{vector. Mapping of row/genes to clusters.}
 
