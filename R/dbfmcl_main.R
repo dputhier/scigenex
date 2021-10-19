@@ -1688,26 +1688,33 @@ setMethod("enrich_viz",
             
             
             for (cur_cluster in clusters) {
-              # Verify if the current cluster id provided exists
+              # Check if the current cluster id provided exists
               if (!(cur_cluster %in% unique(object@cluster))) {
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
-              # Print an informative message to announce plot of the results of the current cluster
-              if (verbose) {
-                print_msg(msg_type = "INFO",
-                          msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
+              # Check if there is a result provided by enrich_analysis function for the current cluster
+              if(is.null(object@cluster_annotations[[cur_cluster]]$result)){
+                print_msg(msg_type = "WARNING",
+                          msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
+              } else {
+                
+                # Print an informative message to announce plot of the results of the current cluster
+                if (verbose) {
+                  print_msg(msg_type = "INFO",
+                            msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
+                }
+                
+                # Create a plotly result plot
+                plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
+                                        interactive = TRUE)
+                plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
+                                                              xaxis = list(title = 'Database'))
+                
+                # Store the plot in the cluster_annotation slot
+                object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
+                print(plot_enrich)
               }
-              
-              # Create a plotly result plot
-              plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
-                                      interactive = TRUE)
-              plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
-                                                            xaxis = list(title = 'Database'))
-              
-              # Store the plot in the cluster_annotation slot
-              object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
-              print(plot_enrich)
             }
             
             # Print a message to inform which slot contains the results
