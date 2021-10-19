@@ -10,7 +10,7 @@ DBFMCL(
   path = ".",
   output_path = ".",
   optional_output = TRUE,
-  mcl_cmd_line = FALSE,
+  mcl_cmd_line = TRUE,
   mcl_cmd_line_threads = 1,
   name = NULL,
   distance_method = c("pearson", "spearman", "euclidean"),
