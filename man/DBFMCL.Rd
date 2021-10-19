@@ -10,8 +10,7 @@ DBFMCL(
   path = ".",
   output_path = ".",
   optional_output = TRUE,
-  mcl_cmd_line = TRUE,
-  mcl_cmd_line_threads = 1,
+  mcl_threads = 1,
   name = NULL,
   distance_method = c("pearson", "spearman", "euclidean"),
   av_dot_prod_min = 2,
@@ -40,9 +39,7 @@ output files will be stored. Default to current working directory.}
 specified output_path directory. This file contains observed and simulated 
 distances, cutting threshold, number of kept genes and FDR value.}
 
-\item{mcl_cmd_line}{Boolean. Whether to use the fast MCL version through command line.}
-
-\item{mcl_cmd_line_threads}{If mcl_cmd_line is TRUE, how many threads should be used (integer).}
+\item{mcl_threads}{An integer to determine number of threads for mcl algorithm.}
 
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}

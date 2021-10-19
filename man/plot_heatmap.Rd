@@ -76,8 +76,7 @@ distance_method="pearson",
 av_dot_prod_min = 0,
 inflation = 1.2,
 k=25,
-fdr = 10,
-mcl_cmd_line = TRUE)
+fdr = 10)
 
 plot_heatmap(object = res)
 

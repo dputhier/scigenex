@@ -653,8 +653,7 @@ plot_dist <-  function(object,
 #' av_dot_prod_min = 0,
 #' inflation = 1.2,
 #' k=25,
-#' fdr = 10,
-#' mcl_cmd_line = TRUE)
+#' fdr = 10)
 #' 
 #' plot_heatmap(object = res)
 #' 
@@ -902,8 +901,7 @@ setMethod(
 #' @param optional_output if TRUE then DBF generate optional output file in the
 #' specified output_path directory. This file contains observed and simulated 
 #' distances, cutting threshold, number of kept genes and FDR value.
-#' @param mcl_cmd_line Boolean. Whether to use the fast MCL version through command line.
-#' @param mcl_cmd_line_threads If mcl_cmd_line is TRUE, how many threads should be used (integer).
+#' @param mcl_threads An integer to determine number of threads for mcl algorithm.
 #' @param distance_method a method to compute the distance to the k-th nearest
 #' neighbor. One of "pearson" (Pearson's correlation coefficient-based
 #' distance), "spearman" (Spearman's rho-based distance), "euclidean".
@@ -980,8 +978,7 @@ DBFMCL <- function(data = NULL,
                    path = ".",
                    output_path = ".",
                    optional_output = TRUE,
-                   mcl_cmd_line=TRUE,
-                   mcl_cmd_line_threads=1,
+                   mcl_threads=1,
                    name = NULL,
                    distance_method = c("pearson", "spearman", "euclidean"),
                    av_dot_prod_min=2,
@@ -993,24 +990,24 @@ DBFMCL <- function(data = NULL,
                    fdr = 10,
                    inflation = 8,
                    set.seed = 123) {
-
+  
   ## testing the system
   if (.Platform$OS.type == "windows") {
     stop("\t--> A unix-like OS is required to launch mcl and cluster programs.")
   }
-
+  
   ## getting parameters
   data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
   data_matrix <- data_source$data
-
+  
   # A simple function to create a random string
   create_rand_str <- function() {
-      v = c(sample(LETTERS, 3, replace = TRUE),
-            sample(0:9, 4, replace = TRUE),
-            sample(letters, 3, replace = TRUE))
-      return(paste0(sample(v),collapse = ""))
+    v = c(sample(LETTERS, 3, replace = TRUE),
+          sample(0:9, 4, replace = TRUE),
+          sample(letters, 3, replace = TRUE))
+    return(paste0(sample(v),collapse = ""))
   }
-
+  
   if (is.null(name)) name <- data_source$name
   if (is.null(name)) name <- create_rand_str()
   
@@ -1032,7 +1029,7 @@ DBFMCL <- function(data = NULL,
   txt <- paste("\n\tInflation: ", inflation, sep = "")
   
   ## writting all parameters
-
+  
   cat(
     "The following parameters will be used :",
     "\n\tWorking directory: ", path,
@@ -1048,8 +1045,8 @@ DBFMCL <- function(data = NULL,
     "commands: ", silent,
     "\n\tMemory used : ", memory_used, "\n\n"
   )
-
-
+  
+  
   ## DBF algorithm, returns a ClusterSet object
   obj <- DBF(data_matrix,
              output_path = output_path,
@@ -1063,116 +1060,92 @@ DBFMCL <- function(data = NULL,
              fdr = fdr,
              set.seed = set.seed
   )
-
+  
   dbf_out_file <- paste0(output_path, "/", name, ".dbf_out.txt")
   dbf_out_file <- gsub(pattern = "//", replacement = "/", x = dbf_out_file)
   mcl_out_file <- paste0(output_path, "/", name, ".mcl_out.txt")
   mcl_out_file <- gsub(pattern = "//", replacement = "/", x = mcl_out_file)
-
+  
   print_msg("DBF completed. Starting MCL step.", msg_type="DEBUG")
-
+  
   if (length(readLines(dbf_out_file)) > 0) {
-
-      ## Launching mcl
-
-      if(mcl_cmd_line){
-        print_msg("Running MCL through the command line for best performance.")
-        mcl_system_cmd(name, inflation = inflation, input_path = output_path, silent = silent, threads = mcl_cmd_line_threads)
+    
+    ## Launching mcl (command line)
+    mcl_system_cmd(name, inflation = inflation, input_path = output_path, silent = silent, threads = mcl_threads)
+    
+    
+    print_msg(paste0("Reading MCL output: ", mcl_out_file), msg_type="DEBUG")
+    
+    ## getting mcl results into the ClusterSet object
+    mcl_cluster <- readLines(mcl_out_file)
+    gene_list <- NULL
+    clusters <- NULL
+    size <- NULL
+    nb <- 0
+    nb_cluster_deleted <- 0
+    
+    for (i in 1:length(mcl_cluster)) {
+      h <- unlist(strsplit(mcl_cluster[i], "\t"))
+      cur_clust <- data_matrix[h,]
+      cur_clust[cur_clust > 0 ] <- 1
+      cur_dot_prod <- cur_clust %*% t(cur_clust)
+      
+      if(mean(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+        
+        nb <- nb + 1
+        gene_list <- c(gene_list, h)
+        clusters <- c(clusters, rep(nb, length(h)))
+        if (is.null(size)) {
+          size <- length(h)
+        }
+        else {
+          size <- c(size, length(h))
+        }
       }else{
-        print_msg("You are using the R implementation of MCL.", msg_type="WARNING")
-        print_msg("Use the command line version for best performance (mcl_cmd_line)", msg_type="WARNING")
-        print_msg(paste("Reading : ", dbf_out_file), msg_type="WARNING")
-        graph_tab <- read.csv(dbf_out_file, sep=" ", header=F)
-        colnames(graph_tab) <- c("source", "dest", "weight")
-        graph_igraph <-  graph_from_data_frame(graph_tab, directed=F)
-        graph_adj <- as_adj(graph_igraph, attr='weight')
-        mcl_res <- mcl(graph_adj,  expansion = 2, inflation = 8, allow1 = TRUE, addLoops = FALSE)
-        cluster_to_genes <- split(rownames(graph_adj), mcl_res$Cluster)
-        print_msg("Writing gene clusters", msg_type="INFO")
-        print_msg(mcl_out_file, msg_type="DEBUG")
-
-        for(i in 1:length(cluster_to_genes)){
-          write.table(paste(cluster_to_genes[[i]], collapse="\t"),
-                      file=mcl_out_file,
-                      append=TRUE,
-                      col.names=FALSE,
-                      row.names=FALSE,
-                      quote=FALSE)
-        }
+        nb_cluster_deleted <- nb_cluster_deleted + 1
       }
-
-      print_msg(paste0("Reading MCL output: ", mcl_out_file), msg_type="DEBUG")
-
-      ## getting mcl results into the ClusterSet object
-      mcl_cluster <- readLines(mcl_out_file)
-      gene_list <- NULL
-      clusters <- NULL
-      size <- NULL
-      nb <- 0
-      nb_cluster_deleted <- 0
-
-      for (i in 1:length(mcl_cluster)) {
-        h <- unlist(strsplit(mcl_cluster[i], "\t"))
-        cur_clust <- data_matrix[h,]
-        cur_clust[cur_clust > 0 ] <- 1
-        cur_dot_prod <- cur_clust %*% t(cur_clust)
-
-        if(mean(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
-
-          nb <- nb + 1
-          gene_list <- c(gene_list, h)
-          clusters <- c(clusters, rep(nb, length(h)))
-          if (is.null(size)) {
-            size <- length(h)
-          }
-          else {
-            size <- c(size, length(h))
-          }
-        }else{
-          nb_cluster_deleted <- nb_cluster_deleted + 1
-        }
-      }
-      print_msg(paste(nb, " clusters conserved after MCL partitioning."),
-                msg_type="INFO")
-      print_msg(paste(nb_cluster_deleted,
-                      " clusters filtered out from MCL partitioning (size and mean dot product)."),
-                msg_type="INFO")
-
-
-      ## build ClusterSet object
-      if (nb > 0) {
-        obj@name <- name
-        obj@data <- as.matrix(data_matrix[gene_list, ])
-        names(clusters) <- rownames(obj@data)
-        obj@cluster <- clusters
-        obj@size <- size
-
-        centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
-        ## calcul of the mean profils
-        for (i in 1:nb) {
-          centers[i, ] <- apply(obj@data[obj@cluster == i, ],
-            2, mean,
-            na.rm = TRUE
-          )
-        }
-        obj@center <- centers
-
-        ## add DBFMCL parameters used to build this object
-        obj@parameters <- list(
-          distance_method = distance_method,
-          k = k,
-          random = random,
-          fdr = fdr,
-          set.seed = set.seed,
-          inflation = inflation
+    }
+    print_msg(paste(nb, " clusters conserved after MCL partitioning."),
+              msg_type="INFO")
+    print_msg(paste(nb_cluster_deleted,
+                    " clusters filtered out from MCL partitioning (size and mean dot product)."),
+              msg_type="INFO")
+    
+    
+    ## build ClusterSet object
+    if (nb > 0) {
+      obj@name <- name
+      obj@data <- as.matrix(data_matrix[gene_list, ])
+      names(clusters) <- rownames(obj@data)
+      obj@cluster <- clusters
+      obj@size <- size
+      
+      centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
+      ## calcul of the mean profils
+      for (i in 1:nb) {
+        centers[i, ] <- apply(obj@data[obj@cluster == i, ],
+                              2, mean,
+                              na.rm = TRUE
         )
       }
+      obj@center <- centers
+      
+      ## add DBFMCL parameters used to build this object
+      obj@parameters <- list(
+        distance_method = distance_method,
+        k = k,
+        random = random,
+        fdr = fdr,
+        set.seed = set.seed,
+        inflation = inflation
+      )
+    }
   }
   else {
     stop("\t--> There is no conserved gene.\n\n")
   }
   return(obj)
-
+  
 }
 
 ###############################################################
@@ -1371,7 +1344,7 @@ mcl_system_cmd <- function(name, inflation = 2.0, input_path = ".", silent = FAL
     ## Testing mcl installation
     if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
       if (!silent) {
-        cat("Running mcl (graph partitioning)... ")
+        cat("Running mcl (graph partitioning)... \n")
         verb <- ""
       }
       else {
@@ -1510,8 +1483,7 @@ get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
 #'               av_dot_prod_min = 0,
 #'               inflation = 1.2,
 #'               k=25,
-#'               fdr = 10,
-#'               mcl_cmd_line = TRUE)
+#'               fdr = 10)
 #'               
 #'res <- top_genes(object = res, top=500, cluster="all")
 #'res@top_genes

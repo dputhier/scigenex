@@ -31,8 +31,7 @@ res <- DBFMCL(data=m,
               av_dot_prod_min = 0,
               inflation = 1.2,
               k=25,
-              fdr = 10,
-              mcl_cmd_line = TRUE)
+              fdr = 10)
               
 res <- top_genes(object = res, top=500, cluster="all")
 res@top_genes
