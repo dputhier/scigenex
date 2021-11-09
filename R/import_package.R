@@ -6,7 +6,7 @@
 #' 
 #' @importFrom methods new slot slotNames setClass signature setMethod setGeneric
 #' @importFrom grDevices colorRampPalette
-#' @importFrom stats sd dist hclust heatmap median rnorm setNames as.dist hclust
+#' @importFrom stats sd dist hclust heatmap median rnorm setNames as.dist hclust cor
 #' @importFrom utils object.size read.table write.table read.csv
 #' @importFrom dplyr summarise group_by distinct
 #' @importFrom ggplot2 ggplot geom_line aes geom_tile geom_vline geom_text
