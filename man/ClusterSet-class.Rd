@@ -15,11 +15,15 @@ This class is a representation of a partitioning algorithm and is intented to st
 \describe{
 \item{\code{name}}{character. The original input file name (if applicable).}
 
+\item{\code{opt_name}}{character. The name is file containing distance and cutting threshold.}
+
 \item{\code{data}}{matrix. The matrix containing the filtered/partitionned data.}
 
 \item{\code{cluster}}{vector. Mapping of row/genes to clusters.}
 
 \item{\code{size}}{vector. The size of each cluster.}
+
+\item{\code{top_genes}}{matrix The highly co-expressed genes of each gene clusters.}
 
 \item{\code{center}}{matrix. The centers of each clusters.}
 

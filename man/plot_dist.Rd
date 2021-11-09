@@ -4,13 +4,14 @@
 \alias{plot_dist}
 \title{plot_dist}
 \usage{
-plot_dist(file_name, path = ".")
+plot_dist(object, path = ".")
 }
 \arguments{
-\item{file_name}{The name of the input file containing distance and threshold values.}
+\item{object}{A ClusterSet object.}
 
-\item{path}{a character string representing the data directory where
-input file is stored. Default to current working directory.}
+\item{path}{A character string representing the data directory where
+input file containing distances and cutting threshold is stored. 
+Default to current working directory.}
 }
 \value{
 A ggplot diagram.

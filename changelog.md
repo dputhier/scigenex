@@ -1,6 +1,17 @@
 
 # Changelog
 
+## v1.1.2
+
+*   Create plot_heatmap function to generate an interactive heatmap of the gene clusters
+*   Modify NAMESPACE and DESCRIPTION file and add import_package.R files to automatically update dependencies using roxygen2::roxygenise()
+*   Create top_genes function to find the top n genes from each signature. This function is also usefull for the plot_heatmap function.
+*   Add a slot in the ClusterSet object containing the filename of the output file including simulated distances and cutting threshold.
+*   Modify the input of plot_dist function to a ClusterSet object.
+*   Update enric_analysis function : run the functional enrichment analysis for each gene cluster.
+*   Remove R implementation of MCL. The package used is no more maintained and the released version needs to be fixed.
+
+
 ## v1.0.2
 
 *   Fix fprint_selected function in C code byt changing type of len varibale to size_t
