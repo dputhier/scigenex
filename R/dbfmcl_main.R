@@ -1194,13 +1194,10 @@ DBFMCL <- function(data = NULL,
 DBF <- function(data,
                 output_path = ".",
                 name = NULL,
-                optional_output = TRUE,
                 distance_method = c("spearman", "pearson", "euclidean"),
                 silent = FALSE,
                 k = 100,
-                random = 3,
                 fdr = 10,
-                memory_used = 1024,
                 set.seed = 123) {
 
   ## testing the system
@@ -1228,59 +1225,130 @@ DBF <- function(data,
       outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
       outfile <- gsub(pattern = "//", replacement = "/", x = outfile)
       
-      # Directory and name of the optional outputs
-      path_optional_output <- paste0(output_path, "/extra_output")
       
-      # Add options for the DBF function (C++)
-      if(optional_output) {
-        # Character string containing all the options refered in the fprint_selected function in the C++ code
-        options <- c( "dists,thresholds")
+      
+      #################### Correlation and distance matrices
+      # Remove genes with 0 values for all cells
+      select_for_correlation <- data_matrix[-c(which(rowSums(data_matrix) == 0)),]
+      
+      # Compute gene-gene pearson correlation matrix
+      if(distance_method == "pearson") {
+        cor_matrix <- corSparse(t(select_for_correlation))
+        rownames(cor_matrix) <- rownames(select_for_correlation)
+        colnames(cor_matrix) <- rownames(select_for_correlation)
       } else {
-        options <- ""
+        print_msg(msg_type = "WARNING",
+                  msg = "Distance used is not provided.")
+      }
+      
+      # Remove the diagonal and the upper triangular matrix (values is replaced by NA)
+      cor_matrix[lower.tri(cor_matrix, diag=TRUE)] <- NA
+      
+      # Transform correlation matrix into distance matrix (values between 0 and 2)
+      dist_matrix <- 2 - (cor_matrix + 1)
+      
+      
+      #Create a dataframe with a column that contains all the gene ID
+      df_dknn <- data.frame("gene_id" = rownames(dist_matrix))
+      l_knn <- list()
+      
+      #################### DKNN for each genes
+      # Extract the DKNN for each gene
+      for (gene in df_dknn[,"gene_id"]){
+        #Create a vector with all the correlation values for one gene(i)
+        gene_dist <- c(subset(dist_matrix[gene,], !is.na(dist_matrix[gene,])),
+                       subset(dist_matrix[,gene], !is.na(dist_matrix[,gene]))) 
+        
+        #Reorder the pearson correlation values (increasing order)
+        row_dknn <- order(gene_dist, decreasing=F)[1:k]
+        gene_dknn <- gene_dist[row_dknn]
+        
+        #Store the results in a list
+        l_knn[[gene]] <- gene_dknn
+        
+        #Select the kth pearson correlation values. This value corresponds to the DKNN of the gene(i)
+        df_dknn[which(df_dknn[,"gene_id"] == gene) ,"DKNN_cor"] <- gene_dknn[k]
       }
       
       
-      ## launching DBF
-      a <- .C("DBF",
-        data,
-        as.integer(nrow(data)),
-        as.integer(ncol(data)),
-        row,
-        col,
-        distance_method,
-        as.integer(k),
-        as.integer(random),
-        as.integer(!silent),
-        as.integer(memory_used),
-        as.integer(fdr),
-        as.integer(!silent),
-        m2 = vector(length = nrow(data), mode = "character"),
-        outfile,
-        as.integer(set.seed),
-        0,
-        options,
-        path_optional_output
-      )
-
-      ## creation of the ClusterSet object
+      #################### DKNN simulation
+      # Extract the distance values from the distance matrix
+      dist_values <- dist_matrix[!is.na(dist_matrix)]
+      nb_of_gene_sim <- nrow(select_for_correlation) * 1.5 #REMPLACER PAR NB DE GENE x2
+      sim_dknn <- vector()
+      
+      # Generate simulated distances
+      for (sim_nb in 1:nb_of_gene_sim) {
+        
+        # Randomly sample distances for one simulated gene
+        nb_gene <- nrow(select_for_correlation)
+        dist_sim <- sample(dist_values, size=nb_gene, replace=FALSE)
+        
+        # Extract the k nearest neighbors of these simulated gene
+        dist_sim <- dist_sim[order(dist_sim)]
+        sim_dknn[sim_nb] <- dist_sim[k]
+        
+      }
+      
+      
+      #################### Determine the DKNN threshold (or critical distance)
+      # Order genes by DKNN values
+      df_dknn <- df_dknn[order(df_dknn[,"DKNN_cor"]),]
+      df_dknn[, c("nb_dknn_sim", "nb_dknn_obs", "ratio_sim_obs")] <- 0
+      
+      
+      #Recuperer les valeurs sim_dknn < obs_dknn(i)
+      for(i in 2:nb_gene) {
+        
+        #Compute the number of simulated DKNN values under DKNN value at rank i
+        #If there is no simulated DKNN values under DKNN value at rank i, put 0 in nb_dknn_sim
+        if (min(sim_dknn) < df_dknn[i,"DKNN_cor"]) {
+          nb_dknn_sim <- sim_dknn[which(sim_dknn < df_dknn[i,"DKNN_cor"])]
+          nb_dknn_sim <- length(nb_dknn_sim)
+          df_dknn[i,"nb_dknn_sim"] <- nb_dknn_sim
+          
+        }else {
+          nb_dknn_sim <- 0 
+          df_dknn[i,"nb_dknn_sim"] <- nb_dknn_sim 
+          
+        }
+        #Compute the number of observed DKNN values under DKNN value at rank i
+        nb_dknn_obs <- length(df_dknn[which(df_dknn[,"DKNN_cor"] < df_dknn[i,"DKNN_cor"]), "DKNN_cor"]) #Nombre de valeurs de dknn observees inferieures a la valeur dknn_obs(i)
+        df_dknn[i,"nb_dknn_obs"] <- nb_dknn_obs
+        
+        #Compute the ratio between number of simulated DKNN values and the number of observed DKNN values under DKNN value at rank i
+        df_dknn[i,"ratio_sim_obs"] <- nb_dknn_sim/(nb_dknn_obs + nb_dknn_sim)
+      }
+      
+      #################### Select genes with a distance value under critical distance
+      selected_genes <- df_dknn[which(df_dknn[,"ratio_sim_obs"] < fdr*0.01),]
+      
+      
+      #################### Outputs
+      # Create the ClusterSet object
       obj <- new("ClusterSet")
       obj@algorithm <- "DBFMCL"
-
-      informative <- a$m2[a$m2 != ""]
-      if (length(informative) > 0) {
+      
+      if (length(selected_genes[,"gene_id"]) > 0) {
         obj@opt_name <- "extra_output-dbfAll.txt"
-        obj@data <- as.matrix(data[a[[4]] %in% informative, ])
+        obj@data <- as.matrix(data[selected_genes[,"gene_id"],])
         obj@cluster <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)
         obj@center <- matrix(
           apply(obj@data[obj@cluster == 1, ],
-            2,
-            mean,
-            na.rm = TRUE
+                2,
+                mean,
+                na.rm = TRUE
           ),
           nrow = 1
         )
       }
+      
+      
+      
+      
+      
+      
       return(obj)
     } else {
       stop("\t--> Please provide a matrix...\n\n")
