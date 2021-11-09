@@ -32,7 +32,6 @@ print_msg <- function(msg, msg_type="INFO"){
 library(ggplot2)
 library(reshape2)
 library(dplyr)
-library(MCL)
 library(igraph)
 library(iheatmapr)
 
