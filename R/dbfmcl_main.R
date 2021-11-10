@@ -1122,7 +1122,6 @@ DBFMCL <- function(data = NULL,
       obj@parameters <- list(
         distance_method = distance_method,
         k = k,
-        random = random,
         fdr = fdr,
         set.seed = set.seed,
         inflation = inflation
@@ -1307,6 +1306,8 @@ DBF <- function(data,
       
       #################### Select genes with a distance value under critical distance
       selected_genes <- df_dknn[which(df_dknn[,"ratio_sim_obs"] < fdr*0.01),]
+      # Remove genes not selected on the previously created list including observed distance values
+      l_knn_selected <- l_knn[as.character(selected_genes[,"gene_id"])]
       
       
       
