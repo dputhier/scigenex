@@ -40,8 +40,10 @@ library(iheatmapr)
 #' @description
 #' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
-#' @slot opt_name character. The name is file containing distance and cutting threshold.
 #' @slot data matrix. The matrix containing the filtered/partitionned data.
+#' @slot distances vector. The observed distance values with the knn.
+#' @slot simulated_distances vector. The simulated distance values with the knn.
+#' @slot critical_distance vector. The critical threshold distance to select informative genes.
 #' @slot cluster vector. Mapping of row/genes to clusters.
 #' @slot size vector. The size of each cluster.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
@@ -77,8 +79,10 @@ library(iheatmapr)
 setClass("ClusterSet",
   representation = list(
     name = "character",
-    opt_name = "character",
     data = "matrix",
+    distances = "vector",
+    simulated_distances = "vector",
+    critical_distance = "vector",
     cluster = "vector",
     size = "vector",
     top_genes = "matrix",
@@ -93,6 +97,9 @@ setClass("ClusterSet",
   prototype = list(
     name = character(),
     data = matrix(nr = 0, nc = 0),
+    distances = vector(),
+    simulated_distances = vector(),
+    critical_distance = vector(),
     cluster = numeric(),
     size = numeric(),
     top_genes = matrix(),
@@ -1245,7 +1252,7 @@ DBF <- function(data,
         l_knn[[gene]] <- gene_dknn
         
         #Select the kth pearson correlation values. This value corresponds to the DKNN of the gene(i)
-        df_dknn[which(df_dknn[,"gene_id"] == gene) ,"DKNN_cor"] <- gene_dknn[k]
+        df_dknn[which(df_dknn[,"gene_id"] == gene) ,"dknn_values"] <- gene_dknn[k]
       }
       
       
@@ -1271,7 +1278,7 @@ DBF <- function(data,
       
       #################### Determine the DKNN threshold (or critical distance)
       # Order genes by DKNN values
-      df_dknn <- df_dknn[order(df_dknn[,"DKNN_cor"]),]
+      df_dknn <- df_dknn[order(df_dknn[,"dknn_values"]),]
       df_dknn[, c("nb_dknn_sim", "nb_dknn_obs", "ratio_sim_obs")] <- 0
       
       
@@ -1280,8 +1287,8 @@ DBF <- function(data,
         
         #Compute the number of simulated DKNN values under DKNN value at rank i
         #If there is no simulated DKNN values under DKNN value at rank i, put 0 in nb_dknn_sim
-        if (min(sim_dknn) < df_dknn[i,"DKNN_cor"]) {
-          nb_dknn_sim <- sim_dknn[which(sim_dknn < df_dknn[i,"DKNN_cor"])]
+        if (min(sim_dknn) < df_dknn[i,"dknn_values"]) {
+          nb_dknn_sim <- sim_dknn[which(sim_dknn < df_dknn[i,"dknn_values"])]
           nb_dknn_sim <- length(nb_dknn_sim)
           df_dknn[i,"nb_dknn_sim"] <- nb_dknn_sim
           
@@ -1291,7 +1298,7 @@ DBF <- function(data,
           
         }
         #Compute the number of observed DKNN values under DKNN value at rank i
-        nb_dknn_obs <- length(df_dknn[which(df_dknn[,"DKNN_cor"] < df_dknn[i,"DKNN_cor"]), "DKNN_cor"]) #Nombre de valeurs de dknn observees inferieures a la valeur dknn_obs(i)
+        nb_dknn_obs <- length(df_dknn[which(df_dknn[,"dknn_values"] < df_dknn[i,"dknn_values"]), "dknn_values"]) #Nombre de valeurs de dknn observees inferieures a la valeur dknn_obs(i)
         df_dknn[i,"nb_dknn_obs"] <- nb_dknn_obs
         
         #Compute the ratio between number of simulated DKNN values and the number of observed DKNN values under DKNN value at rank i
@@ -1335,7 +1342,6 @@ DBF <- function(data,
       obj@algorithm <- "DBFMCL"
       
       if (length(selected_genes[,"gene_id"]) > 0) {
-        obj@opt_name <- "extra_output-dbfAll.txt"
         obj@data <- as.matrix(data[selected_genes[,"gene_id"],])
         obj@cluster <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)
@@ -1347,6 +1353,11 @@ DBF <- function(data,
           ),
           nrow = 1
         )
+        obs_dknn <- as.vector(df_dknn[,"dknn_values"])
+        names(obs_dknn) <- df_dknn[,"gene_id"]
+        obj@distances <- obs_dknn
+        obj@simulated_distances <- sim_dknn
+        obj@critical_distance <- df_dknn[which(df_dknn[,"ratio_sim_obs"] > fdr*0.01)[1], "dknn_values"]
       }
       
       
