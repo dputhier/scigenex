@@ -897,13 +897,8 @@ setMethod(
 #' intermediary files are to be stored. Default to current working directory.
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
-#' @param optional_output if TRUE then DBF generate optional output file in the
-#' specified output_path directory. This file contains observed and simulated 
-#' distances, cutting threshold, number of kept genes and FDR value.
 #' @param mcl_threads An integer to determine number of threads for mcl algorithm.
-#' @param distance_method a method to compute the distance to the k-th nearest
-#' neighbor. One of "pearson" (Pearson's correlation coefficient-based
-#' distance), "spearman" (Spearman's rho-based distance), "euclidean".
+#' @param distance_method a method to compute the distance to the k-th nearest neighbor.
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' @param min_cluster_size Minimum number of element inside a cluster. MCL tend to create lots of clusters with
@@ -911,11 +906,6 @@ setMethod(
 #' @param silent if set to TRUE, the progression of distance matrix calculation
 #' is not displayed.
 #' @param k the neighborhood size.
-#' @param random the number of simulated distributions S to compute. By default
-#' \code{random = 3}.
-#' @param memory_used size of the memory used to store part of the distance
-#' matrix. The subsequent sub-matrix is used to computed simulated distances to
-#' the k-th nearest neighbor (see detail section).
 #' @param fdr an integer value corresponding to the false discovery rate
 #' (range: 0 to 100).
 #' @param inflation the main control of MCL. Inflation affects cluster
@@ -976,16 +966,13 @@ DBFMCL <- function(data = NULL,
                    filename = NULL, 
                    path = ".",
                    output_path = ".",
-                   optional_output = TRUE,
                    mcl_threads=1,
                    name = NULL,
-                   distance_method = c("pearson", "spearman", "euclidean"),
+                   distance_method = "pearson",
                    av_dot_prod_min=2,
                    min_cluster_size=10,
                    silent = FALSE,
                    k = 50,
-                   random = 3, 
-                   memory_used = 1024,
                    fdr = 10,
                    inflation = 8,
                    set.seed = 123) {
@@ -1038,11 +1025,9 @@ DBFMCL <- function(data = NULL,
     "\n\tMinimum average dot product for clusters: ", av_dot_prod_min,
     "\n\tMinimum cluster size: ", min_cluster_size,
     "\n\tNumber of neighbors: ", k,
-    "\n\tNumber of randomizations: ", random,
     "\n\tFDR: ", fdr, "%", txt,
     "\n\tVisualize standard outputs from both mcl and cluster",
-    "commands: ", silent,
-    "\n\tMemory used : ", memory_used, "\n\n"
+    "commands: ", silent,"\n\n"
   )
   
   
@@ -1050,12 +1035,9 @@ DBFMCL <- function(data = NULL,
   obj <- DBF(data_matrix,
              output_path = output_path,
              name,
-             optional_output = optional_output,
              distance_method = distance_method,
              silent = silent,
              k = k,
-             random = random,
-             memory_used = memory_used,
              fdr = fdr,
              set.seed = set.seed
   )
@@ -1165,21 +1147,12 @@ DBFMCL <- function(data = NULL,
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
 #' @param name a prefix for the file name
-#' @param optional_output if TRUE then DBF generate optional output file in the
-#' specified output_path directory. This file contains observed and simulated 
-#' distances, cutting threshold, number of kept genes and FDR value.
 #' @param distance_method a method to compute the distance to the k-th nearest
-#' neighbor. One of "pearson" (Pearson's correlation coefficient-based
-#' distance), "spearman" (Spearman's rho-based distance) or "euclidean".
+#' neighbor.
 #' @param silent if set to TRUE (default), the progression of distance matrix
 #' calculation is not displayed.
 #' @param k the neighborhood size.
-#' @param random the number of simulated distributions S to compute. By default
-#' \code{random = FALSE}.
 #' @param fdr a value for the false discovery rate.
-#' @param memory_used size of the memory used to store part of the distance
-#' matrix. The subsequent sub-matrix is used to computed simulated distances to
-#' the k-th nearest neighbor (see detail section).
 #' @param set.seed specify seeds for random number generator.
 #' @section Warnings: Works only on UNIX-alikes platforms.
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
@@ -1194,7 +1167,7 @@ DBFMCL <- function(data = NULL,
 DBF <- function(data,
                 output_path = ".",
                 name = NULL,
-                distance_method = c("spearman", "pearson", "euclidean"),
+                distance_method = "pearson",
                 silent = FALSE,
                 k = 100,
                 fdr = 10,
@@ -1212,7 +1185,7 @@ DBF <- function(data,
       distance_method <- match.arg(distance_method)
 
       ## transforming data into double
-      data <- apply(data, 2, as.double)
+      #data <- apply(data, 2, as.double)
 
       if (silent) {
         print_msg(paste0("Computing distances to the kth-nearest neighbors ",
@@ -1229,7 +1202,12 @@ DBF <- function(data,
       
       #################### Correlation and distance matrices
       # Remove genes with 0 values for all cells
-      select_for_correlation <- data_matrix[-c(which(rowSums(data_matrix) == 0)),]
+      genes_to_rm <- c(which(rowSums(data) == 0))
+      if (length(genes_to_rm) > 0) {
+        select_for_correlation <- data[-c(which(rowSums(data) == 0)),]
+      } else {
+        select_for_correlation <- data
+      }
       
       # Compute gene-gene pearson correlation matrix
       if(distance_method == "pearson") {
