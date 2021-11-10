@@ -1302,8 +1302,35 @@ DBF <- function(data,
       selected_genes <- df_dknn[which(df_dknn[,"ratio_sim_obs"] < fdr*0.01),]
       
       
-      #################### Outputs
-      # Create the ClusterSet object
+      
+      ####################  Create the input file for mcl algorithm
+      # Distance matrix of selected genes
+      input_mcl <- dist_matrix[as.character(selected_genes[,"gene_id"]), as.character(selected_genes[,"gene_id"])]
+      
+      # Remove distances values not conserved
+      for (gene in as.character(selected_genes[,"gene_id"])) {
+        gene_comb_loop <- names(l_knn_selected[[gene]])
+        gene_comb_loop <- gene_comb_loop[which(gene_comb_loop %in% selected_genes[,"gene_id"])]
+        
+        input_mcl[-which(rownames(input_mcl) %in% gene_comb_loop), gene] <- 0
+      }
+      
+      # Melt the matrix to adapt it the the MCL format
+      input_mcl <- melt(input_mcl)
+      
+      # Remove NA values and zero values
+      input_mcl <- input_mcl[-which(is.na(input_mcl[,"value"]) | input_mcl[,"value"] == 0),]
+      
+      write.table(input_mcl, 
+                  file=file.path( output_path, paste0(name, ".dbf_out.txt")), 
+                  row.names=FALSE, 
+                  col.names=FALSE, 
+                  sep='\t', 
+                  quote=FALSE)
+      
+      
+      
+      #################### Create the ClusterSet object
       obj <- new("ClusterSet")
       obj@algorithm <- "DBFMCL"
       
@@ -1321,8 +1348,6 @@ DBF <- function(data,
           nrow = 1
         )
       }
-      
-      
       
       
       
