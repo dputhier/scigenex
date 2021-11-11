@@ -9,16 +9,13 @@ DBFMCL(
   filename = NULL,
   path = ".",
   output_path = ".",
-  optional_output = TRUE,
   mcl_threads = 1,
   name = NULL,
-  distance_method = c("pearson", "spearman", "euclidean"),
+  distance_method = "pearson",
   av_dot_prod_min = 2,
   min_cluster_size = 10,
   silent = FALSE,
   k = 50,
-  random = 3,
-  memory_used = 1024,
   fdr = 10,
   inflation = 8,
   set.seed = 123
@@ -35,18 +32,12 @@ intermediary files are to be stored. Default to current working directory.}
 \item{output_path}{a character string representing the data directory where
 output files will be stored. Default to current working directory.}
 
-\item{optional_output}{if TRUE then DBF generate optional output file in the
-specified output_path directory. This file contains observed and simulated 
-distances, cutting threshold, number of kept genes and FDR value.}
-
 \item{mcl_threads}{An integer to determine number of threads for mcl algorithm.}
 
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
 
-\item{distance_method}{a method to compute the distance to the k-th nearest
-neighbor. One of "pearson" (Pearson's correlation coefficient-based
-distance), "spearman" (Spearman's rho-based distance), "euclidean".}
+\item{distance_method}{a method to compute the distance to the k-th nearest neighbor.}
 
 \item{av_dot_prod_min}{Any cluster with average dot product below this value is discarded. This allow to delete
 clusters in which correlation is influenced/supported by very few samples (typically 1).}
@@ -58,13 +49,6 @@ very few (e.g 2) objects.}
 is not displayed.}
 
 \item{k}{the neighborhood size.}
-
-\item{random}{the number of simulated distributions S to compute. By default
-\code{random = 3}.}
-
-\item{memory_used}{size of the memory used to store part of the distance
-matrix. The subsequent sub-matrix is used to computed simulated distances to
-the k-th nearest neighbor (see detail section).}
 
 \item{fdr}{an integer value corresponding to the false discovery rate
 (range: 0 to 100).}

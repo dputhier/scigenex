@@ -15,9 +15,13 @@ This class is a representation of a partitioning algorithm and is intented to st
 \describe{
 \item{\code{name}}{character. The original input file name (if applicable).}
 
-\item{\code{opt_name}}{character. The name is file containing distance and cutting threshold.}
-
 \item{\code{data}}{matrix. The matrix containing the filtered/partitionned data.}
+
+\item{\code{distances}}{vector. The observed distance values with the knn.}
+
+\item{\code{simulated_distances}}{vector. The simulated distance values with the knn.}
+
+\item{\code{critical_distance}}{vector. The critical threshold distance to select informative genes.}
 
 \item{\code{cluster}}{vector. Mapping of row/genes to clusters.}
 
