@@ -18,7 +18,7 @@ DBFMCL(
   k = 50,
   fdr = 10,
   inflation = 8,
-  set.seed = 123
+  seed = 123
 )
 }
 \arguments{
@@ -60,7 +60,7 @@ whereas \code{inflation = 1.2} will tend to result in very coarse grained
 clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 good results for microarray data when k is set between 70 and 250.}
 
-\item{set.seed}{specify seeds for random number generator.}
+\item{seed}{specify seeds for random number generator.}
 }
 \value{
 a ClusterSets class object.

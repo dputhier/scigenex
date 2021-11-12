@@ -12,7 +12,7 @@ DBF(
   silent = FALSE,
   k = 100,
   fdr = 10,
-  set.seed = 123
+  seed = 123
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ calculation is not displayed.}
 
 \item{fdr}{a value for the false discovery rate.}
 
-\item{set.seed}{specify seeds for random number generator.}
+\item{seed}{specify seeds for random number generator.}
 }
 \description{
 This function is an internal function used by \code{\link{DBFMCL}} to detect

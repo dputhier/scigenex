@@ -921,7 +921,7 @@ setMethod(
 #' whereas \code{inflation = 1.2} will tend to result in very coarse grained
 #' clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 #' good results for microarray data when k is set between 70 and 250.
-#' @param set.seed specify seeds for random number generator.
+#' @param seed specify seeds for random number generator.
 #' @return a ClusterSets class object.
 #' @section Warnings: With the current implementation, this function only works
 #' only on UNIX-like plateforms.
@@ -982,7 +982,7 @@ DBFMCL <- function(data = NULL,
                    k = 50,
                    fdr = 10,
                    inflation = 8,
-                   set.seed = 123) {
+                   seed = 123) {
   
   ## testing the system
   if (.Platform$OS.type == "windows") {
@@ -1046,7 +1046,7 @@ DBFMCL <- function(data = NULL,
              silent = silent,
              k = k,
              fdr = fdr,
-             set.seed = set.seed
+             seed = seed
   )
   
   dbf_out_file <- paste0(output_path, "/", name, ".dbf_out.txt")
@@ -1123,7 +1123,7 @@ DBFMCL <- function(data = NULL,
         distance_method = distance_method,
         k = k,
         fdr = fdr,
-        set.seed = set.seed,
+        seed = seed,
         inflation = inflation
       )
     }
@@ -1159,7 +1159,7 @@ DBFMCL <- function(data = NULL,
 #' calculation is not displayed.
 #' @param k the neighborhood size.
 #' @param fdr a value for the false discovery rate.
-#' @param set.seed specify seeds for random number generator.
+#' @param seed specify seeds for random number generator.
 #' @section Warnings: Works only on UNIX-alikes platforms.
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 #' D.
@@ -1177,11 +1177,16 @@ DBF <- function(data,
                 silent = FALSE,
                 k = 100,
                 fdr = 10,
-                set.seed = 123) {
+                seed = 123) {
 
   ## testing the system
   if (.Platform$OS.type != "windows") {
     if (!is.null(data)) {
+      ## set a seed for reproductibility
+      if (!is.null(seed)) {
+        set.seed(seed)
+      }
+      
       ## getting data and parameters
       if (output_path == ".") {output_path <- getwd()}
       if (is.null(name)) name <- "exprs"
