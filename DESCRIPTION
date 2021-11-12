@@ -5,8 +5,8 @@ Version: 1.1.2
 Date: 2020-07-22
 Author: J. Bavais, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
 Maintainer: J. Bavais <julie.bavais@yahoo.fr>
-Depends: R (>= 4.0.0), methods, grDevices, stats, utils, dplyr, ggplot2, reshape2, magrittr, testthat, igraph, iheatmapr
-Imports: reshape2, ggplot2, magrittr, dplyr, igraph, gprofiler2, plotly
+Depends: R (>= 4.0.0), methods, grDevices, stats, utils, dplyr, ggplot2, reshape2, magrittr, testthat, igraph, iheatmapr, qlcMatrix
+Imports: reshape2, ggplot2, magrittr, dplyr, igraph, gprofiler2, plotly, qlcMatrix
 Collate: dbfmcl_main.R zzz.R import_package.R
 Description: The scigenex package (Single-Cell Informative GENe Explorer) proposes a set of functions to extract informative genes from a scRNA-seq experiment, search and store clusters of co-expressed genes. These clusters are annotated and can be mapped onto UMAP or t-SNE diagram to functionally annotate cell populations.
 biocViews: Clustering, Classification, Transcriptomics, SingleCell, ReportWriting, GeneRegulation
