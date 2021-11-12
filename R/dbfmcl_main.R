@@ -1190,9 +1190,6 @@ DBF <- function(data,
       col <- colnames(data)
       distance_method <- match.arg(distance_method)
 
-      ## transforming data into double
-      #data <- apply(data, 2, as.double)
-
       if (silent) {
         print_msg(paste0("Computing distances to the kth-nearest neighbors ",
                          "and associated FDR values... \n"),
