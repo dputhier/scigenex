@@ -15,9 +15,9 @@ help:
 	@echo ""
 	@echo ""
 
-clean:
-	@rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck
-	@rm -rf /tmp/dbfmcl; 
+#clean:
+#	@rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck
+#	@rm -rf /tmp/dbfmcl; 
 
 check: clean
 	@mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex

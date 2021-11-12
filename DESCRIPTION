@@ -15,5 +15,5 @@ Suggests: RColorBrewer
 LazyLoad: yes
 URL: https://github.com/dputhier/sigenex
 Packaged: 2009-10-28 09:39:36 UTC; biocbuild
-RoxygenNote: 7.1.2
+RoxygenNote: 7.1.1
 Encoding: UTF-8
