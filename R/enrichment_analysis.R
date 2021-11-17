@@ -17,7 +17,7 @@
 #' \dontrun{
 #' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 #'
-#' gores <- enrich_analysis(myobject)
+#' go_res <- enrich_analysis(myobject)
 #' }
 
 setGeneric("enrich_analysis",
