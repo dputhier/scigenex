@@ -396,6 +396,9 @@ DBF <- function(data,
                   msg = "Distance used is not provided.")
       }
       
+      # Store correlation matrix in input_mcl. It will be used to create the input file for mcl.
+      input_mcl <- cor_matrix
+      
       # Remove the diagonal and the upper triangular matrix (values is replaced by NA)
       cor_matrix[lower.tri(cor_matrix, diag=TRUE)] <- NA
       
@@ -484,7 +487,8 @@ DBF <- function(data,
       
       ####################  Create the input file for mcl algorithm
       # Distance matrix of selected genes
-      input_mcl <- dist_matrix[as.character(selected_genes[,"gene_id"]), as.character(selected_genes[,"gene_id"])]
+      input_mcl <- (input_mcl+1)/2
+      input_mcl <- input_mcl[as.character(selected_genes[,"gene_id"]), as.character(selected_genes[,"gene_id"])]
       
       # Remove distances values not conserved
       for (gene in as.character(selected_genes[,"gene_id"])) {
