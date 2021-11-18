@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v1.2.2
+
+*   Replace the C code for DBF function by a R implementation to reduce the computational time.
+*   Split the main R script into sub-script related to each function of scigenex package.
+
 ## v1.1.2
 
 *   Create plot_heatmap function to generate an interactive heatmap of the gene clusters
