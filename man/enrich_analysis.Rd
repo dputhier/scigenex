@@ -25,6 +25,6 @@ Perform enrichment analysis on all MCL clusters indepentently and store the resu
 \dontrun{
 ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 
-gores <- enrich_analysis(myobject)
+go_res <- enrich_analysis(myobject)
 }
 }
