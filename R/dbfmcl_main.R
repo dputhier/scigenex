@@ -5,7 +5,6 @@
 ##  with the collaboration of LOPEZ F., TEXTORIS J. and PUTHIER D.
 ##
 ##
-## R CMD SHLIB dbf.c -o dbf
 #################################################################
 ##    UTILS (a set of useful function)
 #################################################################
