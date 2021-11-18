@@ -1,6 +1,6 @@
 test_that("Cheking DBF is providing the right number of genes", {
-  set.seed(123)
   #Create matrix
+  set.seed(123)
   m <- matrix(rnorm(80000), nc=20)
   m[1:100,1:10] <- m[1:100,1:10] + 4
   m[101:200,11:20] <- m[101:200,11:20] + 3
@@ -9,21 +9,19 @@ test_that("Cheking DBF is providing the right number of genes", {
   res <- DBF(data = m,
              distance_method = "pearson",
              k = 50,
-             random = 3,
              fdr = 10,
-             memory_used = 1024,
-             silent = FALSE)
+             silent = FALSE,
+             seed = 123)
   #Test results
-  expect_lt(res@size, 390)
-  expect_gt(res@size, 360)
+  expect_equal(res@size, 370)
   #Remove output files
   file.remove("exprs.dbf_out.txt")
 })
 
 
 test_that("Checking DBF is writting the output in the correct directory...", {
-  set.seed(123)
   #Create matrix
+  set.seed(123)
   m <- matrix(rnorm(80000), nc=20)
   m[1:100,1:10] <- m[1:100,1:10] + 4
   m[101:200,11:20] <- m[101:200,11:20] + 3
@@ -37,10 +35,9 @@ test_that("Checking DBF is writting the output in the correct directory...", {
              name = "test_",
              distance_method = "pearson",
              k = 50,
-             random = 3,
              fdr = 10,
-             memory_used = 1024,
-             silent = FALSE)
+             silent = FALSE,
+             seed = 123)
   #Test results
   out <- file.exists("tmp_output/test_.dbf_out.txt")
   expect_equal(out, TRUE)

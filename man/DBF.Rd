@@ -8,14 +8,11 @@ DBF(
   data,
   output_path = ".",
   name = NULL,
-  optional_output = TRUE,
-  distance_method = c("spearman", "pearson", "euclidean"),
+  distance_method = "pearson",
   silent = FALSE,
   k = 100,
-  random = 3,
   fdr = 10,
-  memory_used = 1024,
-  set.seed = 123
+  seed = 123
 )
 }
 \arguments{
@@ -26,29 +23,17 @@ output files will be stored. Default to current working directory.}
 
 \item{name}{a prefix for the file name}
 
-\item{optional_output}{if TRUE then DBF generate optional output file in the
-specified output_path directory. This file contains observed and simulated 
-distances, cutting threshold, number of kept genes and FDR value.}
-
 \item{distance_method}{a method to compute the distance to the k-th nearest
-neighbor. One of "pearson" (Pearson's correlation coefficient-based
-distance), "spearman" (Spearman's rho-based distance) or "euclidean".}
+neighbor.}
 
 \item{silent}{if set to TRUE (default), the progression of distance matrix
 calculation is not displayed.}
 
 \item{k}{the neighborhood size.}
 
-\item{random}{the number of simulated distributions S to compute. By default
-\code{random = FALSE}.}
-
 \item{fdr}{a value for the false discovery rate.}
 
-\item{memory_used}{size of the memory used to store part of the distance
-matrix. The subsequent sub-matrix is used to computed simulated distances to
-the k-th nearest neighbor (see detail section).}
-
-\item{set.seed}{specify seeds for random number generator.}
+\item{seed}{specify seeds for random number generator.}
 }
 \description{
 This function is an internal function used by \code{\link{DBFMCL}} to detect
