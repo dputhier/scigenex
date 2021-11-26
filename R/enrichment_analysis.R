@@ -7,37 +7,86 @@
 ##' @description
 #' Perform enrichment analysis on all MCL clusters indepentently and store the results in the cluster_annotations slot of the ClusterSet object.
 #' @param object A \code{ClusterSet} object.
-#' @param specie Specie name, as a concatenation of the first letter of the name and the family name, e.g human - hsapien
+#' @param specie Specie name, as a concatenation of the first letter of the name (uppercas) and the family name, e.g human - Hsapien
+#' @param ontology One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.
+#' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
-#' @export enrich_analysis
+#' @export enrich_go
 #'
 #' @examples
 #' 
 #' \dontrun{
 #' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 #'
-#' go_res <- enrich_analysis(myobject)
+#' go_res <- enrich_go(myobject)
 #' }
 
-setGeneric("enrich_analysis",
+setGeneric("enrich_go",
            function(object,
-                    specie="hsapiens") {
-             standardGeneric("enrich_analysis")
+                    specie="Hsapiens",
+                    ontology="ALL",
+                    verbose = TRUE) {
+             standardGeneric("enrich_go")
            })
 
-#' @rdname enrich_analysis
-setMethod("enrich_analysis",
+#' @rdname enrich_go
+setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
-                   specie="hsapiens") {
+                   specie="Hsapiens",
+                   ontology="ALL",
+                   verbose = TRUE) {
+            
+            
+            if (!specie %in% c("Hsapiens", "Mmusculus")){
+              stop("Specie name provided doesn't exists.")}
+            
+            if (specie == "Hsapiens") {
+              hs <- org.Hs.eg.db
+              go_name <- "org.Hs.eg.db"
+              kegg_name <- "hsa"
+              if(verbose) {print_msg(msg_type = "INFO",
+                                     msg = "Specie used : Homo sapiens")}
+            }
+            
+            if (specie == "Mmusculus") {
+              mm <- org.Mm.eg.db
+              go_name <- "org.Mm.eg.db"
+              kegg_name <- "mmu"
+              if(verbose) {print_msg(msg_type = "INFO",
+                                     msg = "Specie used : Mus musculus")}
+            }
+            
             
             for(cluster in unique(object@cluster)){
-              print(paste0("Enrichment analysis for cluster ", cluster))
+              if (verbose) {print(paste0("Enrichment analysis for cluster ", cluster))}
               cluster_name = paste0("Cluster_", cluster)
               query = rownames(object@data[object@cluster == cluster,])
-              gostres <- gost(query, organism = "hsapiens", ordered_query = FALSE, significant = TRUE, exclude_iea = T)
-              object@cluster_annotations[[cluster]] = list(result = gostres$result, meta = gostres$meta)
+              
+              # Convert gene id to EntrezId format
+              suppressMessages(query_entrezid <- select(hs, 
+                                                        keys = query,
+                                                        columns = c("ENTREZID", "SYMBOL"),
+                                                        keytype = "SYMBOL"))
+              
+              print_msg(msg_type = "DEBUG",
+                        msg = paste0("Cluster ",
+                                     cluster,
+                                     "\n",
+                                     "Number of gene names converted to EntrezId : ", 
+                                     length(which(!is.na(query_entrezid[, "ENTREZID"]))),
+                                     "\n", 
+                                     "Number of gene names not converted to EntrezId : ", 
+                                     length(which(is.na(query_entrezid[, "ENTREZID"])))))
+              
+              # Enrichment analysis using GO database
+                enrich_go_res <- enrichGO(de_entrezid[,"ENTREZID"],
+                                          OrgDb = go_name,
+                                          ont = ontology,
+                                          readable = TRUE)
+                # Store results in the ClusterSet object
+                object@cluster_annotations[[cluster]] = enrich_go_res
             }
             return(object)
           }
@@ -93,7 +142,7 @@ setMethod("enrich_viz",
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
-              # Check if there is a result provided by enrich_analysis function for the current cluster
+              # Check if there is a result provided by enrich_go function for the current cluster
               if(is.null(object@cluster_annotations[[cur_cluster]]$result)){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
