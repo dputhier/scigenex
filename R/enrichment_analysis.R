@@ -84,7 +84,7 @@ setMethod("enrich_go",
                                           ont = ontology,
                                           readable = TRUE)
                 # Store results in the ClusterSet object
-                object@cluster_annotations[[cluster]] = enrich_go_res
+                object@cluster_annotations[[cluster]] <- enrich_go_res
             }
             return(object)
           }
@@ -116,6 +116,7 @@ setMethod("enrich_go",
 setGeneric("enrich_viz",
            function(object,
                     clusters = "all",
+                    type = "dotplot",
                     verbose = TRUE) {
              standardGeneric("enrich_viz")
            })
@@ -125,6 +126,7 @@ setMethod("enrich_viz",
           signature(object = "ClusterSet"),
           function(object,
                    clusters = "all",
+                   type = "dotplot",
                    verbose = TRUE) {
             
             if (length(clusters) == 1){
@@ -141,7 +143,7 @@ setMethod("enrich_viz",
               }
               
               # Check if there is a result provided by enrich_go function for the current cluster
-              if(is.null(object@cluster_annotations[[cur_cluster]]$result)){
+              if(is.null(object@cluster_annotations[[cur_cluster]]@result)){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -151,6 +153,19 @@ setMethod("enrich_viz",
                   print_msg(msg_type = "INFO",
                             msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
                 }
+                
+                
+                # Create a ggplot - dotplot
+                if (type = "dotplot"){
+                  dotplot(object@cluster_annotations[[cur_cluster]], showCategory=30)
+                }
+                
+                # Create a ggplot - barplot
+                if (type = "dotplot"){
+                  barplot(object@cluster_annotations[[cur_cluster]], showCategory=20)
+                }
+                
+                
                 
                 # Create a plotly result plot
                 plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
