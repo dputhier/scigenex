@@ -45,7 +45,6 @@ setMethod("enrich_go",
             if (specie == "Hsapiens") {
               hs <- org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
-              kegg_name <- "hsa"
               if(verbose) {print_msg(msg_type = "INFO",
                                      msg = "Specie used : Homo sapiens")}
             }
@@ -53,7 +52,6 @@ setMethod("enrich_go",
             if (specie == "Mmusculus") {
               mm <- org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
-              kegg_name <- "mmu"
               if(verbose) {print_msg(msg_type = "INFO",
                                      msg = "Specie used : Mus musculus")}
             }
