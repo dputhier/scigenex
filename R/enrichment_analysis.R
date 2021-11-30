@@ -63,10 +63,10 @@ setMethod("enrich_go",
               query = rownames(object@data[object@cluster == cluster,])
               
               # Convert gene id to EntrezId format
-              suppressMessages(query_entrezid <- select(hs, 
-                                                        keys = query,
-                                                        columns = c("ENTREZID", "SYMBOL"),
-                                                        keytype = "SYMBOL"))
+              suppressMessages(query_entrezid <- AnnotationDbi::select(hs, 
+                                                                       keys = query,
+                                                                       columns = c("ENTREZID", "SYMBOL"),
+                                                                       keytype = "SYMBOL"))
               
               print_msg(msg_type = "DEBUG",
                         msg = paste0("Cluster ",
@@ -79,12 +79,12 @@ setMethod("enrich_go",
                                      length(which(is.na(query_entrezid[, "ENTREZID"])))))
               
               # Enrichment analysis using GO database
-                enrich_go_res <- enrichGO(de_entrezid[,"ENTREZID"],
-                                          OrgDb = go_name,
-                                          ont = ontology,
-                                          readable = TRUE)
-                # Store results in the ClusterSet object
-                object@cluster_annotations[[cluster]] <- enrich_go_res
+              enrich_go_res <- enrichGO(query_entrezid[,"ENTREZID"],
+                                        OrgDb = go_name,
+                                        ont = ontology,
+                                        readable = TRUE)
+              # Store results in the ClusterSet object
+              object@cluster_annotations[[cluster]] <- enrich_go_res
             }
             return(object)
           }
@@ -103,30 +103,30 @@ setMethod("enrich_go",
 #' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
-#' @export enrich_viz
+#' @export viz_enrich
 #'
 #' @examples
 #' 
 #' \dontrun{
 #' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 #'
-#' enrich_viz(myobject)
+#' viz_enrich(myobject)
 #' }
 
-setGeneric("enrich_viz",
+setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
                     type = "dotplot",
                     verbose = TRUE) {
-             standardGeneric("enrich_viz")
+             standardGeneric("viz_enrich")
            })
 
-#' @rdname enrich_viz
-setMethod("enrich_viz",
+#' @rdname viz_enrich
+setMethod("viz_enrich",
           signature(object = "ClusterSet"),
           function(object,
                    clusters = "all",
-                   type = "dotplot",
+                   type = c("dotplot", "barplot"),
                    verbose = TRUE) {
             
             if (length(clusters) == 1){
@@ -156,33 +156,24 @@ setMethod("enrich_viz",
                 
                 
                 # Create a ggplot - dotplot
-                if (type = "dotplot"){
-                  dotplot(object@cluster_annotations[[cur_cluster]], showCategory=30)
+                if ("dotplot" %in% type){
+                  dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=30)
+                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
                 
                 # Create a ggplot - barplot
-                if (type = "dotplot"){
-                  barplot(object@cluster_annotations[[cur_cluster]], showCategory=20)
+                if ("barplot" %in% type){
+                  bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=20)
+                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }
-                
-                
-                
-                # Create a plotly result plot
-                plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
-                                        interactive = TRUE)
-                plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
-                                                              xaxis = list(title = 'Database'))
-                
-                # Store the plot in the cluster_annotation slot
-                object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
-                print(plot_enrich)
               }
             }
             
             # Print a message to inform which slot contains the results
             if (verbose){
               print_msg(msg_type = "INFO",
-                        msg = paste("Plots are stored in object@cluster_annotations[[<cluster>]]$plot"))
+                        msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
+                                    "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
             }
             
             return(object)
