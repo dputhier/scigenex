@@ -5,12 +5,21 @@
 \alias{viz_enrich,ClusterSet-method}
 \title{Manhattan-like-plot of enrichment analysis results}
 \usage{
-viz_enrich(object, clusters = "all", type = "dotplot", verbose = TRUE)
+viz_enrich(
+  object,
+  clusters = "all",
+  type = "dotplot",
+  panel = TRUE,
+  nb_terms = 20,
+  verbose = TRUE
+)
 
 \S4method{viz_enrich}{ClusterSet}(
   object,
   clusters = "all",
   type = c("dotplot", "barplot"),
+  panel = TRUE,
+  nb_terms = 20,
   verbose = TRUE
 )
 }
@@ -18,6 +27,12 @@ viz_enrich(object, clusters = "all", type = "dotplot", verbose = TRUE)
 \item{object}{A \code{ClusterSet} object.}
 
 \item{clusters}{A vector of cluster id to plot.}
+
+\item{type}{A vector providing the type of plot.}
+
+\item{panel}{Whether the plot is splited by ontology.}
+
+\item{nb_terms}{An integer indicating the number of terms in the plot.}
 
 \item{verbose}{Whether or not to print progression in the console.}
 }

@@ -5,9 +5,9 @@
 \alias{enrich_go,ClusterSet-method}
 \title{Perform gene enrichment analysis.}
 \usage{
-enrich_go(object, specie = "Hsapiens", ontology = "ALL", verbose = TRUE)
+enrich_go(object, specie = "Hsapiens", ontology = "all", verbose = TRUE)
 
-\S4method{enrich_go}{ClusterSet}(object, specie = "Hsapiens", ontology = "ALL", verbose = TRUE)
+\S4method{enrich_go}{ClusterSet}(object, specie = "Hsapiens", ontology = "all", verbose = TRUE)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
