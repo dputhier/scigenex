@@ -25,7 +25,7 @@
 setGeneric("enrich_go",
            function(object,
                     specie="Hsapiens",
-                    ontology="ALL",
+                    ontology="all",
                     verbose = TRUE) {
              standardGeneric("enrich_go")
            })
@@ -35,7 +35,7 @@ setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
                    specie="Hsapiens",
-                   ontology="ALL",
+                   ontology="all",
                    verbose = TRUE) {
             
             
@@ -100,6 +100,9 @@ setMethod("enrich_go",
 #' Retrieve enrichment analysis results from a ClusterSet object and draw a Manhattan-like-plot.
 #' @param object A \code{ClusterSet} object.
 #' @param clusters  A vector of cluster id to plot.
+#' @param type A vector providing the type of plot.
+#' @param panel Whether the plot is splited by ontology.
+#' @param nb_terms An integer indicating the number of terms in the plot.
 #' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
@@ -117,6 +120,8 @@ setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
                     type = "dotplot",
+                    panel = TRUE,
+                    nb_terms = 20,
                     verbose = TRUE) {
              standardGeneric("viz_enrich")
            })
@@ -127,6 +132,8 @@ setMethod("viz_enrich",
           function(object,
                    clusters = "all",
                    type = c("dotplot", "barplot"),
+                   panel = TRUE,
+                   nb_terms = 20,
                    verbose = TRUE) {
             
             if (length(clusters) == 1){
@@ -143,7 +150,7 @@ setMethod("viz_enrich",
               }
               
               # Check if there is a result provided by enrich_go function for the current cluster
-              if(is.null(object@cluster_annotations[[cur_cluster]]@result)){
+              if(nrow(object@cluster_annotations[[cur_cluster]]@result) == 0){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -157,13 +164,23 @@ setMethod("viz_enrich",
                 
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
-                  dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=30)
+                  if(panel){
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms)
+                    dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scale="free")
+                  } else {
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms)
+                  }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
                 
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
-                  bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=20)
+                  if(panel){
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms)
+                    bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scale="free")
+                  } else {
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms)
+                  }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }
               }
@@ -175,7 +192,6 @@ setMethod("viz_enrich",
                         msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
                                     "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
             }
-            
             return(object)
           }
 )
