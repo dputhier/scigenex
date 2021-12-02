@@ -165,10 +165,10 @@ setMethod("viz_enrich",
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
                   if(panel){
-                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms)
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
                     dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scale="free")
                   } else {
-                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms)
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
@@ -176,10 +176,10 @@ setMethod("viz_enrich",
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
                   if(panel){
-                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms)
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scale="free")
                   } else {
-                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms)
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }
