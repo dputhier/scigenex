@@ -205,15 +205,23 @@ setMethod(
 
 
 #################################################################
-##    Define the plot_distance
+##    Define the viz_dist
 #################################################################
 
 #' @title
-#' plot_dist
+#' viz_dist
 #' @description
 #' Plot the observed and simulated distance with the Kth nearest neighbors.
 #' @param object A ClusterSet object.
-#' @param path A character string representing the data directory where
+#' @param line_type A vector of character defining the line type for the observed distance line and the simulated distance line.
+#' @param line_color A vector of numeric defining the color for the observed distance line and the simulated distance line.
+#' @param line_size A vector of numeric defining the size for the observed distance line and the simulated distance line.
+#' @param vline_type Type of vertical line.
+#' @param vline_color Color of vertical line.
+#' @param vline_size Size of vertical line
+#' @param text_size Size of vertical line text
+#' @param text_hjust Horizontal position adjustment of vertical line text.
+#' @param text_vjust Vertical position adjustment of vertical line text
 #' input file containing distances and cutting threshold is stored. 
 #' Default to current working directory.
 #'
@@ -223,57 +231,31 @@ setMethod(
 #' @examples
 #' # see online examples
 
-#' @rdname plot_dist
+#' @rdname viz_dist
 
 
-plot_dist <-  function(object,
-                       path = ".") {
-  #Extract name of the file containing distance and cutting threshold.
-  file_name <- object@opt_name
+viz_dist <-  function(object,
+                       line_type = c("solid", "longdash"),
+                       line_color = c("#006D77", "#83C5BE"),
+                       line_size = c(1, 0.8),
+                       vline_type = "dotdash",
+                       vline_color = "#E29578",
+                       vline_size = 0.5,
+                       text_size = 4,
+                       text_hjust = -0.8,
+                       text_vjust = -0.5) {
   
-  #Path to the file containg distance and cutting threshold.
-  if (path == ".") path <- getwd()
-  file_path <- file.path(path, file_name)
-  file_path <- gsub(pattern = "//", replacement = "/", x = file_path)
-  
-  #Read file containing distance and cutting threshold.
-  opt_data <- readLines(file_path)
-  
-  # Extract cutting threshold value
-  dknn <- opt_data[(which(opt_data == ">>thresholds")+1):length(opt_data)]
-  dknn <- as.numeric(dknn[1])
-  
-  # Extract distances values 
-  dist <- opt_data[(which(opt_data == ">>dists")+1):(which(opt_data == ">>thresholds")-1)]
-  dist <- strsplit(dist, "\t")
-  dist <- do.call(rbind, dist)
-  # Convert it in dataframe
-  dist <- as.data.frame(dist)
-  
-  # Modify column names 
-  dist_name <- c("Observed")
-  for (i in 1:(ncol(dist)-1)) {
-    dist_name_temp <- paste0("simulation_", i, "_distance")
-    dist_name <- c(dist_name, dist_name_temp)
-  }
-  names(dist) <- dist_name
-  
-  # Convert column from factor to numeric
-  dist <- sapply(dist[1:4], function(x) as.numeric(as.character(x)))
-  dist <- as.data.frame(dist)
-  
-  # Prepare dataframe for ggplot
-  dist_p <- melt(dist, variable.name = "type", value.name = "distance_value", id.vars = NULL)
-  
-  dist_p[,"type"] <- as.character(dist_p[,"type"])
-  dist_p[grep(dist_p[,"type"], pattern = "sim*"), "type"] <- "Simulated"
+  # Extract observed and simulated distances
+  dist_obs <- data.frame(distance_value = object@distances, type = "Observed")
+  dist_sim <- data.frame(distance_value = object@simulated_distances, type = "Simulated")
+  dist_p <- rbind(dist_obs, dist_sim)
   
   # plot density of distance values for the observed and simulated conditions
   p <- ggplot(data = dist_p, aes(x = distance_value, color = type)) +
     stat_density(aes(linetype = type, size = type), geom = "line", position = "identity") +
-    scale_linetype_manual(breaks = c("Observed", "Simulated"), values = c("solid", "longdash")) +
-    scale_size_manual(values = c(1, 0.8)) +
-    scale_color_manual(values = c("#006D77", "#83C5BE")) +
+    scale_linetype_manual(breaks = c("Observed", "Simulated"), values = line_type) +
+    scale_size_manual(values = line_size) +
+    scale_color_manual(values = line_color) +
     theme_bw() +
     theme(panel.grid.minor = element_blank(),
           panel.grid.major = element_blank(),
@@ -284,17 +266,18 @@ plot_dist <-  function(object,
           axis.text = element_text(size = 10)) +
     xlab(label = "Distance with KNN") +
     ylab(label = "Density") +
-    geom_vline(aes(xintercept = dknn),
-               color = "#E29578",
-               linetype = "dotdash",
-               size = 0.5) +
-    geom_text(mapping = aes(x = dknn,
+    geom_vline(aes(xintercept = object@critical_distance),
+               color = vline_color,
+               linetype = vline_type,
+               size = vline_size) +
+    geom_text(mapping = aes(x = object@critical_distance,
                             y = 0,
                             label = "Critical distance with KNN",
-                            hjust = -0.5,
-                            vjust = -1,
+                            hjust = text_hjust,
+                            vjust = text_vjust,
                             angle = 90),
-              color = "#E29758")
+              color = vline_color,
+              size = text_size)
   
   return(p)
   
