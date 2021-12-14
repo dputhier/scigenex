@@ -7,7 +7,7 @@
 ##' @description
 #' Perform enrichment analysis on all MCL clusters indepentently and store the results in the cluster_annotations slot of the ClusterSet object.
 #' @param object A \code{ClusterSet} object.
-#' @param specie Specie name, as a concatenation of the first letter of the name (uppercas) and the family name, e.g human - Hsapien
+#' @param specie Specie name, as a concatenation of the first letter of the name (uppercase) and the family name, e.g human - Hsapiens
 #' @param ontology One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.
 #' @param verbose Whether or not to print progression in the console.
 #'
@@ -43,14 +43,14 @@ setMethod("enrich_go",
               stop("Specie name provided doesn't exists.")}
             
             if (specie == "Hsapiens") {
-              hs <- org.Hs.eg.db
+              org_db <- org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
               if(verbose) {print_msg(msg_type = "INFO",
                                      msg = "Specie used : Homo sapiens")}
             }
             
             if (specie == "Mmusculus") {
-              mm <- org.Mm.eg.db
+              org_db <- org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
               if(verbose) {print_msg(msg_type = "INFO",
                                      msg = "Specie used : Mus musculus")}
@@ -63,7 +63,7 @@ setMethod("enrich_go",
               query = rownames(object@data[object@cluster == cluster,])
               
               # Convert gene id to EntrezId format
-              suppressMessages(query_entrezid <- AnnotationDbi::select(hs, 
+              suppressMessages(query_entrezid <- AnnotationDbi::select(org_db, 
                                                                        keys = query,
                                                                        columns = c("ENTREZID", "SYMBOL"),
                                                                        keytype = "SYMBOL"))

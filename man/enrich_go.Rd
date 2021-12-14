@@ -12,7 +12,7 @@ enrich_go(object, specie = "Hsapiens", ontology = "all", verbose = TRUE)
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
-\item{specie}{Specie name, as a concatenation of the first letter of the name (uppercas) and the family name, e.g human - Hsapien}
+\item{specie}{Specie name, as a concatenation of the first letter of the name (uppercase) and the family name, e.g human - Hsapiens}
 
 \item{ontology}{One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.}
 
