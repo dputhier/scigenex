@@ -385,21 +385,6 @@ plot_heatmap <- function(object,
   }  
   
   
-  # Add blank row to separate feature clusters in heatmap
-  ## Create blank row
-  blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
-  
-  ## Insert blank row in matrix
-  m_blank <- matrix(ncol = ncol(object@data))
-  for (i in 1:length(object@size)) {
-    row_start <- sum(object@size[0:(i-1)])+1
-    row_end <- sum(object@size[1:i])
-    m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
-    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
-    m_blank <- rbind(m_blank, m_blank_loop)
-  }
-  m <- m_blank
-  
   # Reduce m rows to only keep genes from top_genes
   if(use_top_genes) {
     if (nrow(object@top_genes) == 1 &
@@ -411,6 +396,28 @@ plot_heatmap <- function(object,
     genes_top <- genes_top[!is.na(genes_top)]
     m <- m[genes_top,]
   }
+  
+  
+  # Add blank row to separate feature clusters in heatmap
+  ## Create blank row
+  blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
+  
+  ## Insert blank row in matrix
+  m_blank <- matrix(ncol = ncol(object@data))
+  for (i in 1:length(object@size)) {
+    if(!use_top_genes) {
+      row_start <- sum(object@size[0:(i-1)])+1
+      row_end <- sum(object@size[1:i])
+    } else {
+      row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
+      row_end <- i*ncol(object@top_genes)
+    }
+    
+    m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
+    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
+    m_blank <- rbind(m_blank, m_blank_loop)
+  }
+  m <- m_blank
   
   
   ####### Heatmap #######
