@@ -419,6 +419,9 @@ plot_heatmap <- function(object,
   }
   m <- m_blank
   
+  #Flip rows
+  m <- m[order(nrow(m):1),]
+  
   
   ####### Heatmap #######
   # Main heatmap
