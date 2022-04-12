@@ -387,13 +387,10 @@ plot_heatmap <- function(object,
   
   # Add blank row to separate feature clusters in heatmap
   ## Create blank row
-  blank_row <- data.frame()
-  blank_row[1:line_size, 1:ncol(object@data)] <- NA
-  row.names(blank_row) <- make.names(rep("w_line", line_size), unique=TRUE)
-  colnames(blank_row) <- colnames(object@data)
+  blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
   
   ## Insert blank row in matrix
-  m_blank <- data.frame()
+  m_blank <- matrix(ncol = ncol(object@data))
   for (i in 1:length(object@size)) {
     row_start <- sum(object@size[0:(i-1)])+1
     row_end <- sum(object@size[1:i])
@@ -401,7 +398,7 @@ plot_heatmap <- function(object,
     #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
     m_blank <- rbind(m_blank, m_blank_loop)
   }
-  m <- as.matrix(m_blank)
+  m <- m_blank
   
   # Reduce m rows to only keep genes from top_genes
   if(use_top_genes) {
