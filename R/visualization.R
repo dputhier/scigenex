@@ -300,6 +300,7 @@ viz_dist <-  function(object,
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_order A vector of cell names already ordered.
 #' @param cell_ordering_method The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.
+#' @param cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
@@ -329,6 +330,7 @@ viz_dist <-  function(object,
 #' fdr = 10)
 #' 
 #' plot_heatmap(object = res)
+#' plot_heatmap(object = res, cluster = "1")
 #' 
 
 #' @rdname plot_heatmap
@@ -339,6 +341,7 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_order = NULL,
                          cell_ordering_method = "hclust",
+                         cluster = NULL,
                          use_top_genes = FALSE,
                          name = NULL,
                          xlab = NULL,
@@ -385,6 +388,12 @@ plot_heatmap <- function(object,
   }  
   
   
+  # Reduce matrix to one cluster
+  if(!is.null(cluster)){
+    gene_cl_int <- names(which(object@cluster == cluster))
+    m <- m[gene_cl_int,]
+  }
+  
   # Reduce m rows to only keep genes from top_genes
   if(use_top_genes) {
     if (nrow(object@top_genes) == 1 &
@@ -399,25 +408,27 @@ plot_heatmap <- function(object,
   
   
   # Add blank row to separate feature clusters in heatmap
-  ## Create blank row
-  blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
-  
-  ## Insert blank row in matrix
-  m_blank <- matrix(ncol = ncol(object@data))
-  for (i in 1:length(object@size)) {
-    if(!use_top_genes) {
-      row_start <- sum(object@size[0:(i-1)])+1
-      row_end <- sum(object@size[1:i])
-    } else {
-      row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
-      row_end <- i*ncol(object@top_genes)
-    }
+  if(is.null(cluster)){
+    ## Create blank row
+    blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
     
-    m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
-    #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
-    m_blank <- rbind(m_blank, m_blank_loop)
+    ## Insert blank row in matrix
+    m_blank <- matrix(ncol = ncol(object@data))
+    for (i in 1:length(object@size)) {
+      if(!use_top_genes) {
+        row_start <- sum(object@size[0:(i-1)])+1
+        row_end <- sum(object@size[1:i])
+      } else {
+        row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
+        row_end <- i*ncol(object@top_genes)
+      }
+      
+      m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
+      #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
+      m_blank <- rbind(m_blank, m_blank_loop)
+    }
+    m <- m_blank
   }
-  m <- m_blank
   
   #Flip rows
   m <- m[order(nrow(m):1),]
