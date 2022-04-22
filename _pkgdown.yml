@@ -1,0 +1,14 @@
+title: scigenex
+url: https://scigenex.r-lib.org
+
+template:
+  params :
+    bootswatch: flatly
+  bslib:
+    bg: #FFFCF6
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Roboto Slab"}
+    code_font: {google: "JetBrains Mono"}
+
+
+
