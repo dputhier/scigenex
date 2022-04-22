@@ -10,5 +10,12 @@ template:
     heading_font: {google: "Roboto Slab"}
     code_font: {google: "JetBrains Mono"}
 
-
+navbar:
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Install"
+      href: articles/installation.html
+    - text: "Get Started"
+      href: articles/install.html
 
