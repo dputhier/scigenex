@@ -16,6 +16,6 @@ navbar:
       href: index.html
     - text: "Install"
       href: articles/installation.html
-    - text: "Get Started"
-      href: articles/install.html
+    - text: "Guided tutorial"
+      href: articles/usage.html
 

@@ -5,7 +5,8 @@ articles:
   get_started: get_started.html
   install: install.html
   installation: installation.html
-last_built: 2022-04-22T13:23Z
+  usage: usage.html
+last_built: 2022-04-22T15:39Z
 urls:
   reference: https://scigenex.r-lib.org/reference
   article: https://scigenex.r-lib.org/articles

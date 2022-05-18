@@ -1,0 +1,69 @@
+# Guided tutorial
+The simplest way to use scigenex is to run the following steps of Seurat R package:
+<br>
+<ul>
+  <li>Create Seurat object</li>
+  <li>Quality Control</li>
+  <li>Normalization</li>
+</ul>
+and then use the seurat object as input of SciGeneX. 
+<br/>
+<br>
+SciGeneX assumes that the normalized count matrix is saved in the "data" slot of seurat object and can be loaded with GetAssayData(object, slot="data).
+If not or if you didn't use seurat, you can also provide a normalized matrix as input.
+<br/>
+
+## Loading normalized count matrix
+For this tutorial, we will use scRNA-seq dataset of Peripheral Blood Mononuclear Cells (PBMC) freely available on 10x Genomics. 
+This dataset contains 2700 single cells sequenced on the Illumina NextSeq 50. 
+You can download it [**here**](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz).
+<br>
+
+### Common Seurat pipeline
+In this step, we will run the pre-processing steps from [common seurat pipeline](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html). 
+If you already have your pre-processed seurat object or your normalized count matrix, you can skip this step.
+
+#### Setup the Seurat object
+```{r , eval=T, include = F}
+# Load 
+library(Seurat)
+pbmc <- Read10X(data.dir = "/mnt/NAS7/Workspace/bavaisj/dbfmcl/dataset_pbmc/filtered_gene_bc_matrices/hg19/")
+pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
+                                  min.cells = 3, 
+                                  min.features = 200)
+pbmc_seurat
+```
+
+```{r , eval=F, echo=T}
+library(Seurat)
+
+# Read 10x data
+pbmc <- Read10X(data.dir = "../pbmc3k/filtered_gene_bc_matrices/hg19")
+
+# Create Seurat object
+pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
+                                  min.cells = 3, 
+                                  min.features = 200)
+```
+
+#### Quality Control
+We filter cells that have less than 5% of mitochondrial genes or 200 unique feature counts or more than 2500 feature counts.
+```{r , eval=F, echo=T}
+# Compute percentage of mitochondrial genes
+pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
+# Filter cells
+pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200 & nFeature_RNA < 2500)
+```
+
+#### Normalizing count matrix
+```{r , eval=F, echo=T}
+# Normalizing
+pbmc_seurat <- NormalizeData(pbmc_seurat)
+```
+<br>
+<br>
+
+### Run SciGeneX
+In this section, we will use
+
+
