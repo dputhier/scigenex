@@ -431,7 +431,7 @@ DBF <- function(data,
       #################### DKNN simulation
       # Extract the distance values from the distance matrix
       dist_values <- dist_matrix[!is.na(dist_matrix)]
-      nb_of_gene_sim <- nrow(select_for_correlation) * 1.5 #REMPLACER PAR NB DE GENE x2
+      nb_of_gene_sim <- nrow(select_for_correlation) * 1 #REMPLACER PAR NB DE GENE x2 POUR RAJOUTER UNE SIMULATION
       sim_dknn <- vector()
       
       # Generate simulated distances
@@ -478,7 +478,8 @@ DBF <- function(data,
       }
       
       #################### Select genes with a distance value under critical distance
-      selected_genes <- df_dknn[which(df_dknn[,"ratio_sim_obs"] < fdr*0.01),]
+      critical_distance <- df_dknn[which(df_dknn[,"ratio_sim_obs"] > fdr*0.01)[1], "dknn_values"]
+      selected_genes <- df_dknn[df_dknn[,"dknn_values"] < critical_distance,]
       # Remove genes not selected on the previously created list including observed distance values
       l_knn_selected <- l_knn[as.character(selected_genes[,"gene_id"])]
       
@@ -532,7 +533,7 @@ DBF <- function(data,
         names(obs_dknn) <- df_dknn[,"gene_id"]
         obj@distances <- obs_dknn
         obj@simulated_distances <- sim_dknn
-        obj@critical_distance <- df_dknn[which(df_dknn[,"ratio_sim_obs"] > fdr*0.01)[1], "dknn_values"]
+        obj@critical_distance <- critical_distance
       }
       
       
