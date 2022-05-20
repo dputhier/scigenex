@@ -474,7 +474,7 @@ DBF <- function(data,
         df_dknn[i,"nb_dknn_obs"] <- nb_dknn_obs
         
         #Compute the ratio between number of simulated DKNN values and the number of observed DKNN values under DKNN value at rank i
-        df_dknn[i,"ratio_sim_obs"] <- nb_dknn_sim/(nb_dknn_obs + nb_dknn_sim)
+        df_dknn[i,"ratio_sim_obs"] <- nb_dknn_sim/nb_dknn_obs
       }
       
       #################### Select genes with a distance value under critical distance
