@@ -11,6 +11,8 @@ plot_heatmap(
   floor = -1,
   cell_order = NULL,
   cell_ordering_method = "hclust",
+  show_dendro = TRUE,
+  cluster = NULL,
   use_top_genes = FALSE,
   name = NULL,
   xlab = NULL,
@@ -36,6 +38,10 @@ plot_heatmap(
 \item{cell_order}{A vector of cell names already ordered.}
 
 \item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
+
+\item{show_dendro}{A logical to indicate whether to show column dendrogram.}
+
+\item{cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
@@ -66,7 +72,7 @@ Iheatmap-class object
 Plot the observed and simulated distance with the Kth nearest neighbors.
 }
 \examples{
-m <- matrix(rnorm(6000), nc=20)
+m <- matrix(rnorm(40000), nc=20)
 m[1:100,1:10] <- m[1:100,1:10] + 4
 m[101:200,11:20] <- m[101:200,11:20] + 3
 m[201:300,5:15] <- m[201:300,5:15] + -2
@@ -74,10 +80,11 @@ m[201:300,5:15] <- m[201:300,5:15] + -2
 res <- DBFMCL(data=m,
 distance_method="pearson",
 av_dot_prod_min = 0,
-inflation = 1.2,
+inflation = 2,
 k=25,
 fdr = 10)
 
 plot_heatmap(object = res)
+plot_heatmap(object = res, cluster = "1")
 
 }

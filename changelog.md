@@ -1,6 +1,13 @@
 
 # Changelog
 
+## v1.2.21
+
+*   Update the package used for enrichment analysis to use ClusterProfiler
+*   Update visualization of enrichment analysis results : add dotplot and barplot provided by ClusterProfiler
+*   Add more parameters to control the density plot of distances
+*   Fix issues from Github
+
 ## v1.2.2
 
 *   Replace the C code for DBF function by a R implementation to reduce the computational time.

@@ -27,6 +27,8 @@ This class is a representation of a partitioning algorithm and is intented to st
 
 \item{\code{size}}{vector. The size of each cluster.}
 
+\item{\code{dot_prodcut}}{vector. The median dot product of each gene clusters.}
+
 \item{\code{top_genes}}{matrix The highly co-expressed genes of each gene clusters.}
 
 \item{\code{center}}{matrix. The centers of each clusters.}

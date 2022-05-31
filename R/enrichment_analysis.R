@@ -7,37 +7,84 @@
 ##' @description
 #' Perform enrichment analysis on all MCL clusters indepentently and store the results in the cluster_annotations slot of the ClusterSet object.
 #' @param object A \code{ClusterSet} object.
-#' @param specie Specie name, as a concatenation of the first letter of the name and the family name, e.g human - hsapien
+#' @param specie Specie name, as a concatenation of the first letter of the name (uppercase) and the family name, e.g human - Hsapiens
+#' @param ontology One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.
+#' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
-#' @export enrich_analysis
+#' @export enrich_go
 #'
 #' @examples
 #' 
 #' \dontrun{
 #' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 #'
-#' go_res <- enrich_analysis(myobject)
+#' go_res <- enrich_go(myobject)
 #' }
 
-setGeneric("enrich_analysis",
+setGeneric("enrich_go",
            function(object,
-                    specie="hsapiens") {
-             standardGeneric("enrich_analysis")
+                    specie="Hsapiens",
+                    ontology="all",
+                    verbose = TRUE) {
+             standardGeneric("enrich_go")
            })
 
-#' @rdname enrich_analysis
-setMethod("enrich_analysis",
+#' @rdname enrich_go
+setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
-                   specie="hsapiens") {
+                   specie="Hsapiens",
+                   ontology="all",
+                   verbose = TRUE) {
+            
+            
+            if (!specie %in% c("Hsapiens", "Mmusculus")){
+              stop("Specie name provided doesn't exists.")}
+            
+            if (specie == "Hsapiens") {
+              org_db <- org.Hs.eg.db
+              go_name <- "org.Hs.eg.db"
+              if(verbose) {print_msg(msg_type = "INFO",
+                                     msg = "Specie used : Homo sapiens")}
+            }
+            
+            if (specie == "Mmusculus") {
+              org_db <- org.Mm.eg.db
+              go_name <- "org.Mm.eg.db"
+              if(verbose) {print_msg(msg_type = "INFO",
+                                     msg = "Specie used : Mus musculus")}
+            }
+            
             
             for(cluster in unique(object@cluster)){
-              print(paste0("Enrichment analysis for cluster ", cluster))
+              if (verbose) {print(paste0("Enrichment analysis for cluster ", cluster))}
               cluster_name = paste0("Cluster_", cluster)
               query = rownames(object@data[object@cluster == cluster,])
-              gostres <- gost(query, organism = "hsapiens", ordered_query = FALSE, significant = TRUE, exclude_iea = T)
-              object@cluster_annotations[[cluster]] = list(result = gostres$result, meta = gostres$meta)
+              
+              # Convert gene id to EntrezId format
+              suppressMessages(query_entrezid <- AnnotationDbi::select(org_db, 
+                                                                       keys = query,
+                                                                       columns = c("ENTREZID", "SYMBOL"),
+                                                                       keytype = "SYMBOL"))
+              
+              print_msg(msg_type = "DEBUG",
+                        msg = paste0("Cluster ",
+                                     cluster,
+                                     "\n",
+                                     "Number of gene names converted to EntrezId : ", 
+                                     length(which(!is.na(query_entrezid[, "ENTREZID"]))),
+                                     "\n", 
+                                     "Number of gene names not converted to EntrezId : ", 
+                                     length(which(is.na(query_entrezid[, "ENTREZID"])))))
+              
+              # Enrichment analysis using GO database
+              enrich_go_res <- enrichGO(query_entrezid[,"ENTREZID"],
+                                        OrgDb = go_name,
+                                        ont = ontology,
+                                        readable = TRUE)
+              # Store results in the ClusterSet object
+              object@cluster_annotations[[cluster]] <- enrich_go_res
             }
             return(object)
           }
@@ -53,31 +100,40 @@ setMethod("enrich_analysis",
 #' Retrieve enrichment analysis results from a ClusterSet object and draw a Manhattan-like-plot.
 #' @param object A \code{ClusterSet} object.
 #' @param clusters  A vector of cluster id to plot.
+#' @param type A vector providing the type of plot.
+#' @param panel Whether the plot is splited by ontology.
+#' @param nb_terms An integer indicating the number of terms in the plot.
 #' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
-#' @export enrich_viz
+#' @export viz_enrich
 #'
 #' @examples
 #' 
 #' \dontrun{
 #' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
 #'
-#' enrich_viz(myobject)
+#' viz_enrich(myobject)
 #' }
 
-setGeneric("enrich_viz",
+setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
+                    type = "dotplot",
+                    panel = TRUE,
+                    nb_terms = 20,
                     verbose = TRUE) {
-             standardGeneric("enrich_viz")
+             standardGeneric("viz_enrich")
            })
 
-#' @rdname enrich_viz
-setMethod("enrich_viz",
+#' @rdname viz_enrich
+setMethod("viz_enrich",
           signature(object = "ClusterSet"),
           function(object,
                    clusters = "all",
+                   type = c("dotplot", "barplot"),
+                   panel = TRUE,
+                   nb_terms = 20,
                    verbose = TRUE) {
             
             if (length(clusters) == 1){
@@ -93,8 +149,8 @@ setMethod("enrich_viz",
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
-              # Check if there is a result provided by enrich_analysis function for the current cluster
-              if(is.null(object@cluster_annotations[[cur_cluster]]$result)){
+              # Check if there is a result provided by enrich_go function for the current cluster
+              if(nrow(object@cluster_annotations[[cur_cluster]]@result) == 0){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -105,24 +161,37 @@ setMethod("enrich_viz",
                             msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
                 }
                 
-                # Create a plotly result plot
-                plot_enrich <- gostplot(object@cluster_annotations[[cur_cluster]],
-                                        interactive = TRUE)
-                plot_enrich <- plot_enrich %>% plotly::layout(title = paste0("Cluster ", cur_cluster),
-                                                              xaxis = list(title = 'Database'))
                 
-                # Store the plot in the cluster_annotation slot
-                object@cluster_annotations[[cur_cluster]]$plot <- plot_enrich
-                print(plot_enrich)
+                # Create a ggplot - dotplot
+                if ("dotplot" %in% type){
+                  if(panel){
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scale="free")
+                  } else {
+                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                  }
+                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
+                }
+                
+                # Create a ggplot - barplot
+                if ("barplot" %in% type){
+                  if(panel){
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scale="free")
+                  } else {
+                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                  }
+                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
+                }
               }
             }
             
             # Print a message to inform which slot contains the results
             if (verbose){
               print_msg(msg_type = "INFO",
-                        msg = paste("Plots are stored in object@cluster_annotations[[<cluster>]]$plot"))
+                        msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
+                                    "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
             }
-            
             return(object)
           }
 )
