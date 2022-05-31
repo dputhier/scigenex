@@ -230,7 +230,7 @@ DBFMCL <- function(data = NULL,
     mcl_system_cmd(name, inflation = inflation, input_path = output_path, silent = silent, threads = mcl_threads)
     
     
-    print_msg(paste0("Reading MCL output: ", mcl_out_file), msg_type="DEBUG")
+    print_msg(paste0("Reading and filtering MCL output: ", mcl_out_file), msg_type="DEBUG")
     
     ## getting mcl results into the ClusterSet object
     mcl_cluster <- readLines(mcl_out_file)
