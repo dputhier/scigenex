@@ -246,7 +246,7 @@ DBFMCL <- function(data = NULL,
       cur_clust[cur_clust > 0 ] <- 1
       cur_dot_prod <- cur_clust %*% t(cur_clust)
       
-      if(mean(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+      if(median(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
         
         nb <- nb + 1
         gene_list <- c(gene_list, h)
