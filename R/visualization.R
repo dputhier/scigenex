@@ -417,10 +417,10 @@ plot_heatmap <- function(object,
   # Add blank row to separate feature clusters in heatmap
   if(is.null(cluster)){
     ## Create blank row
-    blank_row <- matrix(nrow = line_size, ncol = ncol(object@data))
+    blank_row <- matrix(nrow = line_size, ncol = ncol(m))
     
     ## Insert blank row in matrix
-    m_blank <- matrix(ncol = ncol(object@data))
+    m_blank <- matrix(ncol = ncol(m))
     for (i in 1:length(object@size)) {
       if(!use_top_genes) {
         row_start <- sum(object@size[0:(i-1)])+1
