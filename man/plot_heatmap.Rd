@@ -11,6 +11,7 @@ plot_heatmap(
   floor = -1,
   cell_order = NULL,
   cell_ordering_method = "hclust",
+  show_dendro = TRUE,
   cluster = NULL,
   use_top_genes = FALSE,
   name = NULL,
@@ -37,6 +38,8 @@ plot_heatmap(
 \item{cell_order}{A vector of cell names already ordered.}
 
 \item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
+
+\item{show_dendro}{A logical to indicate whether to show column dendrogram.}
 
 \item{cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
 

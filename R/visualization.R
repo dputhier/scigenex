@@ -300,6 +300,7 @@ viz_dist <-  function(object,
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_order A vector of cell names already ordered.
 #' @param cell_ordering_method The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.
+#' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param name A title for the heatmap.
@@ -341,6 +342,7 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_order = NULL,
                          cell_ordering_method = "hclust",
+                         show_dendro = TRUE,
                          cluster = NULL,
                          use_top_genes = FALSE,
                          name = NULL,
@@ -468,6 +470,10 @@ plot_heatmap <- function(object,
   if(!is.null(name)){
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
+  # Show dendrogram from hclust
+  if(!is.null(show_dendro)) {
+    htmp <- htmp %>% add_col_dendro(m_clust)
+  }
   
   
   return(htmp)
