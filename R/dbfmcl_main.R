@@ -239,6 +239,7 @@ DBFMCL <- function(data = NULL,
     size <- NULL
     nb <- 0
     nb_cluster_deleted <- 0
+    median_cur_dot_prod <- c()
     
     for (i in 1:length(mcl_cluster)) {
       h <- unlist(strsplit(mcl_cluster[i], "\t"))
@@ -247,6 +248,7 @@ DBFMCL <- function(data = NULL,
       cur_dot_prod <- cur_clust %*% t(cur_clust)
       
       if(median(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+        median_cur_dot_prod[i] <- median(cur_dot_prod)
         
         nb <- nb + 1
         gene_list <- c(gene_list, h)
@@ -285,6 +287,10 @@ DBFMCL <- function(data = NULL,
         )
       }
       obj@center <- centers
+      
+      # Add median values of dot product for each gene cluster
+      names(median_cur_dot_prod) <- paste0("cluster_", seq(1:length(size)))
+      obj@dot_prodcut <- median_cur_dot_prod
       
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
