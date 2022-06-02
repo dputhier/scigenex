@@ -35,7 +35,7 @@ Or using the R interpreter:
 ### Quick example on artificial data
 
       library(scigenex)
-      sed.seed(123)
+      set.seed(123)
       m <- matrix(rnorm(40000), nc=20)
       m[1:100,1:10] <- m[1:100,1:10] + 4
       m[101:200,11:20] <- m[101:200,11:20] + 3
