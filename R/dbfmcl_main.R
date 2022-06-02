@@ -246,8 +246,11 @@ DBFMCL <- function(data = NULL,
       cur_clust <- data_matrix[h,]
       cur_clust[cur_clust > 0 ] <- 1
       cur_dot_prod <- cur_clust %*% t(cur_clust)
+      diag(cur_dot_prod) <- NA
+      cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 1, max, na.rm=T))
       
-      if(median(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+      if(cur_dot_prod_median_of_max >= av_dot_prod_min & length(h) > min_cluster_size){
+        # Extract median value of dot product for gene signature i
         median_cur_dot_prod[i] <- median(cur_dot_prod)
         
         nb <- nb + 1
