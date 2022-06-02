@@ -472,7 +472,7 @@ plot_heatmap <- function(object,
   
   # Show dendrogram from hclust
   if(!is.null(show_dendro)) {
-    htmp <- htmp %>% add_col_dendro(m_clust)
+    htmp <- htmp %>% add_col_dendro(m_clust, reorder = FALSE)
   }
   
   
