@@ -423,16 +423,26 @@ plot_heatmap <- function(object,
     
     ## Insert blank row in matrix
     m_blank <- matrix(ncol = ncol(m))
+    m <- rbind(m, matrix(nrow = 1, ncol = ncol(m)))
+    
     for (i in 1:length(object@size)) {
       if(!use_top_genes) {
         row_start <- sum(object@size[0:(i-1)])+1
         row_end <- sum(object@size[1:i])
+        
+        m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
       } else {
-        row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
-        row_end <- i*ncol(object@top_genes)
+        nb_top_genes <- length(object@top_genes[i,!is.na(object@top_genes[i,])])
+        
+        m_top_i <- m[0:nb_top_genes,]
+        m <- m[(nb_top_genes+1):nrow(m),]
+        
+        m_blank_loop <- rbind(m_top_i, blank_row)
+        #row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
+        #row_end <- i*nb_top_genes
       }
       
-      m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
+      
       #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
       m_blank <- rbind(m_blank, m_blank_loop)
     }
