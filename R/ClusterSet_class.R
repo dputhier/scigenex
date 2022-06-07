@@ -17,7 +17,7 @@ library(iheatmapr)
 #' @slot distances vector. The observed distance values with the knn.
 #' @slot simulated_distances vector. The simulated distance values with the knn.
 #' @slot critical_distance vector. The critical threshold distance to select informative genes.
-#' @slot cluster vector. Mapping of row/genes to clusters.
+#' @slot gene_patterns vector. Mapping of row/genes to gene_patterns.
 #' @slot size vector. The size of each cluster.
 #' @slot dot_prodcut vector. The median dot product of each gene clusters.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
@@ -58,7 +58,7 @@ setClass("ClusterSet",
            distances = "vector",
            simulated_distances = "vector",
            critical_distance = "vector",
-           cluster = "vector",
+           gene_patterns = "vector",
            size = "vector",
            dot_prodcut = "vector",
            top_genes = "matrix",
@@ -77,7 +77,7 @@ setClass("ClusterSet",
            distances = vector(),
            simulated_distances = vector(),
            critical_distance = vector(),
-           cluster = numeric(),
+           gene_patterns = numeric(),
            size = numeric(),
            dot_prodcut = numeric(),
            top_genes = matrix(),

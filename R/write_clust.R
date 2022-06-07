@@ -50,7 +50,7 @@ setMethod(
       
       print_msg(paste("Cluster ", i, " --> ", object@size[i], " probes"), msg_type="INFO")
       
-      subData <- data[object@cluster == i, ]
+      subData <- data[object@gene_patterns == i, ]
       subData <- cbind(rownames(subData), subData)
       if (nb_na_row > 0){
         intLine <- matrix(rep(NA, (ncol(data) + 1)*nb_na_row), nrow = nb_na_row)

@@ -23,7 +23,7 @@ This class is a representation of a partitioning algorithm and is intented to st
 
 \item{\code{critical_distance}}{vector. The critical threshold distance to select informative genes.}
 
-\item{\code{cluster}}{vector. Mapping of row/genes to clusters.}
+\item{\code{gene_patterns}}{vector. Mapping of row/genes to gene_patterns.}
 
 \item{\code{size}}{vector. The size of each cluster.}
 

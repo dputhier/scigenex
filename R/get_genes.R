@@ -44,7 +44,7 @@ get_genes <- function(object,
     cluster <- c(1:length(object@size))
   }
   
-  gene_names <- names(object@cluster[object@cluster %in% cluster])
+  gene_names <- names(object@gene_patterns[object@gene_patterns %in% cluster])
   
   return(gene_names)
 }

@@ -93,7 +93,7 @@ setMethod(
     ## melting
     print_msg("Melting matrix.", msg_type="DEBUG")
     m_melt <- as.data.frame(m)
-    m_melt$cluster <- object@cluster
+    m_melt$cluster <- object@gene_patterns
     m_melt$gene <- row.names(object@data)
     
     m_melt <- melt(m_melt,
@@ -394,7 +394,7 @@ plot_heatmap <- function(object,
   
   # Reduce matrix to one cluster
   if(!is.null(cluster)){
-    gene_cl_int <- names(which(object@cluster == cluster))
+    gene_cl_int <- names(which(object@gene_patterns == cluster))
     m <- m[gene_cl_int,]
   }
   
