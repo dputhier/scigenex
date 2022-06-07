@@ -480,6 +480,11 @@ plot_heatmap <- function(object,
   if(!is.null(name)){
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
+  # Show cell clusters
+  if(!is.null(object@cell_clusters)) {
+    htmp <- htmp %>% add_col_annotation(as.character(object@cell_clusters))
+  }
+  
   # Show dendrogram from hclust
   if(!is.null(show_dendro)) {
     htmp <- htmp %>% add_col_dendro(m_clust, reorder = FALSE)
