@@ -301,7 +301,9 @@ DBFMCL <- function(data = NULL,
         k = k,
         fdr = fdr,
         seed = seed,
-        inflation = inflation
+        inflation = inflation,
+        min_cluster_size = min_cluster_size,
+        av_dot_prod_min = av_dot_prod_min
       )
     }
   }
