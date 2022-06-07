@@ -9,6 +9,7 @@
 #' The dendrogram is cut using the hybrid method of the DynamicTreeCut R package which is based on the shape of the dendrogram branches.
 #' For a full description of the algorithm, see Peter Langfelder, Bin Zhang, Steve Horvath, Defining clusters from a hierarchical cluster tree: the Dynamic Tree Cut package for R, Bioinformatics, 2008.
 #' @param object A \code{ClusterSet} object.
+#' @param min_cluster_size Minimum cluster size.
 #'
 #' @return 
 #' @export cell_clust
@@ -28,12 +29,13 @@
 #'               k=25,
 #'               fdr = 10)
 #'               
-#' res <- cell_clust(res)
+#' res <- cell_clust(res, min_cluster_size = 3)
 #' res@cell_clust
 #' }
 
 
-cell_clust <- function(object) {
+cell_clust <- function(object,
+                       min_cluster_size = 5) {
   
   # Row centering (Soustract the row mean values for each value in a row)
   data_rc <- sweep(object@data, MARGIN = 1, FUN = "-", STATS = rowMeans(object@data))
@@ -43,7 +45,7 @@ cell_clust <- function(object) {
   m_clust <- hclust(m_dist, method = "average")
   
   # Cell partitionning - cut tree
-  ct <- cutreeHybrid(m_clust, minClusterSize = 5,
+  ct <- cutreeHybrid(m_clust, minClusterSize = min_cluster_size,
                      distM = as.matrix(m_dist),
                      deepSplit = 1,
                      useMedoids=T,
