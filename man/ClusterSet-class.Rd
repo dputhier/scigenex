@@ -37,7 +37,7 @@ This class is a representation of a partitioning algorithm and is intented to st
 
 \item{\code{algorithm}}{vector. The algorithm used to produce the clusters.}
 
-\item{\code{cell_clusters}}{vector. The cell clusters.}
+\item{\code{cell_clusters}}{list The cell clusters.}
 
 \item{\code{cell_types}}{vector. The cell types.}
 

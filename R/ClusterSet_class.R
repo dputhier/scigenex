@@ -24,7 +24,7 @@ library(iheatmapr)
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
 #' @slot algorithm vector. The algorithm used to produce the clusters.
-#' @slot cell_clusters vector. The cell clusters.
+#' @slot cell_clusters list The cell clusters.
 #' @slot cell_types vector. The cell types.
 #' @slot cell_colors vector. The cell types to color mapping.
 #' @slot cell_order vector. How cell should be ordered.
@@ -65,7 +65,7 @@ setClass("ClusterSet",
            center = "matrix",
            parameters = "list",
            algorithm = "vector",
-           cell_clusters = "vector",
+           cell_clusters = "list",
            cell_types = "vector",
            cell_colors = "vector",
            cell_order = "vector",
@@ -84,7 +84,7 @@ setClass("ClusterSet",
            center = matrix(nc = 0, nr = 0),
            parameters = list(),
            algorithm = character(),
-           cell_clusters = numeric(),
+           cell_clusters = list(),
            cell_types = vector(),
            cell_colors = vector(),
            cell_order = vector(),
