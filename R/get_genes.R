@@ -26,7 +26,7 @@
 #'               k=25,
 #'               fdr = 10)
 #'               
-#'genes <- get_genes(object = res, cluster="all")
+#'genes <- get_genes(object = res, cluster="1")
 #'genes
 #' 
 #' \dontrun{
