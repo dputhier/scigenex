@@ -303,6 +303,7 @@ viz_dist <-  function(object,
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
+#' @param use_core_cells A logical to indicate whether to use core cells obtained by cell_clust function.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
@@ -345,6 +346,7 @@ plot_heatmap <- function(object,
                          show_dendro = TRUE,
                          cluster = NULL,
                          use_top_genes = FALSE,
+                         use_core_cells = FALSE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
@@ -415,6 +417,18 @@ plot_heatmap <- function(object,
     }
   }
   
+  # Reduce m cols to only keep core cells from cell_clust
+  if(use_core_cells) {
+    if(length(object@cell_clusters) == 0){
+      stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run cell_clust() before."))
+    } else {
+      cell_names <- names(which(object@cell_clusters$cores !=0))
+      m <- m[,cell_names]
+    }
+  } else {
+    cell_names <- names(object@cell_clusters$labels)
+  }
+  
   
   # Add blank row to separate feature clusters in heatmap
   if(is.null(cluster)){
@@ -481,12 +495,12 @@ plot_heatmap <- function(object,
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
   # Show cell clusters
-  if(!is.null(object@cell_clusters)) {
-    htmp <- htmp %>% add_col_annotation(as.character(object@cell_clusters))
+  if(!length(object@cell_clusters) == 0) {
+    htmp <- htmp %>% add_col_annotation(as.character(object@cell_clusters$labels[cell_names]))
   }
   
   # Show dendrogram from hclust
-  if(!is.null(show_dendro)) {
+  if(!is.null(show_dendro) & !(use_core_cells)) {
     htmp <- htmp %>% add_col_dendro(m_clust, reorder = FALSE)
   }
   
