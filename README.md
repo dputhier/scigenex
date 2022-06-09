@@ -35,18 +35,19 @@ Or using the R interpreter:
 ### Quick example on artificial data
 
       library(scigenex)
-      m <- matrix(rnorm(80000), nc=20)
+      set.seed(123)
+      m <- matrix(rnorm(40000), nc=20)
       m[1:100,1:10] <- m[1:100,1:10] + 4
       m[101:200,11:20] <- m[101:200,11:20] + 3
       m[201:300,5:15] <- m[201:300,5:15] + -2
       res <- DBFMCL(data=m,
-                    distance_method="pearson",
-                    av_dot_prod_min = 0,
-                    inflation = 1.2,
-                    k=25,
-                    fdr = 10)
-      plot_clust(res, ceil = 10, floor = -10)
-      write_clust(res, "ALL.sign.txt")
+              distance_method="pearson",
+              av_dot_prod_min = 0,
+              inflation = 2,
+              k=25,
+              fdr = 10)
+      plot_heatmap(res, ceil = 3, floor = -3)
+      saveRDS(object = res, file = "ClusterSet_obj.RDS")
       
 ### Documentation
 

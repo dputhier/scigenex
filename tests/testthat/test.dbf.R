@@ -13,7 +13,7 @@ test_that("Cheking DBF is providing the right number of genes", {
              silent = FALSE,
              seed = 123)
   #Test results
-  expect_equal(res@size, 370)
+  expect_equal(res@size, 372)
   #Remove output files
   file.remove("exprs.dbf_out.txt")
 })

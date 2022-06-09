@@ -19,6 +19,7 @@
 #' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_row_title add_col_title
 #' @importFrom clusterProfiler enrichGO select
 #' @importFrom qlcMatrix corSparse
+#' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 #' 

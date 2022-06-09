@@ -11,8 +11,10 @@ plot_heatmap(
   floor = -1,
   cell_order = NULL,
   cell_ordering_method = "hclust",
+  show_dendro = TRUE,
   cluster = NULL,
   use_top_genes = FALSE,
+  use_core_cells = FALSE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -38,9 +40,13 @@ plot_heatmap(
 
 \item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
 
+\item{show_dendro}{A logical to indicate whether to show column dendrogram.}
+
 \item{cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
+
+\item{use_core_cells}{A logical to indicate whether to use core cells obtained by cell_clust function.}
 
 \item{name}{A title for the heatmap.}
 

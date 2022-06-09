@@ -230,7 +230,7 @@ DBFMCL <- function(data = NULL,
     mcl_system_cmd(name, inflation = inflation, input_path = output_path, silent = silent, threads = mcl_threads)
     
     
-    print_msg(paste0("Reading MCL output: ", mcl_out_file), msg_type="DEBUG")
+    print_msg(paste0("Reading and filtering MCL output: ", mcl_out_file), msg_type="DEBUG")
     
     ## getting mcl results into the ClusterSet object
     mcl_cluster <- readLines(mcl_out_file)
@@ -239,26 +239,37 @@ DBFMCL <- function(data = NULL,
     size <- NULL
     nb <- 0
     nb_cluster_deleted <- 0
+    median_cur_dot_prod <- c()
     
     for (i in 1:length(mcl_cluster)) {
       h <- unlist(strsplit(mcl_cluster[i], "\t"))
-      cur_clust <- data_matrix[h,]
-      cur_clust[cur_clust > 0 ] <- 1
-      cur_dot_prod <- cur_clust %*% t(cur_clust)
       
-      if(mean(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
+      # Cluster size filtering
+      if(length(h) > min_cluster_size) {
         
-        nb <- nb + 1
-        gene_list <- c(gene_list, h)
-        clusters <- c(clusters, rep(nb, length(h)))
-        if (is.null(size)) {
-          size <- length(h)
+        cur_clust <- data_matrix[h,]
+        cur_clust[cur_clust > 0 ] <- 1
+        cur_dot_prod <- cur_clust %*% t(cur_clust)
+        diag(cur_dot_prod) <- NA
+        cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 1, max, na.rm=T))
+        
+        # Dot product filtering
+        if(cur_dot_prod_median_of_max >= av_dot_prod_min){
+          # Extract median value of dot product for gene signature i
+          median_cur_dot_prod[i] <- median(cur_dot_prod)
+          
+          nb <- nb + 1
+          gene_list <- c(gene_list, h)
+          clusters <- c(clusters, rep(nb, length(h)))
+          if (is.null(size)) {
+            size <- length(h)
+          }
+          else {
+            size <- c(size, length(h))
+          }
+        }else{
+          nb_cluster_deleted <- nb_cluster_deleted + 1
         }
-        else {
-          size <- c(size, length(h))
-        }
-      }else{
-        nb_cluster_deleted <- nb_cluster_deleted + 1
       }
     }
     print_msg(paste(nb, " clusters conserved after MCL partitioning."),
@@ -273,18 +284,22 @@ DBFMCL <- function(data = NULL,
       obj@name <- name
       obj@data <- as.matrix(data_matrix[gene_list, ])
       names(clusters) <- rownames(obj@data)
-      obj@cluster <- clusters
+      obj@gene_patterns <- clusters
       obj@size <- size
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
       ## calcul of the mean profils
       for (i in 1:nb) {
-        centers[i, ] <- apply(obj@data[obj@cluster == i, ],
+        centers[i, ] <- apply(obj@data[obj@gene_patterns == i, ],
                               2, mean,
                               na.rm = TRUE
         )
       }
       obj@center <- centers
+      
+      # Add median values of dot product for each gene cluster
+      names(median_cur_dot_prod) <- paste0("cluster_", seq(1:length(size)))
+      obj@dot_prodcut <- median_cur_dot_prod
       
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
@@ -292,7 +307,9 @@ DBFMCL <- function(data = NULL,
         k = k,
         fdr = fdr,
         seed = seed,
-        inflation = inflation
+        inflation = inflation,
+        min_cluster_size = min_cluster_size,
+        av_dot_prod_min = av_dot_prod_min
       )
     }
   }
@@ -431,7 +448,7 @@ DBF <- function(data,
       #################### DKNN simulation
       # Extract the distance values from the distance matrix
       dist_values <- dist_matrix[!is.na(dist_matrix)]
-      nb_of_gene_sim <- nrow(select_for_correlation) * 1.5 #REMPLACER PAR NB DE GENE x2
+      nb_of_gene_sim <- nrow(select_for_correlation) * 1 #REMPLACER PAR NB DE GENE x2 POUR RAJOUTER UNE SIMULATION
       sim_dknn <- vector()
       
       # Generate simulated distances
@@ -474,11 +491,12 @@ DBF <- function(data,
         df_dknn[i,"nb_dknn_obs"] <- nb_dknn_obs
         
         #Compute the ratio between number of simulated DKNN values and the number of observed DKNN values under DKNN value at rank i
-        df_dknn[i,"ratio_sim_obs"] <- nb_dknn_sim/(nb_dknn_obs + nb_dknn_sim)
+        df_dknn[i,"ratio_sim_obs"] <- nb_dknn_sim/nb_dknn_obs
       }
       
       #################### Select genes with a distance value under critical distance
-      selected_genes <- df_dknn[which(df_dknn[,"ratio_sim_obs"] < fdr*0.01),]
+      critical_distance <- df_dknn[which(df_dknn[,"ratio_sim_obs"] > fdr*0.01)[1], "dknn_values"]
+      selected_genes <- df_dknn[df_dknn[,"dknn_values"] < critical_distance,]
       # Remove genes not selected on the previously created list including observed distance values
       l_knn_selected <- l_knn[as.character(selected_genes[,"gene_id"])]
       
@@ -518,10 +536,10 @@ DBF <- function(data,
       
       if (length(selected_genes[,"gene_id"]) > 0) {
         obj@data <- as.matrix(data[selected_genes[,"gene_id"],])
-        obj@cluster <- rep(1, nrow(obj@data))
+        obj@gene_patterns <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)
         obj@center <- matrix(
-          apply(obj@data[obj@cluster == 1, ],
+          apply(obj@data[obj@gene_patterns == 1, ],
                 2,
                 mean,
                 na.rm = TRUE
@@ -532,7 +550,7 @@ DBF <- function(data,
         names(obs_dknn) <- df_dknn[,"gene_id"]
         obj@distances <- obs_dknn
         obj@simulated_distances <- sim_dknn
-        obj@critical_distance <- df_dknn[which(df_dknn[,"ratio_sim_obs"] > fdr*0.01)[1], "dknn_values"]
+        obj@critical_distance <- critical_distance
       }
       
       

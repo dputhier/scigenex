@@ -18,12 +18,12 @@ test_that("Cheking DBFMCL is providing the right number of genes", {
   expect_equal(length(res@size), 3)
   
   #Test number of genes
-  expect_equal(sum(res@size), 370)
+  expect_equal(sum(res@size), 372)
   
   #Test number of genes in each gene cluster
   expect_equal(res@size[1], 134)
-  expect_equal(res@size[2], 133)
-  expect_equal(res@size[3], 103)
+  expect_equal(res@size[2], 134)
+  expect_equal(res@size[3], 104)
   
   #Remove output files
   file.remove("test.dbf_out.txt")
