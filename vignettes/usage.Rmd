@@ -63,7 +63,83 @@ pbmc_seurat <- NormalizeData(pbmc_seurat)
 <br>
 <br>
 
-### Run SciGeneX
-In this section, we will use
+
+
+
+
+## Extract patterns of co-expressed genes using SciGeneX
+In this section, we use the previously generated Seurat object as an input example to run SciGeneX main command. This command run the DBFMCL algorithm (Density-based Filtering and Markov CLuster algorithm) that :
+<br>
+<ul>
+  <li>Identify and extract co-expressed genes</li>
+  <li>Define gene cluster related to their respective patterns of co-expression</li>
+  <li>Store the result in a ClusterSet object</li>
+</ul>
+
+```{r , eval=F, echo=T}
+# Run DBFMCL
+pbmc_scigenex <- DBFMCL(data = pbmc_seurat,
+                        k = 50,
+                        inflation = 8,
+                        min_cluster_size = 5,
+                        av_dot_prod_min=2)
+```
+
+The gene clusters are stored in the slot gene_patterns. You can access the gene names from a cluster using the command get_genes().
+```{r , eval=F, echo=T}
+# Extract gene names from all cluster
+genes <- get_genes(pbmc_scigenex, cluster = "all")
+genes
+
+# Extract gene names from gene cluster 3
+genes_3 <- get_genes(pbmc_scigenex, cluster = 3)
+genes_3
+```
+
+
+## Extract top 10 genes from each patterns of co-expression
+```{r , eval=F, echo=T}
+# Find top 10 genes for all gene clusters
+pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
+pbmc_scigenex@top_genes
+
+# Extract gene names from the top 10 genes of cluster 3
+genes_3_top <- get_genes(pbmc_scigenex, cluster = 3, top = TRUE)
+genes_3_top
+```
+
+
+## Visualization of gene clusters
+We provide a command to generate an interactive heatmap of the gene cluster
+```{r , eval=F, echo=T}
+# 
+plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
+```
+
+
+
+## Gene cluster enrichment analysis
+```{r , eval=F, echo=T}
+# 
+pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens")
+pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "dotplot")
+pbmc_scigenex@cluster_annotations$plot_cl3$barplot
+```
+
+
+## Cell clustering
+```{r , eval=F, echo=T}
+# 
+pbmc_scigenex <- cell_clust(pbmc_scigenex)
+plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
+```
+
+
+
+
+
+
+
+
 
 

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.21</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/dputhier/sigenex/" class="external-link">
+  <a href="https://github.com/dputhier/scigenex/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -110,19 +110,20 @@
 <h3 id="quick-example-on-artificial-data">Quick example on artificial data<a class="anchor" aria-label="anchor" href="#quick-example-on-artificial-data"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(scigenex)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">80000</span>), <span class="at">nc=</span><span class="dv">20</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="ot">&lt;-</span> m[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="sc">+</span> <span class="dv">4</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>,<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>] <span class="ot">&lt;-</span> m[<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>,<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>] <span class="sc">+</span> <span class="dv">3</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">201</span><span class="sc">:</span><span class="dv">300</span>,<span class="dv">5</span><span class="sc">:</span><span class="dv">15</span>] <span class="ot">&lt;-</span> m[<span class="dv">201</span><span class="sc">:</span><span class="dv">300</span>,<span class="dv">5</span><span class="sc">:</span><span class="dv">15</span>] <span class="sc">+</span> <span class="sc">-</span><span class="dv">2</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">DBFMCL</span>(<span class="at">data=</span>m,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">distance_method=</span><span class="st">"pearson"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">av_dot_prod_min =</span> <span class="dv">0</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">inflation =</span> <span class="fl">1.2</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">k=</span><span class="dv">25</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">fdr =</span> <span class="dv">10</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_clust</span>(res, <span class="at">ceil =</span> <span class="dv">10</span>, <span class="at">floor =</span> <span class="sc">-</span><span class="dv">10</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_clust</span>(res, <span class="st">"ALL.sign.txt"</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">40000</span>), <span class="at">nc=</span><span class="dv">20</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="ot">&lt;-</span> m[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="sc">+</span> <span class="dv">4</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>,<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>] <span class="ot">&lt;-</span> m[<span class="dv">101</span><span class="sc">:</span><span class="dv">200</span>,<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>] <span class="sc">+</span> <span class="dv">3</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  m[<span class="dv">201</span><span class="sc">:</span><span class="dv">300</span>,<span class="dv">5</span><span class="sc">:</span><span class="dv">15</span>] <span class="ot">&lt;-</span> m[<span class="dv">201</span><span class="sc">:</span><span class="dv">300</span>,<span class="dv">5</span><span class="sc">:</span><span class="dv">15</span>] <span class="sc">+</span> <span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">DBFMCL</span>(<span class="at">data=</span>m,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">distance_method=</span><span class="st">"pearson"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">av_dot_prod_min =</span> <span class="dv">0</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">inflation =</span> <span class="dv">2</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">k=</span><span class="dv">25</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">fdr =</span> <span class="dv">10</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_heatmap</span>(res, <span class="at">ceil =</span> <span class="dv">3</span>, <span class="at">floor =</span> <span class="sc">-</span><span class="dv">3</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(<span class="at">object =</span> res, <span class="at">file =</span> <span class="st">"ClusterSet_obj.RDS"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  </span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
@@ -137,7 +138,7 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/dputhier/sigenex/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/dputhier/scigenex/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.21</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@
   <a href="../articles/usage.html">Guided tutorial</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/dputhier/sigenex/" class="external-link">
+  <a href="https://github.com/dputhier/scigenex/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -50,7 +50,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>plot_heatmap</h1>
-    <small class="dont-index">Source: <a href="https://github.com/dputhier/sigenex/blob/HEAD/R/visualization.R" class="external-link"><code>R/visualization.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/dputhier/scigenex/blob/HEAD/R/visualization.R" class="external-link"><code>R/visualization.R</code></a></small>
     <div class="hidden name"><code>plot_heatmap.Rd</code></div>
     </div>
 
@@ -66,8 +66,10 @@
   floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
   cell_order <span class="op">=</span> <span class="cn">NULL</span>,
   cell_ordering_method <span class="op">=</span> <span class="st">"hclust"</span>,
+  show_dendro <span class="op">=</span> <span class="cn">TRUE</span>,
   cluster <span class="op">=</span> <span class="cn">NULL</span>,
   use_top_genes <span class="op">=</span> <span class="cn">FALSE</span>,
+  use_core_cells <span class="op">=</span> <span class="cn">FALSE</span>,
   name <span class="op">=</span> <span class="cn">NULL</span>,
   xlab <span class="op">=</span> <span class="cn">NULL</span>,
   ylab <span class="op">=</span> <span class="cn">NULL</span>,
@@ -95,10 +97,14 @@
 <dd><p>A vector of cell names already ordered.</p></dd>
 <dt>cell_ordering_method</dt>
 <dd><p>The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.</p></dd>
+<dt>show_dendro</dt>
+<dd><p>A logical to indicate whether to show column dendrogram.</p></dd>
 <dt>cluster</dt>
 <dd><p>A cluster id to plot. Default is NULL for plotting all cluster.</p></dd>
 <dt>use_top_genes</dt>
 <dd><p>A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.</p></dd>
+<dt>use_core_cells</dt>
+<dd><p>A logical to indicate whether to use core cells obtained by cell_clust function.</p></dd>
 <dt>name</dt>
 <dd><p>A title for the heatmap.</p></dd>
 <dt>xlab</dt>
@@ -143,7 +149,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> The following parameters will be used : </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Working directory:  /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Ouput directory:  /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Name:  8Z2EHzrk77 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	Name:  009TwfOE8x </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Distance method:  pearson </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Minimum average dot product for clusters:  0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Minimum cluster size:  10 </span>
@@ -155,8 +161,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  DBF completed. Starting MCL step. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Running mcl (graph partitioning)... </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  Done </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  creating file : /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/8Z2EHzrk77.mcl_out.txt </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Reading MCL output: /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/8Z2EHzrk77.mcl_out.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |--  creating file : /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/009TwfOE8x.mcl_out.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Reading and filtering MCL output: /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/009TwfOE8x.mcl_out.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  3  clusters conserved after MCL partitioning. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  0  clusters filtered out from MCL partitioning (size and mean dot product). </span>
 <span class="r-in"></span>

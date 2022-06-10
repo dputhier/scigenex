@@ -37,13 +37,22 @@
     <loc>https://scigenex.r-lib.org/reference/DBFMCL.html</loc>
   </url>
   <url>
+    <loc>https://scigenex.r-lib.org/reference/cell_clust.html</loc>
+  </url>
+  <url>
     <loc>https://scigenex.r-lib.org/reference/dim-ClusterSet-method.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/reference/enrich_go.html</loc>
   </url>
   <url>
+    <loc>https://scigenex.r-lib.org/reference/get_cells.html</loc>
+  </url>
+  <url>
     <loc>https://scigenex.r-lib.org/reference/get_data_4_DBFMCL.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/reference/get_genes.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/reference/index.html</loc>

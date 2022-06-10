@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.21</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@
   <a href="../articles/usage.html">Guided tutorial</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/dputhier/sigenex/" class="external-link">
+  <a href="https://github.com/dputhier/scigenex/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -50,7 +50,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>ClusterSet</h1>
-    <small class="dont-index">Source: <a href="https://github.com/dputhier/sigenex/blob/HEAD/R/ClusterSet_class.R" class="external-link"><code>R/ClusterSet_class.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/dputhier/scigenex/blob/HEAD/R/ClusterSet_class.R" class="external-link"><code>R/ClusterSet_class.R</code></a></small>
     <div class="hidden name"><code>ClusterSet-class.Rd</code></div>
     </div>
 
@@ -87,12 +87,16 @@
 <dd><p>vector. The critical threshold distance to select informative genes.</p></dd>
 
 
-<dt><code>cluster</code></dt>
-<dd><p>vector. Mapping of row/genes to clusters.</p></dd>
+<dt><code>gene_patterns</code></dt>
+<dd><p>vector. Mapping of row/genes to gene_patterns.</p></dd>
 
 
 <dt><code>size</code></dt>
 <dd><p>vector. The size of each cluster.</p></dd>
+
+
+<dt><code>dot_prodcut</code></dt>
+<dd><p>vector. The median dot product of each gene clusters.</p></dd>
 
 
 <dt><code>top_genes</code></dt>
@@ -109,6 +113,10 @@
 
 <dt><code>algorithm</code></dt>
 <dd><p>vector. The algorithm used to produce the clusters.</p></dd>
+
+
+<dt><code>cell_clusters</code></dt>
+<dd><p>list The cell clusters.</p></dd>
 
 
 <dt><code>cell_types</code></dt>
