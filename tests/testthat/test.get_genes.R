@@ -6,6 +6,7 @@ test_that("Cheking get_genes is providing the right list of genes", {
   m[101:200,11:20] <- m[101:200,11:20] + 3
   m[201:300,5:15] <- m[201:300,5:15] + -2
   res <- DBFMCL(data=m,
+                name = "test",
                 distance_method="pearson",
                 av_dot_prod_min = 0,
                 inflation = 2,
@@ -65,4 +66,30 @@ test_that("Cheking get_genes is providing the right list of genes", {
                           "gene269",  "gene276",  "gene296",  "gene246",  "gene280",  "gene292",  "gene295",  "gene230",  "gene216",  "gene275",  "gene207",  "gene231",  "gene235",  "gene466",  "gene256",  "gene255", 
                           "gene288",  "gene285",  "gene286",  "gene283",  "gene241",  "gene299",  "gene282")
   expect_equal(gene_names, gene_name_to_check)
+  
+  res <- top_genes(res, top = 20, cluster = "all")
+  gene_names <- get_genes(res, cluster = "all", top = T)
+  #Test gene list in all cluster
+  gene_name_to_check <- c("gene58", "gene166", "gene201", "gene37", "gene186", "gene279", "gene81", "gene192", "gene212", "gene27", "gene183", "gene289", "gene94", "gene117", "gene266", "gene54", "gene155", "gene249",
+                           "gene4",  "gene180", "gene293", "gene65", "gene114", "gene272", "gene11", "gene122", "gene242", "gene35", "gene163", "gene277", "gene84", "gene121", "gene213", "gene14", "gene150", "gene210",
+                           "gene28", "gene168", "gene290", "gene82", "gene181", "gene233", "gene20", "gene200", "gene273", "gene23", "gene171", "gene278", "gene48", "gene104", "gene215", "gene55", "gene113", "gene228",
+                           "gene12", "gene165", "gene248", "gene79", "gene189", "gene298")
+  expect_equal(gene_names, gene_name_to_check)
+  
+  gene_names <- get_genes(res, cluster = 1, top = T)
+  #Test gene list in all cluster
+  gene_name_to_check <- c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", "gene28", "gene82",
+                          "gene20", "gene23", "gene48", "gene55", "gene12", "gene79")
+  expect_equal(gene_names, gene_name_to_check)
+  
+  gene_names <- get_genes(res, cluster = 2:3, top = T)
+  #Test gene list in all cluster
+  gene_name_to_check <- c("gene166", "gene201", "gene186", "gene279", "gene192", "gene212", "gene183", "gene289", "gene117", "gene266", "gene155", "gene249", "gene180", "gene293", "gene114", "gene272", "gene122", "gene242",
+                          "gene163", "gene277", "gene121", "gene213", "gene150", "gene210", "gene168", "gene290", "gene181", "gene233", "gene200", "gene273", "gene171", "gene278", "gene104", "gene215", "gene113", "gene228",
+                          "gene165", "gene248", "gene189", "gene298")
+  expect_equal(gene_names, gene_name_to_check)
+  
+  #Remove output files
+  file.remove("test.dbf_out.txt")
+  file.remove("test.mcl_out.txt")
 })
