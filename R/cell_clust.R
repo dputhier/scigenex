@@ -44,6 +44,9 @@ cell_clust <- function(object,
   m_dist <- as.dist(1 - cor(data_rc, method = "pearson"))
   m_clust <- hclust(m_dist, method = "average")
   
+  # Store clustering results in ClusterSet object
+  object@cell_clusters$hclust_res <- m_clust
+  
   # Cell partitionning - cut tree
   ct <- cutreeHybrid(m_clust, minClusterSize = min_cluster_size,
                      distM = as.matrix(m_dist),

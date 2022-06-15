@@ -374,9 +374,14 @@ plot_heatmap <- function(object,
   } else {
     if (cell_ordering_method == "hclust"){
       print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
-      m_dist <- as.dist(1 - cor(m, method = 'pearson'))
-      m_clust <- hclust(m_dist, method = 'average')
-      m <- m[,m_clust$order]
+      # m_dist <- as.dist(1 - cor(m, method = 'pearson'))
+      # m_clust <- hclust(m_dist, method = 'average')
+      m <- m[,object@cell_clusters$hclust_res$order]
+      
+      if(length(object@cell_clusters$labels) != 0) {
+        object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
+        object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
+      }
     }
   }
   
@@ -422,11 +427,15 @@ plot_heatmap <- function(object,
     if(length(object@cell_clusters) == 0){
       stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run cell_clust() before."))
     } else {
-      cell_names <- names(which(object@cell_clusters$cores !=0))
+      cell_names <- names(which(sort(object@cell_clusters$cores) !=0))
       m <- m[,cell_names]
     }
   } else {
-    cell_names <- names(object@cell_clusters$labels)
+    if(is.null(cell_order)){
+      cell_names <- names(object@cell_clusters$labels)
+    } else {
+      cell_names <- names(sort(object@cell_clusters$labels))
+    }
   }
   
   
@@ -467,6 +476,8 @@ plot_heatmap <- function(object,
   m <- m[order(nrow(m):1),]
   
   
+  
+  
   ####### Heatmap #######
   # Main heatmap
   print_msg("Plotting heatmap.", msg_type="DEBUG")
@@ -496,12 +507,13 @@ plot_heatmap <- function(object,
   
   # Show cell clusters
   if(!length(object@cell_clusters) == 0) {
-    htmp <- htmp %>% add_col_annotation(as.character(object@cell_clusters$labels[cell_names]))
+    htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[cell_names])), colors = list("Clusters"= c("#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
+                                                                                                                                                  "#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70")))
   }
   
   # Show dendrogram from hclust
-  if(show_dendro & !(use_core_cells)) {
-    htmp <- htmp %>% add_col_dendro(m_clust, reorder = FALSE)
+  if(show_dendro & !(use_core_cells) & is.null(cell_order)) {
+    htmp <- htmp %>% add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
   }
   
   
