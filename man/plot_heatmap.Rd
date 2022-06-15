@@ -14,6 +14,7 @@ plot_heatmap(
   show_dendro = TRUE,
   cluster = NULL,
   use_top_genes = FALSE,
+  use_core_cells = FALSE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -44,6 +45,8 @@ plot_heatmap(
 \item{cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
+
+\item{use_core_cells}{A logical to indicate whether to use core cells obtained by cell_clust function.}
 
 \item{name}{A title for the heatmap.}
 

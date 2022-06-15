@@ -26,7 +26,7 @@
 #'               k=25,
 #'               fdr = 10)
 #'               
-#'genes <- get_genes(object = res, cluster="all")
+#'genes <- get_genes(object = res, cluster="1")
 #'genes
 #' 
 #' \dontrun{
@@ -44,6 +44,7 @@ get_genes <- function(object,
   if(unique(cluster == "all")) {
     cluster <- c(1:length(object@size))
   }
+
   if(top){
     if (nrow(object@top_genes) == 1 &
         ncol(object@top_genes) == 1 &
@@ -52,7 +53,7 @@ get_genes <- function(object,
     }
     gene_names <- as.vector(object@top_genes[paste0("cluster_", cluster),])
   }else{
-    gene_names <- names(object@cluster[object@cluster %in% cluster])
+    gene_names <- names(object@gene_patterns[object@gene_patterns %in% cluster])
   }
   
   return(gene_names)
