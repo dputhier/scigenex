@@ -38,13 +38,23 @@
 #' 
 
 get_genes <- function(object,
-                      cluster = "all") {
+                      cluster = "all",
+                      top = FALSE) {
   
   if(unique(cluster == "all")) {
     cluster <- c(1:length(object@size))
   }
-  
-  gene_names <- names(object@gene_patterns[object@gene_patterns %in% cluster])
+
+  if(top){
+    if (nrow(object@top_genes) == 1 &
+        ncol(object@top_genes) == 1 &
+        is.na(object@top_genes[1,1])) {
+      stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
+    }
+    gene_names <- as.vector(object@top_genes[paste0("cluster_", cluster),])
+  }else{
+    gene_names <- names(object@gene_patterns[object@gene_patterns %in% cluster])
+  }
   
   return(gene_names)
 }
