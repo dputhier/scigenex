@@ -342,7 +342,7 @@ plot_heatmap <- function(object,
                          ceil = 1,
                          floor = -1,
                          cell_order = NULL,
-                         cell_ordering_method = "hclust",
+                         #cell_ordering_method = "hclust",
                          show_dendro = TRUE,
                          cluster = NULL,
                          use_top_genes = FALSE,
@@ -372,16 +372,21 @@ plot_heatmap <- function(object,
     print_msg("Ordering cells.", msg_type="DEBUG")
     m <- m[,cell_order]
   } else {
-    if (cell_ordering_method == "hclust"){
-      print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
-      # m_dist <- as.dist(1 - cor(m, method = 'pearson'))
-      # m_clust <- hclust(m_dist, method = 'average')
-      m <- m[,object@cell_clusters$hclust_res$order]
-      
-      if(length(object@cell_clusters$labels) != 0) {
-        object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
-        object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
-      }
+    if (length(res@cell_clusters) == 0) {
+      stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run cell_clust() before."))
+    } else {
+#      if (cell_ordering_method == "hclust"){
+        print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
+        # m_dist <- as.dist(1 - cor(m, method = 'pearson'))
+        # m_clust <- hclust(m_dist, method = 'average')
+        m <- m[,object@cell_clusters$hclust_res$order]
+        
+        if(length(object@cell_clusters$labels) != 0) {
+          object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
+          object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
+        }
+        
+#      }
     }
   }
   
