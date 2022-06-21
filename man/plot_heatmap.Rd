@@ -10,7 +10,6 @@ plot_heatmap(
   ceil = 1,
   floor = -1,
   cell_order = NULL,
-  cell_ordering_method = "hclust",
   show_dendro = TRUE,
   cluster = NULL,
   use_top_genes = FALSE,
@@ -37,8 +36,6 @@ plot_heatmap(
 \item{floor}{A value for flooring (NULL for no flooring). Flooring is performed after centering.}
 
 \item{cell_order}{A vector of cell names already ordered.}
-
-\item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
 
 \item{show_dendro}{A logical to indicate whether to show column dendrogram.}
 
@@ -67,6 +64,8 @@ plot_heatmap(
 \item{label_size}{A value for label font size.}
 
 \item{line_size}{An integer for the horizontal white line size.}
+
+\item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
 }
 \value{
 Iheatmap-class object

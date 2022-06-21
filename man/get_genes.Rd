@@ -4,7 +4,7 @@
 \alias{get_genes}
 \title{Extract genes list from each gene clusters.}
 \usage{
-get_genes(object, cluster = "all")
+get_genes(object, cluster = "all", top = FALSE)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
