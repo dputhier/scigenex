@@ -19,7 +19,7 @@ library(iheatmapr)
 #' @slot critical_distance vector. The critical threshold distance to select informative genes.
 #' @slot gene_patterns vector. Mapping of row/genes to gene_patterns.
 #' @slot size vector. The size of each cluster.
-#' @slot dot_prodcut vector. The median dot product of each gene clusters.
+#' @slot dot_product vector. The median dot product of each gene clusters.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
@@ -60,7 +60,7 @@ setClass("ClusterSet",
            critical_distance = "vector",
            gene_patterns = "vector",
            size = "vector",
-           dot_prodcut = "vector",
+           dot_product = "vector",
            top_genes = "matrix",
            center = "matrix",
            parameters = "list",
@@ -79,7 +79,7 @@ setClass("ClusterSet",
            critical_distance = vector(),
            gene_patterns = numeric(),
            size = numeric(),
-           dot_prodcut = numeric(),
+           dot_product = numeric(),
            top_genes = matrix(),
            center = matrix(nc = 0, nr = 0),
            parameters = list(),
