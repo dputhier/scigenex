@@ -8,6 +8,7 @@
 #' Extract genes list from each gene clusters. Can extract genes from all clusters (default) or from specified clusters.
 #' @param object A \code{ClusterSet} object.
 #' @param cluster A vector of gene cluster identity (all by default).
+#' @param top A logical to indicate whether to provide top genes.
 #'
 #' @return 
 #' @export get_genes

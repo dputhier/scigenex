@@ -4,12 +4,14 @@
 \alias{get_cells}
 \title{Extract cell identities from each cell clusters.}
 \usage{
-get_cells(object, cluster = "all")
+get_cells(object, cluster = "all", core = FALSE)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
 \item{cluster}{A vector of cell cluster identity (all by default).}
+
+\item{core}{A logical to indicate whether to provide core cells.}
 }
 \value{
 

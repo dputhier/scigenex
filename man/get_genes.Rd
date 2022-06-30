@@ -10,6 +10,8 @@ get_genes(object, cluster = "all", top = FALSE)
 \item{object}{A \code{ClusterSet} object.}
 
 \item{cluster}{A vector of gene cluster identity (all by default).}
+
+\item{top}{A logical to indicate whether to provide top genes.}
 }
 \value{
 

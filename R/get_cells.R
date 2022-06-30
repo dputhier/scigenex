@@ -8,6 +8,7 @@
 #' Extract cell identities from each cell clusters. Can extract cells from all clusters (default) or from specified clusters.
 #' @param object A \code{ClusterSet} object.
 #' @param cluster A vector of cell cluster identity (all by default).
+#' @param core A logical to indicate whether to provide core cells.
 #'
 #' @return 
 #' @export get_cells
@@ -32,13 +33,19 @@
 #' 
 
 get_cells <- function(object,
-                      cluster = "all") {
+                      cluster = "all",
+                      core = FALSE) {
   
   if(unique(cluster == "all")) {
-    cluster <- order(unique(res@cell_clusters))
+    cluster <- order(unique(object@cell_clusters$labels))
   }
   
-  cell_names <- names(object@cell_clusters[object@cell_clusters %in% cluster])
+  if(!core){
+    cell_names <- names(object@cell_clusters$labels[object@cell_clusters$labels %in% cluster])
+  } else {
+    cell_names <- names(object@cell_clusters$cores[object@cell_clusters$cores %in% cluster])
+  }
+  
   
   return(cell_names)
 }
