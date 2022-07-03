@@ -59,37 +59,44 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">top_genes</span><span class="op">(</span><span class="va">object</span>, top <span class="op">=</span> <span class="fl">20</span>, cluster <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">top_genes</span><span class="op">(</span><span class="va">object</span>, top <span class="op">=</span> <span class="fl">20</span>, cluster <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>A <code>ClusterSet</code> object.</p></dd>
+
+
 <dt>top</dt>
 <dd><p>A value for the number of the most similar genes in gene clusters.</p></dd>
+
+
 <dt>cluster</dt>
 <dd><p>A vector of gene cluster identity.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
+
+
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span>
-<span class="r-in"><span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span>
-<span class="r-in"><span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">+</span> <span class="op">-</span><span class="fl">2</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="DBFMCL.html">DBFMCL</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span>,</span>
-<span class="r-in">              distance_method<span class="op">=</span><span class="st">"pearson"</span>,</span>
-<span class="r-in">              av_dot_prod_min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span class="r-in">              inflation <span class="op">=</span> <span class="fl">1.2</span>,</span>
-<span class="r-in">              k<span class="op">=</span><span class="fl">25</span>,</span>
-<span class="r-in">              fdr <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">+</span> <span class="op">-</span><span class="fl">2</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="DBFMCL.html">DBFMCL</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span>,</span></span>
+<span class="r-in"><span>              distance_method<span class="op">=</span><span class="st">"pearson"</span>,</span></span>
+<span class="r-in"><span>              av_dot_prod_min <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>              inflation <span class="op">=</span> <span class="fl">1.2</span>,</span></span>
+<span class="r-in"><span>              k<span class="op">=</span><span class="fl">25</span>,</span></span>
+<span class="r-in"><span>              fdr <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  Row names not provided. Adding. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  Colum names not provided. Adding. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The following parameters will be used : </span>
@@ -111,13 +118,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  Reading and filtering MCL output: /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/X1tR0oi30C.mcl_out.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  3  clusters conserved after MCL partitioning. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  0  clusters filtered out from MCL partitioning (size and mean dot product). </span>
-<span class="r-in">              </span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">top_genes</span><span class="op">(</span>object <span class="op">=</span> <span class="va">res</span>, top<span class="op">=</span><span class="fl">500</span>, cluster<span class="op">=</span><span class="st">"all"</span><span class="op">)</span></span>
+<span class="r-in"><span>              </span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">top_genes</span><span class="op">(</span>object <span class="op">=</span> <span class="va">res</span>, top<span class="op">=</span><span class="fl">500</span>, cluster<span class="op">=</span><span class="st">"all"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Number of top genes is greater than the number of genes in cluster 1. All genes will be use and order by similarity rank.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Number of top genes is greater than the number of genes in cluster 2. All genes will be use and order by similarity rank.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Number of top genes is greater than the number of genes in cluster 3. All genes will be use and order by similarity rank.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |--  Results are stored in top_genes slot of ClusterSet object. </span>
-<span class="r-in"><span class="va">res</span><span class="op">@</span><span class="va">top_genes</span></span>
+<span class="r-in"><span><span class="va">res</span><span class="op">@</span><span class="va">top_genes</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           gene.top.1 gene.top.2 gene.top.3 gene.top.4 gene.top.5 gene.top.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cluster.1 "gene68"   "gene58"   "gene92"   "gene8"    "gene27"   "gene36"  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cluster.2 "gene164"  "gene152"  "gene192"  "gene180"  "gene199"  "gene125" </span>
@@ -518,14 +525,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> cluster.1 NA           NA           NA          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cluster.2 NA           NA           NA          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cluster.3 NA           NA           NA          </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">## with an artificial dataset</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_data_4_DBFMCL.html">get_data_4_DBFMCL</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## with an artificial dataset</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_data_4_DBFMCL.html">get_data_4_DBFMCL</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -540,7 +547,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

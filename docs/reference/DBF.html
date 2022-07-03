@@ -67,39 +67,54 @@ function with <code>clustering</code> argument set to <code>FALSE</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">DBF</span><span class="op">(</span>
-  <span class="va">data</span>,
-  output_path <span class="op">=</span> <span class="st">"."</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  distance_method <span class="op">=</span> <span class="st">"pearson"</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  k <span class="op">=</span> <span class="fl">100</span>,
-  fdr <span class="op">=</span> <span class="fl">10</span>,
-  seed <span class="op">=</span> <span class="fl">123</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DBF</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  output_path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  distance_method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  fdr <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">123</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a matrix or data.frame</p></dd>
+
+
 <dt>output_path</dt>
 <dd><p>a character string representing the data directory where
 output files will be stored. Default to current working directory.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>a prefix for the file name</p></dd>
+
+
 <dt>distance_method</dt>
 <dd><p>a method to compute the distance to the k-th nearest
 neighbor.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>if set to TRUE (default), the progression of distance matrix
 calculation is not displayed.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>the neighborhood size.</p></dd>
+
+
 <dt>fdr</dt>
 <dd><p>a value for the false discovery rate.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>specify seeds for random number generator.</p></dd>
+
 </dl></div>
     <div id="warnings">
     <h2>Warnings</h2>
@@ -134,7 +149,7 @@ D.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

@@ -24,9 +24,10 @@ In this step, we will run the pre-processing steps from [common seurat pipeline]
 If you already have your pre-processed seurat object or your normalized count matrix, you can skip this step.
 
 #### Setup the Seurat object
-```{r , eval=T, include = F}
+```{r , eval=T, echo = F}
 # Load 
-library(Seurat)
+library(Seurat, quietly = TRUE)
+library(scigenex, quietly = TRUE)
 pbmc <- Read10X(data.dir = "/mnt/NAS7/Workspace/bavaisj/dbfmcl/dataset_pbmc/filtered_gene_bc_matrices/hg19/")
 pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
                                   min.cells = 3, 
@@ -34,7 +35,7 @@ pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
 pbmc_seurat
 ```
 
-```{r , eval=F, echo=T}
+```{r , eval=F}
 library(Seurat)
 
 # Read 10x data
@@ -48,15 +49,15 @@ pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
 
 #### Quality Control
 We filter cells that have less than 5% of mitochondrial genes or 200 unique feature counts or more than 2500 feature counts.
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # Compute percentage of mitochondrial genes
 pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
 # Filter cells
-pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200 & nFeature_RNA < 2500)
+pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200)
 ```
 
 #### Normalizing count matrix
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # Normalizing
 pbmc_seurat <- NormalizeData(pbmc_seurat)
 ```
@@ -76,17 +77,17 @@ In this section, we use the previously generated Seurat object as an input examp
   <li>Store the result in a ClusterSet object</li>
 </ul>
 
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # Run DBFMCL
 pbmc_scigenex <- DBFMCL(data = pbmc_seurat,
-                        k = 50,
-                        inflation = 8,
+                        k = 80,
+                        inflation = 2,
                         min_cluster_size = 5,
-                        av_dot_prod_min=2)
+                        av_dot_prod_min = 2)
 ```
 
 The gene clusters are stored in the slot gene_patterns. You can access the gene names from a cluster using the command get_genes().
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # Extract gene names from all cluster
 genes <- get_genes(pbmc_scigenex, cluster = "all")
 genes
@@ -98,7 +99,7 @@ genes_3
 
 
 ## Extract top 10 genes from each patterns of co-expression
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # Find top 10 genes for all gene clusters
 pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
 pbmc_scigenex@top_genes
@@ -111,7 +112,7 @@ genes_3_top
 
 ## Visualization of gene clusters
 We provide a command to generate an interactive heatmap of the gene cluster
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # 
 plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
 ```
@@ -119,7 +120,7 @@ plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
 
 
 ## Gene cluster enrichment analysis
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # 
 pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens")
 pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "dotplot")
@@ -128,7 +129,7 @@ pbmc_scigenex@cluster_annotations$plot_cl3$barplot
 
 
 ## Cell clustering
-```{r , eval=F, echo=T}
+```{r , eval=T, echo=T}
 # 
 pbmc_scigenex <- cell_clust(pbmc_scigenex)
 plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)

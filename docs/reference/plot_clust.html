@@ -59,61 +59,80 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_clust</span><span class="op">(</span>
-  <span class="va">object</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"line"</span>, <span class="st">"tile"</span><span class="op">)</span>,
-  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,
-  average_only <span class="op">=</span> <span class="cn">FALSE</span>,
-  average_line_color <span class="op">=</span> <span class="st">"skyblue4"</span>,
-  standardizing <span class="op">=</span> <span class="cn">FALSE</span>,
-  ceil <span class="op">=</span> <span class="fl">1</span>,
-  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  centering <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="co"># S4 method for ClusterSet</span>
-<span class="fu">plot_clust</span><span class="op">(</span>
-  <span class="va">object</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"line"</span>, <span class="st">"tile"</span><span class="op">)</span>,
-  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,
-  average_only <span class="op">=</span> <span class="cn">FALSE</span>,
-  average_line_color <span class="op">=</span> <span class="st">"skyblue4"</span>,
-  standardizing <span class="op">=</span> <span class="cn">FALSE</span>,
-  ceil <span class="op">=</span> <span class="fl">1</span>,
-  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
-  centering <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_clust</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"line"</span>, <span class="st">"tile"</span><span class="op">)</span>,</span>
+<span>  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  average_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  average_line_color <span class="op">=</span> <span class="st">"skyblue4"</span>,</span>
+<span>  standardizing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ceil <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  centering <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for ClusterSet</span></span>
+<span><span class="fu">plot_clust</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"line"</span>, <span class="st">"tile"</span><span class="op">)</span>,</span>
+<span>  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  average_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  average_line_color <span class="op">=</span> <span class="st">"skyblue4"</span>,</span>
+<span>  standardizing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ceil <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  centering <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>A ClusterSet object.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>The type of diagram ("line or "tile").</p></dd>
+
+
 <dt>to_log2</dt>
 <dd><p>Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).</p></dd>
+
+
 <dt>average_only</dt>
 <dd><p>Only display the average gene expression profile (if type="line").</p></dd>
+
+
 <dt>average_line_color</dt>
 <dd><p>The color of the average profile.</p></dd>
+
+
 <dt>standardizing</dt>
 <dd><p>Whether rows should be divided by standard deviation.</p></dd>
+
+
 <dt>ceil</dt>
 <dd><p>A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.</p></dd>
+
+
 <dt>floor</dt>
 <dd><p>A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.</p></dd>
+
+
 <dt>centering</dt>
 <dd><p>Whether rows should be centered.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A ggplot diagram.</p>
+    
+
+<p>A ggplot diagram.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># see online examples</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># see online examples</span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -129,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

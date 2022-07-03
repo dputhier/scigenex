@@ -63,19 +63,21 @@ further informations).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mcl_system_cmd</span><span class="op">(</span>
-  <span class="va">name</span>,
-  inflation <span class="op">=</span> <span class="fl">2</span>,
-  input_path <span class="op">=</span> <span class="st">"."</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  threads <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mcl_system_cmd</span><span class="op">(</span></span>
+<span>  <span class="va">name</span>,</span>
+<span>  inflation <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  input_path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>name</dt>
 <dd><p>a character string corresponding to the file name.</p></dd>
+
+
 <dt>inflation</dt>
 <dd><p>the main control of MCL. Inflation affects cluster
 granularity. It is usually chosen somewhere in the range <code>[1.2-5.0]</code>.
@@ -83,18 +85,27 @@ granularity. It is usually chosen somewhere in the range <code>[1.2-5.0]</code>.
 whereas <code>inflation = 1.2</code> will tend to result in very coarse grained
 clusterings. By default, <code>inflation = 2.0</code>. Default setting gives very
 good results for microarray data when k is set around 100.</p></dd>
+
+
 <dt>input_path</dt>
 <dd><p>a character string representing the directory path of 
 the input file used by mcl. Default is the current working directory.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>if set to TRUE, the progression of the MCL partitionning is
 not displayed.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to use.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a file with the ".mcl\_out.txt" extension.</p>
+    
+
+<p>Returns a file with the ".mcl\_out.txt" extension.</p>
     </div>
     <div id="warning">
     <h2>warning</h2>
@@ -136,7 +147,7 @@ Science in the Netherlands, Amsterdam, May 2000.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

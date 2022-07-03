@@ -111,57 +111,81 @@ and the graph obtained is partitioned using the Markov CLustering Algorithm
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">DBFMCL</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  filename <span class="op">=</span> <span class="cn">NULL</span>,
-  path <span class="op">=</span> <span class="st">"."</span>,
-  output_path <span class="op">=</span> <span class="st">"."</span>,
-  mcl_threads <span class="op">=</span> <span class="fl">1</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  distance_method <span class="op">=</span> <span class="st">"pearson"</span>,
-  av_dot_prod_min <span class="op">=</span> <span class="fl">2</span>,
-  min_cluster_size <span class="op">=</span> <span class="fl">10</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  k <span class="op">=</span> <span class="fl">50</span>,
-  fdr <span class="op">=</span> <span class="fl">10</span>,
-  inflation <span class="op">=</span> <span class="fl">8</span>,
-  seed <span class="op">=</span> <span class="fl">123</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">DBFMCL</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  filename <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  output_path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  mcl_threads <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  distance_method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
+<span>  av_dot_prod_min <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  min_cluster_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  fdr <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  inflation <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">123</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code>matrix</code>, <code>data.frame</code> or <code>Seurat</code> object.</p></dd>
+
+
 <dt>filename</dt>
 <dd><p>a character string representing the file name.</p></dd>
+
+
 <dt>path</dt>
 <dd><p>a character string representing the data directory where
 intermediary files are to be stored. Default to current working directory.</p></dd>
+
+
 <dt>output_path</dt>
 <dd><p>a character string representing the data directory where
 output files will be stored. Default to current working directory.</p></dd>
+
+
 <dt>mcl_threads</dt>
 <dd><p>An integer to determine number of threads for mcl algorithm.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>a prefix for the names of the intermediary files created by DBF
 and MCL.</p></dd>
+
+
 <dt>distance_method</dt>
 <dd><p>a method to compute the distance to the k-th nearest neighbor.</p></dd>
+
+
 <dt>av_dot_prod_min</dt>
 <dd><p>Any cluster with average dot product below this value is discarded. This allow to delete
 clusters in which correlation is influenced/supported by very few samples (typically 1).</p></dd>
+
+
 <dt>min_cluster_size</dt>
 <dd><p>Minimum number of element inside a cluster. MCL tend to create lots of clusters with
 very few (e.g 2) objects.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>if set to TRUE, the progression of distance matrix calculation
 is not displayed.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>the neighborhood size.</p></dd>
+
+
 <dt>fdr</dt>
 <dd><p>an integer value corresponding to the false discovery rate
 (range: 0 to 100).</p></dd>
+
+
 <dt>inflation</dt>
 <dd><p>the main control of MCL. Inflation affects cluster
 granularity. It is usually chosen somewhere in the range <code>[1.2-5.0]</code>.
@@ -169,12 +193,17 @@ granularity. It is usually chosen somewhere in the range <code>[1.2-5.0]</code>.
 whereas <code>inflation = 1.2</code> will tend to result in very coarse grained
 clusterings. By default, <code>inflation = 2.0</code>. Default setting gives very
 good results for microarray data when k is set between 70 and 250.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>specify seeds for random number generator.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a ClusterSets class object.</p>
+    
+
+<p>a ClusterSets class object.</p>
     </div>
     <div id="warnings">
     <h2>Warnings</h2>
@@ -211,23 +240,23 @@ D.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span>
-<span class="r-in">   <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span>
-<span class="r-in">   <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">+</span> <span class="op">-</span><span class="fl">2</span></span>
-<span class="r-in">   <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">DBFMCL</span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span>,</span>
-<span class="r-in">                 distance_method<span class="op">=</span><span class="st">"pearson"</span>,</span>
-<span class="r-in">                 av_dot_prod_min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span class="r-in">                 inflation <span class="op">=</span> <span class="fl">1.2</span>,</span>
-<span class="r-in">                 k<span class="op">=</span><span class="fl">25</span>,</span>
-<span class="r-in">                 fdr <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="plot_clust.html">plot_clust</a></span><span class="op">(</span><span class="va">res</span>, ceil <span class="op">=</span> <span class="fl">10</span>, floor <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="plot_clust.html">plot_clust</a></span><span class="op">(</span><span class="va">res</span>, type<span class="op">=</span><span class="st">"tile"</span>, ceil <span class="op">=</span> <span class="fl">10</span>, floor <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="write_clust.html">write_clust</a></span><span class="op">(</span><span class="va">res</span>, filename_out <span class="op">=</span> <span class="st">"ALL.sign.txt"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">80000</span><span class="op">)</span>, nc<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span></span>
+<span class="r-in"><span>   <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span></span>
+<span class="r-in"><span>   <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">+</span> <span class="op">-</span><span class="fl">2</span></span></span>
+<span class="r-in"><span>   <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">DBFMCL</span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span>,</span></span>
+<span class="r-in"><span>                 distance_method<span class="op">=</span><span class="st">"pearson"</span>,</span></span>
+<span class="r-in"><span>                 av_dot_prod_min <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>                 inflation <span class="op">=</span> <span class="fl">1.2</span>,</span></span>
+<span class="r-in"><span>                 k<span class="op">=</span><span class="fl">25</span>,</span></span>
+<span class="r-in"><span>                 fdr <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot_clust.html">plot_clust</a></span><span class="op">(</span><span class="va">res</span>, ceil <span class="op">=</span> <span class="fl">10</span>, floor <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot_clust.html">plot_clust</a></span><span class="op">(</span><span class="va">res</span>, type<span class="op">=</span><span class="st">"tile"</span>, ceil <span class="op">=</span> <span class="fl">10</span>, floor <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="write_clust.html">write_clust</a></span><span class="op">(</span><span class="va">res</span>, filename_out <span class="op">=</span> <span class="st">"ALL.sign.txt"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -242,7 +271,7 @@ D.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
