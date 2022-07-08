@@ -1,6 +1,18 @@
 
 # Changelog
 
+## v1.3.0
+
+*   Add a clustering method using hierchical clustering and DynamicTreeCut R package
+*   Add a cell_clusters slot in the ClusterSet object
+*   Create a new documentation
+*   Modification of the av_dot_prod_min filter : use the max of the median values of the dot product
+*   Add get_genes and get_cells functions
+*   Improve the computational speed of DBFMCL function
+*   Replace the name of the slot "cluster" by "gene_patterns"
+*   Implementation of new test (testthat)
+
+
 ## v1.2.21
 
 *   Update the package used for enrichment analysis to use ClusterProfiler
