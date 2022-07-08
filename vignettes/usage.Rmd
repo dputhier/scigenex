@@ -24,17 +24,6 @@ In this step, we will run the pre-processing steps from [common seurat pipeline]
 If you already have your pre-processed seurat object or your normalized count matrix, you can skip this step.
 
 #### Setup the Seurat object
-```{r , eval=T, echo = F}
-# Load 
-library(Seurat, quietly = TRUE)
-library(scigenex, quietly = TRUE)
-pbmc <- Read10X(data.dir = "/mnt/NAS7/Workspace/bavaisj/dbfmcl/dataset_pbmc/filtered_gene_bc_matrices/hg19/")
-pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
-                                  min.cells = 3, 
-                                  min.features = 200)
-pbmc_seurat
-```
-
 ```{r , eval=F}
 library(Seurat)
 
@@ -47,19 +36,71 @@ pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
                                   min.features = 200)
 ```
 
-#### Quality Control
-We filter cells that have less than 5% of mitochondrial genes or 200 unique feature counts or more than 2500 feature counts.
-```{r , eval=T, echo=T}
-# Compute percentage of mitochondrial genes
-pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
-# Filter cells
-pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200)
+```{r , eval=T, echo = F}
+# Load 
+suppressMessages(library(Seurat, quietly = TRUE))
+suppressMessages(library(scigenex, quietly = TRUE))
+pbmc <- Read10X(data.dir = "/mnt/NAS7/Workspace/bavaisj/dbfmcl/dataset_pbmc/filtered_gene_bc_matrices/hg19/")
+suppressWarnings(pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
+                                                   min.cells = 3, 
+                                                   min.features = 200))
+pbmc_seurat
 ```
 
-#### Normalizing count matrix
-```{r , eval=T, echo=T}
+
+#### Classical pipeline of Seurat
+We run here the classical steps of the seurat pipeline. For more information, you can check their website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
+```{r , eval=F}
+# Quality control
+pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
+pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200)
+
 # Normalizing
 pbmc_seurat <- NormalizeData(pbmc_seurat)
+
+# Identification of highly variable genes
+pbmc_seurat <- FindVariableFeatures(pbmc_seurat, selection.method = "vst", nfeatures = 2000)
+
+# Scaling data
+pbmc_seurat <- ScaleData(pbmc_seurat, features = rownames(pbmc_seurat))
+
+# Perform principal component analysis
+pbmc_seurat <- RunPCA(pbmc_seurat, features = VariableFeatures(object = pbmc_seurat))
+
+# Cell clustering 
+pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10)
+pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5)
+
+# Dimension reduction
+pbmc_seurat <- RunUMAP(pbmc_seurat, dims = 1:10)
+DimPlot(pbmc_seurat, reduction = "umap")
+```
+
+
+```{r , eval=T, echo=F}
+# Quality control
+pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
+pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200)
+
+# Normalizing
+pbmc_seurat <- NormalizeData(pbmc_seurat)
+
+# Identification of highly variable genes
+pbmc_seurat <- FindVariableFeatures(pbmc_seurat, selection.method = "vst", nfeatures = 2000)
+
+# Scaling data
+pbmc_seurat <- ScaleData(pbmc_seurat, features = rownames(pbmc_seurat), verbose = FALSE)
+
+# Perform principal component analysis
+pbmc_seurat <- RunPCA(pbmc_seurat, features = VariableFeatures(object = pbmc_seurat), verbose = FALSE)
+
+# Cell clustering 
+pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10, verbose = FALSE)
+pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5, verbose = FALSE)
+
+# Dimension reduction
+pbmc_seurat <-suppressWarnings(RunUMAP(pbmc_seurat, dims = 1:10, verbose = FALSE))
+DimPlot(pbmc_seurat, reduction = "umap")
 ```
 <br>
 <br>
@@ -90,52 +131,110 @@ The gene clusters are stored in the slot gene_patterns. You can access the gene 
 ```{r , eval=T, echo=T}
 # Extract gene names from all cluster
 genes <- get_genes(pbmc_scigenex, cluster = "all")
-genes
+head(genes)
 
-# Extract gene names from gene cluster 3
-genes_3 <- get_genes(pbmc_scigenex, cluster = 3)
-genes_3
+# Extract gene names from gene cluster 5
+genes_5 <- get_genes(pbmc_scigenex, cluster = 5)
+genes_5
 ```
-
+<br>
 
 ## Extract top 10 genes from each patterns of co-expression
-```{r , eval=T, echo=T}
+```{r , eval=F}
 # Find top 10 genes for all gene clusters
 pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
 pbmc_scigenex@top_genes
 
-# Extract gene names from the top 10 genes of cluster 3
-genes_3_top <- get_genes(pbmc_scigenex, cluster = 3, top = TRUE)
-genes_3_top
+# Extract gene names from the top 10 genes of cluster 5
+genes_5_top <- get_genes(pbmc_scigenex, cluster = 5, top = TRUE)
+genes_5_top
 ```
 
+```{r , eval=T, echo=F}
+# Find top 10 genes for all gene clusters
+pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
+pbmc_scigenex@top_genes
 
-## Visualization of gene clusters
-We provide a command to generate an interactive heatmap of the gene cluster
-```{r , eval=T, echo=T}
-# 
-plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
+# Extract gene names from the top 10 genes of cluster 5
+genes_5_top <- get_genes(pbmc_scigenex, cluster = 5, top = TRUE)
+genes_5_top
 ```
-
-
-
-## Gene cluster enrichment analysis
-```{r , eval=T, echo=T}
-# 
-pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens")
-pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "dotplot")
-pbmc_scigenex@cluster_annotations$plot_cl3$barplot
-```
-
+<br>
+<br>
 
 ## Cell clustering
-```{r , eval=T, echo=T}
-# 
-pbmc_scigenex <- cell_clust(pbmc_scigenex)
-plot_heatmap(pbmc_scigenex, use_top_genes = TRUE, line_size = 2)
+```{r , eval=F}
+# Perform hierarchical cluster algorithm and cut the tree using DynamicTreeCut package
+pbmc_scigenex <- cell_clust(pbmc_scigenex, min_cluster_size = 4)
 ```
 
+```{r , eval=T, echo=F}
+# Perform hierarchical cluster algorithm and cut the tree using DynamicTreeCut package
+pbmc_scigenex <- cell_clust(pbmc_scigenex, min_cluster_size = 4)
+```
+<br>
 
+## Heatmap visualization
+We provide a command to generate an interactive heatmap.
+```{r , eval=T, echo=T}
+# Heatmap of the top genes for each pattern of co-expressed genes
+plot_heatmap(pbmc_scigenex,
+             use_top_genes = TRUE,
+             cell_order = names(sort(pbmc_scigenex@cell_clusters$labels)),
+             line_size = 2)
+
+# Using core cells of each cell clusters
+plot_heatmap(pbmc_scigenex,
+             use_top_genes = TRUE,
+             use_core_cells = TRUE,
+             line_size = 2)
+```
+<br>
+
+## Gene cluster enrichment analysis
+```{r , eval=F}
+# Enrichment analysis
+pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens")
+pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "barplot", nb_terms = 25)
+pbmc_scigenex@cluster_annotations$plot_cl5$barplot
+```
+
+```{r , eval=T, echo=F, fig.height=20, fig.height=16}
+# Enrichment analysis
+pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens")
+pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "barplot", nb_terms = 25)
+pbmc_scigenex@cluster_annotations$plot_cl5$barplot
+```
+<br>
+<br>
+
+## Example of identification of rare cell population
+```{r , eval=T, echo=T}
+# Visualization of a co-expressed gene pattern expressed in a small number of genes
+plot_heatmap(pbmc_scigenex,
+             use_top_genes = TRUE,
+             use_core_cells = TRUE,
+             line_size = 2,
+             cluster = 7)
+
+# In the top genes of the pattern, we identify genes that are known to be marker of plasmacytoid dendritic cells (LILRA4, CLEC4C, SERPINF1)
+get_genes(pbmc_scigenex, cluster = 7, top = TRUE)
+
+
+# Mapping the cell cluster on UMAP
+## Use genes selected by SciGeneX as feature selection
+
+## Scaling data
+pbmc_seurat <- ScaleData(pbmc_seurat, features = rownames(pbmc_seurat))
+## Principal component analysis
+pbmc_seurat <- RunPCA(pbmc_seurat, features = VariableFeatures(object = pbmc_seurat))
+## Dimension reduction
+pbmc_seurat <- RunUMAP(pbmc_seurat, dims = 1:10)
+
+
+DimPlot(pbmc_seurat, reduction = "umap", cells.highlight = get_cells(pbmc_scigenex, cluster = 13))
+
+```
 
 
 
