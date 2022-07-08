@@ -93,7 +93,7 @@ setMethod(
     ## melting
     print_msg("Melting matrix.", msg_type="DEBUG")
     m_melt <- as.data.frame(m)
-    m_melt$cluster <- object@cluster
+    m_melt$cluster <- object@gene_patterns
     m_melt$gene <- row.names(object@data)
     
     m_melt <- melt(m_melt,
@@ -303,6 +303,7 @@ viz_dist <-  function(object,
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
+#' @param use_core_cells A logical to indicate whether to use core cells obtained by cell_clust function.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
@@ -341,10 +342,11 @@ plot_heatmap <- function(object,
                          ceil = 1,
                          floor = -1,
                          cell_order = NULL,
-                         cell_ordering_method = "hclust",
+                         #cell_ordering_method = "hclust",
                          show_dendro = TRUE,
                          cluster = NULL,
                          use_top_genes = FALSE,
+                         use_core_cells = FALSE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
@@ -370,11 +372,27 @@ plot_heatmap <- function(object,
     print_msg("Ordering cells.", msg_type="DEBUG")
     m <- m[,cell_order]
   } else {
-    if (cell_ordering_method == "hclust"){
-      print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
-      m_dist <- as.dist(1 - cor(m, method = 'pearson'))
-      m_clust <- hclust(m_dist, method = 'average')
-      m <- m[,m_clust$order]
+    if (length(object@cell_clusters) == 0) {
+      object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
+      object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
+      
+      show_dendro = FALSE
+      
+    } else {
+#      if (cell_ordering_method == "hclust"){
+        print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
+        # m_dist <- as.dist(1 - cor(m, method = 'pearson'))
+        # m_clust <- hclust(m_dist, method = 'average')
+        m <- m[,object@cell_clusters$hclust_res$order]
+        
+        show_dendro = TRUE
+        
+        if(length(object@cell_clusters$labels) != 0) {
+          object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
+          object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
+        }
+        
+#      }
     }
   }
   
@@ -392,7 +410,7 @@ plot_heatmap <- function(object,
   
   # Reduce matrix to one cluster
   if(!is.null(cluster)){
-    gene_cl_int <- names(which(object@cluster == cluster))
+    gene_cl_int <- names(which(object@gene_patterns == cluster))
     m <- m[gene_cl_int,]
   }
   
@@ -415,6 +433,22 @@ plot_heatmap <- function(object,
     }
   }
   
+  # Reduce m cols to only keep core cells from cell_clust
+  if(use_core_cells) {
+    if(length(object@cell_clusters) == 0){
+      stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run cell_clust() before."))
+    } else {
+      cell_names <- names(which(sort(object@cell_clusters$cores) !=0))
+      m <- m[,cell_names]
+    }
+  } else {
+    if(is.null(cell_order)){
+      cell_names <- names(object@cell_clusters$labels)
+    } else {
+      cell_names <- names(sort(object@cell_clusters$labels))
+    }
+  }
+  
   
   # Add blank row to separate feature clusters in heatmap
   if(is.null(cluster)){
@@ -423,16 +457,26 @@ plot_heatmap <- function(object,
     
     ## Insert blank row in matrix
     m_blank <- matrix(ncol = ncol(m))
+    m <- rbind(m, matrix(nrow = 1, ncol = ncol(m)))
+    
     for (i in 1:length(object@size)) {
       if(!use_top_genes) {
         row_start <- sum(object@size[0:(i-1)])+1
         row_end <- sum(object@size[1:i])
+        
+        m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
       } else {
-        row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
-        row_end <- i*ncol(object@top_genes)
+        nb_top_genes <- length(object@top_genes[i,!is.na(object@top_genes[i,])])
+        
+        m_top_i <- m[0:nb_top_genes,]
+        m <- m[(nb_top_genes+1):nrow(m),]
+        
+        m_blank_loop <- rbind(m_top_i, blank_row)
+        #row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
+        #row_end <- i*nb_top_genes
       }
       
-      m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
+      
       #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
       m_blank <- rbind(m_blank, m_blank_loop)
     }
@@ -441,6 +485,8 @@ plot_heatmap <- function(object,
   
   #Flip rows
   m <- m[order(nrow(m):1),]
+  
+  
   
   
   ####### Heatmap #######
@@ -470,9 +516,15 @@ plot_heatmap <- function(object,
   if(!is.null(name)){
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
+  # Show cell clusters
+  if(!length(object@cell_clusters) == 0) {
+    htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[cell_names])), colors = list("Clusters"= c("#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
+                                                                                                                                                  "#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70")))
+  }
+  
   # Show dendrogram from hclust
-  if(!is.null(show_dendro)) {
-    htmp <- htmp %>% add_col_dendro(m_clust)
+  if(show_dendro & !(use_core_cells) & is.null(cell_order)) {
+    htmp <- htmp %>% add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
   }
   
   

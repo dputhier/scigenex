@@ -56,7 +56,7 @@ top_genes <- function(object,
   }
   
   # Initialization for the for loop
-  clusters <- object@cluster
+  clusters <- object@gene_patterns
   l_cor_means <- list()
   genes_top <- matrix(ncol = top)
   
@@ -99,8 +99,8 @@ top_genes <- function(object,
   } else {
     genes_top <- as.matrix(t(genes_top[2:(length(cluster)+1),]))
   }
-  colnames(genes_top) <- make.names(rep("gene.top", top+1), unique=TRUE)[2:(top+1)]
-  rownames(genes_top) <- make.names(rep("cluster", length(cluster)+1), unique=TRUE)[2:(length(cluster)+1)]
+  colnames(genes_top) <- paste0("gene_top_", 1:top)
+  rownames(genes_top) <- paste0("cluster_", cluster)
   
   # Put genes_top matrix in object@top_genes
   object@top_genes <- genes_top

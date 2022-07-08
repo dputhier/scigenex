@@ -128,7 +128,7 @@ print_msg <- function(msg, msg_type="INFO"){
 #'    res <- DBFMCL(data=m,
 #'                  distance_method="pearson",
 #'                  av_dot_prod_min = 0,
-#'                  inflation = 1.2,
+#'                  inflation = 2,
 #'                  k=25,
 #'                  fdr = 10)
 #' plot_clust(res, ceil = 10, floor = -10)
@@ -149,7 +149,7 @@ DBFMCL <- function(data = NULL,
                    silent = FALSE,
                    k = 50,
                    fdr = 10,
-                   inflation = 8,
+                   inflation = 2,
                    seed = 123) {
   
   ## testing the system
@@ -243,24 +243,33 @@ DBFMCL <- function(data = NULL,
     
     for (i in 1:length(mcl_cluster)) {
       h <- unlist(strsplit(mcl_cluster[i], "\t"))
-      cur_clust <- data_matrix[h,]
-      cur_clust[cur_clust > 0 ] <- 1
-      cur_dot_prod <- cur_clust %*% t(cur_clust)
       
-      if(median(cur_dot_prod) > av_dot_prod_min & length(h) > min_cluster_size){
-        median_cur_dot_prod[i] <- median(cur_dot_prod)
+      # Cluster size filtering
+      if(length(h) > min_cluster_size) {
         
-        nb <- nb + 1
-        gene_list <- c(gene_list, h)
-        clusters <- c(clusters, rep(nb, length(h)))
-        if (is.null(size)) {
-          size <- length(h)
+        cur_clust <- data_matrix[h,]
+        cur_clust[cur_clust > 0 ] <- 1
+        cur_dot_prod <- cur_clust %*% t(cur_clust)
+        diag(cur_dot_prod) <- NA
+        cur_dot_prod_median_of_max <- median(apply(cur_dot_prod, 1, max, na.rm=T))
+        
+        # Dot product filtering
+        if(cur_dot_prod_median_of_max >= av_dot_prod_min){
+          # Extract median value of dot product for gene signature i
+          median_cur_dot_prod[i] <- cur_dot_prod_median_of_max
+          
+          nb <- nb + 1
+          gene_list <- c(gene_list, h)
+          clusters <- c(clusters, rep(nb, length(h)))
+          if (is.null(size)) {
+            size <- length(h)
+          }
+          else {
+            size <- c(size, length(h))
+          }
+        }else{
+          nb_cluster_deleted <- nb_cluster_deleted + 1
         }
-        else {
-          size <- c(size, length(h))
-        }
-      }else{
-        nb_cluster_deleted <- nb_cluster_deleted + 1
       }
     }
     print_msg(paste(nb, " clusters conserved after MCL partitioning."),
@@ -275,13 +284,13 @@ DBFMCL <- function(data = NULL,
       obj@name <- name
       obj@data <- as.matrix(data_matrix[gene_list, ])
       names(clusters) <- rownames(obj@data)
-      obj@cluster <- clusters
+      obj@gene_patterns <- clusters
       obj@size <- size
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
       ## calcul of the mean profils
       for (i in 1:nb) {
-        centers[i, ] <- apply(obj@data[obj@cluster == i, ],
+        centers[i, ] <- apply(obj@data[obj@gene_patterns == i, ],
                               2, mean,
                               na.rm = TRUE
         )
@@ -290,7 +299,7 @@ DBFMCL <- function(data = NULL,
       
       # Add median values of dot product for each gene cluster
       names(median_cur_dot_prod) <- paste0("cluster_", seq(1:length(size)))
-      obj@dot_prodcut <- median_cur_dot_prod
+      obj@dot_product <- median_cur_dot_prod
       
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
@@ -298,7 +307,9 @@ DBFMCL <- function(data = NULL,
         k = k,
         fdr = fdr,
         seed = seed,
-        inflation = inflation
+        inflation = inflation,
+        min_cluster_size = min_cluster_size,
+        av_dot_prod_min = av_dot_prod_min
       )
     }
   }
@@ -525,10 +536,10 @@ DBF <- function(data,
       
       if (length(selected_genes[,"gene_id"]) > 0) {
         obj@data <- as.matrix(data[selected_genes[,"gene_id"],])
-        obj@cluster <- rep(1, nrow(obj@data))
+        obj@gene_patterns <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)
         obj@center <- matrix(
-          apply(obj@data[obj@cluster == 1, ],
+          apply(obj@data[obj@gene_patterns == 1, ],
                 2,
                 mean,
                 na.rm = TRUE

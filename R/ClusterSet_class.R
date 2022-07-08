@@ -17,13 +17,14 @@ library(iheatmapr)
 #' @slot distances vector. The observed distance values with the knn.
 #' @slot simulated_distances vector. The simulated distance values with the knn.
 #' @slot critical_distance vector. The critical threshold distance to select informative genes.
-#' @slot cluster vector. Mapping of row/genes to clusters.
+#' @slot gene_patterns vector. Mapping of row/genes to gene_patterns.
 #' @slot size vector. The size of each cluster.
-#' @slot dot_prodcut vector. The median dot product of each gene clusters.
+#' @slot dot_product vector. The median dot product of each gene clusters.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
 #' @slot algorithm vector. The algorithm used to produce the clusters.
+#' @slot cell_clusters list The cell clusters.
 #' @slot cell_types vector. The cell types.
 #' @slot cell_colors vector. The cell types to color mapping.
 #' @slot cell_order vector. How cell should be ordered.
@@ -57,13 +58,14 @@ setClass("ClusterSet",
            distances = "vector",
            simulated_distances = "vector",
            critical_distance = "vector",
-           cluster = "vector",
+           gene_patterns = "vector",
            size = "vector",
-           dot_prodcut = "vector",
+           dot_product = "vector",
            top_genes = "matrix",
            center = "matrix",
            parameters = "list",
            algorithm = "vector",
+           cell_clusters = "list",
            cell_types = "vector",
            cell_colors = "vector",
            cell_order = "vector",
@@ -75,13 +77,14 @@ setClass("ClusterSet",
            distances = vector(),
            simulated_distances = vector(),
            critical_distance = vector(),
-           cluster = numeric(),
+           gene_patterns = numeric(),
            size = numeric(),
-           dot_prodcut = numeric(),
+           dot_product = numeric(),
            top_genes = matrix(),
            center = matrix(nc = 0, nr = 0),
            parameters = list(),
            algorithm = character(),
+           cell_clusters = list(),
            cell_types = vector(),
            cell_colors = vector(),
            cell_order = vector(),

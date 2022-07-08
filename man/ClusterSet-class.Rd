@@ -23,11 +23,11 @@ This class is a representation of a partitioning algorithm and is intented to st
 
 \item{\code{critical_distance}}{vector. The critical threshold distance to select informative genes.}
 
-\item{\code{cluster}}{vector. Mapping of row/genes to clusters.}
+\item{\code{gene_patterns}}{vector. Mapping of row/genes to gene_patterns.}
 
 \item{\code{size}}{vector. The size of each cluster.}
 
-\item{\code{dot_prodcut}}{vector. The median dot product of each gene clusters.}
+\item{\code{dot_product}}{vector. The median dot product of each gene clusters.}
 
 \item{\code{top_genes}}{matrix The highly co-expressed genes of each gene clusters.}
 
@@ -36,6 +36,8 @@ This class is a representation of a partitioning algorithm and is intented to st
 \item{\code{parameters}}{list. The parameter used.}
 
 \item{\code{algorithm}}{vector. The algorithm used to produce the clusters.}
+
+\item{\code{cell_clusters}}{list The cell clusters.}
 
 \item{\code{cell_types}}{vector. The cell types.}
 

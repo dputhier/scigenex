@@ -1,0 +1,39 @@
+# Installation instructions
+
+## Step 1 - Installation of MCL
+Install MCL from sources.
+```{bash , eval=F, echo=T}
+# Download the latest version of mcl 
+wget http://micans.org/mcl/src/mcl-latest.tar.gz
+# Uncompress and install mcl
+tar xvfz mcl-latest.tar.gz
+cd mcl-xx-xxx
+./configure
+make
+sudo make install
+# You should get mcl in your path
+mcl -h
+```
+
+Or you may install MCL using conda. Importantly, the mcl command should be in your PATH and reachable from within R.
+```{bash , eval=F, echo=T}
+conda install -c bioconda mcl
+```
+
+## Step 2 - Installation of SciGeneX
+### From R
+The scigenex library is currently not available in CRAN or Bioc. To install from github, use:
+```{r , eval=F, echo=T}
+ devtools::install_github("dputhier/scigenex")
+ library(scigenex)
+```
+
+### In a terminal
+```{bash , eval=F, echo=T}
+R CMD INSTALL scigenex
+```
+And load the library in R.
+```{r, eval=F, echo=T}
+library(scigenex)
+```
+

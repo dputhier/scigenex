@@ -17,7 +17,7 @@ DBFMCL(
   silent = FALSE,
   k = 50,
   fdr = 10,
-  inflation = 8,
+  inflation = 2,
   seed = 123
 )
 }
@@ -126,7 +126,7 @@ successfully with the 06-058 version).}
    res <- DBFMCL(data=m,
                  distance_method="pearson",
                  av_dot_prod_min = 0,
-                 inflation = 1.2,
+                 inflation = 2,
                  k=25,
                  fdr = 10)
 plot_clust(res, ceil = 10, floor = -10)
