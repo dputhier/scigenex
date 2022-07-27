@@ -150,7 +150,7 @@ setMethod("viz_enrich",
               }
               
               # Check if there is a result provided by enrich_go function for the current cluster
-              if(nrow(object@cluster_annotations[[cur_cluster]]@result) == 0){
+              if(nrow(object@cluster_annotations[[as.numeric(cur_cluster)]]@result) == 0){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -175,8 +175,8 @@ setMethod("viz_enrich",
                 
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
-                  if(panel){
-                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                  if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
+                    bar_plot <- barplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scale="free")
                   } else {
                     bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
