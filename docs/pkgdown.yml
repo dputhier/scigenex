@@ -2,10 +2,11 @@ pandoc: 2.11.4
 pkgdown: 2.0.5
 pkgdown_sha: ~
 articles:
-  1_installation: 1_installation.html
-  2_usage: 2_usage.html
-  3_cell_clustering: 3_cell_clustering.html
-last_built: 2022-07-27T08:22Z
+  get_started: get_started.html
+  install: install.html
+  installation: installation.html
+  usage: usage.html
+last_built: 2022-07-04T07:14Z
 urls:
   reference: https://scigenex.r-lib.org/reference
   article: https://scigenex.r-lib.org/articles
