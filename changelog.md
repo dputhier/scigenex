@@ -1,6 +1,13 @@
 
 # Changelog
 
+## v1.3.1
+
+*   Update of the documentation
+*   Improve get_genes function : gene names are ordered by gene clusters
+*   Fix viz_enrich function : viz_enrich function is now working when using a specific ontology db as ontology parameter in enrich_go function
+
+
 ## v1.3.0
 
 *   Add a clustering method using hierchical clustering and DynamicTreeCut R package

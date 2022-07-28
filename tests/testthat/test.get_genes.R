@@ -70,10 +70,10 @@ test_that("Cheking get_genes is providing the right list of genes", {
   res <- top_genes(res, top = 20, cluster = "all")
   gene_names <- get_genes(res, cluster = "all", top = T)
   #Test gene list in all cluster
-  gene_name_to_check <- c("gene58", "gene166", "gene201", "gene37", "gene186", "gene279", "gene81", "gene192", "gene212", "gene27", "gene183", "gene289", "gene94", "gene117", "gene266", "gene54", "gene155", "gene249",
-                           "gene4",  "gene180", "gene293", "gene65", "gene114", "gene272", "gene11", "gene122", "gene242", "gene35", "gene163", "gene277", "gene84", "gene121", "gene213", "gene14", "gene150", "gene210",
-                           "gene28", "gene168", "gene290", "gene82", "gene181", "gene233", "gene20", "gene200", "gene273", "gene23", "gene171", "gene278", "gene48", "gene104", "gene215", "gene55", "gene113", "gene228",
-                           "gene12", "gene165", "gene248", "gene79", "gene189", "gene298")
+  gene_name_to_check <- c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", "gene28", "gene82", "gene20", "gene23", "gene48", "gene55", "gene12", 
+                          "gene79", "gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", "gene150", "gene168", "gene181", "gene200", "gene171",
+                          "gene104", "gene113", "gene165", "gene189", "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", 
+                          "gene233", "gene273", "gene278", "gene215", "gene228", "gene248", "gene298")
   expect_equal(gene_names, gene_name_to_check)
   
   gene_names <- get_genes(res, cluster = 1, top = T)
@@ -84,9 +84,9 @@ test_that("Cheking get_genes is providing the right list of genes", {
   
   gene_names <- get_genes(res, cluster = 2:3, top = T)
   #Test gene list in all cluster
-  gene_name_to_check <- c("gene166", "gene201", "gene186", "gene279", "gene192", "gene212", "gene183", "gene289", "gene117", "gene266", "gene155", "gene249", "gene180", "gene293", "gene114", "gene272", "gene122", "gene242",
-                          "gene163", "gene277", "gene121", "gene213", "gene150", "gene210", "gene168", "gene290", "gene181", "gene233", "gene200", "gene273", "gene171", "gene278", "gene104", "gene215", "gene113", "gene228",
-                          "gene165", "gene248", "gene189", "gene298")
+  gene_name_to_check <- c("gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", "gene150", "gene168", "gene181", "gene200", "gene171", "gene104",
+                          "gene113", "gene165", "gene189", "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", "gene233",
+                          "gene273", "gene278", "gene215", "gene228", "gene248", "gene298")
   expect_equal(gene_names, gene_name_to_check)
   
   #Remove output files

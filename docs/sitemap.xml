@@ -4,13 +4,16 @@
     <loc>https://scigenex.r-lib.org/404.html</loc>
   </url>
   <url>
-    <loc>https://scigenex.r-lib.org/articles/get_started.html</loc>
+    <loc>https://scigenex.r-lib.org/articles/1_installation.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/articles/2_usage.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/articles/3_cell_clustering.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://scigenex.r-lib.org/articles/install.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/articles/installation.html</loc>
