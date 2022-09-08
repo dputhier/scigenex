@@ -11,7 +11,7 @@ plot_heatmap(
   floor = -1,
   cell_order = NULL,
   show_dendro = TRUE,
-  cluster = NULL,
+  gene_cluster = NULL,
   use_top_genes = FALSE,
   use_core_cells = FALSE,
   name = NULL,
@@ -23,7 +23,8 @@ plot_heatmap(
   row_labels = TRUE,
   col_labels = FALSE,
   label_size = 9,
-  line_size = 15
+  line_size_vertical = 15,
+  line_size_horizontal = 15
 )
 }
 \arguments{
@@ -39,7 +40,7 @@ plot_heatmap(
 
 \item{show_dendro}{A logical to indicate whether to show column dendrogram.}
 
-\item{cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
+\item{gene_cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
@@ -63,7 +64,9 @@ plot_heatmap(
 
 \item{label_size}{A value for label font size.}
 
-\item{line_size}{An integer for the horizontal white line size.}
+\item{line_size_vertical}{An integer for the size of horizontal white line which separate gene clusters.}
+
+\item{line_size_horizontal}{An integer for the size of vertical white line  which separate cell clusters.}
 
 \item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
 }
