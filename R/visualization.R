@@ -344,7 +344,7 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_order = NULL,
                          #cell_ordering_method = "hclust",
-                         show_dendro = TRUE,
+                         show_dendro = FALSE,
                          gene_cluster = NULL,
                          use_top_genes = FALSE,
                          use_core_cells = FALSE,
@@ -361,6 +361,11 @@ plot_heatmap <- function(object,
                          line_size_horizontal = 15) {
   
   m <- object@data
+  
+  # Config
+  if(use_core_cells | use_top_genes) {
+    show_dendro = FALSE
+  }
   
   # Centering
   if(center){
@@ -380,7 +385,7 @@ plot_heatmap <- function(object,
       
     } else {
       
-      if(length(object@cell_clusters$labels) != 0 & !show_dendro) {
+      if(!show_dendro) {
         m <- m[,names(sort(object@cell_clusters$labels))]
         object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
         object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
@@ -570,16 +575,18 @@ plot_heatmap <- function(object,
                                                                        "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
                                                                        "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
     } else {
-      htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[object@cell_clusters$hclust_res$order])),
-                                           colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
-                                                                       "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
-                                                                       "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
-                                                                       "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
+      if(!length(object@cell_clusters) == 0) {
+        htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[object@cell_clusters$hclust_res$order])),
+                                             colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
+                                                                         "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
+                                                                         "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
+                                                                         "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
+      }
     }
   }
   
   # Show dendrogram from hclust
-  if(show_dendro & !(use_core_cells) & is.null(cell_order)) {
+  if(show_dendro & !(use_core_cells) & is.null(cell_order) & !length(object@cell_clusters) == 0) {
     htmp <- htmp %>% add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
   }
   
