@@ -381,22 +381,20 @@ plot_heatmap <- function(object,
       show_dendro = FALSE
       
     } else {
-      #      if (cell_ordering_method == "hclust"){
-      print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
-      # m_dist <- as.dist(1 - cor(m, method = 'pearson'))
-      # m_clust <- hclust(m_dist, method = 'average')
-      m <- m[,object@cell_clusters$hclust_res$order]
-      
-      show_dendro = TRUE
       
       if(length(object@cell_clusters$labels) != 0) {
+        m <- m[,names(sort(object@cell_clusters$labels))]
         object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
         object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
+      } else {
+        print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
+        m <- m[,object@cell_clusters$hclust_res$order]
+        
+        show_dendro = TRUE
       }
-      
-      #      }
     }
   }
+  
   
   # Ceiling and flooring
   if(!is.null(ceil)){
@@ -488,7 +486,7 @@ plot_heatmap <- function(object,
   
   
   # Add blank col to separate cell clusters in heatmap
-  if(!is.null(cell_order)){
+  if(!length(object@cell_clusters) == 0 & is.null(cell_order)){
     ## Create blank row
     blank_col <- matrix(nrow = nrow(m), ncol = line_size_vertical)
     
@@ -562,7 +560,7 @@ plot_heatmap <- function(object,
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
   # Show cell clusters
-  if(!length(object@cell_clusters) == 0 & !is.null(cell_order)) {
+  if(!length(object@cell_clusters) == 0 & is.null(cell_order)) {
     htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(cell_names_blank)),
                                          colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
                                                                      "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
