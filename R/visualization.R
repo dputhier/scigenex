@@ -154,7 +154,7 @@ plot_heatmap <- function(object,
                          line_size_vertical = 15,
                          line_size_horizontal = 15) {
   
-  m <- object@data
+  m <- object@data[names(obj@gene_patterns),]
   
   # Config
   if(use_core_cells | use_top_genes) {
