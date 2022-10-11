@@ -22,5 +22,6 @@
 #' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
+#' @importFrom amap hcluster
 #' 
 NULL

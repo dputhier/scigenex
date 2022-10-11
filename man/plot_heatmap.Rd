@@ -10,7 +10,7 @@ plot_heatmap(
   ceil = 1,
   floor = -1,
   cell_order = NULL,
-  show_dendro = TRUE,
+  show_dendro = FALSE,
   gene_cluster = NULL,
   use_top_genes = FALSE,
   use_core_cells = FALSE,
