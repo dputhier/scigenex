@@ -154,7 +154,7 @@ plot_heatmap <- function(object,
                          line_size_vertical = 15,
                          line_size_horizontal = 15) {
   
-  m <- object@data[names(object@gene_patterns),]
+  m <- object@data[names(object@gene_clusters),]
   
   # Config
   if(use_core_cells | use_top_genes) {
@@ -205,7 +205,7 @@ plot_heatmap <- function(object,
   
   # Reduce matrix to one cluster
   if(!is.null(gene_cluster)){
-    gene_cl_int <- names(which(object@gene_patterns == gene_cluster))
+    gene_cl_int <- names(which(object@gene_clusters == gene_cluster))
     m <- m[gene_cl_int,]
   }
   

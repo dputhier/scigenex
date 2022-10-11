@@ -285,13 +285,13 @@ find_gene_clusters <- function(data = NULL,
       obj@name <- name
       obj@data <- as.matrix(data_matrix[gene_list, ])
       names(clusters) <- rownames(obj@data)
-      obj@gene_patterns <- clusters
+      obj@gene_clusters <- clusters
       obj@size <- size
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
       ## calcul of the mean profils
       for (i in 1:nb) {
-        centers[i, ] <- apply(obj@data[obj@gene_patterns == i, ],
+        centers[i, ] <- apply(obj@data[obj@gene_clusters == i, ],
                               2, mean,
                               na.rm = TRUE
         )
@@ -537,10 +537,10 @@ DBF <- function(data,
       
       if (length(selected_genes[,"gene_id"]) > 0) {
         obj@data <- as.matrix(data[selected_genes[,"gene_id"],])
-        obj@gene_patterns <- rep(1, nrow(obj@data))
+        obj@gene_clusters <- rep(1, nrow(obj@data))
         obj@size <- nrow(obj@data)
         obj@center <- matrix(
-          apply(obj@data[obj@gene_patterns == 1, ],
+          apply(obj@data[obj@gene_clusters == 1, ],
                 2,
                 mean,
                 na.rm = TRUE

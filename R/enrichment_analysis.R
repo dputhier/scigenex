@@ -57,10 +57,10 @@ setMethod("enrich_go",
             }
             
             
-            for(cluster in unique(object@gene_patterns)){
+            for(cluster in unique(object@gene_clusters)){
               if (verbose) {print(paste0("Enrichment analysis for cluster ", cluster))}
               cluster_name = paste0("Cluster_", cluster)
-              query = rownames(object@data[object@gene_patterns == cluster,])
+              query = rownames(object@data[object@gene_clusters == cluster,])
               
               # Convert gene id to EntrezId format
               suppressMessages(query_entrezid <- AnnotationDbi::select(org_db, 
@@ -135,14 +135,14 @@ setMethod("viz_enrich",
             
             if (length(clusters) == 1){
               if (clusters == "all"){
-                clusters <- unique(object@gene_patterns)
+                clusters <- unique(object@gene_clusters)
               }
             }
             
             
             for (cur_cluster in clusters) {
               # Check if the current cluster id provided exists
-              if (!(cur_cluster %in% unique(object@gene_patterns))) {
+              if (!(cur_cluster %in% unique(object@gene_clusters))) {
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               

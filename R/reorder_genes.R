@@ -49,18 +49,18 @@ reorder_genes <- function(object,
   
   
   reordered_genes <- c()
-  for (gene_cluster in unique(object@gene_patterns)) {
+  for (gene_cluster in unique(object@gene_clusters)) {
     
     # Reorder by gene names
     if (order_by == "gene_names") {
-      gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
+      gene_cluster_names <- names(object@gene_clusters[object@gene_clusters == gene_cluster])
       gene_cluster_names <- sort(gene_cluster_names)
       reordered_genes <- c(reordered_genes, gene_cluster_names)
     }
     
     # Reorder using hierarchical clustering (amap::hcluster)
     if (order_by == "hclust") {
-      gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
+      gene_cluster_names <- names(object@gene_clusters[object@gene_clusters == gene_cluster])
       expression_matrix <- object@data[gene_cluster_names,]
       
       
@@ -77,7 +77,7 @@ reorder_genes <- function(object,
     
     # Reorder using top_genes
     if (order_by == "correlation") {
-      gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
+      gene_cluster_names <- names(object@gene_clusters[object@gene_clusters == gene_cluster])
       gene_cluster_names <- c(top_genes(object,
                                         cluster = gene_cluster,
                                         top = length(gene_cluster_names))@top_genes)
@@ -86,7 +86,7 @@ reorder_genes <- function(object,
     }
   }
   
-  object@gene_patterns <- object@gene_patterns[reordered_genes]
+  object@gene_clusters <- object@gene_clusters[reordered_genes]
   
   return(object)
 }

@@ -54,7 +54,7 @@ get_genes <- function(object,
     }
     gene_names <- as.vector(t(object@top_genes[paste0("cluster_", cluster),]))
   }else{
-    gene_names <- names(object@gene_patterns[object@gene_patterns %in% cluster])
+    gene_names <- names(object@gene_clusters[object@gene_clusters %in% cluster])
   }
   
   return(gene_names)
