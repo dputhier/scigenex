@@ -1,5 +1,5 @@
 #################################################################
-##    Define cell_clust function for ClusterSet object
+##    Define find_cell_clusters function for ClusterSet object
 #################################################################
 
 #' @title
@@ -12,7 +12,7 @@
 #' @param min_cluster_size Minimum cluster size.
 #'
 #' @return 
-#' @export cell_clust
+#' @export find_cell_clusters
 #'
 #' @examples
 #' \dontrun{
@@ -29,12 +29,12 @@
 #'                           k=25,
 #'                           fdr = 10)
 #'               
-#' res <- cell_clust(res, min_cluster_size = 3)
+#' res <- find_cell_clusters(res, min_cluster_size = 3)
 #' res@cell_clust
 #' }
 
 
-cell_clust <- function(object,
+find_cell_clusters <- function(object,
                        min_cluster_size = 5) {
   
   # Row centering (Soustract the row mean values for each value in a row)

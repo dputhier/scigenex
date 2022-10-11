@@ -26,7 +26,7 @@
 #'                           inflation = 1.2,
 #'                           k=25,
 #'                           fdr = 10)
-#' res <- cell_clust(res, min_cluster_size = 3)
+#' res <- find_cell_clusters(res, min_cluster_size = 3)
 #' cells <- get_cells(object = res, cluster="1")
 #' cells
 #' }

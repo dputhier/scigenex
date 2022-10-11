@@ -97,7 +97,7 @@ viz_dist <-  function(object,
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param gene_cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
-#' @param use_core_cells A logical to indicate whether to use core cells obtained by cell_clust function.
+#' @param use_core_cells A logical to indicate whether to use core cells obtained by find_cell_clusters function.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
@@ -154,7 +154,7 @@ plot_heatmap <- function(object,
                          line_size_vertical = 15,
                          line_size_horizontal = 15) {
   
-  m <- object@data[names(obj@gene_patterns),]
+  m <- object@data[names(object@gene_patterns),]
   
   # Config
   if(use_core_cells | use_top_genes) {
@@ -228,10 +228,10 @@ plot_heatmap <- function(object,
     }
   }
   
-  # Reduce m cols to only keep core cells from cell_clust
+  # Reduce m cols to only keep core cells from find_cell_clusters function
   if(use_core_cells) {
     if(length(object@cell_clusters) == 0){
-      stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run cell_clust() before."))
+      stop(paste0("The slot cell_clusters of the input ClusterSet object is empty. Be sure to run find_cell_clusters() before."))
     } else {
       cell_names <- names(which(sort(object@cell_clusters$cores) !=0))
       m <- m[,cell_names]

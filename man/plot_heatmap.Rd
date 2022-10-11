@@ -44,7 +44,7 @@ plot_heatmap(
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
-\item{use_core_cells}{A logical to indicate whether to use core cells obtained by cell_clust function.}
+\item{use_core_cells}{A logical to indicate whether to use core cells obtained by find_cell_clusters function.}
 
 \item{name}{A title for the heatmap.}
 
