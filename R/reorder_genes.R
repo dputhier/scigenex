@@ -7,7 +7,7 @@
 #' @description
 #' Reorder genes in gene cluster.
 #' @param object A ClusterSet object.
-#' @param by A character string related to the reordering type. 
+#' @param order_by A character string related to the reordering type. 
 #' Default is "correlation" which reorder genes based on their correlation 
 #' within their respective gene cluster.
 #'
@@ -38,12 +38,12 @@
 #' @rdname reorder_genes
 
 reorder_genes <- function(object,
-                          by = c("gene_names", "hclust", "correlation")) {
+                          order_by = c("gene_names", "hclust", "correlation")) {
   
   
   
   
-  if (!by %in% c("gene_names", "hclust", "correlation")) {
+  if (!order_by %in% c("gene_names", "hclust", "correlation")) {
     stop("Provided order_by parameter does not exist.")
   }
   
@@ -52,14 +52,14 @@ reorder_genes <- function(object,
   for (gene_cluster in unique(object@gene_patterns)) {
     
     # Reorder by gene names
-    if (by == "gene_names") {
+    if (order_by == "gene_names") {
       gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
       gene_cluster_names <- sort(gene_cluster_names)
       reordered_genes <- c(reordered_genes, gene_cluster_names)
     }
     
     # Reorder using hierarchical clustering (amap::hcluster)
-    if (by == "hclust") {
+    if (order_by == "hclust") {
       gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
       expression_matrix <- object@data[gene_cluster_names,]
       
@@ -76,7 +76,7 @@ reorder_genes <- function(object,
     }
     
     # Reorder using top_genes
-    if (by == "correlation") {
+    if (order_by == "correlation") {
       gene_cluster_names <- names(object@gene_patterns[object@gene_patterns == gene_cluster])
       gene_cluster_names <- c(top_genes(object,
                                         cluster = gene_cluster,
