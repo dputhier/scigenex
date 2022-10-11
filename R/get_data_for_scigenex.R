@@ -12,7 +12,7 @@
 #' intermediary files are to be stored. Default to current working directory.
 #'
 #' @return A list containing a matrix and the filename (if filename argument is used).
-#' @export get_data_4_DBFMCL
+#' @export get_data_for_scigenex
 #'
 #' @examples
 #' 
@@ -20,10 +20,10 @@
 #' ## with an artificial dataset
 #'
 #' m <- matrix(rnorm(80000), nc = 20)
-#' res <- get_data_4_DBFMCL(data=m)
+#' res <- get_data_for_scigenex(data=m)
 #' }
 #' 
-get_data_4_DBFMCL <- function(data = NULL, filename = NULL, path = ".") {
+get_data_for_scigenex <- function(data = NULL, filename = NULL, path = ".") {
   
   ## getting matrix (probesID vs SamplesID)
   if (!is.null(data)) {

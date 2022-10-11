@@ -20,12 +20,12 @@
 #' m[1:100,1:10] <- m[1:100,1:10] + 4
 #' m[101:200,11:20] <- m[101:200,11:20] + 3
 #' m[201:300,5:15] <- m[201:300,5:15] + -2
-#' res <- DBFMCL(data=m,
-#'               distance_method="pearson",
-#'               av_dot_prod_min = 0,
-#'               inflation = 2,
-#'               k=25,
-#'              fdr = 10)
+#' res <- find_gene_clusters(data=m,
+#'                           distance_method="pearson",
+#'                           av_dot_prod_min = 0,
+#'                           inflation = 2,
+#'                           k=25,
+#'                           fdr = 10)
 #' 
 #' res <- reorder_genes(res, "correlation")
 #' 

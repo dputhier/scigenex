@@ -125,33 +125,33 @@ print_msg <- function(msg, msg_type="INFO"){
 #' m[1:100,1:10] <- m[1:100,1:10] + 4
 #' m[101:200,11:20] <- m[101:200,11:20] + 3
 #' m[201:300,5:15] <- m[201:300,5:15] + -2
-#' res <- DBFMCL(data=m,
-#'               distance_method="pearson",
-#'               av_dot_prod_min = 0,
-#'               inflation = 2,
-#'               k=25,
-#'              fdr = 10)
+#' res <- find_gene_clusters(data=m,
+#'                           distance_method="pearson",
+#'                           av_dot_prod_min = 0,
+#'                           inflation = 2,
+#'                           k=25,
+#'                           fdr = 10)
 #'              
 #' plot_heatmap(res,
 #'              use_core_cells = FALSE,
 #'              use_top_genes = FALSE)
 #' }
 #'
-#' @export DBFMCL
-DBFMCL <- function(data = NULL, 
-                   filename = NULL, 
-                   path = ".",
-                   output_path = ".",
-                   mcl_threads=1,
-                   name = NULL,
-                   distance_method = "pearson",
-                   av_dot_prod_min=2,
-                   min_cluster_size=10,
-                   silent = FALSE,
-                   k = 50,
-                   fdr = 10,
-                   inflation = 2,
-                   seed = 123) {
+#' @export find_gene_clusters
+find_gene_clusters <- function(data = NULL, 
+                               filename = NULL, 
+                               path = ".",
+                               output_path = ".",
+                               mcl_threads=1,
+                               name = NULL,
+                               distance_method = "pearson",
+                               av_dot_prod_min=2,
+                               min_cluster_size=10,
+                               silent = FALSE,
+                               k = 50,
+                               fdr = 10,
+                               inflation = 2,
+                               seed = 123) {
   
   ## testing the system
   if (.Platform$OS.type == "windows") {
@@ -159,7 +159,7 @@ DBFMCL <- function(data = NULL,
   }
   
   ## getting parameters
-  data_source <- get_data_4_DBFMCL(data = data, filename = filename, path = path)
+  data_source <- get_data_for_scigenex(data = data, filename = filename, path = path)
   data_matrix <- data_source$data
   
   # A simple function to create a random string
@@ -328,12 +328,12 @@ DBFMCL <- function(data = NULL,
 #' @title
 #' DBF
 #' @description
-#' This function is an internal function used by \code{\link{DBFMCL}} to detect
+#' This function is an internal function used by \code{\link{find_gene_clusters}} to detect
 #' informative elements (\emph{i.e.}, those that belong to dense regions). User
-#' should not use this function. Instead they can use the \code{\link{DBFMCL}}
+#' should not use this function. Instead they can use the \code{\link{find_gene_clusters}}
 #' function with \code{clustering} argument set to \code{FALSE}.
 #'
-#' See \code{\link{DBFMCL}}
+#' See \code{\link{find_gene_clusters}}
 #'
 #' @param data a matrix or data.frame
 #' @param output_path a character string representing the data directory where
@@ -349,7 +349,7 @@ DBFMCL <- function(data = NULL,
 #' @section Warnings: Works only on UNIX-alikes platforms.
 #' @author Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
 #' D.
-#' @seealso \code{\link{DBFMCL}}
+#' @seealso \code{\link{find_gene_clusters}}
 #' @references Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud
 #' S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
 #' and flexible toolbox to explore productively the transcriptional landscape
@@ -364,7 +364,7 @@ DBF <- function(data,
                 k = 100,
                 fdr = 10,
                 seed = 123) {
-
+  
   ## testing the system
   if (.Platform$OS.type != "windows") {
     if (!is.null(data)) {
@@ -376,7 +376,7 @@ DBF <- function(data,
       ## getting data and parameters
       if (output_path == ".") {output_path <- getwd()}
       if (is.null(name)) name <- "exprs"
-      data <- get_data_4_DBFMCL(data = data)$data
+      data <- get_data_for_scigenex(data = data)$data
       row <- rownames(data)
       col <- colnames(data)
       distance_method <- match.arg(distance_method)

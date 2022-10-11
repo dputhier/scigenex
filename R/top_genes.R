@@ -20,12 +20,12 @@
 #' m[101:200,11:20] <- m[101:200,11:20] + 3
 #' m[201:300,5:15] <- m[201:300,5:15] + -2
 #' 
-#' res <- DBFMCL(data=m,
-#'               distance_method="pearson",
-#'               av_dot_prod_min = 0,
-#'               inflation = 1.2,
-#'               k=25,
-#'               fdr = 10)
+#' res <- find_gene_clusters(data=m,
+#'                           distance_method="pearson",
+#'                           av_dot_prod_min = 0,
+#'                           inflation = 1.2,
+#'                           k=25,
+#'                           fdr = 10)
 #'               
 #'res <- top_genes(object = res, top=500, cluster="all")
 #'res@top_genes
@@ -34,7 +34,7 @@
 #' ## with an artificial dataset
 #'
 #' m <- matrix(rnorm(80000), nc = 20)
-#' res <- get_data_4_DBFMCL(data=m)
+#' res <- get_data_for_scigenex(data=m)
 #' }
 #' 
 
@@ -66,7 +66,7 @@ top_genes <- function(object,
     genes <- names(clusters[which(clusters == i)])
     
     #Compute distances between genes in cluster i
-    #Use the same distance used by DBFMCL
+    #Use the same distance used by SciGeneX
     dist_method <- object@parameters$distance_method
     
     if (dist_method == "pearson") {
