@@ -5,13 +5,13 @@ test_that("Cheking get_genes is providing the right list of genes", {
   m[1:100,1:10] <- m[1:100,1:10] + 4
   m[101:200,11:20] <- m[101:200,11:20] + 3
   m[201:300,5:15] <- m[201:300,5:15] + -2
-  res <- DBFMCL(data=m,
-                name = "test",
-                distance_method="pearson",
-                av_dot_prod_min = 0,
-                inflation = 2,
-                k=25,
-                fdr = 10)
+  res <- find_gene_clusters(data=m,
+                            name = "test",
+                            distance_method="pearson",
+                            av_dot_prod_min = 0,
+                            inflation = 2,
+                            k=25,
+                            fdr = 10)
   
   gene_names <- get_genes(res, cluster = "all")
   #Test gene list in all cluster
