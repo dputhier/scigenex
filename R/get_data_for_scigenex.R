@@ -61,7 +61,7 @@ get_data_for_scigenex <- function(data = NULL, filename = NULL, path = ".") {
     rownames(data) <- paste("gene", 1:nrow(data), sep = "")
   }
   if (is.null(colnames(data))) {
-    print_msg("Colum names not provided. Adding.", msg_type = "DEBUG")
+    print_msg("Column names not provided. Adding.", msg_type = "DEBUG")
     colnames(data) <- paste("sample", 1:ncol(data), sep = "")
   }
   
