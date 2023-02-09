@@ -273,10 +273,10 @@ find_gene_clusters <- function(data = NULL,
         }
       }
     }
-    print_msg(paste(nb, " clusters conserved after MCL partitioning."),
-              msg_type="INFO")
     print_msg(paste(nb_cluster_deleted,
                     " clusters filtered out from MCL partitioning (size and mean dot product)."),
+              msg_type="INFO")
+    print_msg(paste(nb, " clusters conserved after MCL partitioning."),
               msg_type="INFO")
     
     
