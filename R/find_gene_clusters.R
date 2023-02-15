@@ -125,8 +125,8 @@
 #' @export find_gene_clusters
 find_gene_clusters <- function(data = NULL,
                                filename = NULL,
-                               path = ".",
-                               output_path = ".",
+                               path = tempdir(),
+                               output_path = tempdir(),
                                mcl_threads = 1,
                                name = NULL,
                                distance_method = c("pearson",
