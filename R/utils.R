@@ -32,6 +32,30 @@ set_verbosity <- function(verbosity_value) {
   }
 }
 
+#################################################################
+##    get_verbosity()
+#################################################################
+#' Get the current verbosity level.
+#'
+#' This function get the verbosity level of the SciGeneX package which 
+#' controls the amount of information that is printed to the console by 
+#' the \code{\link{print_msg}} function. 
+#'
+#'
+#' @return A vector
+#'
+#' @export
+#'
+#' @examples
+#' get_verbosity()
+#'
+
+get_verbosity <- function() {
+  if(is.null(unlist(options()["scigenex_verbosity"]))) {
+    options(scigenex_verbosity = 1)
+  }
+  return(options()$scigenex_verbosity)
+}
 
 #################################################################
 ##    print_msg
