@@ -46,7 +46,7 @@ and MCL.}
 
 \item{min_nb_supporting_cell}{Use to filter out the clusters. The minimum number 
 of cell supporting a cluster. A cell supports a cluster if it expresses at least 
-min_pct_gene_expressed % of the genes from the cluster.}
+min_pct_gene_expressed \% of the genes from the cluster.}
 
 \item{min_pct_gene_expressed}{See min_nb_supporting_cell argument.}
 
