@@ -46,14 +46,14 @@ setMethod("enrich_go",
               org_db <- org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
               print_msg(msg_type = "INFO",
-                                     msg = "Species used : Homo sapiens")
+                        msg = "Species used : Homo sapiens")
             }
             
             if (species == "Mmusculus") {
               org_db <- org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
               print_msg(msg_type = "INFO",
-                                     msg = "Species used : Mus musculus")
+                        msg = "Species used : Mus musculus")
             }
             
             
@@ -150,17 +150,17 @@ setMethod("viz_enrich",
               } else {
                 
                 # Print an informative message to announce plot of the results of the current cluster
-                  print_msg(msg_type = "INFO",
-                            msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
+                print_msg(msg_type = "INFO",
+                          msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
                 
                 
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    dot_plot <- dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
-                    dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scale="free")
+                    dot_plot <- clusterProfiler::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scales="free")
                   } else {
-                    dot_plot <- dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    dot_plot <- clusterProfiler::dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
@@ -168,10 +168,10 @@ setMethod("viz_enrich",
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    bar_plot <- barplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
-                    bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scale="free")
+                    bar_plot <- clusterProfiler::barplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scales="free")
                   } else {
-                    bar_plot <- barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    bar_plot <- clusterProfiler::barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }
@@ -179,9 +179,9 @@ setMethod("viz_enrich",
             }
             
             # Print a message to inform which slot contains the results
-              print_msg(msg_type = "INFO",
-                        msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
-                                    "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
+            print_msg(msg_type = "INFO",
+                      msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
+                                  "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
             return(object)
           }
 )

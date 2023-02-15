@@ -40,8 +40,8 @@ viz_dist <-  function(object,
                        text_vjust = -0.5) {
   
   # Extract observed and simulated distances
-  dist_obs <- data.frame(distance_value = object@distances, type = "Observed")
-  dist_sim <- data.frame(distance_value = object@simulated_distances, type = "Simulated")
+  dist_obs <- data.frame("distance_value" = object@distances, "type" = "Observed")
+  dist_sim <- data.frame("distance_value" = object@simulated_distances, "type" = "Simulated")
   dist_p <- rbind(dist_obs, dist_sim)
   
   # plot density of distance values for the observed and simulated conditions
@@ -93,7 +93,6 @@ viz_dist <-  function(object,
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed centering.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_order A vector of cell names already ordered.
-#' @param cell_ordering_method The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param gene_cluster A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
@@ -110,7 +109,7 @@ viz_dist <-  function(object,
 #' @param line_size_vertical An integer for the size of horizontal white line which separate gene clusters.
 #' @param line_size_horizontal An integer for the size of vertical white line  which separate cell clusters.
 #'
-#' @return Iheatmap-class object
+#' @return Iheatmap-class object.
 #' @export
 #'
 #' @examples
@@ -137,7 +136,6 @@ plot_heatmap <- function(object,
                          ceil = 1,
                          floor = -1,
                          cell_order = NULL,
-                         #cell_ordering_method = "hclust",
                          show_dendro = FALSE,
                          gene_cluster = NULL,
                          use_top_genes = FALSE,
@@ -370,7 +368,7 @@ plot_heatmap <- function(object,
                                                                        "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
     } else {
       if(!length(object@cell_clusters) == 0) {
-        htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[object@cell_clusters$hclust_res$order])),
+        htmp <- htmp %>% iheatmapr::add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[object@cell_clusters$hclust_res$order])),
                                              colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
                                                                          "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
                                                                          "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
@@ -381,7 +379,7 @@ plot_heatmap <- function(object,
   
   # Show dendrogram from hclust
   if(show_dendro & !(use_core_cells) & is.null(cell_order) & !length(object@cell_clusters) == 0) {
-    htmp <- htmp %>% add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
+    htmp <- htmp %>% iheatmapr::add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
   }
   
   
@@ -420,8 +418,8 @@ plot_dist <- function(object,
     stop("Please provide ClusterSet object.")
   }
   
-  df <- data.frame(distance=c(object@simulated_distances, object@distances),
-                   type=c(rep("Simulated", length(object@simulated_distances)),
+  df <- data.frame("distance"=c(object@simulated_distances, object@distances),
+                   "type"=c(rep("Simulated", length(object@simulated_distances)),
                           rep("Observed", length(object@distances))))
   p <-  ggplot(df, aes(x=distance, fill=type)) +
     geom_histogram(bins=bins, 

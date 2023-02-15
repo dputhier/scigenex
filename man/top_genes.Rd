@@ -14,7 +14,7 @@ top_genes(object, top = 20, cluster = "all")
 \item{cluster}{A vector of gene cluster identity.}
 }
 \value{
-
+A \code{ClusterSet} object.
 }
 \description{
 Extract the highly co-expressed genes of each gene cluster.

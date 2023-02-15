@@ -10,7 +10,7 @@
 #' @param top A value for the number of the most similar genes in gene clusters.
 #' @param cluster A vector of gene cluster identity.
 #'
-#' @return 
+#' @return A \code{ClusterSet} object.
 #' @export top_genes
 #'
 #' @examples

@@ -11,7 +11,7 @@
 #' @param object A \code{ClusterSet} object.
 #' @param min_cluster_size Minimum cluster size.
 #'
-#' @return 
+#' @return A \code{ClusterSet} object.
 #' @export find_cell_clusters
 #'
 #' @examples

@@ -14,7 +14,7 @@ get_genes(object, cluster = "all", top = FALSE)
 \item{top}{A logical to indicate whether to provide top genes.}
 }
 \value{
-
+A character vector.
 }
 \description{
 Extract genes list from each gene clusters. Can extract genes from all clusters (default) or from specified clusters.

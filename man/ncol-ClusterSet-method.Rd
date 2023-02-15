@@ -7,7 +7,7 @@
 \S4method{ncol}{ClusterSet}(x)
 }
 \arguments{
-\item{x}{A ClusterSet object.}
+\item{object}{A ClusterSet object.}
 }
 \value{
 The number of columns.

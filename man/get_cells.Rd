@@ -14,7 +14,7 @@ get_cells(object, cluster = "all", core = FALSE)
 \item{core}{A logical to indicate whether to provide core cells.}
 }
 \value{
-
+A character vector.
 }
 \description{
 Extract cell identities from each cell clusters. Can extract cells from all clusters (default) or from specified clusters.

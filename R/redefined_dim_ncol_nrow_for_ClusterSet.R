@@ -6,7 +6,7 @@
 #' ncol
 #' @description
 #' The number of columns of a ClusterSet object.
-#' @param x A ClusterSet object.
+#' @param object A ClusterSet object.
 #' @return The number of columns.
 #' @export
 #'
@@ -26,12 +26,17 @@
 #'   ncol(res)
 #' }
 #'
+# setGeneric("ncol",
+#            function(object) {
+#              standardGeneric("ncol")
+#            })
+
 setMethod(
   "ncol", signature("ClusterSet"),
   
-  function(x) {
+  function(object) {
     
-    return(ncol(x@data))
+    return(ncol(object@data))
     
   }
 )

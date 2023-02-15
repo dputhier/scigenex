@@ -10,7 +10,7 @@
 #' @param cluster A vector of cell cluster identity (all by default).
 #' @param core A logical to indicate whether to provide core cells.
 #'
-#' @return 
+#' @return A character vector.
 #' @export get_cells
 #'
 #' @examples

@@ -10,7 +10,7 @@
 #' @param cluster A vector of gene cluster identity (all by default).
 #' @param top A logical to indicate whether to provide top genes.
 #'
-#' @return 
+#' @return A character vector.
 #' @export get_genes
 #'
 #' @examples

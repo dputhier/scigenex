@@ -28,7 +28,7 @@ get_data_for_scigenex <- function(data = NULL, filename = NULL, path = ".") {
   ## getting matrix (probesID vs SamplesID)
   if (!is.null(data)) {
     if (inherits(data, "Seurat")) {
-      data <- as.matrix(GetAssayData(data, slot = 'data'))
+      data <- as.matrix(SeuratObject::GetAssayData(data, slot = 'data'))
     }
     else if (is.data.frame(data)) {
       data <- as.matrix(data)

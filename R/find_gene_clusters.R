@@ -550,7 +550,7 @@ DBF <- function(data,
   } else if (highest == 1) {
     tresh_dknn <- max(df_dknn$dknn_values)
   } else {
-    tresh_dknn <- quantile(df_dknn$dknn_values, highest)
+    tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
   }
   
   gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
@@ -588,10 +588,10 @@ DBF <- function(data,
   for (i in 1:nb_selected_genes) {
     gene <- df_dknn$gene_id[i]
     df_dknn[gene, "FDR"] <-
-      pnorm(df_dknn[gene, "dknn_values"],
-            mean = mean_sim,
-            sd = sd_sim,
-            lower.tail = T) / (i / nb_selected_genes) * 100
+      stats::pnorm(df_dknn[gene, "dknn_values"],
+                   mean = mean_sim,
+                   sd = sd_sim,
+                   lower.tail = T) / (i / nb_selected_genes) * 100
   }
   
   df_dknn$FDR[df_dknn$FDR > 100] <- 100
