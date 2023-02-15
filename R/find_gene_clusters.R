@@ -5,25 +5,10 @@
 ##  with the collaboration of LOPEZ F., TEXTORIS J. and PUTHIER D.
 ##
 ##
-#################################################################
-##    UTILS (a set of useful function)
-#################################################################
-# 0 : No message
-# 1 : info
-# 2 : DEBUG
+################################################################
 
-VERBOSITY_SCIGENEX = 3
 
-print_msg <- function(msg, msg_type = "INFO") {
-  if (msg_type == "INFO")
-    if (VERBOSITY_SCIGENEX > 0)
-      cat(paste("|-- ", msg, "\n"))
-  if (msg_type == "DEBUG")
-    if (VERBOSITY_SCIGENEX > 1)
-      cat(paste("|-- ", msg, "\n"))
-  if (msg_type == "WARNING")
-    cat(paste("|-- ", msg, "\n"))
-}
+
 
 #################################################################
 ##    find_gene_clusters function
@@ -268,7 +253,7 @@ find_gene_clusters <- function(data = NULL,
          replacement = "/",
          x = mcl_out_file)
   
-  print_msg("DBF completed. Starting MCL step.", msg_type = "DEBUG")
+  print_msg("DBF completed. Starting MCL step.", msg_type = "INFO")
   
   if (length(readLines(dbf_out_file)) > 0) {
     ## Launching mcl (command line)
@@ -282,7 +267,7 @@ find_gene_clusters <- function(data = NULL,
     
     
     print_msg(paste0("Reading and filtering MCL output: ", mcl_out_file),
-              msg_type = "DEBUG")
+              msg_type = "INFO")
     
     ## getting mcl results into the ClusterSet object
     mcl_cluster <- readLines(mcl_out_file)
@@ -495,7 +480,7 @@ DBF <- function(data,
       "Computing correlations using selected method: ",
       distance_method
     ),
-    msg_type = "DEBUG"
+    msg_type = "INFO"
   )
   
   if (distance_method == "pearson") {
@@ -537,7 +522,7 @@ DBF <- function(data,
   
   #################### DKNN for each genes
   # Extract the DKNN for each gene
-  print_msg(paste0("Computing distances to KNN."), msg_type = "DEBUG")
+  print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
   
   for (pos in seq_len(nrow(dist_matrix))) {
     gene <- rownames(df_dknn)[pos]
@@ -556,7 +541,7 @@ DBF <- function(data,
   }
   
   #################### DKNN simulation
-  print_msg(paste0("Computing simulated distances to KNN."), msg_type = "DEBUG")
+  print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
   
   nb_selected_genes <- nrow(select_for_correlation)
   
@@ -593,7 +578,7 @@ DBF <- function(data,
   #################### Determine the DKNN threshold (or critical distance)
   # Order genes by DKNN values
   print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
-            msg_type = "DEBUG")
+            msg_type = "INFO")
   
   # Order the dknn values from low to high
   df_dknn <- df_dknn[order(df_dknn$dknn_values), ]
@@ -612,7 +597,7 @@ DBF <- function(data,
   df_dknn$FDR[df_dknn$FDR > 100] <- 100
   
   #################### Select genes with a distance value under critical distance
-  print_msg(paste0("Selecting informative genes."), msg_type = "DEBUG")
+  print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
   fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
   selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
   critical_distance <-df_dknn$dknn_values[fdr_tresh_pos]
@@ -623,7 +608,7 @@ DBF <- function(data,
   l_knn_selected <- l_knn[selected_genes]
   
   ####################  Create the input file for mcl algorithm
-  print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "DEBUG")
+  print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
   
@@ -662,7 +647,7 @@ DBF <- function(data,
   mcl_out_as_df <-
     mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
   
-  print_msg(paste0("Writing table."), msg_type = "DEBUG")
+  print_msg(paste0("Writing table."), msg_type = "INFO")
   data.table::fwrite(
     mcl_out_as_df,
     file = file.path(output_path,
