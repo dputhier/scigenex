@@ -2,7 +2,8 @@
 % Please edit documentation in R/find_gene_clusters.R
 \name{find_gene_clusters}
 \alias{find_gene_clusters}
-\title{The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).}
+\title{The central function of Scigenex package used to select informative genes
+and create partitions of co-expressed genes.}
 \usage{
 find_gene_clusters(
   data = NULL,
@@ -11,12 +12,15 @@ find_gene_clusters(
   output_path = ".",
   mcl_threads = 1,
   name = NULL,
-  distance_method = "pearson",
-  av_dot_prod_min = 2,
+  distance_method = c("pearson", "cosine", "euclidean"),
+  min_nb_supporting_cell = 2,
+  min_pct_gene_expressed = 40,
   min_cluster_size = 10,
   silent = FALSE,
+  highest = 0.25,
   k = 50,
-  fdr = 10,
+  row_sum = 0,
+  fdr = 0.05,
   inflation = 2,
   seed = 123
 )
@@ -37,24 +41,35 @@ output files will be stored. Default to current working directory.}
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
 
-\item{distance_method}{a method to compute the distance to the k-th nearest neighbor.}
+\item{distance_method}{A method to compute the distance to the k-th nearest neighbor 
+(one of "pearson", "cosine" or "euclidean").}
 
-\item{av_dot_prod_min}{Any cluster with average dot product below this value is discarded. This allow to delete
-clusters in which correlation is influenced/supported by very few samples (typically 1).}
+\item{min_nb_supporting_cell}{Use to filter out the clusters. The minimum number 
+of cell supporting a cluster. A cell supports a cluster if it expresses at least 
+min_pct_gene_expressed % of the genes from the cluster.}
 
-\item{min_cluster_size}{Minimum number of element inside a cluster. MCL tend to create lots of clusters with
-very few (e.g 2) objects.}
+\item{min_pct_gene_expressed}{See min_nb_supporting_cell argument.}
+
+\item{min_cluster_size}{Minimum number of element inside a cluster. 
+MCL tend to create lots of clusters with very few (e.g 2) objects.}
 
 \item{silent}{if set to TRUE, the progression of distance matrix calculation
 is not displayed.}
 
+\item{highest}{During the process, genes will be ordered by their distance to their 
+k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
+whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
+use all the genes.}
+
 \item{k}{the neighborhood size.}
 
-\item{fdr}{an integer value corresponding to the false discovery rate
-(range: 0 to 100).}
+\item{row_sum}{Select only lines whose row sum is greater than row_sum (may be 
+-Inf if no filter needed).}
+
+\item{fdr}{an integer value corresponding to the false discovery rate (range: 0 to 100).}
 
 \item{inflation}{the main control of MCL. Inflation affects cluster
-granularity. It is usually chosen somewhere in the range \code{[1.2-5.0]}.
+granularity. It is usually chosen somewhere in the range \code{[1.2-3]}.
 \code{inflation = 5.0} will tend to result in fine-grained clusterings, and
 whereas \code{inflation = 1.2} will tend to result in very coarse grained
 clusterings. By default, \code{inflation = 2.0}. Default setting gives very
@@ -66,6 +81,7 @@ good results for microarray data when k is set between 70 and 250.}
 a ClusterSets class object.
 }
 \description{
+The find_gene_clusters function used an implementation of the  DBFMCL algorithm.
 DBFMCL is a tree-steps adaptative algorithm that \emph{(i)} find elements
 located in dense areas (DBF), \emph{(ii)} uses selected items to construct a
 graph, \emph{(iii)} performs graph partitioning using the Markov CLustering
@@ -81,20 +97,15 @@ their nearest neighbors (i.e. strong profile similarities). To isolate these
 regions DBF-MCL computes, for each gene/element, the distance with its kth
 nearest neighbor (DKNN).In order to define a critical DKNN value that will
 depend on the dataset and below which a gene/element will be considered as
-falling in a dense area, DBF-MCL computes simulated DKNN values by using an
-empirical randomization procedure. Given a dataset containing n genes and p
-samples, a simulated DKNN value is obtained by sampling n distance values
-from the gene-gene distance matrix D and by extracting the kth-smallest
-value. This procedure is repeated n times to obtain a set of simulated DKNN
-values S. Computed distributions of simulated DKNN are used to compute a FDR
-value for each observed DKNN value. The critical value of DKNN is the one
-for which a user-defined FDR value (typically 10\%) is observed. Genes with
-DKNN value below this threshold are selected and used to construct a graph.
-In this graph, edges are constructed between two genes (nodes) if one of
-them belongs to the k-nearest neighbors of the other. Edges are weighted
-based on the respective coefficient of correlation (\emph{i.e.}, similarity)
-and the graph obtained is partitioned using the Markov CLustering Algorithm
-(MCL).
+falling in a dense area, DBF-MCL computes simulated DKNN values based on 
+distances corresponding to genes with the genes highest dknn values. Computed 
+distributions of simulated DKNN are used to compute a FDR value for each observed 
+DKNN value. Genes with corresponding FDR value <= user defined FDR are selected 
+and used to construct a graph. In this graph, edges are constructed between 
+two genes (nodes) if one of them belongs to the k-nearest neighbors of the other. 
+Edges are weighted based on the respective coefficient of correlation (\emph{i.e.}, 
+similarity) and the graph obtained is partitioned using the Markov CLustering 
+Algorithm (MCL).
 }
 \section{Warnings}{
  With the current implementation, this function only works
@@ -120,19 +131,21 @@ successfully with the 06-058 version).}
 
 \dontrun{
 m <- matrix(rnorm(80000), nc=20)
-m[1:100,1:10] <- m[1:100,1:10] + 4
-m[101:200,11:20] <- m[101:200,11:20] + 3
-m[201:300,5:15] <- m[201:300,5:15] + -2
+m[1:100, 1:10] <- m[1:100, 1:10] + 3
+m[101:200, 11:20] <- m[101:200, 11:20] + 3
+m[301:400, 5:15] <- m[201:300, 5:15] - 3
+m[201:300, c(1,5,10,15,20)] <- m[201:300, c(1,5,10,15,20)] - 3
+
+## A rather stringent version
 res <- find_gene_clusters(data=m,
-                          distance_method="pearson",
-                          av_dot_prod_min = 0,
-                          inflation = 2,
-                          k=25,
-                          fdr = 10)
-             
-plot_heatmap(res,
-             use_core_cells = FALSE,
-             use_top_genes = FALSE)
+                             distance_method="pearson",
+                             inflation = 2,
+                             k=75,
+                             row_sum=-Inf,
+                             highest=0.3,
+                             min_nb_supporting_cell = 0,
+                             fdr = 1e-8)
+plot_heatmap(res)
 }
 
 }
@@ -145,8 +158,7 @@ and flexible toolbox to explore productively the transcriptional landscape
 of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
 \author{
-Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
-D.
+Bergon A., Bavais J., Textoris J., Lopez F and Puthier D.
 }
 \keyword{MCL.}
 \keyword{classification,}

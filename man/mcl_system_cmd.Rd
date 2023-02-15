@@ -22,7 +22,7 @@ whereas \code{inflation = 1.2} will tend to result in very coarse grained
 clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 good results for microarray data when k is set around 100.}
 
-\item{input_path}{a character string representing the directory path of 
+\item{input_path}{a character string representing the directory path of
 the input file used by mcl. Default is the current working directory.}
 
 \item{silent}{if set to TRUE, the progression of the MCL partitionning is

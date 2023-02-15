@@ -8,28 +8,39 @@ DBF(
   data,
   output_path = ".",
   name = NULL,
-  distance_method = "pearson",
+  distance_method = c("pearson", "cosine", "euclidean"),
   silent = FALSE,
+  highest = 0.5,
   k = 100,
-  fdr = 10,
+  row_sum = 0,
+  fdr = 0.05,
   seed = 123
 )
 }
 \arguments{
-\item{data}{a matrix or data.frame}
+\item{data}{a \code{matrix}, \code{data.frame} or \code{Seurat} object.}
 
 \item{output_path}{a character string representing the data directory where
 output files will be stored. Default to current working directory.}
 
-\item{name}{a prefix for the file name}
+\item{name}{a prefix for the names of the intermediary files created by DBF
+and MCL.}
 
-\item{distance_method}{a method to compute the distance to the k-th nearest
-neighbor.}
+\item{distance_method}{A method to compute the distance to the k-th nearest neighbor 
+(one of "pearson", "cosine" or "euclidean").}
 
 \item{silent}{if set to TRUE (default), the progression of distance matrix
 calculation is not displayed.}
 
+\item{highest}{During the process, genes will be ordered by their distance to their 
+k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
+whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
+use all the genes.}
+
 \item{k}{the neighborhood size.}
+
+\item{row_sum}{Select only lines whose row sum is greater than row_sum (may be 
+-Inf if no filter needed).}
 
 \item{fdr}{a value for the false discovery rate.}
 
@@ -57,7 +68,6 @@ of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 \code{\link{find_gene_clusters}}
 }
 \author{
-Bergon A., Bavais J., Textoris J., Granjeaud S., Lopez F and Puthier
-D.
+Bergon A., Bavais J., Textoris J., Lopez F and Puthier D.
 }
 \keyword{manip}

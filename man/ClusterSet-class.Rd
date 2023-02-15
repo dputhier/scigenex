@@ -21,13 +21,14 @@ This class is a representation of a partitioning algorithm and is intented to st
 
 \item{\code{simulated_distances}}{vector. The simulated distance values with the knn.}
 
-\item{\code{critical_distance}}{vector. The critical threshold distance to select informative genes.}
+\item{\code{critical_distance}}{vector. The critical distance to k nearest neighbors (dknn) values 
+used to select informative genes.}
 
 \item{\code{gene_clusters}}{vector. Mapping of row/genes to gene_clusters.}
 
 \item{\code{size}}{vector. The size of each cluster.}
 
-\item{\code{dot_product}}{vector. The median dot product of each gene clusters.}
+\item{\code{fdr}}{The computed FDR for eah gene.}
 
 \item{\code{top_genes}}{matrix The highly co-expressed genes of each gene clusters.}
 
