@@ -128,5 +128,41 @@ setMethod(
 )
 
 
+################################################################################
+##      NCOL/NROW/DIM METHOD FOR CLASS OBJECT : ClusterSet
+################################################################################
+if (!isGeneric("ncol"))
+  setGeneric("ncol", 
+             function(x)
+               standardGeneric("ncol")
+  )
 
+setMethod("ncol",signature(x="ClusterSet"),
+          function(x) {
+            ncol(x@data)
+          }
+) 
 
+if (!isGeneric("nrow"))
+  setGeneric("nrow", 
+             function(x)
+               standardGeneric("nrow")
+  )
+
+setMethod("nrow",signature(x="ClusterSet"),
+          function(x) {
+            nrow(x@data)
+          }
+)
+
+if (!isGeneric("dim"))
+  setGeneric("dim", 
+             function(x)
+               standardGeneric("dim")
+  )
+
+setMethod("dim",signature(x="ClusterSet"),
+          function(x) {
+            dim(x@data)
+          }
+) 

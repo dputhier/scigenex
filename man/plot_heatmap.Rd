@@ -67,11 +67,9 @@ plot_heatmap(
 \item{line_size_vertical}{An integer for the size of horizontal white line which separate gene clusters.}
 
 \item{line_size_horizontal}{An integer for the size of vertical white line  which separate cell clusters.}
-
-\item{cell_ordering_method}{The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.}
 }
 \value{
-Iheatmap-class object
+Iheatmap-class object.
 }
 \description{
 Plot the observed and simulated distance with the Kth nearest neighbors.

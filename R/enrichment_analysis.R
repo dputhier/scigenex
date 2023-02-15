@@ -79,7 +79,7 @@ setMethod("enrich_go",
                                      length(which(is.na(query_entrezid[, "ENTREZID"])))))
               
               # Enrichment analysis using GO database
-              enrich_go_res <- enrichGO(query_entrezid[,"ENTREZID"],
+              enrich_go_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
                                         OrgDb = go_name,
                                         ont = ontology,
                                         readable = TRUE)
@@ -157,10 +157,10 @@ setMethod("viz_enrich",
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    dot_plot <- clusterProfiler::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
                     dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scales="free")
                   } else {
-                    dot_plot <- clusterProfiler::dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
@@ -168,10 +168,10 @@ setMethod("viz_enrich",
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    bar_plot <- clusterProfiler::barplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    bar_plot <- enrichplot::barplot.enrichResult(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scales="free")
                   } else {
-                    bar_plot <- clusterProfiler::barplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    bar_plot <- enrichplot::barplot.enrichResult(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }

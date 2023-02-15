@@ -29,6 +29,3 @@ A ggplot object.
 \description{
 This function creates a histogram of the simulated and observed distances of a Seurat clusterSet object.
 }
-\examples{
-
-}

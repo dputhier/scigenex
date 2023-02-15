@@ -17,8 +17,11 @@
 #' @importFrom testthat expect_equal
 #' @importFrom igraph graph_from_data_frame as_adj
 #' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_row_title add_col_title add_col_annotation add_col_dendro
-#' @importFrom clusterProfiler enrichGO select barplot dotplot
+#' @importFrom enrichplot dotplot
+#' @importFrom AnnotationDbi select
+#' @importFrom clusterProfiler enrichGO
 #' @importFrom qlcMatrix corSparse
+#' @importFrom graphics barplot
 #' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
