@@ -51,10 +51,10 @@ top_genes <- function(object,
   for (size in object@size[cluster]){
     loop <- 1 + loop
     if(top > size) {
-      warning(paste0("Number of top genes is greater than the number of genes in cluster ", loop, ". All genes will be use and order by similarity rank."))
+      warning(paste0("Number of top genes is greater than the number of genes in cluster ", loop, ". All genes will be used and ordered by similarity rank."))
     }
   }
-  
+
   # Initialization for the for loop
   clusters <- object@gene_clusters
   l_cor_means <- list()
@@ -111,3 +111,6 @@ top_genes <- function(object,
   
   return(object)
 }
+
+## Reading Pbmc3k
+
