@@ -3,26 +3,27 @@
 \name{enrich_go}
 \alias{enrich_go}
 \alias{enrich_go,ClusterSet-method}
-\title{Perform gene enrichment analysis.}
+\title{Enrichment analysis using GO database of gene clusters from a ClusterSet object}
 \usage{
-enrich_go(object, specie = "Hsapiens", ontology = "all", verbose = TRUE)
+enrich_go(object, species = "Hsapiens", ontology = "all")
 
-\S4method{enrich_go}{ClusterSet}(object, specie = "Hsapiens", ontology = "all", verbose = TRUE)
+\S4method{enrich_go}{ClusterSet}(object, species = "Hsapiens", ontology = "all")
 }
 \arguments{
-\item{object}{A \code{ClusterSet} object.}
+\item{object}{an object of class \code{ClusterSet}.}
 
-\item{specie}{Specie name, as a concatenation of the first letter of the name (uppercase) and the family name, e.g human - Hsapiens}
+\item{species}{a character string indicating the species name,
+as a concatenation of the first letter of the name (uppercase) and the family name (lowercase),
+ e.g human -> Hsapiens, mouse -> Mmusculus}
 
-\item{ontology}{One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.}
-
-\item{verbose}{Whether or not to print progression in the console.}
+\item{ontology}{a character string indicating the ontology to use for the enrichment analysis. One of "BP", "MF", and "CC" ontology, or "ALL".}
 }
 \value{
 A \code{ClusterSet} object
 }
 \description{
-Perform enrichment analysis on all MCL clusters indepentently and store the results in the cluster_annotations slot of the ClusterSet object.
+This function performs enrichment analysis of all gene clusters from a ClusterSet object
+ and store the results in the cluster_annotations slot.
 }
 \examples{
 

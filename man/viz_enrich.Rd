@@ -3,22 +3,15 @@
 \name{viz_enrich}
 \alias{viz_enrich}
 \alias{viz_enrich,ClusterSet-method}
-\title{Manhattan-like-plot of enrichment analysis results}
+\title{Visualization of enrichment analyses results from a ClusterSet object}
 \usage{
-viz_enrich(
-  object,
-  clusters = "all",
-  type = "dotplot",
-  nb_terms = 20,
-  verbose = TRUE
-)
+viz_enrich(object, clusters = "all", type = "dotplot", nb_terms = 20)
 
 \S4method{viz_enrich}{ClusterSet}(
   object,
   clusters = "all",
   type = c("dotplot", "barplot"),
-  nb_terms = 20,
-  verbose = TRUE
+  nb_terms = 20
 )
 }
 \arguments{
@@ -29,14 +22,12 @@ viz_enrich(
 \item{type}{A vector providing the type of plot.}
 
 \item{nb_terms}{An integer indicating the number of terms in the plot.}
-
-\item{verbose}{Whether or not to print progression in the console.}
 }
 \value{
 A \code{ClusterSet} object
 }
 \description{
-Retrieve enrichment analysis results from a ClusterSet object and draw a Manhattan-like-plot.
+Display enrichment analyses results for a ClusterSet object.
 }
 \examples{
 

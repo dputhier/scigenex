@@ -3,13 +3,15 @@
 #################################################################
 
 #' @title
-#' Perform gene enrichment analysis.
+#' Enrichment analysis using GO database of gene clusters from a ClusterSet object 
 ##' @description
-#' Perform enrichment analysis on all MCL clusters indepentently and store the results in the cluster_annotations slot of the ClusterSet object.
-#' @param object A \code{ClusterSet} object.
-#' @param specie Specie name, as a concatenation of the first letter of the name (uppercase) and the family name, e.g human - Hsapiens
-#' @param ontology One of "BP", "MF", and "CC" subontologies, or "ALL" for all three.
-#' @param verbose Whether or not to print progression in the console.
+#' This function performs enrichment analysis of all gene clusters from a ClusterSet object
+#'  and store the results in the cluster_annotations slot.
+#' @param object an object of class \code{ClusterSet}.
+#' @param species a character string indicating the species name,
+#'  as a concatenation of the first letter of the name (uppercase) and the family name (lowercase),
+#'   e.g human -> Hsapiens, mouse -> Mmusculus
+#' @param ontology a character string indicating the ontology to use for the enrichment analysis. One of "BP", "MF", and "CC" ontology, or "ALL".
 #'
 #' @return A \code{ClusterSet} object
 #' @export enrich_go
@@ -24,9 +26,8 @@
 
 setGeneric("enrich_go",
            function(object,
-                    specie="Hsapiens",
-                    ontology="all",
-                    verbose = TRUE) {
+                    species="Hsapiens",
+                    ontology="all") {
              standardGeneric("enrich_go")
            })
 
@@ -34,31 +35,30 @@ setGeneric("enrich_go",
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
-                   specie="Hsapiens",
-                   ontology="all",
-                   verbose = TRUE) {
+                   species="Hsapiens",
+                   ontology="all") {
             
             
-            if (!specie %in% c("Hsapiens", "Mmusculus")){
-              stop("Specie name provided doesn't exists.")}
+            if (!species %in% c("Hsapiens", "Mmusculus")){
+              stop("Species name provided doesn't exists.")}
             
-            if (specie == "Hsapiens") {
+            if (species == "Hsapiens") {
               org_db <- org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
-              if(verbose) {print_msg(msg_type = "INFO",
-                                     msg = "Specie used : Homo sapiens")}
+              print_msg(msg_type = "INFO",
+                                     msg = "Species used : Homo sapiens")
             }
             
-            if (specie == "Mmusculus") {
+            if (species == "Mmusculus") {
               org_db <- org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
-              if(verbose) {print_msg(msg_type = "INFO",
-                                     msg = "Specie used : Mus musculus")}
+              print_msg(msg_type = "INFO",
+                                     msg = "Species used : Mus musculus")
             }
             
             
             for(cluster in unique(object@gene_clusters)){
-              if (verbose) {print(paste0("Enrichment analysis for cluster ", cluster))}
+              print(paste0("Enrichment analysis for cluster ", cluster))
               cluster_name = paste0("Cluster_", cluster)
               query = rownames(object@data[object@gene_clusters == cluster,])
               
@@ -91,18 +91,17 @@ setMethod("enrich_go",
 )
 
 #################################################################
-##    Manhattan-like-plot for enrichment analysis on ClusterSet object
+##    Visualization of enrichment analyses results from a ClusterSet object
 #################################################################
 
 #' @title
-#' Manhattan-like-plot of enrichment analysis results
+#' Visualization of enrichment analyses results from a ClusterSet object
 ##' @description
-#' Retrieve enrichment analysis results from a ClusterSet object and draw a Manhattan-like-plot.
+#' Display enrichment analyses results for a ClusterSet object.
 #' @param object A \code{ClusterSet} object.
 #' @param clusters  A vector of cluster id to plot.
 #' @param type A vector providing the type of plot.
 #' @param nb_terms An integer indicating the number of terms in the plot.
-#' @param verbose Whether or not to print progression in the console.
 #'
 #' @return A \code{ClusterSet} object
 #' @export viz_enrich
@@ -119,8 +118,7 @@ setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
                     type = "dotplot",
-                    nb_terms = 20,
-                    verbose = TRUE) {
+                    nb_terms = 20) {
              standardGeneric("viz_enrich")
            })
 
@@ -130,8 +128,7 @@ setMethod("viz_enrich",
           function(object,
                    clusters = "all",
                    type = c("dotplot", "barplot"),
-                   nb_terms = 20,
-                   verbose = TRUE) {
+                   nb_terms = 20) {
             
             if (length(clusters) == 1){
               if (clusters == "all"){
@@ -153,10 +150,8 @@ setMethod("viz_enrich",
               } else {
                 
                 # Print an informative message to announce plot of the results of the current cluster
-                if (verbose) {
                   print_msg(msg_type = "INFO",
                             msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
-                }
                 
                 
                 # Create a ggplot - dotplot
@@ -184,11 +179,9 @@ setMethod("viz_enrich",
             }
             
             # Print a message to inform which slot contains the results
-            if (verbose){
               print_msg(msg_type = "INFO",
                         msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
                                     "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
-            }
             return(object)
           }
 )
