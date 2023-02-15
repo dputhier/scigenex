@@ -387,3 +387,53 @@ plot_heatmap <- function(object,
   
   return(htmp)
 }
+
+#################################################################
+##    Define the plot_dist function
+#################################################################
+
+#' Plot Distribution of distances
+#' 
+#' This function creates a histogram of the simulated and observed distances of a Seurat clusterSet object.
+#' 
+#' @param object A "ClusterSet"object.
+#' @param bins The number of bins to use in the histogram (default is 200).
+#' @param alpha Transparency of the histogram bars (default is 0.5).
+#' @param colors A named vector of colors to use for the histograms, with "Simulated" and "Observed" as the named elements (default is c("Simulated"="blue", "Observed"="red")).
+#' @param xlim Limits for the x axis of the histogram (e.g. c(0.8, 1)).
+#' 
+#' @return A ggplot object.
+#' 
+#' @examples
+#' 
+#' @import ggplot2
+#' 
+#' @export plot_dist
+#' 
+plot_dist <- function(object,
+                      bins=200,
+                      alpha=0.5,
+                      colors=c("Simulated"="blue", "Observed"="red"),
+                      xlim=NULL) {
+  
+  if (!inherits(object, "ClusterSet")) {
+    stop("Please provide ClusterSet object.")
+  }
+  
+  df <- data.frame(distance=c(object@simulated_distances, object@distances),
+                   type=c(rep("Simulated", length(object@simulated_distances)),
+                          rep("Observed", length(object@distances))))
+  p <-  ggplot(df, aes(x=distance, fill=type)) +
+    geom_histogram(bins=bins, 
+                   position="identity", 
+                   alpha=alpha, 
+                   color="white", 
+                   size=0.5) + 
+    theme_bw() + 
+    scale_fill_manual(values=colors) 
+  
+  if(!is.null(xlim))
+    p <- p + xlim(xlim)
+  
+  return(p)
+}
