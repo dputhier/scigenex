@@ -16,7 +16,6 @@ find_gene_clusters(
   min_nb_supporting_cell = 2,
   min_pct_gene_expressed = 40,
   min_cluster_size = 10,
-  silent = FALSE,
   highest = 0.25,
   k = 50,
   row_sum = 0,
@@ -52,9 +51,6 @@ min_pct_gene_expressed \% of the genes from the cluster.}
 
 \item{min_cluster_size}{Minimum number of element inside a cluster. 
 MCL tend to create lots of clusters with very few (e.g 2) objects.}
-
-\item{silent}{if set to TRUE, the progression of distance matrix calculation
-is not displayed.}
 
 \item{highest}{During the process, genes will be ordered by their distance to their 
 k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
@@ -129,13 +125,14 @@ successfully with the 06-058 version).}
 
 \examples{
 
-\dontrun{
 m <- matrix(rnorm(80000), nc=20)
 m[1:100, 1:10] <- m[1:100, 1:10] + 3
 m[101:200, 11:20] <- m[101:200, 11:20] + 3
 m[301:400, 5:15] <- m[201:300, 5:15] - 3
 m[201:300, c(1,5,10,15,20)] <- m[201:300, c(1,5,10,15,20)] - 3
 
+## Set the level of verbosity
+set_verbosity(2)
 ## A rather stringent version
 res <- find_gene_clusters(data=m,
                              distance_method="pearson",
@@ -146,7 +143,6 @@ res <- find_gene_clusters(data=m,
                              min_nb_supporting_cell = 0,
                              fdr = 1e-8)
 plot_heatmap(res)
-}
 
 }
 \references{

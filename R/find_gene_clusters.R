@@ -8,8 +8,6 @@
 ################################################################
 
 
-
-
 #################################################################
 ##    find_gene_clusters function
 #################################################################
@@ -61,8 +59,6 @@
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
 #' @param min_cluster_size Minimum number of element inside a cluster. 
 #' MCL tend to create lots of clusters with very few (e.g 2) objects.
-#' @param silent if set to TRUE, the progression of distance matrix calculation
-#' is not displayed.
 #' @param highest During the process, genes will be ordered by their distance to their 
 #' k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
 #' whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
@@ -107,13 +103,14 @@
 #' @keywords clustering, gene expression, classification, MCL.
 #' @examples
 #'
-#' \dontrun{
 #' m <- matrix(rnorm(80000), nc=20)
 #' m[1:100, 1:10] <- m[1:100, 1:10] + 3
 #' m[101:200, 11:20] <- m[101:200, 11:20] + 3
 #' m[301:400, 5:15] <- m[201:300, 5:15] - 3
 #' m[201:300, c(1,5,10,15,20)] <- m[201:300, c(1,5,10,15,20)] - 3
 #' 
+#' ## Set the level of verbosity
+#' set_verbosity(2)
 #' ## A rather stringent version
 #' res <- find_gene_clusters(data=m,
 #'                              distance_method="pearson",
@@ -124,7 +121,6 @@
 #'                              min_nb_supporting_cell = 0,
 #'                              fdr = 1e-8)
 #' plot_heatmap(res)
-#' }
 #'
 #' @export find_gene_clusters
 find_gene_clusters <- function(data = NULL,
@@ -139,7 +135,6 @@ find_gene_clusters <- function(data = NULL,
                                min_nb_supporting_cell = 2,
                                min_pct_gene_expressed = 40,
                                min_cluster_size = 10,
-                               silent = FALSE,
                                highest = 0.25,
                                k = 50,
                                row_sum = 0,
@@ -194,39 +189,23 @@ find_gene_clusters <- function(data = NULL,
   
   distance_method <- match.arg(distance_method)
   
-  txt <- paste("\n\tInflation: ", inflation, sep = "")
-  
-  ## writing all parameters
-  
-  cat(
+  print_msg(paste0(
     "The following parameters will be used :",
-    "\n\tWorking directory: ",
-    path,
-    "\n\tOuput directory: ",
-    output_path,
-    "\n\tName: ",
-    name,
-    "\n\tDistance method: ",
-    distance_method,
-    "\n\tMinimum number of cell supporting each cluster: ",
-    min_nb_supporting_cell,
-    "\n\tThe min fraction of genes expressed by supporting cells : ",
-    "\n\tRow sum threshold: ",
-    row_sum,
-    "\n\tMinimum cluster size: ",
-    min_cluster_size,
-    "\n\tNumber of neighbors: ",
-    k,
-    "\n\tFDR: ",
-    fdr,
-    "%",
-    txt,
-    "\n\tVisualize standard outputs from both mcl and cluster",
-    "commands: ",
-    silent,
-    "\n\n"
+    "\n\tWorking directory: ", path,
+    "\n\tOuput directory: ", output_path,
+    "\n\tName: ", name,
+    "\n\tDistance method: ", distance_method,
+    "\n\tMinimum number of cell supporting each cluster: ", min_nb_supporting_cell,
+    "\n\tThe min fraction of genes expressed by supporting cells : ", min_pct_gene_expressed,
+    "\n\tRow sum threshold: ", row_sum,
+    "\n\tMinimum cluster size: ", min_cluster_size,
+    "\n\tNumber of neighbors: ", k,
+    "\n\tFDR: ", fdr, "%",
+    "\n\tInflation: ", inflation,
+    "\n\tVerbosity Level: ", get_verbosity(),
+    "\n\n"),
+    msg_type = "INFO"
   )
-  
   
   ## DBF algorithm, returns a ClusterSet object
   obj <- DBF(
@@ -234,7 +213,6 @@ find_gene_clusters <- function(data = NULL,
     output_path = output_path,
     name = name,
     distance_method = distance_method,
-    silent = silent,
     highest = highest,
     k = k,
     row_sum=row_sum,
@@ -261,7 +239,6 @@ find_gene_clusters <- function(data = NULL,
       name,
       inflation = inflation,
       input_path = output_path,
-      silent = silent,
       threads = mcl_threads
     )
     
@@ -477,7 +454,7 @@ DBF <- function(data,
   
   print_msg(
     paste0(
-      "Computing correlations using selected method: ",
+      "Computing distances using selected method: ",
       distance_method
     ),
     msg_type = "INFO"
@@ -732,69 +709,73 @@ DBF <- function(data,
 #' \url{http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z}
 #' @keywords manip
 #' @export mcl_system_cmd
-mcl_system_cmd <-
-  function(name,
-           inflation = 2.0,
-           input_path = ".",
-           silent = FALSE,
-           threads = 1) {
+mcl_system_cmd <- function(name,
+                           inflation = 2.0,
+                           input_path = ".",
+                           silent = FALSE,
+                           threads = 1) {
     ## testing the system
-    if (.Platform$OS.type != "windows") {
-      ## Testing mcl installation
-      if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
-        if (!silent) {
-          cat("Running mcl (graph partitioning)... \n")
-          verb <- ""
-        }
-        else {
-          verb <- "-V all "
-        }
-        if (inflation != 2) {
-          i <- paste("-I ", as.character(round(inflation, 1)), sep = "")
-        } else {
-          i <- "-I 2.0"
-        }
-        threads <- paste("-te", threads, sep = " ")
-        ## launching mcl program
-        cmd <- paste0(
-          "mcl ",
-          input_path,
-          "/",
-          name,
-          ".dbf_out.txt ",
-          i,
-          " --abc -o ",
-          input_path,
-          "/",
-          name,
-          ".mcl_out.txt ",
-          verb,
-          threads
-        )
-        cmd <- gsub(pattern = "//",
+  if (.Platform$OS.type == "windows") {
+    stop("--> A unix-like OS is required to launch the MCL program.")
+  }else {
+    print_msg("Running mcl_system_cmd() under a unix-like system.", msg_type = "DEBUG")
+  }
+    
+  ## Testing mcl installation
+  if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
+    print_msg("Found MCL program in the path...", msg_type = "DEBUG")
+  } else {
+    stop(
+      "\t--> Please install mcl on your computer...\n",
+      "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
+    )
+  }
+      
+  
+  print_msg("Running MCL (graph partitioning)...", msg_type = "DEBUG")
+  
+  if (get_verbosity() > 0) {
+    verb <- ""
+  }
+  else {
+    verb <- "-V all "
+  }
+  
+  i <- paste("-I ", as.character(round(inflation, 1)), sep = "")
+
+  threads <- paste("-te", threads, sep = " ")
+  
+  ## launching mcl program
+  cmd <- paste0("mcl ",
+                input_path,
+                "/",
+                name,
+                ".dbf_out.txt ",
+                i,
+                " --abc -o ",
+                input_path,
+                "/",
+                name,
+                ".mcl_out.txt ",
+                verb,
+                threads)
+  
+  cmd <- gsub(pattern = "//",
                     replacement = "/",
                     x = cmd)
-        system(cmd)
-        
-        if (!silent) {
-          print_msg("Done", msg_type = "INFO")
-          print_msg(paste0("creating file : ",
-                           file.path(
-                             getwd(), paste(name, ".mcl_out.txt", sep = "")
-                           )),
-                    msg_type = "INFO")
-        }
-      } else {
-        stop(
-          "\t--> Please install mcl on your computer...\n",
-          "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
-        )
-      }
-    }
-    else {
-      stop("--> A unix-like OS is required to launch mcl and cluster programs.")
-    }
-  }
+  
+  print_msg(paste0("Running command: ", cmd), msg_type = "DEBUG")
+  
+  system(cmd)
+    
+  print_msg("MCL step is finished.", msg_type = "DEBUG")
+  print_msg(paste0("creating file : ",
+                   file.path(
+                     getwd(), paste(name, ".mcl_out.txt", sep = "")
+                   )),
+            msg_type = "DEBUG")
+
+}
 
 #########################################################
 ##      END PACKAGE scigenex

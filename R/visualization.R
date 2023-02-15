@@ -161,14 +161,14 @@ plot_heatmap <- function(object,
   
   # Centering
   if(center){
-    print_msg("Centering matrix.", msg_type="DEBUG")
+    print_msg("Centering matrix.", msg_type="INFO")
     m <- t(scale(t(m), center = TRUE, scale = FALSE))
   }
   
   
   # Cell order
   if (!is.null(cell_order)){
-    print_msg("Ordering cells.", msg_type="DEBUG")
+    print_msg("Ordering cells.", msg_type="INFO")
     m <- m[,cell_order]
   } else {
     if (length(object@cell_clusters) == 0) {
@@ -182,7 +182,7 @@ plot_heatmap <- function(object,
         object@cell_clusters$labels <- object@cell_clusters$labels[colnames(m)]
         object@cell_clusters$cores <- object@cell_clusters$cores[colnames(m)]
       } else {
-        print_msg("Ordering cells based on hierarchical clustering.", msg_type="DEBUG")
+        print_msg("Ordering cells based on hierarchical clustering.", msg_type="INFO")
         m <- m[,object@cell_clusters$hclust_res$order]
       }
     }
@@ -191,12 +191,12 @@ plot_heatmap <- function(object,
   
   # Ceiling and flooring
   if(!is.null(ceil)){
-    print_msg("Ceiling matrix.", msg_type="DEBUG")
+    print_msg("Ceiling matrix.", msg_type="INFO")
     m[m > ceil] <- ceil
   }
   
   if(!is.null(floor)){
-    print_msg("Flooring matrix.", msg_type="DEBUG")
+    print_msg("Flooring matrix.", msg_type="INFO")
     m[m < floor] <- floor
   }  
   
@@ -316,18 +316,13 @@ plot_heatmap <- function(object,
     m <- m_blank
   }
   
-  
-  
-  
   #Flip rows
   m <- m[order(nrow(m):1),]
   
   
-  
-  
   ####### Heatmap #######
   # Main heatmap
-  print_msg("Plotting heatmap.", msg_type="DEBUG")
+  print_msg("Plotting heatmap.", msg_type="INFO")
   
   htmp <- main_heatmap(data = m,
                        name = colorbar_name,
@@ -337,14 +332,16 @@ plot_heatmap <- function(object,
   
   htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
   
-  # Add labels
+  print_msg("Adding labels.", msg_type="DEBUG")
+
   if(row_labels){
     htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
   if(col_labels){
     htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
   
   
-  # Add titles
+  print_msg("Adding Titles.", msg_type="DEBUG")
+
   if(!is.null(ylab)){
     htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
   if(!is.null(xlab)){
@@ -352,8 +349,11 @@ plot_heatmap <- function(object,
   if(!is.null(name)){
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   
-  # Show cell clusters
+  
   if(!length(object@cell_clusters) == 0 & is.null(cell_order) & !show_dendro) {
+    
+    print_msg("Adding cell clusters.", msg_type="DEBUG")
+    
     htmp <- htmp %>% add_col_annotation( data.frame("Clusters" = as.factor(cell_names_blank)),
                                          colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
                                                                      "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
@@ -377,8 +377,9 @@ plot_heatmap <- function(object,
     }
   }
   
-  # Show dendrogram from hclust
+
   if(show_dendro & !(use_core_cells) & is.null(cell_order) & !length(object@cell_clusters) == 0) {
+    print_msg("Showing dendrogram from hclust.", msg_type="DEBUG")
     htmp <- htmp %>% iheatmapr::add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
   }
   
