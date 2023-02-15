@@ -20,7 +20,7 @@ clean:
 	@rm -rf /tmp/dbfmcl; rm -rf *dbf_out.txt; rm -rf *mcl_out.txt 
 
 check: clean
-	@mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex
+	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex
 	@R CMD check /tmp/scigenex
 
 doc:
