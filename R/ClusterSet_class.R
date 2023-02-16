@@ -19,6 +19,8 @@ library(iheatmapr)
 #' @slot critical_distance vector. The critical distance to k nearest neighbors (dknn) values 
 #' used to select informative genes.
 #' @slot gene_clusters vector. Mapping of row/genes to gene_clusters.
+#' @slot cluster_list list. List containing the number of clusters.
+#' @slot cluster_number vector. Number of gene clusters detected.
 #' @slot size vector. The size of each cluster.
 #' @slot fdr The computed FDR for eah gene.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
@@ -60,6 +62,8 @@ setClass("ClusterSet",
            simulated_distances = "vector",
            critical_distance = "vector",
            gene_clusters = "vector",
+           cluster_list = "vector",
+           cluster_number = "vector",
            size = "vector",
            fdr="vector",
            top_genes = "matrix",
@@ -79,6 +83,8 @@ setClass("ClusterSet",
            simulated_distances = vector(),
            critical_distance = vector(),
            gene_clusters = numeric(),
+           cluster_list = vector(),
+           cluster_number = numeric(),
            size = numeric(),
            fdr=numeric(),
            top_genes = matrix(),
