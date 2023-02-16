@@ -8,7 +8,6 @@ test_that("Cheking get_genes is providing the right list of genes", {
   res <- find_gene_clusters(data=m,
                             name = "test",
                             distance_method="pearson",
-                            av_dot_prod_min = 0,
                             inflation = 2,
                             k=25,
                             fdr = 10)

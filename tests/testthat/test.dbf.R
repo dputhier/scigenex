@@ -8,7 +8,7 @@ test_that("Checking DBF is writting the output in the correct directory...", {
   m[101:200,11:20] <- m[101:200,11:20] + 3
   m[201:300,5:15] <- m[201:300,5:15] + -2
   #Create an output directory in the current folder
-  dir.create(path = "tmp_output")
+  dir.create(path = "tmp_output", showWarnings = F)
   #Run DBF
   res <- find_gene_clusters(data = m,
                             output_path = "tmp_output",
@@ -17,7 +17,6 @@ test_that("Checking DBF is writting the output in the correct directory...", {
                             k = 50,
                             fdr = 10,
                             silent = FALSE,
-                            av_dot_prod_min = 0,
                             inflation = 2,
                             seed = 123)
   #Test results
