@@ -320,6 +320,8 @@ find_gene_clusters <- function(data = NULL,
       obj@data <- as.matrix(data_matrix[gene_list, ])
       names(clusters) <- rownames(obj@data)
       obj@gene_clusters <- clusters
+      obj@cluster_list <- 1:max(obj@gene_clusters)
+      obj@cluster_number <- max(obj@gene_clusters)
       obj@size <- size
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
@@ -642,6 +644,8 @@ DBF <- function(data,
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])
     obj@gene_clusters <- rep(1, nrow(obj@data))
+    obj@cluster_list <- 1:max(obj@gene_clusters)
+    obj@cluster_number <- max(obj@gene_clusters)
     obj@size <- nrow(obj@data)
     obj@center <- matrix(apply(obj@data[obj@gene_clusters == 1, ],
                                2,

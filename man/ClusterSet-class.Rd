@@ -26,6 +26,10 @@ used to select informative genes.}
 
 \item{\code{gene_clusters}}{vector. Mapping of row/genes to gene_clusters.}
 
+\item{\code{cluster_list}}{list. List containing the number of clusters.}
+
+\item{\code{cluster_number}}{vector. Number of gene clusters detected.}
+
 \item{\code{size}}{vector. The size of each cluster.}
 
 \item{\code{fdr}}{The computed FDR for eah gene.}
