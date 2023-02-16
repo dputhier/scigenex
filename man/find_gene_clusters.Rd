@@ -7,8 +7,6 @@ and create partitions of co-expressed genes.}
 \usage{
 find_gene_clusters(
   data = NULL,
-  filename = NULL,
-  path = tempdir(),
   output_path = tempdir(),
   mcl_threads = 1,
   name = NULL,
@@ -26,11 +24,6 @@ find_gene_clusters(
 }
 \arguments{
 \item{data}{a \code{matrix}, \code{data.frame} or \code{Seurat} object.}
-
-\item{filename}{a character string representing the file name.}
-
-\item{path}{a character string representing the data directory where
-intermediary files are to be stored. Default to current working directory.}
 
 \item{output_path}{a character string representing the data directory where
 output files will be stored. Default to current working directory.}
