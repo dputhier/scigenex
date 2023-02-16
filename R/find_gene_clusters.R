@@ -163,8 +163,6 @@ find_gene_clusters <- function(data = NULL,
   }
   
   if (is.null(name))
-    name <- data_source$name
-  if (is.null(name))
     name <- create_rand_str()
   
   # Put the current working directory in output_path or path
@@ -413,7 +411,7 @@ DBF <- function(data,
   if (is.null(name))
     name <- "exprs"
   
-  data <- get_data_for_scigenex(data = data)$data
+  data <- get_data_for_scigenex(data = data)
   
   distance_method <- match.arg(distance_method)
   
