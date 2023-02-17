@@ -72,14 +72,14 @@ setMethod(
   function(object) {
     
     cat("\t\tAn object of class ClusterSet\n")
-    cat("\t\tName:", slot(object, "name"), "\n")
+    cat("\t\tName:", slot(object, "parameters")$name, "\n")
     cat("\t\tMemory used: ", object.size(object), "\n")
     cat("\t\tNumber of cells: ", ncol(slot(object, "data")), "\n")
     cat(
       "\t\tNumber of informative genes: ",
       nrow(slot(object, "data")), "\n"
     )
-    cat("\t\tNumber of gene clusters: ", length(slot(object, "size")), "\n")
+    cat("\t\tNumber of gene clusters: ", slot(object, "gene_clusters_metadata")$number, "\n")
     cat("\t\tThis object contains the following informations:\n")
     
     for (i in slotNames(object)) {
