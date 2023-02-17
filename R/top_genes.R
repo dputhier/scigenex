@@ -22,7 +22,6 @@
 #' 
 #' res <- find_gene_clusters(data=m,
 #'                           distance_method="pearson",
-#'                           av_dot_prod_min = 0,
 #'                           inflation = 1.2,
 #'                           k=25,
 #'                           fdr = 10)
@@ -43,18 +42,18 @@ top_genes <- function(object,
                       cluster = "all") {
   
   if(unique(cluster == "all")) {
-    cluster <- c(1:length(object@size))
+    cluster <- object@gene_clusters_metadata$cluster_id
   }
   
   # Display a warning message if there is less than n top genes in a gene cluster
   loop <- 0
-  for (size in object@size[cluster]){
+  for (size in object@gene_clusters_metadata$size[cluster]){
     loop <- 1 + loop
     if(top > size) {
       warning(paste0("Number of top genes is greater than the number of genes in cluster ", loop, ". All genes will be used and ordered by similarity rank."))
     }
   }
-
+  
   # Initialization for the for loop
   clusters <- object@gene_clusters
   l_cor_means <- list()
@@ -63,7 +62,7 @@ top_genes <- function(object,
   # Extract top co-expressed genes for each gene cluster
   for (i in cluster) {
     #Extract gene names in cluster i
-    genes <- names(clusters[which(clusters == i)])
+    genes <- clusters[[i]]
     
     #Compute distances between genes in cluster i
     #Use the same distance used by SciGeneX
@@ -103,7 +102,11 @@ top_genes <- function(object,
   rownames(genes_top) <- paste0("cluster_", cluster)
   
   # Put genes_top matrix in object@top_genes
-  object@top_genes <- genes_top
+  object@top_genes <- split(x = unname(genes_top), f = cluster)
+  
+  for(clust in cluster){
+    object@top_genes[[clust]] <- object@top_genes[[as.character(clust)]][!is.na(object@top_genes[[as.character(clust)]])]
+  }
   
   # Print
   print_msg(msg = "Results are stored in top_genes slot of ClusterSet object.",

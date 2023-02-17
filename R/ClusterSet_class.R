@@ -11,91 +11,54 @@ library(iheatmapr)
 #' @title
 #' ClusterSet
 #' @description
-#' This class is a representation of a partitioning algorithm and is intended to store gene clusters.
-#' @slot name character. The original input file name (if applicable).
-#' @slot data matrix. The matrix containing the filtered/partitioned data.
-#' @slot distances vector. The observed distance values with the knn.
-#' @slot simulated_distances vector. The simulated distance values with the knn.
-#' @slot critical_distance vector. The critical distance to k nearest neighbors (dknn) values 
-#' used to select informative genes.
-#' @slot gene_clusters vector. Mapping of row/genes to gene_clusters.
-#' @slot cluster_list list. List containing the number of clusters.
-#' @slot cluster_number vector. Number of gene clusters detected.
-#' @slot size vector. The size of each cluster.
-#' @slot fdr The computed FDR for each gene.
-#' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
-#' @slot center matrix. The centers of each clusters.
-#' @slot parameters list. The parameter used.
-#' @slot algorithm vector. The algorithm used to produce the clusters.
-#' @slot cell_clusters list The cell clusters.
-#' @slot cell_types vector. The cell types.
-#' @slot cell_colors vector. The cell types to color mapping.
-#' @slot cell_order vector. How cell should be ordered.
-#' @slot cluster_annotations list. Functional annotation of clusters.
+#' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
+#' @slot data A matrix containing the filtered and partitioned data.
+#' @slot gene_clusters A list contains the partitioned genes of the dataset. Each element of the list corresponds to a cluster, and contains the indices of the genes assigned to that cluster.
+#' @slot top_genes A list contains the top genes from the gene clusters. Each element of the list corresponds to a cluster, and contains the indices of the genes assigned to that cluster ranked by their correlation value within their cluster.
+#' @slot gene_clusters_metadata A list contains metadata related to the gene clusters such as the number of gene clusters, their ID, and the number of genes contained in each of them.
+#' @slot gene_cluster_annotations A list contains the result obtained from the GO enrichment analysis of gene clusters.
+#' @slot cell_metadata A list containing metadata related to the cell clusters such as the clustering results the number of cell clusters, their order, colors associated to each cluster,... 
+#' @slot dbf_output A list containing the intermediates outputs of the DBF function : dknn, simulated distances, critical distance and fdr values. 
+#' @slot parameters A list containing the parameter used. Each element of the list correspond to a parameter.
+#' 
 #' @return A ClusterSet object.
 #' @export
 #'
 #' @examples
 #' 
 #' \dontrun{
-#'   m <- matrix(rnorm(80000), nc=20)
-#'    m[1:100,1:10] <- m[1:100,1:10] + 4
-#'    m[101:200,11:20] <- m[101:200,11:20] + 3
-#'    m[201:300,5:15] <- m[201:300,5:15] + -2
-#'    res <- find_gene_clusters(data=m,
-#'                              distance_method="pearson",
-#'                              av_dot_prod_min = 0,
-#'                              inflation = 1.2,
-#'                              k=25,
-#'                              fdr = 10)
-#' plot_clust(res, ceil = 10, floor = -10)
-#' plot_clust(res, type="tile", ceil = 10, floor = -10)
-#' write_clust(res, filename_out = "ALL.sign.txt")
-#'   is(res)
-#' }
-#'               
+#'  m <- matrix(rnorm(80000), nc=20)
+#'  m[1:100,1:10] <- m[1:100,1:10] + 4
+#'  m[101:200,11:20] <- m[101:200,11:20] + 3
+#'  m[201:300,5:15] <- m[201:300,5:15] + -2
+#'  res <- find_gene_clusters(data=m,
+#'                            distance_method="pearson",
+#'                            inflation = 1.2,
+#'                            k=25,
+#'                            fdr = 10)
+#'  is(res)
+#'  res
+#'  }          
 setClass("ClusterSet",
          representation = list(
-           name = "character",
            data = "matrix",
-           distances = "vector",
-           simulated_distances = "vector",
-           critical_distance = "vector",
-           gene_clusters = "vector",
-           cluster_list = "vector",
-           cluster_number = "vector",
-           size = "vector",
-           fdr="vector",
-           top_genes = "matrix",
-           center = "matrix",
-           parameters = "list",
-           algorithm = "vector",
-           cell_clusters = "list",
-           cell_types = "vector",
-           cell_colors = "vector",
-           cell_order = "vector",
-           cluster_annotations = "list"
+           gene_clusters = "list",
+           top_genes = "list",
+           gene_clusters_metadata = "list",
+           gene_cluster_annotations = "list",
+           cells_metadata = "data.frame",
+           dbf_output = "list",
+           parameters = "list"
          ),
          prototype = list(
-           name = character(),
            data = matrix(nr = 0, nc = 0),
-           distances = vector(),
-           simulated_distances = vector(),
-           critical_distance = vector(),
-           gene_clusters = numeric(),
-           cluster_list = vector(),
-           cluster_number = numeric(),
-           size = numeric(),
-           fdr=numeric(),
-           top_genes = matrix(),
-           center = matrix(nc = 0, nr = 0),
-           parameters = list(),
-           algorithm = character(),
-           cell_clusters = list(),
-           cell_types = vector(),
-           cell_colors = vector(),
-           cell_order = vector(),
-           cluster_annotations = list()
+           gene_clusters = list(),
+           top_genes = list(),
+           gene_clusters_metadata = list(),
+           gene_cluster_annotations = list(),
+           cells_metadata = data.frame(),
+           dbf_output = list(),
+           parameters = list()
          )
 )
 
@@ -109,14 +72,14 @@ setMethod(
   function(object) {
     
     cat("\t\tAn object of class ClusterSet\n")
-    cat("\t\tName:", slot(object, "name"), "\n")
+    cat("\t\tName:", slot(object, "parameters")$name, "\n")
     cat("\t\tMemory used: ", object.size(object), "\n")
     cat("\t\tNumber of cells: ", ncol(slot(object, "data")), "\n")
     cat(
       "\t\tNumber of informative genes: ",
       nrow(slot(object, "data")), "\n"
     )
-    cat("\t\tNumber of clusters: ", length(slot(object, "size")), "\n")
+    cat("\t\tNumber of gene clusters: ", slot(object, "gene_clusters_metadata")$number, "\n")
     cat("\t\tThis object contains the following informations:\n")
     
     for (i in slotNames(object)) {

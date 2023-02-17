@@ -43,18 +43,16 @@ get_genes <- function(object,
                       top = FALSE) {
   
   if(unique(cluster == "all")) {
-    cluster <- c(1:length(object@size))
+    cluster <- object@gene_clusters_metadata$cluster_id
   }
 
   if(top){
-    if (nrow(object@top_genes) == 1 &
-        ncol(object@top_genes) == 1 &
-        is.na(object@top_genes[1,1])) {
+    if (length(sc10x.rna.scigenex@top_genes) == 0) {
       stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
     }
-    gene_names <- as.vector(t(object@top_genes[paste0("cluster_", cluster),]))
+    gene_names <- unlist(sc10x.rna.scigenex@top_genes[cluster], use.names = FALSE)
   }else{
-    gene_names <- names(object@gene_clusters[object@gene_clusters %in% cluster])
+    gene_names <- unlist(object@gene_clusters[cluster], use.names = FALSE)
   }
   
   return(gene_names)

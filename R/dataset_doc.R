@@ -28,7 +28,7 @@
 #' @name complex9
 #' @usage data(complex9)
 #' @format A data frame with 3031 rows and 3 variables
-#' @
+#' 
 'complex9'
 
 #---------------------------------------
@@ -64,5 +64,5 @@
 #' @name complex9Noisy
 #' @usage data(complex9Noisy)
 #' @format A data frame with 3637 rows and 3 variables
-#' @
+#' 
 'complex9Noisy'

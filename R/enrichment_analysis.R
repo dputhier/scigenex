@@ -57,10 +57,10 @@ setMethod("enrich_go",
             }
             
             
-            for(cluster in unique(object@gene_clusters)){
+            for(cluster in unique(names(object@gene_clusters))){
               print(paste0("Enrichment analysis for cluster ", cluster))
               cluster_name = paste0("Cluster_", cluster)
-              query = rownames(object@data[object@gene_clusters == cluster,])
+              query = object@gene_clusters[[cluster]]
               
               # Convert gene id to EntrezId format
               suppressMessages(query_entrezid <- AnnotationDbi::select(org_db, 
@@ -80,11 +80,11 @@ setMethod("enrich_go",
               
               # Enrichment analysis using GO database
               enrich_go_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
-                                        OrgDb = go_name,
-                                        ont = ontology,
-                                        readable = TRUE)
+                                                         OrgDb = go_name,
+                                                         ont = ontology,
+                                                         readable = TRUE)
               # Store results in the ClusterSet object
-              object@cluster_annotations[[cluster]] <- enrich_go_res
+              object@gene_cluster_annotations[[cluster]] <- enrich_go_res
             }
             return(object)
           }
@@ -135,19 +135,19 @@ setMethod("viz_enrich",
             
             if (length(clusters) == 1){
               if (clusters == "all"){
-                clusters <- unique(object@gene_clusters)
+                clusters <- object@gene_clusters_metadata$cluster_id
               }
             }
             
             
             for (cur_cluster in clusters) {
               # Check if the current cluster id provided exists
-              if (!(cur_cluster %in% unique(object@gene_clusters))) {
+              if (!(cur_cluster %in% object@gene_clusters_metadata$cluster_id)) {
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
               # Check if there is a result provided by enrich_go function for the current cluster
-              if(nrow(object@cluster_annotations[[as.numeric(cur_cluster)]]@result) == 0){
+              if(nrow(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@result) == 0){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -156,49 +156,46 @@ setMethod("viz_enrich",
                 print_msg(msg_type = "INFO",
                           msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
                 
+                list_plot <- list()
                 
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
-                  if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]],
+                  if(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
+                    dot_plot <- enrichplot::dotplot(object@gene_cluster_annotations[[as.numeric(cur_cluster)]],
                                                     split="ONTOLOGY",
                                                     showCategory=nb_terms,
                                                     label_format = terms_size)
                     dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scales="free")
                     dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   } else {
-                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[cur_cluster]],
+                    dot_plot <- enrichplot::dotplot(object@gene_cluster_annotations[[cur_cluster]],
                                                     showCategory=nb_terms,
                                                     label_format = terms_size)
                     dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
-                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
+                  list_plot <- append(list_plot, list(dot_plot))
                 }
                 
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
-                  if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    bar_plot <- graphics::barplot(object@cluster_annotations[[as.numeric(cur_cluster)]],
+                  if(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
+                    bar_plot <- graphics::barplot(object@gene_cluster_annotations[[as.numeric(cur_cluster)]],
                                                   split="ONTOLOGY",
                                                   showCategory=nb_terms,
                                                   label_format = terms_size)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scales="free")
                     bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   } else {
-                    bar_plot <- graphics::barplot(object@cluster_annotations[[cur_cluster]],
+                    bar_plot <- graphics::barplot(object@gene_cluster_annotations[[cur_cluster]],
                                                   showCategory=nb_terms,
                                                   label_format = terms_size)
                     bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
-                  object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
+                  list_plot <- append(list_plot, list(bar_plot))
                 }
               }
             }
-            
-            # Print a message to inform which slot contains the results
-            print_msg(msg_type = "INFO",
-                      msg = paste("Plots are stored in object@cluster_annotations[[plot_cl<cluster>]]$<type of plot> \n",
-                                  "For example : object@cluster_annotations[[plot_cl1]]$dotplot"))
-            return(object)
+
+            return(invisible(list_plot))
           }
 )
