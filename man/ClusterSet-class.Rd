@@ -8,14 +8,14 @@
 A ClusterSet object.
 }
 \description{
-This class is a representation of a partitioning algorithm and is intented to store gene clusters.
+This class is a representation of a partitioning algorithm and is intended to store gene clusters.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{name}}{character. The original input file name (if applicable).}
 
-\item{\code{data}}{matrix. The matrix containing the filtered/partitionned data.}
+\item{\code{data}}{matrix. The matrix containing the filtered/partitioned data.}
 
 \item{\code{distances}}{vector. The observed distance values with the knn.}
 
@@ -32,7 +32,7 @@ used to select informative genes.}
 
 \item{\code{size}}{vector. The size of each cluster.}
 
-\item{\code{fdr}}{The computed FDR for eah gene.}
+\item{\code{fdr}}{The computed FDR for each gene.}
 
 \item{\code{top_genes}}{matrix The highly co-expressed genes of each gene clusters.}
 
