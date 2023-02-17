@@ -29,19 +29,19 @@
 
 
 viz_dist <-  function(object,
-                       line_type = c("solid", "longdash"),
-                       line_color = c("#006D77", "#83C5BE"),
-                       line_size = c(1, 0.8),
-                       vline_type = "dotdash",
-                       vline_color = "#E29578",
-                       vline_size = 0.5,
-                       text_size = 4,
-                       text_hjust = -0.8,
-                       text_vjust = -0.5) {
+                      line_type = c("solid", "longdash"),
+                      line_color = c("#006D77", "#83C5BE"),
+                      line_size = c(1, 0.8),
+                      vline_type = "dotdash",
+                      vline_color = "#E29578",
+                      vline_size = 0.5,
+                      text_size = 4,
+                      text_hjust = -0.8,
+                      text_vjust = -0.5) {
   
   # Extract observed and simulated distances
-  dist_obs <- data.frame("distance_value" = object@distances, "type" = "Observed")
-  dist_sim <- data.frame("distance_value" = object@simulated_distances, "type" = "Simulated")
+  dist_obs <- data.frame("distance_value" = object@dbf_output$dknn, "type" = "Observed")
+  dist_sim <- data.frame("distance_value" = object@dbf_output$simulated_dknn, "type" = "Simulated")
   dist_p <- rbind(dist_obs, dist_sim)
   
   # plot density of distance values for the observed and simulated conditions
@@ -60,11 +60,11 @@ viz_dist <-  function(object,
           axis.text = element_text(size = 10)) +
     xlab(label = "Distance with KNN") +
     ylab(label = "Density") +
-    geom_vline(aes(xintercept = object@critical_distance),
+    geom_vline(aes(xintercept = object@dbf_output$critical_distance),
                color = vline_color,
                linetype = vline_type,
                size = vline_size) +
-    geom_text(mapping = aes(x = object@critical_distance,
+    geom_text(mapping = aes(x = object@dbf_output$critical_distance,
                             y = 0,
                             label = "Critical distance with KNN",
                             hjust = text_hjust,
@@ -333,7 +333,7 @@ plot_heatmap <- function(object,
   htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
   
   print_msg("Adding labels.", msg_type="DEBUG")
-
+  
   if(row_labels){
     htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
   if(col_labels){
@@ -341,7 +341,7 @@ plot_heatmap <- function(object,
   
   
   print_msg("Adding Titles.", msg_type="DEBUG")
-
+  
   if(!is.null(ylab)){
     htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
   if(!is.null(xlab)){
@@ -369,15 +369,15 @@ plot_heatmap <- function(object,
     } else {
       if(!length(object@cell_clusters) == 0) {
         htmp <- htmp %>% iheatmapr::add_col_annotation( data.frame("Clusters" = as.factor(object@cell_clusters$labels[object@cell_clusters$hclust_res$order])),
-                                             colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
-                                                                         "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
-                                                                         "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
-                                                                         "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
+                                                        colors = list("Clusters"= c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
+                                                                                    "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
+                                                                                    "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
+                                                                                    "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9")))
       }
     }
   }
   
-
+  
   if(show_dendro & !(use_core_cells) & is.null(cell_order) & !length(object@cell_clusters) == 0) {
     print_msg("Showing dendrogram from hclust.", msg_type="DEBUG")
     htmp <- htmp %>% iheatmapr::add_col_dendro(object@cell_clusters$hclust_res, reorder = FALSE)
@@ -421,7 +421,7 @@ plot_dist <- function(object,
   
   df <- data.frame("distance"=c(object@simulated_distances, object@distances),
                    "type"=c(rep("Simulated", length(object@simulated_distances)),
-                          rep("Observed", length(object@distances))))
+                            rep("Observed", length(object@distances))))
   p <-  ggplot(df, aes(x=distance, fill=type)) +
     geom_histogram(bins=bins, 
                    position="identity", 
