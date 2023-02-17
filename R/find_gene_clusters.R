@@ -448,29 +448,31 @@ DBF <- function(data,
     msg_type = "INFO"
   )
   
+  # Compute correlations and corresponding 
+  # distance matrix. Note that for pearson
+  # and cosine, 0 < distance < 2.
   if (distance_method == "pearson") {
-    cor_matrix <- corSparse(t(select_for_correlation))
+    dist_matrix <- corSparse(t(select_for_correlation))
+    dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "cosine") {
-    cor_matrix <- as.matrix(corSparse(t(select_for_correlation)))
+    dist_matrix <- as.matrix(corSparse(t(select_for_correlation)))
+    dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
-    cor_matrix <- as.matrix(dist(select_for_correlation))
+    dist_matrix <- as.matrix(dist(select_for_correlation))
   }
   
-  rownames(cor_matrix) <- rownames(select_for_correlation)
-  colnames(cor_matrix) <- rownames(select_for_correlation)
+  # Compute min and max distances.
+  # They will be used later to compute weights.
+  min_dist <- min(dist_matrix)
+  max_dist <- max(dist_matrix)
+  
+  # Set the rownames / colnames of the distance matrix
+  rownames(dist_matrix) <- rownames(select_for_correlation)
+  colnames(dist_matrix) <- rownames(select_for_correlation)
   
   # The distance from a gene to itself is 'hidden'
-  diag(cor_matrix) <- NA
+  diag(dist_matrix) <- NA
   
-  # Transform correlation matrix into distance matrix (values between 0 and 2).
-  # TODO: one matrix should be sufficient...
-  if (distance_method %in% c("pearson", "cosine")) {
-    dist_matrix <- 1 - cor_matrix
-  } else if (distance_method == "euclidean") {
-    dist_matrix <- cor_matrix
-  } else {
-    stop("Unknown distance.")
-  }
   
   # Create a dataframe to store the DKNN values.
   # Gene_id appear both as rownames and column
@@ -587,20 +589,13 @@ DBF <- function(data,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  # Convert into weights
-  if (distance_method %in% c("pearson", "cosine")) {
-    mcl_out_as_df$weight <- (mcl_out_as_df$weight + 1) / 2
-  } else if (distance_method == "euclidean") {
-    # Here for euclidean
-    min_cor <- min(cor_matrix)
-    max_cor <- max(cor_matrix)
-    mcl_out_as_df$weight <-
-      (mcl_out_as_df$weight - min_cor) / (max_cor - min_cor)
-    mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
-  } else {
-    stop("Unknown distance.")
-  }
-  
+  #############  Convertidistances into weights
+  # scale dist between 0..1
+  mcl_out_as_df$weight <- 
+    (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
+  # Convert scaled dist to weight
+  mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
+
   # A and B are added if A is in the
   # neighborhood of B and B in the neighborhood
   # of A
