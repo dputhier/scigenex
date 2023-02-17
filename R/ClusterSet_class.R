@@ -17,8 +17,7 @@ library(iheatmapr)
 #' @slot top_genes A list contains the top genes from the gene clusters. Each element of the list corresponds to a cluster, and contains the indices of the genes assigned to that cluster ranked by their correlation value within their cluster.
 #' @slot gene_clusters_metadata A list contains metadata related to the gene clusters such as the number of gene clusters, their ID, and the number of genes contained in each of them.
 #' @slot gene_cluster_annotations A list contains the result obtained from the GO enrichment analysis of gene clusters.
-#' @slot cell_clusters A list containing the cell clusters.
-#' @slot cell_metadata A list containing metadata related to the cell clusters such as the number of cell clusters, their order, colors associated to each cluster,... 
+#' @slot cell_metadata A list containing metadata related to the cell clusters such as the clustering results the number of cell clusters, their order, colors associated to each cluster,... 
 #' @slot dbf_output A list containing the intermediates outputs of the DBF function : dknn, simulated distances, critical distance and fdr values. 
 #' @slot parameters A list containing the parameter used. Each element of the list correspond to a parameter.
 #' 
@@ -47,8 +46,7 @@ setClass("ClusterSet",
            top_genes = "list",
            gene_clusters_metadata = "list",
            gene_cluster_annotations = "list",
-           cell_clusters = "list",
-           cell_metadata = "list",
+           cell_metadata = "data.frame",
            dbf_output = "list",
            parameters = "list"
          ),
@@ -58,8 +56,7 @@ setClass("ClusterSet",
            top_genes = list(),
            gene_clusters_metadata = list(),
            gene_cluster_annotations = list(),
-           cell_clusters = list(),
-           cell_metadata = list(),
+           cell_metadata = data.frame(),
            dbf_output = list(),
            parameters = list()
          )
