@@ -319,6 +319,8 @@ find_gene_clusters <- function(data = NULL,
       }
       obj@dbf_output$center <- centers
       
+      obj@cells_metadata <- data.frame("cells_barcode" = colnames(obj@data))
+      
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
         filename = name,

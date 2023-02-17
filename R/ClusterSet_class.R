@@ -46,7 +46,7 @@ setClass("ClusterSet",
            top_genes = "list",
            gene_clusters_metadata = "list",
            gene_cluster_annotations = "list",
-           cell_metadata = "data.frame",
+           cells_metadata = "data.frame",
            dbf_output = "list",
            parameters = "list"
          ),
@@ -56,7 +56,7 @@ setClass("ClusterSet",
            top_genes = list(),
            gene_clusters_metadata = list(),
            gene_cluster_annotations = list(),
-           cell_metadata = data.frame(),
+           cells_metadata = data.frame(),
            dbf_output = list(),
            parameters = list()
          )

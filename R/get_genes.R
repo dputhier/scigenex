@@ -43,7 +43,7 @@ get_genes <- function(object,
                       top = FALSE) {
   
   if(unique(cluster == "all")) {
-    cluster <- c(1:length(object@size))
+    cluster <- object@gene_clusters_metadata$cluster_id
   }
 
   if(top){
@@ -54,7 +54,7 @@ get_genes <- function(object,
     }
     gene_names <- as.vector(t(object@top_genes[paste0("cluster_", cluster),]))
   }else{
-    gene_names <- names(object@gene_clusters[object@gene_clusters %in% cluster])
+    gene_names <- unlist(object@gene_clusters[cluster], use.names = FALSE)
   }
   
   return(gene_names)
