@@ -461,6 +461,9 @@ DBF <- function(data,
     dist_matrix <- as.matrix(dist(select_for_correlation))
   }
   
+  print_stat("Distance matrix stats", 
+             data = dist_matrix, msg_type = "DEBUG")
+  
   # Compute min and max distances.
   # They will be used later to compute weights.
   min_dist <- min(dist_matrix)
@@ -537,6 +540,9 @@ DBF <- function(data,
     sim_dknn[sim_nb] <- dist_sim[k]
   }
   
+  print_stat("Simulated DKNN stats", 
+             data = sim_dknn, msg_type = "DEBUG")
+  
   # The simulated DKNN values follow a normal distribution.
   # Compute the parameters of this distribution
   mean_sim <- mean(sim_dknn)
@@ -589,13 +595,21 @@ DBF <- function(data,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  #############  Convertidistances into weights
+  print_stat("Graph weights (before convertion)", 
+             data = mcl_out_as_df$weight, 
+             msg_type = "DEBUG")
+  
+  #############  Convert distances into weights
   # scale dist between 0..1
   mcl_out_as_df$weight <- 
     (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
   # Convert scaled dist to weight
   mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
 
+  print_stat("Graph weights (after convertion)", 
+             data = mcl_out_as_df$weight, 
+             msg_type = "DEBUG")
+  
   # A and B are added if A is in the
   # neighborhood of B and B in the neighborhood
   # of A
