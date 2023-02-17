@@ -127,7 +127,7 @@ print_msg <-
 print_stat <-
   function(msg,
            data,
-           round_val = 3,
+           round_val = 2,
            msg_type = c("INFO", "DEBUG", "WARNING")) {
     
     msg_type <- match.arg(arg = msg_type, c("DEBUG", "WARNING", "INFO"))
@@ -139,9 +139,10 @@ print_stat <-
     data <- as.vector(data)
     
     if (!is.numeric(data)) {
+      
       print_msg("Can't print stats from numeric object", msg_type = "WARNING")
-      
-      
+      stats="No Statistics"
+    }else{
       stats <- summary(data)
       names(stats) <- c("Min", "Q1", "Med", "Mean", "Q3", "Max")
       
@@ -150,10 +151,32 @@ print_stat <-
       }
       
       stats <- paste(names(stats), stats, sep = ":", collapse = " ")
-    }else{
-      stats="None"
     }
     
     print_msg(paste0(msg, ": ", stats), msg_type = msg_type)
     
   }
+
+
+#################################################################
+##    A simple function to create a random string
+#################################################################
+#' Generate a random string of letters and numbers
+#'
+#' This function generates a random string of 10 characters, consisting of 3 uppercase letters,
+#' 4 digits, and 3 lowercase letters.
+#'
+#' @return A character string of length 10, consisting of random letters and numbers
+#' 
+#' @export
+#' 
+#' @examples
+#' create_rand_str()
+create_rand_str <- function() {
+  v <- c(
+    sample(LETTERS, 3, replace = TRUE),
+    sample(0:9, 4, replace = TRUE),
+    sample(letters, 3, replace = TRUE)
+  )
+  return(paste0(sample(v), collapse = ""))
+}

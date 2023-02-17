@@ -152,16 +152,6 @@ find_gene_clusters <- function(data = NULL,
     stop("min_pct_gene_expressed argument should be >= 0 and <= 100.")
   }
   
-  # A simple function to create a random string
-  create_rand_str <- function() {
-    v <- c(
-      sample(LETTERS, 3, replace = TRUE),
-      sample(0:9, 4, replace = TRUE),
-      sample(letters, 3, replace = TRUE)
-    )
-    return(paste0(sample(v), collapse = ""))
-  }
-  
   if (is.null(name))
     name <- create_rand_str()
   
