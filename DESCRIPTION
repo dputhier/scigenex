@@ -7,7 +7,7 @@ Author: J. Bavais, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granje
 Maintainer: J. Bavais <julie.bavais@yahoo.fr>
 Depends: R (>= 4.0.0), methods
 Imports: reshape2, ggplot2, dplyr, igraph, plotly, qlcMatrix, clusterProfiler, org.Hs.eg.db, org.Mm.eg.db, dynamicTreeCut, amap, grDevices, stats, utils, magrittr, testthat, iheatmapr, AnnotationDbi, data.table, enrichplot, SeuratObject
-Collate: find_gene_clusters.R zzz.R import_package.R enrichment_analysis.R top_genes.R visualization.R ClusterSet_class.R load_seurat.R get_data_for_scigenex.R get_genes.R find_cell_clusters.R get_cells.R reorder_genes.R utils.R
+Collate: find_gene_clusters.R zzz.R import_package.R enrichment_analysis.R top_genes.R visualization.R ClusterSet_class.R load_seurat.R get_data_for_scigenex.R get_genes.R find_cell_clusters.R get_cells.R reorder_genes.R utils.R dataset_doc.R
 Description: The scigenex package (Single-Cell Informative GENe Explorer) proposes a set of functions to extract informative genes from a scRNA-seq experiment, search and store clusters of co-expressed genes. These clusters are annotated and can be mapped onto UMAP or t-SNE diagram to functionally annotate cell populations.
 biocViews: Clustering, Classification, Transcriptomics, SingleCell, ReportWriting, GeneRegulation
 License: GPL-3
@@ -17,3 +17,4 @@ URL: https://github.com/dputhier/scigenex
 Packaged: 2009-10-28 09:39:36 UTC; biocbuild
 RoxygenNote: 7.2.3
 Encoding: UTF-8
+LazyData: true

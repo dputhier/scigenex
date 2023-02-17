@@ -21,11 +21,11 @@
 #' @importFrom AnnotationDbi select
 #' @importFrom clusterProfiler enrichGO
 #' @importFrom qlcMatrix corSparse
-#' @importFrom graphics barplot
 #' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 #' @importFrom amap hcluster
 #' @importFrom SeuratObject GetAssayData
+#' @importFrom graphics barplot
 #' 
 NULL

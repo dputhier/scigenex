@@ -7,11 +7,8 @@
 ##' @description
 #' This function fetchs an expression matrix from a file, dataframe or Seurat object.
 #' @param data A \code{matrix}, \code{data.frame} or \code{Seurat} object.
-#' @param filename A character string representing the file name.
-#' @param path A character string representing the data directory where
-#' intermediary files are to be stored. Default to current working directory.
 #'
-#' @return A list containing a matrix and the filename (if filename argument is used).
+#' @return An expression matrix.
 #' @export get_data_for_scigenex
 #'
 #' @examples
@@ -23,38 +20,36 @@
 #' res <- get_data_for_scigenex(data=m)
 #' }
 #' 
-get_data_for_scigenex <- function(data = NULL, filename = NULL, path = ".") {
+get_data_for_scigenex <- function(data = NULL) {
   
   ## getting matrix (probesID vs SamplesID)
-  if (!is.null(data)) {
-    if (inherits(data, "Seurat")) {
-      data <- as.matrix(SeuratObject::GetAssayData(data, slot = 'data'))
-    }
-    else if (is.data.frame(data)) {
+  
+  # Stop the function if data not provided
+  if (is.null(data)) {
+    stop("Please provide a Seurat Object, a data.frame",
+         " or a matrix.\n")
+  }
+  
+  
+  if (inherits(data, "Seurat")) { 
+    # Extract normalized count matrix in Seurat object
+    data <- as.matrix(SeuratObject::GetAssayData(data, slot = 'data'))
+  } else {
+    if (is.data.frame(data)) {
+      # Convert dataframe to a matrix
       data <- as.matrix(data)
-    }
-    if (!is.matrix(data)) {
-      stop(
-        "\t--> Please provide a Seurat Object, a data.frame",
-        " or a matrix.\n"
-      )
-    }
-    name <- NULL
-  }
-  else {
-    if (!is.null(filename)) {
-      data <- as.matrix(read.table(file.path(path, filename),
-                                   sep = "\t", header = TRUE, row.names = 1, quote = ""
-      ))
-      name <- unlist(strsplit(filename, "\\."))[1]
-    }
-    else {
-      stop(
-        "\t--> Please provide an ExpressionSet, a data.frame, ",
-        "a matrix or a tabular file\n"
-      )
+    } else {
+      if (!is.matrix(data)) {
+        stop(
+          "\t--> Please provide a Seurat Object, a data.frame",
+          " or a matrix.\n"
+        )
+      }
     }
   }
+  
+  
+
   ## adding dimnames if not provided
   if (is.null(rownames(data))) {
     print_msg("Row names not provided. Adding.", msg_type = "DEBUG")
@@ -65,5 +60,5 @@ get_data_for_scigenex <- function(data = NULL, filename = NULL, path = ".") {
     colnames(data) <- paste("sample", 1:ncol(data), sep = "")
   }
   
-  return(list(data = data, name = name))
+  return(data)
 }

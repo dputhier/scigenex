@@ -43,11 +43,8 @@
 #' Algorithm (MCL).
 #'
 #' @param data a \code{matrix}, \code{data.frame} or \code{Seurat} object.
-#' @param filename a character string representing the file name.
 #' @param name a prefix for the names of the intermediary files created by DBF
 #' and MCL.
-#' @param path a character string representing the data directory where
-#' intermediary files are to be stored. Default to current working directory.
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
 #' @param mcl_threads An integer to determine number of threads for mcl algorithm.
@@ -124,8 +121,6 @@
 #'
 #' @export find_gene_clusters
 find_gene_clusters <- function(data = NULL,
-                               filename = NULL,
-                               path = tempdir(),
                                output_path = tempdir(),
                                mcl_threads = 1,
                                name = NULL,
@@ -147,10 +142,7 @@ find_gene_clusters <- function(data = NULL,
   }
   
   ## getting parameters
-  data_source <- get_data_for_scigenex(data = data,
-                                       filename = filename,
-                                       path = path)
-  data_matrix <- data_source$data
+  data_matrix <- get_data_for_scigenex(data = data)
   
   if (highest < 0 || highest > 1) {
     stop("highest argument should be >= 0 and <= 1.")
@@ -171,14 +163,9 @@ find_gene_clusters <- function(data = NULL,
   }
   
   if (is.null(name))
-    name <- data_source$name
-  if (is.null(name))
     name <- create_rand_str()
   
   # Put the current working directory in output_path or path
-  if (path == ".") {
-    path <- getwd()
-  }
   if (output_path == ".") {
     output_path <- getwd()
   }
@@ -191,7 +178,6 @@ find_gene_clusters <- function(data = NULL,
   
   print_msg(paste0(
     "The following parameters will be used :",
-    "\n\tWorking directory: ", path,
     "\n\tOuput directory: ", output_path,
     "\n\tName: ", name,
     "\n\tDistance method: ", distance_method,
@@ -425,7 +411,7 @@ DBF <- function(data,
   if (is.null(name))
     name <- "exprs"
   
-  data <- get_data_for_scigenex(data = data)$data
+  data <- get_data_for_scigenex(data = data)
   
   distance_method <- match.arg(distance_method)
   

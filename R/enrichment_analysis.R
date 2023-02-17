@@ -102,6 +102,7 @@ setMethod("enrich_go",
 #' @param clusters  A vector of cluster id to plot.
 #' @param type A vector providing the type of plot.
 #' @param nb_terms An integer indicating the number of terms in the plot.
+#' @param terms_size An interger indicating the wrap length of terms
 #'
 #' @return A \code{ClusterSet} object
 #' @export viz_enrich
@@ -118,7 +119,8 @@ setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
                     type = "dotplot",
-                    nb_terms = 20) {
+                    nb_terms = 20,
+                    terms_size = 50) {
              standardGeneric("viz_enrich")
            })
 
@@ -128,7 +130,8 @@ setMethod("viz_enrich",
           function(object,
                    clusters = "all",
                    type = c("dotplot", "barplot"),
-                   nb_terms = 20) {
+                   nb_terms = 20,
+                   terms_size = 50) {
             
             if (length(clusters) == 1){
               if (clusters == "all"){
@@ -157,10 +160,17 @@ setMethod("viz_enrich",
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[as.numeric(cur_cluster)]],
+                                                    split="ONTOLOGY",
+                                                    showCategory=nb_terms,
+                                                    label_format = terms_size)
                     dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scales="free")
+                    dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   } else {
-                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    dot_plot <- enrichplot::dotplot(object@cluster_annotations[[cur_cluster]],
+                                                    showCategory=nb_terms,
+                                                    label_format = terms_size)
+                    dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$dotplot <- dot_plot
                 }
@@ -168,10 +178,17 @@ setMethod("viz_enrich",
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
                   if(object@cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    bar_plot <- enrichplot::barplot.enrichResult(object@cluster_annotations[[as.numeric(cur_cluster)]], split="ONTOLOGY", showCategory=nb_terms, label_format = 100)
+                    bar_plot <- graphics::barplot(object@cluster_annotations[[as.numeric(cur_cluster)]],
+                                                  split="ONTOLOGY",
+                                                  showCategory=nb_terms,
+                                                  label_format = terms_size)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scales="free")
+                    bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   } else {
-                    bar_plot <- enrichplot::barplot.enrichResult(object@cluster_annotations[[cur_cluster]], showCategory=nb_terms, label_format = 100)
+                    bar_plot <- graphics::barplot(object@cluster_annotations[[cur_cluster]],
+                                                  showCategory=nb_terms,
+                                                  label_format = terms_size)
+                    bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
                   object@cluster_annotations[[paste0("plot_cl",cur_cluster)]]$barplot <- bar_plot
                 }

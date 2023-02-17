@@ -4,18 +4,13 @@
 \alias{get_data_for_scigenex}
 \title{Fetch an expression matrix from a file, dataframe or Seurat object.}
 \usage{
-get_data_for_scigenex(data = NULL, filename = NULL, path = ".")
+get_data_for_scigenex(data = NULL)
 }
 \arguments{
 \item{data}{A \code{matrix}, \code{data.frame} or \code{Seurat} object.}
-
-\item{filename}{A character string representing the file name.}
-
-\item{path}{A character string representing the data directory where
-intermediary files are to be stored. Default to current working directory.}
 }
 \value{
-A list containing a matrix and the filename (if filename argument is used).
+An expression matrix.
 }
 \description{
 This function fetchs an expression matrix from a file, dataframe or Seurat object.
