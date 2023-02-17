@@ -302,31 +302,38 @@ find_gene_clusters <- function(data = NULL,
     
     ## build ClusterSet object
     if (nb > 0) {
-      obj@name <- name
       obj@data <- as.matrix(data_matrix[gene_list, ])
-      names(clusters) <- rownames(obj@data)
-      obj@gene_clusters <- clusters
-      obj@cluster_list <- 1:max(obj@gene_clusters)
-      obj@cluster_number <- max(obj@gene_clusters)
-      obj@size <- size
+      clusters_df <- data.frame("gene_clusters" = clusters,
+                                "gene_id" = rownames(obj@data))
+      obj@gene_clusters <- split(clusters_df[,"gene_id"], f=clusters_df$gene_clusters)
+      obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
+                                         "number" = max(names(obj@gene_clusters)),
+                                         "size" = unlist(lapply(obj@gene_clusters, length)))
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
       ## calcul of the mean profils
       for (i in 1:nb) {
-        centers[i, ] <- apply(obj@data[obj@gene_clusters == i, ],
+        centers[i, ] <- apply(obj@data[obj@gene_clusters[[i]], ],
                               2, mean,
                               na.rm = TRUE)
       }
-      obj@center <- centers
+      obj@dbf_output$center <- centers
+      
+      obj@cells_metadata <- data.frame("cells_barcode" = colnames(obj@data))
       
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
+        filename = name,
         distance_method = distance_method,
         k = k,
-        fdr = fdr,
-        seed = seed,
         inflation = inflation,
-        min_cluster_size = min_cluster_size
+        highest = highest,
+        fdr = fdr,
+        min_nb_supporting_cell = min_nb_supporting_cell,
+        min_pct_gene_expressed, min_pct_gene_expressed,
+        min_cluster_size = min_cluster_size,
+        row_sum = row_sum,
+        seed = seed
       )
     }
   } else {
@@ -625,26 +632,27 @@ DBF <- function(data,
   
   #################### Create the ClusterSet object
   obj <- new("ClusterSet")
-  obj@algorithm <- "DBFMCL"
+  obj@parameters <- list("algorithm" = "DBFMCL")
   
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])
-    obj@gene_clusters <- rep(1, nrow(obj@data))
-    obj@cluster_list <- 1:max(obj@gene_clusters)
-    obj@cluster_number <- max(obj@gene_clusters)
-    obj@size <- nrow(obj@data)
-    obj@center <- matrix(apply(obj@data[obj@gene_clusters == 1, ],
-                               2,
-                               mean,
-                               na.rm = TRUE),
-                         nrow = 1)
+    obj@gene_clusters <- list("1" = rownames(obj@data))
+    obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
+                                       "number" = max(names(obj@gene_clusters)),
+                                       "size" = nrow(obj@data))
     
     obs_dknn <- as.vector(df_dknn[, "dknn_values"])
     names(obs_dknn) <- df_dknn[, "gene_id"]
-    obj@distances <- obs_dknn
-    obj@simulated_distances <- sim_dknn
-    obj@critical_distance <- critical_distance
-    obj@fdr <- df_dknn$FDR
+    center = matrix(apply(obj@data[obj@gene_clusters$`1`, ],
+                          2,
+                          mean,
+                          na.rm = TRUE),
+                    nrow = 1)
+    obj@dbf_output <- list("dknn" = obs_dknn,
+                           "simulated_dknn" = sim_dknn,
+                           "critical_distance" = critical_distance,
+                           "fdr" = df_dknn$FDR,
+                           "center" = center)
     # obj@normal_model_mean <- mean_sim
     # obj@normal_model_sd <- mean_sd
   }
@@ -704,13 +712,13 @@ mcl_system_cmd <- function(name,
                            input_path = ".",
                            silent = FALSE,
                            threads = 1) {
-    ## testing the system
+  ## testing the system
   if (.Platform$OS.type == "windows") {
     stop("--> A unix-like OS is required to launch the MCL program.")
   }else {
     print_msg("Running mcl_system_cmd() under a unix-like system.", msg_type = "DEBUG")
   }
-    
+  
   ## Testing mcl installation
   if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
     print_msg("Found MCL program in the path...", msg_type = "DEBUG")
@@ -720,7 +728,7 @@ mcl_system_cmd <- function(name,
       "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
     )
   }
-      
+  
   
   print_msg("Running MCL (graph partitioning)...", msg_type = "DEBUG")
   
@@ -732,7 +740,7 @@ mcl_system_cmd <- function(name,
   }
   
   i <- paste("-I ", as.character(round(inflation, 1)), sep = "")
-
+  
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
@@ -751,20 +759,20 @@ mcl_system_cmd <- function(name,
                 threads)
   
   cmd <- gsub(pattern = "//",
-                    replacement = "/",
-                    x = cmd)
+              replacement = "/",
+              x = cmd)
   
   print_msg(paste0("Running command: ", cmd), msg_type = "DEBUG")
   
   system(cmd)
-    
+  
   print_msg("MCL step is finished.", msg_type = "DEBUG")
   print_msg(paste0("creating file : ",
                    file.path(
                      getwd(), paste(name, ".mcl_out.txt", sep = "")
                    )),
             msg_type = "DEBUG")
-
+  
 }
 
 #########################################################
