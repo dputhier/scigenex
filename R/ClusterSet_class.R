@@ -11,9 +11,9 @@ library(iheatmapr)
 #' @title
 #' ClusterSet
 #' @description
-#' This class is a representation of a partitioning algorithm and is intented to store gene clusters.
+#' This class is a representation of a partitioning algorithm and is intended to store gene clusters.
 #' @slot name character. The original input file name (if applicable).
-#' @slot data matrix. The matrix containing the filtered/partitionned data.
+#' @slot data matrix. The matrix containing the filtered/partitioned data.
 #' @slot distances vector. The observed distance values with the knn.
 #' @slot simulated_distances vector. The simulated distance values with the knn.
 #' @slot critical_distance vector. The critical distance to k nearest neighbors (dknn) values 
@@ -22,7 +22,7 @@ library(iheatmapr)
 #' @slot cluster_list list. List containing the number of clusters.
 #' @slot cluster_number vector. Number of gene clusters detected.
 #' @slot size vector. The size of each cluster.
-#' @slot fdr The computed FDR for eah gene.
+#' @slot fdr The computed FDR for each gene.
 #' @slot top_genes matrix The highly co-expressed genes of each gene clusters.
 #' @slot center matrix. The centers of each clusters.
 #' @slot parameters list. The parameter used.
