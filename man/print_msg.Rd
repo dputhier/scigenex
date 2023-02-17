@@ -4,7 +4,7 @@
 \alias{print_msg}
 \title{Print a message based on the level of verbosity}
 \usage{
-print_msg(msg, msg_type = "INFO")
+print_msg(msg, msg_type = c("INFO", "DEBUG", "WARNING"))
 }
 \arguments{
 \item{msg}{The message to be printed}
@@ -18,7 +18,16 @@ None
 Print a message based on the level of verbosity
 }
 \examples{
+set_verbosity(1)
+print_msg("Hello world!", "INFO")
+set_verbosity(3)
+print_msg("Debugging message", "DEBUG")
+set_verbosity(0)
 print_msg("Hello world!", "INFO")
 print_msg("Debugging message", "DEBUG")
+options(warn=0)
 print_msg("Warning message", "WARNING")
+options(warn=-1)
+print_msg("A warning message not displayed", "WARNING")
+options(warn=opt_warn)
 }

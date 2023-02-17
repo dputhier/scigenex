@@ -10,10 +10,10 @@ set_verbosity(verbosity_value)
 \item{verbosity_value}{A non-negative integer indicating the verbosity level to be set.}
 }
 \description{
-This function sets the verbosity level for the SciGeneX package, 
-which controls the amount of information that is printed to the console by 
+This function sets the verbosity level for the SciGeneX package,
+which controls the amount of information that is printed to the console by
 the \code{\link{print_msg}} function. The verbosity level can be set to
- any non-negative integer, with higher values indicating more detailed output. 
+ any non-negative integer, with higher values indicating more detailed output.
  By default, the verbosity level is set to 1.
 }
 \examples{
