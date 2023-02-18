@@ -180,3 +180,57 @@ create_rand_str <- function() {
   )
   return(paste0(sample(v), collapse = ""))
 }
+
+#################################################################
+##    A simple function that return a dataset (1)
+#################################################################
+#' Generate an example dataset with three clusters of profiles 
+#'
+#' Generate an artificial matrix with with random noise and 3 
+#' clusters of 'expression' profiles (as row). 
+#'
+#' @return a matrix.
+#' 
+#' @export
+#' 
+#' @examples
+#' m <- create_3_rnd_clust()
+#' 
+create_3_rnd_clust <- function(){
+  set.seed(123)
+  m <- matrix(rnorm(80000), nc=20)
+  m[1:100,1:10] <- m[1:100,1:10] + 4
+  m[101:200,11:20] <- m[101:200,11:20] + 3
+  m[201:300,5:15] <- m[201:300,5:15] -2
+  return(m)
+}
+
+#################################################################
+##    A simple function that return a dataset (2)
+#################################################################
+#' Generate an example dataset with four clusters of profiles 
+#'
+#' Generate an artificial matrix with with random noise and 4 
+#' clusters of 'expression' profiles (as row). 
+#'
+#' @return a matrix.
+#' 
+#' @export
+#' 
+#' @examples
+#' m <- create_4_rnd_clust()
+#' 
+#' 
+create_4_rnd_clust <- function(){
+  set.seed(123)
+  m <- matrix(rnorm(80000), nc=20)
+  m[1:100, 1:10] <- m[1:100, 1:10] + 2
+  m[101:200, 11:20] <- m[101:200, 11:20] + 4
+  m[301:400, 5:15] <- m[201:300, 5:15] - 2
+  m[201:300, c(1,5,10,15,20)] <- m[201:300, c(1,5,10,15,20)] - 3
+  return(m)
+}
+
+
+
+
