@@ -507,6 +507,9 @@ DBF <- function(data,
     df_dknn[gene, "dknn_values"] <- gene_dist[k]
   }
   
+  print_stat("Observed DKNN stats", 
+             data = df_dknn$dknn_values, msg_type = "DEBUG")
+  
   #################### DKNN simulation
   print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
   
