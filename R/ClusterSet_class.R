@@ -27,18 +27,18 @@ library(iheatmapr)
 #' @examples
 #' 
 #' \dontrun{
-#'  m <- matrix(rnorm(80000), nc=20)
-#'  m[1:100,1:10] <- m[1:100,1:10] + 4
-#'  m[101:200,11:20] <- m[101:200,11:20] + 3
-#'  m[201:300,5:15] <- m[201:300,5:15] + -2
-#'  res <- find_gene_clusters(data=m,
-#'                            distance_method="pearson",
-#'                            inflation = 1.2,
-#'                            k=25,
-#'                            fdr = 10)
-#'  is(res)
-#'  res
-#'  }          
+#' m <- create_3_rnd_clust()
+#' res <- find_gene_clusters(data=m,
+#'                              distance_method="pearson",
+#'                              inflation = 2,
+#'                              k=75,
+#'                              row_sum=-Inf,
+#'                              highest=0.3,
+#'                              min_nb_supporting_cell = 0,
+#'                              fdr = 1e-8)
+#' is(res)
+#' res
+#' }          
 setClass("ClusterSet",
          representation = list(
            data = "matrix",

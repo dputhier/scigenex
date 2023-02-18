@@ -113,18 +113,16 @@ viz_dist <-  function(object,
 #' @export
 #'
 #' @examples
-#' m <- matrix(rnorm(40000), nc=20)
-#' m[1:100,1:10] <- m[1:100,1:10] + 4
-#' m[101:200,11:20] <- m[101:200,11:20] + 3
-#' m[201:300,5:15] <- m[201:300,5:15] + -2
+#' m <- create_3_rnd_clust()
 #' 
 #' res <- find_gene_clusters(data=m,
-#'                           distance_method="pearson",
-#'                           av_dot_prod_min = 0,
-#'                           inflation = 2,
-#'                           k = 25,
-#'                           fdr = 10)
-#' 
+#'                              distance_method="pearson",
+#'                              inflation = 2,
+#'                              k=75,
+#'                              row_sum=-Inf,
+#'                              highest=0.3,
+#'                              min_nb_supporting_cell = 0,
+#'                              fdr = 1e-8)
 #' plot_heatmap(object = res)
 #' plot_heatmap(object = res, cluster = "1")
 #' 
@@ -340,7 +338,17 @@ plot_heatmap <- function(object,
 #' @return A ggplot object.
 #' 
 #' @examples
+#' m <- create_4_rnd_clust()
 #' 
+#' res <- find_gene_clusters(data=m,
+#'                              distance_method="pearson",
+#'                              inflation = 2,
+#'                              k=75,
+#'                              row_sum=-Inf,
+#'                              highest=0.3,
+#'                              min_nb_supporting_cell = 0,
+#'                              fdr = 1e-8)
+#' plot_dist(res)
 #' @import ggplot2
 #' 
 #' @export plot_dist

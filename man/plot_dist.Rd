@@ -30,5 +30,14 @@ A ggplot object.
 This function creates a histogram of the simulated and observed distances of a Seurat clusterSet object.
 }
 \examples{
-
+m <- create_4_rnd_clust()
+res <- find_gene_clusters(data=m,
+                             distance_method="pearson",
+                             inflation = 2,
+                             k=75,
+                             row_sum=-Inf,
+                             highest=0.3,
+                             min_nb_supporting_cell = 0,
+                             fdr = 1e-8)
+plot_dist(res)
 }

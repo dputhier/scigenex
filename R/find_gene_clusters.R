@@ -99,14 +99,10 @@
 #' of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 #' @keywords clustering, gene expression, classification, MCL.
 #' @examples
-#'
+#' 
+#' set_verbosity(2)
 #' m <- create_4_rnd_clust()
 #' 
-#' ## Set the level of verbosity
-#' set_verbosity(2)
-#' 
-#' ## A rather stringent version
-#' ## with a 2D artificial dataset
 #' res <- find_gene_clusters(data=m,
 #'                              distance_method="pearson",
 #'                              inflation = 2,
