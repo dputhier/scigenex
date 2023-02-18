@@ -355,17 +355,17 @@ plot_dist <- function(object,
     stop("Please provide ClusterSet object.")
   }
   
-  df <- data.frame("distance"=c(object@simulated_distances, object@distances),
-                   "type"=c(rep("Simulated", length(object@simulated_distances)),
-                            rep("Observed", length(object@distances))))
+  df <- data.frame("distance"=c(object@dbf_output$simulated_dknn, object@dbf_output$dknn),
+                   "type"=c(rep("Simulated", length(object@dbf_output$simulated_dknn)),
+                            rep("Observed", length(object@dbf_output$dknn))))
   p <-  ggplot(df, aes(x=distance, fill=type)) +
     geom_histogram(bins=bins, 
                    position="identity", 
                    alpha=alpha, 
                    color="white", 
-                   size=0.5) + 
+                   linewidth=0.5) + 
     theme_bw() + 
-    scale_fill_manual(values=colors) 
+    scale_fill_manual(values=colors)
   
   if(!is.null(xlim))
     p <- p + xlim(xlim)
