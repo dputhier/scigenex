@@ -118,15 +118,13 @@ successfully with the 06-058 version).}
 
 \examples{
 
-m <- matrix(rnorm(80000), nc=20)
-m[1:100, 1:10] <- m[1:100, 1:10] + 3
-m[101:200, 11:20] <- m[101:200, 11:20] + 3
-m[301:400, 5:15] <- m[201:300, 5:15] - 3
-m[201:300, c(1,5,10,15,20)] <- m[201:300, c(1,5,10,15,20)] - 3
+m <- create_4_rnd_clust()
 
 ## Set the level of verbosity
 set_verbosity(2)
+
 ## A rather stringent version
+## with a 2D artificial dataset
 res <- find_gene_clusters(data=m,
                              distance_method="pearson",
                              inflation = 2,
