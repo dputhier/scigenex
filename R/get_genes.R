@@ -46,10 +46,10 @@ get_genes <- function(object,
   }
 
   if(top){
-    if (length(sc10x.rna.scigenex@top_genes) == 0) {
+    if (length(object@top_genes) == 0) {
       stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
     }
-    gene_names <- unlist(sc10x.rna.scigenex@top_genes[cluster], use.names = FALSE)
+    gene_names <- unlist(object@top_genes[cluster], use.names = FALSE)
   }else{
     gene_names <- unlist(object@gene_clusters[cluster], use.names = FALSE)
   }

@@ -1,125 +1,291 @@
-test_that("Cheking get_genes is providing the right list of genes", {
-  
-  #Create matrix containing 3 signatures
-  m <- create_3_rnd_clust()
-  res <- find_gene_clusters(data=m,
-                            name = "test",
-                            distance_method="pearson",
-                            inflation = 2,
-                            k=25,
-                            fdr = 10)
-  
-  #=======================================================
+# Create matrix containing 4 signatures
+m <- create_4_rnd_clust()
+## Set the level of verbosity
+set_verbosity(2)
+## A rather stringent version
+res <- find_gene_clusters(
+  data = m,
+  distance_method = "pearson",
+  inflation = 2,
+  k = 75,
+  row_sum = -Inf,
+  highest = 0.3,
+  min_nb_supporting_cell = 0,
+  fdr = 1e-8
+)
+
+
+test_that("Checking get_genes is providing the right list of genes", {
+
+  # =======================================================
   # Test gene list in all cluster
   gene_names <- get_genes(res, cluster = "all")
-  gene_name_to_check <- c("gene94",   "gene58",   "gene37",   "gene81",   "gene4",    "gene54",   "gene27",   "gene84",   "gene20",   "gene14",   "gene17",   "gene39",   "gene67",   "gene48",   "gene16",   "gene98",  
-                          "gene33",   "gene13",   "gene59",   "gene24",   "gene6",    "gene92",   "gene91",   "gene9",    "gene56",   "gene51",   "gene11",   "gene65",   "gene82",   "gene89",   "gene35",   "gene74",  
-                          "gene50",   "gene79",   "gene41",   "gene88",   "gene8",    "gene23",   "gene44",   "gene100",  "gene75",   "gene2",    "gene15",   "gene47",   "gene40",   "gene28",   "gene12",   "gene32",  
-                          "gene60",   "gene90",   "gene49",   "gene30",   "gene95",   "gene25",   "gene99",   "gene55",   "gene5",    "gene85",   "gene29",   "gene36",   "gene80",   "gene61",   "gene93",   "gene70",  
-                          "gene73",   "gene31",   "gene19",   "gene7",    "gene76",   "gene42",   "gene34",   "gene46",   "gene64",   "gene63",   "gene69",   "gene78",   "gene71",   "gene96",   "gene62",   "gene52",  
-                          "gene1",    "gene45",   "gene3",    "gene21",   "gene77",   "gene18",   "gene10",   "gene26",   "gene22",   "gene83",   "gene38",   "gene68",   "gene57",   "gene43",   "gene66",   "gene97",  
-                          "gene53",   "gene86",   "gene87",   "gene72",   "gene740",  "gene637",  "gene186",  "gene166",  "gene183",  "gene180",  "gene192",  "gene155",  "gene117",  "gene114",  "gene122",  "gene163", 
-                          "gene171",  "gene121",  "gene150",  "gene190",  "gene200",  "gene135",  "gene104",  "gene138",  "gene167",  "gene151",  "gene193",  "gene143",  "gene132",  "gene110",  "gene182",  "gene136", 
-                          "gene168",  "gene181",  "gene113",  "gene125",  "gene133",  "gene106",  "gene172",  "gene184",  "gene175",  "gene116",  "gene173",  "gene170",  "gene187",  "gene152",  "gene160",  "gene107", 
-                          "gene142",  "gene120",  "gene123",  "gene158",  "gene197",  "gene162",  "gene165",  "gene129",  "gene144",  "gene146",  "gene103",  "gene105",  "gene126",  "gene189",  "gene147",  "gene109", 
-                          "gene195",  "gene159",  "gene131",  "gene185",  "gene149",  "gene174",  "gene139",  "gene119",  "gene140",  "gene124",  "gene157",  "gene115",  "gene178",  "gene127",  "gene176",  "gene179", 
-                          "gene101",  "gene128",  "gene130",  "gene134",  "gene194",  "gene118",  "gene198",  "gene199",  "gene102",  "gene169",  "gene145",  "gene108",  "gene191",  "gene111",  "gene137",  "gene148", 
-                          "gene153",  "gene164",  "gene112",  "gene188",  "gene156",  "gene141",  "gene1566", "gene154",  "gene177",  "gene240",  "gene161",  "gene196",  "gene279",  "gene201",  "gene212",  "gene249", 
-                          "gene289",  "gene266",  "gene293",  "gene242",  "gene228",  "gene278",  "gene213",  "gene272",  "gene273",  "gene215",  "gene214",  "gene239",  "gene243",  "gene223",  "gene271",  "gene265", 
-                          "gene205",  "gene220",  "gene222",  "gene261",  "gene297",  "gene227",  "gene210",  "gene277",  "gene263",  "gene219",  "gene238",  "gene252",  "gene211",  "gene233",  "gene300",  "gene248", 
-                          "gene267",  "gene250",  "gene218",  "gene232",  "gene291",  "gene260",  "gene206",  "gene298",  "gene244",  "gene251",  "gene259",  "gene236",  "gene290",  "gene258",  "gene257",  "gene245", 
-                          "gene269",  "gene276",  "gene296",  "gene246",  "gene280",  "gene292",  "gene295",  "gene230",  "gene216",  "gene275",  "gene207",  "gene231",  "gene235",  "gene466",  "gene256",  "gene255", 
-                          "gene288",  "gene285",  "gene286",  "gene283",  "gene241",  "gene299",  "gene282")
+  gene_name_to_check <- c(
+    "gene273", "gene285", "gene245", "gene272", "gene249", "gene230",
+    "gene256", "gene225", "gene289", "gene286", "gene278", "gene282",
+    "gene275", "gene214", "gene248", "gene277", "gene241", "gene206",
+    "gene251", "gene298", "gene236", "gene267", "gene222", "gene290",
+    "gene299", "gene223", "gene266", "gene217", "gene293", "gene229",
+    "gene283", "gene300", "gene263", "gene235", "gene250", "gene212",
+    "gene259", "gene219", "gene287", "gene233", "gene262", "gene239",
+    "gene255", "gene258", "gene203", "gene207", "gene240", "gene216",
+    "gene232", "gene215", "gene253", "gene269", "gene237", "gene294",
+    "gene284", "gene247", "gene242", "gene244", "gene297", "gene281",
+    "gene226", "gene279", "gene254", "gene246", "gene270", "gene292",
+    "gene268", "gene288", "gene238", "gene257", "gene227", "gene220",
+    "gene234", "gene202", "gene291", "gene208", "gene205", "gene221",
+    "gene295", "gene271", "gene260", "gene224", "gene201", "gene296",
+    "gene211", "gene243", "gene280", "gene261", "gene213", "gene209",
+    "gene3991", "gene228", "gene218", "gene210", "gene265", "gene264",
+    "gene274", "gene252", "gene1931", "gene231", "gene276", "gene847",
+    "gene2036", "gene2157", "gene189", "gene146", "gene150", "gene117",
+    "gene190", "gene135", "gene165", "gene186", "gene180", "gene155",
+    "gene144", "gene132", "gene106", "gene192", "gene111", "gene153",
+    "gene108", "gene159", "gene133", "gene166", "gene112", "gene143",
+    "gene126", "gene145", "gene184", "gene122", "gene161", "gene176",
+    "gene193", "gene137", "gene168", "gene160", "gene147", "gene107",
+    "gene129", "gene188", "gene101", "gene104", "gene109", "gene114",
+    "gene127", "gene157", "gene173", "gene197", "gene191", "gene177",
+    "gene103", "gene105", "gene194", "gene163", "gene121", "gene116",
+    "gene162", "gene158", "gene178", "gene175", "gene124", "gene141",
+    "gene171", "gene128", "gene142", "gene198", "gene140", "gene119",
+    "gene183", "gene167", "gene200", "gene199", "gene148", "gene174",
+    "gene113", "gene151", "gene136", "gene179", "gene138", "gene181",
+    "gene154", "gene130", "gene118", "gene115", "gene182", "gene134",
+    "gene195", "gene164", "gene185", "gene120", "gene152", "gene149",
+    "gene172", "gene131", "gene196", "gene110", "gene170", "gene125",
+    "gene156", "gene123", "gene169", "gene102", "gene139", "gene393",
+    "gene390", "gene312", "gene314", "gene316", "gene386", "gene364",
+    "gene369", "gene318", "gene315", "gene398", "gene387", "gene363",
+    "gene334", "gene330", "gene320", "gene382", "gene326", "gene379",
+    "gene322", "gene329", "gene324", "gene349", "gene313", "gene306",
+    "gene331", "gene368", "gene350", "gene327", "gene389", "gene319",
+    "gene353", "gene397", "gene366", "gene362", "gene335", "gene365",
+    "gene340", "gene378", "gene336", "gene358", "gene394", "gene311",
+    "gene332", "gene303", "gene341", "gene301", "gene385", "gene351",
+    "gene396", "gene370", "gene339", "gene355", "gene372", "gene342",
+    "gene371", "gene345", "gene367", "gene337", "gene373", "gene317",
+    "gene328", "gene391", "gene392", "gene3609", "gene344", "gene383",
+    "gene323", "gene310", "gene384", "gene400", "gene920", "gene360",
+    "gene304", "gene2911", "gene395", "gene27", "gene76", "gene37",
+    "gene32", "gene70", "gene55", "gene67", "gene80", "gene59", "gene16",
+    "gene12", "gene84", "gene45", "gene88", "gene19", "gene61", "gene78",
+    "gene73", "gene36", "gene29", "gene39", "gene7", "gene2", "gene57",
+    "gene86", "gene9", "gene52", "gene51", "gene66", "gene64", "gene13",
+    "gene4", "gene1", "gene56", "gene74", "gene34", "gene79", "gene93",
+    "gene42", "gene94", "gene82", "gene83", "gene10", "gene63", "gene25",
+    "gene31", "gene17", "gene87", "gene71", "gene28", "gene46", "gene68",
+    "gene11", "gene90", "gene35", "gene14", "gene58", "gene95", "gene85",
+    "gene96", "gene99", "gene22", "gene20", "gene89"
+  )
+
+
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(gene_names, rownames(res@data))
-  expect_equal(gene_names, names(res@gene_clusters))
+  expect_equal(gene_names, unlist(res@gene_clusters, use.names = FALSE))
   expect_that(gene_names, is_a("character"))
-  
-  
-  #=======================================================
+
+
+  # =======================================================
   # Test gene list in cluster 1
   gene_names <- get_genes(res, cluster = 1)
-  gene_name_to_check <- c("gene94",   "gene58",   "gene37",   "gene81",   "gene4",    "gene54",   "gene27",   "gene84",   "gene20",   "gene14",   "gene17",   "gene39",   "gene67",   "gene48",   "gene16",   "gene98",  
-                          "gene33",   "gene13",   "gene59",   "gene24",   "gene6",    "gene92",   "gene91",   "gene9",    "gene56",   "gene51",   "gene11",   "gene65",   "gene82",   "gene89",   "gene35",   "gene74",  
-                          "gene50",   "gene79",   "gene41",   "gene88",   "gene8",    "gene23",   "gene44",   "gene100",  "gene75",   "gene2",    "gene15",   "gene47",   "gene40",   "gene28",   "gene12",   "gene32",  
-                          "gene60",   "gene90",   "gene49",   "gene30",   "gene95",   "gene25",   "gene99",   "gene55",   "gene5",    "gene85",   "gene29",   "gene36",   "gene80",   "gene61",   "gene93",   "gene70",  
-                          "gene73",   "gene31",   "gene19",   "gene7",    "gene76",   "gene42",   "gene34",   "gene46",   "gene64",   "gene63",   "gene69",   "gene78",   "gene71",   "gene96",   "gene62",   "gene52",  
-                          "gene1",    "gene45",   "gene3",    "gene21",   "gene77",   "gene18",   "gene10",   "gene26",   "gene22",   "gene83",   "gene38",   "gene68",   "gene57",   "gene43",   "gene66",   "gene97",  
-                          "gene53",   "gene86",   "gene87",   "gene72",   "gene740",  "gene637")
+  gene_name_to_check <- c(
+    "gene273", "gene285", "gene245", "gene272", "gene249", "gene230",
+    "gene256", "gene225", "gene289", "gene286", "gene278", "gene282",
+    "gene275", "gene214", "gene248", "gene277", "gene241", "gene206",
+    "gene251", "gene298", "gene236", "gene267", "gene222", "gene290",
+    "gene299", "gene223", "gene266", "gene217", "gene293", "gene229",
+    "gene283", "gene300", "gene263", "gene235", "gene250", "gene212",
+    "gene259", "gene219", "gene287", "gene233", "gene262", "gene239",
+    "gene255", "gene258", "gene203", "gene207", "gene240", "gene216",
+    "gene232", "gene215", "gene253", "gene269", "gene237", "gene294",
+    "gene284", "gene247", "gene242", "gene244", "gene297", "gene281",
+    "gene226", "gene279", "gene254", "gene246", "gene270", "gene292",
+    "gene268", "gene288", "gene238", "gene257", "gene227", "gene220",
+    "gene234", "gene202", "gene291", "gene208", "gene205", "gene221",
+    "gene295", "gene271", "gene260", "gene224", "gene201", "gene296",
+    "gene211", "gene243", "gene280", "gene261", "gene213", "gene209",
+    "gene3991", "gene228", "gene218", "gene210", "gene265", "gene264",
+    "gene274", "gene252", "gene1931", "gene231", "gene276", "gene847",
+    "gene2036", "gene2157"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  expect_equal(gene_names, names(res@gene_clusters[res@gene_clusters == 1]))
+  expect_equal(gene_names, res@gene_clusters$`1`)
   expect_that(gene_names, is_a("character"))
-  
-  
-  #=======================================================
+
+
+  # =======================================================
   # Test gene list in cluster 2
   gene_names <- get_genes(res, cluster = 2)
-  gene_name_to_check <- c("gene186",  "gene166",  "gene183",  "gene180",  "gene192",  "gene155",  "gene117",  "gene114",  "gene122",  "gene163", 
-                          "gene171",  "gene121",  "gene150",  "gene190",  "gene200",  "gene135",  "gene104",  "gene138",  "gene167",  "gene151",  "gene193",  "gene143",  "gene132",  "gene110",  "gene182",  "gene136", 
-                          "gene168",  "gene181",  "gene113",  "gene125",  "gene133",  "gene106",  "gene172",  "gene184",  "gene175",  "gene116",  "gene173",  "gene170",  "gene187",  "gene152",  "gene160",  "gene107", 
-                          "gene142",  "gene120",  "gene123",  "gene158",  "gene197",  "gene162",  "gene165",  "gene129",  "gene144",  "gene146",  "gene103",  "gene105",  "gene126",  "gene189",  "gene147",  "gene109", 
-                          "gene195",  "gene159",  "gene131",  "gene185",  "gene149",  "gene174",  "gene139",  "gene119",  "gene140",  "gene124",  "gene157",  "gene115",  "gene178",  "gene127",  "gene176",  "gene179", 
-                          "gene101",  "gene128",  "gene130",  "gene134",  "gene194",  "gene118",  "gene198",  "gene199",  "gene102",  "gene169",  "gene145",  "gene108",  "gene191",  "gene111",  "gene137",  "gene148", 
-                          "gene153",  "gene164",  "gene112",  "gene188",  "gene156",  "gene141",  "gene1566", "gene154",  "gene177",  "gene240",  "gene161",  "gene196")
+  gene_name_to_check <- c(
+    "gene189", "gene146", "gene150", "gene117", "gene190", "gene135",
+    "gene165", "gene186", "gene180", "gene155", "gene144", "gene132",
+    "gene106", "gene192", "gene111", "gene153", "gene108", "gene159",
+    "gene133", "gene166", "gene112", "gene143", "gene126", "gene145",
+    "gene184", "gene122", "gene161", "gene176", "gene193", "gene137",
+    "gene168", "gene160", "gene147", "gene107", "gene129", "gene188",
+    "gene101", "gene104", "gene109", "gene114", "gene127", "gene157",
+    "gene173", "gene197", "gene191", "gene177", "gene103", "gene105",
+    "gene194", "gene163", "gene121", "gene116", "gene162", "gene158",
+    "gene178", "gene175", "gene124", "gene141", "gene171", "gene128",
+    "gene142", "gene198", "gene140", "gene119", "gene183", "gene167",
+    "gene200", "gene199", "gene148", "gene174", "gene113", "gene151",
+    "gene136", "gene179", "gene138", "gene181", "gene154", "gene130",
+    "gene118", "gene115", "gene182", "gene134", "gene195", "gene164",
+    "gene185", "gene120", "gene152", "gene149", "gene172", "gene131",
+    "gene196", "gene110", "gene170", "gene125", "gene156", "gene123",
+    "gene169", "gene102", "gene139"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  expect_equal(gene_names, names(res@gene_clusters[res@gene_clusters == 2]))
+  expect_equal(gene_names, res@gene_clusters$`2`)
   expect_that(gene_names, is_a("character"))
-  
-  
-  #=======================================================
+
+
+  # =======================================================
   # Test gene list in cluster 3
   gene_names <- get_genes(res, cluster = 3)
-  gene_name_to_check <- c("gene279",  "gene201",  "gene212",  "gene249", 
-                          "gene289",  "gene266",  "gene293",  "gene242",  "gene228",  "gene278",  "gene213",  "gene272",  "gene273",  "gene215",  "gene214",  "gene239",  "gene243",  "gene223",  "gene271",  "gene265", 
-                          "gene205",  "gene220",  "gene222",  "gene261",  "gene297",  "gene227",  "gene210",  "gene277",  "gene263",  "gene219",  "gene238",  "gene252",  "gene211",  "gene233",  "gene300",  "gene248", 
-                          "gene267",  "gene250",  "gene218",  "gene232",  "gene291",  "gene260",  "gene206",  "gene298",  "gene244",  "gene251",  "gene259",  "gene236",  "gene290",  "gene258",  "gene257",  "gene245", 
-                          "gene269",  "gene276",  "gene296",  "gene246",  "gene280",  "gene292",  "gene295",  "gene230",  "gene216",  "gene275",  "gene207",  "gene231",  "gene235",  "gene466",  "gene256",  "gene255", 
-                          "gene288",  "gene285",  "gene286",  "gene283",  "gene241",  "gene299",  "gene282")
+  gene_name_to_check <- c(
+    "gene393", "gene390", "gene312", "gene314", "gene316", "gene386",
+    "gene364", "gene369", "gene318", "gene315", "gene398", "gene387",
+    "gene363", "gene334", "gene330", "gene320", "gene382", "gene326",
+    "gene379", "gene322", "gene329", "gene324", "gene349", "gene313",
+    "gene306", "gene331", "gene368", "gene350", "gene327", "gene389",
+    "gene319", "gene353", "gene397", "gene366", "gene362", "gene335",
+    "gene365", "gene340", "gene378", "gene336", "gene358", "gene394",
+    "gene311", "gene332", "gene303", "gene341", "gene301", "gene385",
+    "gene351", "gene396", "gene370", "gene339", "gene355", "gene372",
+    "gene342", "gene371", "gene345", "gene367", "gene337", "gene373",
+    "gene317", "gene328", "gene391", "gene392", "gene3609", "gene344",
+    "gene383", "gene323", "gene310", "gene384", "gene400", "gene920",
+    "gene360", "gene304", "gene2911", "gene395"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  expect_equal(gene_names, names(res@gene_clusters[res@gene_clusters == 3]))
+  expect_equal(gene_names, res@gene_clusters$`3`)
   expect_that(gene_names, is_a("character"))
-  
-  
-  
-  #=======================================================
-  #=======================================================
-  
-  
+
+
+  # =======================================================
+  # Test gene list in cluster 4
+  gene_names <- get_genes(res, cluster = 4)
+  gene_name_to_check <- c(
+    "gene27", "gene76", "gene37", "gene32", "gene70", "gene55", "gene67",
+    "gene80", "gene59", "gene16", "gene12", "gene84", "gene45", "gene88",
+    "gene19", "gene61", "gene78", "gene73", "gene36", "gene29", "gene39",
+    "gene7", "gene2", "gene57", "gene86", "gene9", "gene52", "gene51",
+    "gene66", "gene64", "gene13", "gene4", "gene1", "gene56", "gene74",
+    "gene34", "gene79", "gene93", "gene42", "gene94", "gene82", "gene83",
+    "gene10", "gene63", "gene25", "gene31", "gene17", "gene87", "gene71",
+    "gene28", "gene46", "gene68", "gene11", "gene90", "gene35", "gene14",
+    "gene58", "gene95", "gene85", "gene96", "gene99", "gene22", "gene20",
+    "gene89"
+  )
+  expect_equal(gene_names, gene_name_to_check)
+  expect_equal(gene_names, res@gene_clusters$`4`)
+  expect_that(gene_names, is_a("character"))
+
+
+  # =======================================================
+  # Test gene list in cluster 3 and 4
+  gene_names <- get_genes(res, cluster = c(3, 4))
+  gene_name_to_check <- c(
+    "gene393", "gene390", "gene312", "gene314", "gene316", "gene386",
+    "gene364", "gene369", "gene318", "gene315", "gene398", "gene387",
+    "gene363", "gene334", "gene330", "gene320", "gene382", "gene326",
+    "gene379", "gene322", "gene329", "gene324", "gene349", "gene313",
+    "gene306", "gene331", "gene368", "gene350", "gene327", "gene389",
+    "gene319", "gene353", "gene397", "gene366", "gene362", "gene335",
+    "gene365", "gene340", "gene378", "gene336", "gene358", "gene394",
+    "gene311", "gene332", "gene303", "gene341", "gene301", "gene385",
+    "gene351", "gene396", "gene370", "gene339", "gene355", "gene372",
+    "gene342", "gene371", "gene345", "gene367", "gene337", "gene373",
+    "gene317", "gene328", "gene391", "gene392", "gene3609", "gene344",
+    "gene383", "gene323", "gene310", "gene384", "gene400", "gene920",
+    "gene360", "gene304", "gene2911", "gene395",
+    "gene27", "gene76", "gene37", "gene32", "gene70", "gene55", "gene67",
+    "gene80", "gene59", "gene16", "gene12", "gene84", "gene45", "gene88",
+    "gene19", "gene61", "gene78", "gene73", "gene36", "gene29", "gene39",
+    "gene7", "gene2", "gene57", "gene86", "gene9", "gene52", "gene51",
+    "gene66", "gene64", "gene13", "gene4", "gene1", "gene56", "gene74",
+    "gene34", "gene79", "gene93", "gene42", "gene94", "gene82", "gene83",
+    "gene10", "gene63", "gene25", "gene31", "gene17", "gene87", "gene71",
+    "gene28", "gene46", "gene68", "gene11", "gene90", "gene35", "gene14",
+    "gene58", "gene95", "gene85", "gene96", "gene99", "gene22", "gene20",
+    "gene89"
+  )
+  expect_equal(gene_names, gene_name_to_check)
+  expect_equal(gene_names, c(res@gene_clusters$`3`, res@gene_clusters$`4`))
+  expect_that(gene_names, is_a("character"))
+})
+
+
+
+
+
+
+
+
+test_that("Checking get_genes using top genes.", {
   res <- top_genes(res, top = 20, cluster = "all")
-  
-  
-  #=======================================================
+
+  # =======================================================
   # Test top gene list in all cluster
   gene_names <- get_genes(res, cluster = "all", top = T)
-  gene_name_to_check <- c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", "gene28", "gene82", "gene20", "gene23", "gene48", "gene55", "gene12", 
-                          "gene79", "gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", "gene150", "gene168", "gene181", "gene200", "gene171",
-                          "gene104", "gene113", "gene165", "gene189", "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", 
-                          "gene233", "gene273", "gene278", "gene215", "gene228", "gene248", "gene298")
+  gene_name_to_check <- c(
+    "gene285", "gene273", "gene272", "gene245", "gene230", "gene286",
+    "gene249", "gene278", "gene256", "gene225", "gene282", "gene236",
+    "gene223", "gene214", "gene241", "gene222", "gene289", "gene277",
+    "gene275", "gene206", "gene189", "gene146", "gene190", "gene155",
+    "gene117", "gene150", "gene165", "gene135", "gene192", "gene186",
+    "gene144", "gene106", "gene180", "gene132", "gene108", "gene126",
+    "gene153", "gene133", "gene166", "gene111", "gene312", "gene393",
+    "gene316", "gene386", "gene314", "gene326", "gene363", "gene334",
+    "gene390", "gene364", "gene315", "gene387", "gene398", "gene379",
+    "gene369", "gene382", "gene320", "gene397", "gene329", "gene306",
+    "gene76", "gene55", "gene32", "gene80", "gene12", "gene59",
+    "gene70", "gene27", "gene37", "gene29", "gene84", "gene16",
+    "gene88", "gene67", "gene39", "gene78", "gene36", "gene57",
+    "gene19", "gene7"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  expect_equal(sort(gene_names), sort(c(res@top_genes)))
+  expect_equal(sort(gene_names), sort(unlist(res@top_genes, use.names = F)))
   expect_that(gene_names, is_a("character"))
-  
-  
-  #=======================================================
+
+
+  # =======================================================
   # Test top gene list in cluster 1
   gene_names <- get_genes(res, cluster = 1, top = T)
-  gene_name_to_check <- c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", "gene28", "gene82",
-                          "gene20", "gene23", "gene48", "gene55", "gene12", "gene79")
+  gene_name_to_check <- c(
+    "gene285", "gene273", "gene272", "gene245", "gene230", "gene286",
+    "gene249", "gene278", "gene256", "gene225", "gene282", "gene236",
+    "gene223", "gene214", "gene241", "gene222", "gene289", "gene277",
+    "gene275", "gene206"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  ####expect_equal(sort(gene_names), sort(unlist(res@top_genes["cluster_1",]))) TODO
+  expect_equal(sort(gene_names), sort(res@top_genes$`1`))
   expect_that(gene_names, is_a("character"))
-  
-  
-  #=======================================================
+
+
+  # =======================================================
   # Test top gene list in cluster 2 and 3
   gene_names <- get_genes(res, cluster = 2:3, top = T)
-  gene_name_to_check <- c("gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", "gene150", "gene168", "gene181", "gene200", "gene171", "gene104",
-                          "gene113", "gene165", "gene189", "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", "gene233",
-                          "gene273", "gene278", "gene215", "gene228", "gene248", "gene298")
+  gene_name_to_check <- c(
+    "gene189", "gene146", "gene190", "gene155", "gene117", "gene150",
+    "gene165", "gene135", "gene192", "gene186", "gene144", "gene106",
+    "gene180", "gene132", "gene108", "gene126", "gene153", "gene133",
+    "gene166", "gene111", "gene312", "gene393", "gene316", "gene386",
+    "gene314", "gene326", "gene363", "gene334", "gene390", "gene364",
+    "gene315", "gene387", "gene398", "gene379", "gene369", "gene382",
+    "gene320", "gene397", "gene329", "gene306"
+  )
   expect_equal(gene_names, gene_name_to_check)
-  
-  #=======================================================
-  #Remove output files
-  file.remove("test.dbf_out.txt")
-  file.remove("test.mcl_out.txt")
+  expect_equal(sort(gene_names), sort(c(
+    res@top_genes$`2`,
+    res@top_genes$`3`
+  )))
+  expect_that(gene_names, is_a("character"))
 })
+
+# =======================================================
+# Remove output files
+file.remove("test.dbf_out.txt")
+file.remove("test.mcl_out.txt")
