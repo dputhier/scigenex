@@ -42,7 +42,7 @@ top_genes <- function(object,
                       cluster = "all") {
   
   if(unique(cluster == "all")) {
-    cluster <- c(1:length(object@gene_clusters_metadata$size))
+    cluster <- object@gene_clusters_metadata$cluster_id
   }
   
   # Display a warning message if there is less than n top genes in a gene cluster
@@ -105,7 +105,7 @@ top_genes <- function(object,
   object@top_genes <- split(x = unname(genes_top), f = cluster)
   
   for(clust in cluster){
-    object@top_genes[[clust]] <- object@top_genes[[clust]][!is.na(object@top_genes[[clust]])]
+    object@top_genes[[clust]] <- object@top_genes[[as.character(clust)]][!is.na(object@top_genes[[as.character(clust)]])]
   }
   
   # Print

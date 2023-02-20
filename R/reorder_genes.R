@@ -78,9 +78,9 @@ reorder_genes <- function(object,
     # Reorder using top_genes
     if (order_by == "correlation") {
       gene_cluster_names <- object@gene_clusters[[gene_cluster]]
-      gene_cluster_names <- c(top_genes(object,
-                                        cluster = gene_cluster,
-                                        top = length(gene_cluster_names))@top_genes)
+      gene_cluster_names <- top_genes(object,
+                                      cluster = gene_cluster,
+                                      top = length(gene_cluster_names))@top_genes[[gene_cluster]]
       
       object@gene_clusters[[gene_cluster]] <- gene_cluster_names
     }

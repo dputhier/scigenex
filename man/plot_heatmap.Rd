@@ -9,17 +9,21 @@ plot_heatmap(
   center = TRUE,
   ceil = 1,
   floor = -1,
-  cell_order = NULL,
-  show_dendro = FALSE,
-  gene_cluster = NULL,
-  use_top_genes = FALSE,
-  use_core_cells = FALSE,
+  cell_clusters = NULL,
+  show_dendro = TRUE,
+  gene_clusters = "all",
+  use_top_genes = TRUE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
   colorbar_name = "Expression level",
   show_legend = TRUE,
   colors = c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"),
+  colors_cell_clusters = c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A",
+    "#584178", "#9D1C70", "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8",
+    "#9579B9", "#E25CB4", "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0",
+    "#71529A", "#D02494", "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE",
+    "#AD98C9", "#EA8AC9"),
   row_labels = TRUE,
   col_labels = FALSE,
   label_size = 9,
@@ -36,15 +40,13 @@ plot_heatmap(
 
 \item{floor}{A value for flooring (NULL for no flooring). Flooring is performed after centering.}
 
-\item{cell_order}{A vector of cell names already ordered.}
+\item{cell_clusters}{A vector of cell clusters with cell barcodes as names.}
 
 \item{show_dendro}{A logical to indicate whether to show column dendrogram.}
 
-\item{gene_cluster}{A cluster id to plot. Default is NULL for plotting all cluster.}
+\item{gene_clusters}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
-
-\item{use_core_cells}{A logical to indicate whether to use core cells obtained by find_cell_clusters function.}
 
 \item{name}{A title for the heatmap.}
 
@@ -57,6 +59,8 @@ plot_heatmap(
 \item{show_legend}{A logical to indicate whether to show colorbar.}
 
 \item{colors}{A vector of colors.}
+
+\item{colors_cell_clusters}{A vector of colors for column annotations.}
 
 \item{row_labels}{A logical to indicate whether to show row labels.}
 

@@ -38,7 +38,7 @@ library(iheatmapr)
 #'                            fdr = 10)
 #'  is(res)
 #'  res
-#'               
+#'  }          
 setClass("ClusterSet",
          representation = list(
            data = "matrix",
