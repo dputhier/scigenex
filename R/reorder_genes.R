@@ -60,6 +60,7 @@ reorder_genes <- function(object,
     
     # Reorder using hierarchical clustering (amap::hcluster)
     if (order_by == "hclust") {
+      set.seed(123)
       gene_cluster_names <- object@gene_clusters[[gene_cluster]]
       expression_matrix <- object@data[gene_cluster_names,]
       
