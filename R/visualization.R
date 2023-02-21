@@ -135,8 +135,8 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_clusters = NULL,
                          show_dendro = TRUE,
-                         gene_clusters = "all",
-                         use_top_genes = TRUE,
+                         gene_clusters = NULL,
+                         use_top_genes = FALSE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
@@ -165,7 +165,8 @@ plot_heatmap <- function(object,
     print_msg("Ordering cells.", msg_type="INFO")
     m <- m[,names(sort(cell_clusters))]
   } else {
-    dist_cells <- dist(t(m))
+    dist_cells <- cor(m, method = "pearson")
+    dist_cells <- as.dist((1-dist_cells)/2)
     hclust_cells <- hclust(dist_cells, method = "complete")
     # Reorder cells based on hierarchical clustering
     m <- m[,hclust_cells$order]
@@ -297,7 +298,7 @@ plot_heatmap <- function(object,
   if(col_labels){
     htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
   
-    if(!is.null(cell_clusters)){
+  if(!is.null(cell_clusters)){
     cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
     htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
   }
