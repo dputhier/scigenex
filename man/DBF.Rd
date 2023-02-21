@@ -8,7 +8,8 @@ DBF(
   data,
   output_path = ".",
   name = NULL,
-  distance_method = c("pearson", "cosine", "euclidean"),
+  dist_threads = 1,
+  distance_method = c("pearson", "cosine", "euclidean", "kendall"),
   silent = FALSE,
   highest = 0.5,
   k = 100,
@@ -27,8 +28,10 @@ output files will be stored. Default to current working directory.}
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
 
+\item{dist_threads}{If the "kendall" distance is used, the number of threads (library amap).}
+
 \item{distance_method}{A method to compute the distance to the k-th nearest neighbor 
-(one of "pearson", "cosine" or "euclidean").}
+(one of "pearson", "cosine", "euclidean" or "kendall").}
 
 \item{silent}{if set to TRUE (default), the progression of distance matrix
 calculation is not displayed.}

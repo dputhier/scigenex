@@ -48,8 +48,9 @@
 #' @param output_path a character string representing the data directory where
 #' output files will be stored. Default to current working directory.
 #' @param mcl_threads An integer to determine number of threads for mcl algorithm.
+#' @param dist_threads If the "kendall" distance is used, the number of threads (library amap).
 #' @param distance_method A method to compute the distance to the k-th nearest neighbor 
-#' (one of "pearson", "cosine" or "euclidean").
+#' (one of "pearson", "cosine", "euclidean" or "kendall").
 #' @param min_nb_supporting_cell Use to filter out the clusters. The minimum number 
 #' of cell supporting a cluster. A cell supports a cluster if it expresses at least 
 #' min_pct_gene_expressed \% of the genes from the cluster.
@@ -102,6 +103,7 @@
 #' @keywords clustering, gene expression, classification, MCL.
 #' @examples
 #' 
+#' # Example with Pearson-based distance
 #' set_verbosity(2)
 #' m <- create_4_rnd_clust()
 #' 
@@ -115,14 +117,39 @@
 #'                              fdr = 1e-8)
 #' plot_heatmap(res, row_labels = F)
 #'
+#'
+#' set_verbosity(3)
+#' m <- create_4_rnd_clust()
+#'    
+#' res <- find_gene_clusters(data=m,
+#'                          distance_method="kendall",
+#'                          name = "test",
+#'                          dist_threads = 4,
+#'                          output_path = ".",
+#'                          inflation = 2,
+#'                          k=75,
+#'                          row_sum=-Inf,
+#'                          highest=0.3,
+#'                          min_nb_supporting_cell = 0,
+#'                          fdr = 1e-8)
+#' plot_heatmap(res, row_labels = F)
+#'
+#'
+#'
+#'
+#'
+#'
+#'
 #' @export find_gene_clusters
 find_gene_clusters <- function(data = NULL,
                                output_path = tempdir(),
                                mcl_threads = 1,
+                               dist_threads=1,
                                name = NULL,
                                distance_method = c("pearson",
                                                    "cosine",
-                                                   "euclidean"),
+                                                   "euclidean",
+                                                   "kendall"),
                                min_nb_supporting_cell = 2,
                                min_pct_gene_expressed = 40,
                                min_cluster_size = 10,
@@ -185,6 +212,7 @@ find_gene_clusters <- function(data = NULL,
     obj <- DBF(
       data_matrix,
       output_path = output_path,
+      dist_threads=dist_threads,
       name = name,
       distance_method = distance_method,
       highest = highest,
@@ -351,7 +379,8 @@ find_gene_clusters <- function(data = NULL,
 #' @param name a prefix for the names of the intermediary files created by DBF
 #' and MCL.
 #' @param distance_method A method to compute the distance to the k-th nearest neighbor 
-#' (one of "pearson", "cosine" or "euclidean").
+#' (one of "pearson", "cosine", "euclidean" or "kendall").
+#' @param dist_threads If the "kendall" distance is used, the number of threads (library amap).
 #' @param silent if set to TRUE (default), the progression of distance matrix
 #' calculation is not displayed.
 #' @param highest During the process, genes will be ordered by their distance to their 
@@ -372,11 +401,17 @@ find_gene_clusters <- function(data = NULL,
 #' and flexible toolbox to explore productively the transcriptional landscape
 #' of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 #' @keywords manip
+#' @importFrom  amap Dist
+#' @importFrom qlcMatrix corSparse cosSparse
 #' @export DBF
 DBF <- function(data,
                 output_path = ".",
                 name = NULL,
-                distance_method = c("pearson", "cosine", "euclidean"),
+                dist_threads=1,
+                distance_method = c("pearson",
+                                    "cosine",
+                                    "euclidean",
+                                    "kendall"),
                 silent = FALSE,
                 highest = 0.5,
                 k = 100,
@@ -449,10 +484,12 @@ DBF <- function(data,
   # distance matrix. Note that for pearson
   # and cosine, 0 < distance < 2.
   if (distance_method == "pearson") {
-    dist_matrix <- corSparse(t(select_for_correlation))
+    dist_matrix <- qlcMatrix::corSparse(t(select_for_correlation))
     dist_matrix <- 1 - dist_matrix
+  }else  if (distance_method == "kendall") {
+    dist_matrix <- as.matrix(amap::Dist(select_for_correlation, method="kendall", nbproc=dist_threads))
   } else if (distance_method == "cosine") {
-    dist_matrix <- as.matrix(corSparse(t(select_for_correlation)))
+    dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(select_for_correlation)))
     dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
     dist_matrix <- as.matrix(dist(select_for_correlation))
@@ -473,7 +510,6 @@ DBF <- function(data,
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix) <- NA
   
-
   # Create a dataframe to store the DKNN values.
   # Gene_id appear both as rownames and column
   # for coding convenience

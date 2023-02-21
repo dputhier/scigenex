@@ -9,8 +9,9 @@ find_gene_clusters(
   data = NULL,
   output_path = tempdir(),
   mcl_threads = 1,
+  dist_threads = 1,
   name = NULL,
-  distance_method = c("pearson", "cosine", "euclidean"),
+  distance_method = c("pearson", "cosine", "euclidean", "kendall"),
   min_nb_supporting_cell = 2,
   min_pct_gene_expressed = 40,
   min_cluster_size = 10,
@@ -31,11 +32,13 @@ output files will be stored. Default to current working directory.}
 
 \item{mcl_threads}{An integer to determine number of threads for mcl algorithm.}
 
+\item{dist_threads}{If the "kendall" distance is used, the number of threads (library amap).}
+
 \item{name}{a prefix for the names of the intermediary files created by DBF
 and MCL.}
 
 \item{distance_method}{A method to compute the distance to the k-th nearest neighbor 
-(one of "pearson", "cosine" or "euclidean").}
+(one of "pearson", "cosine", "euclidean" or "kendall").}
 
 \item{min_nb_supporting_cell}{Use to filter out the clusters. The minimum number 
 of cell supporting a cluster. A cell supports a cluster if it expresses at least 
