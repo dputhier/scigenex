@@ -3,4 +3,8 @@ test_that("Just some check about create_4_rnd_clust()", {
   expect_equal(ncol(m), 20)
   expect_equal(nrow(m), 4000)
   expect_equal(round(sum(m), 2), 2390.88)
+  expect_equal(round(sd(m), 2), 1.17)
+  expect_equal(round(mean(m), 2), 0.03)
+  expect_equal(round(median(m), 2), 0.01)
+  expect_that(m, is_a("matrix"))
 })
