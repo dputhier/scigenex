@@ -1,92 +1,202 @@
+# Create matrix containing 3 signatures
+m <- create_3_rnd_clust()
+res <- find_gene_clusters(
+  data = m,
+  name = "test",
+  distance_method = "pearson",
+  inflation = 2,
+  k = 25,
+  fdr = 10
+)
+
 test_that("Cheking get_genes is providing the right list of genes", {
-  #Create matrix containing 3 signatures
-  m <- create_3_rnd_clust()
-  res <- find_gene_clusters(data=m,
-                            name = "test",
-                            distance_method="pearson",
-                            inflation = 2,
-                            k=25,
-                            fdr = 10)
-  
-  genes_top <- top_genes(res, cluster = "all", top = 20)
-  #Test 20 top genes list in all cluster
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", 
-                                 "gene28", "gene82", "gene20", "gene23", "gene48", "gene55", "gene12", "gene79", "gene166", "gene186", "gene192", "gene183", 
-                                 "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", "gene150", "gene168", "gene181", "gene200", 
-                                 "gene171", "gene104", "gene113", "gene165", "gene189", "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", 
-                                 "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", "gene233", "gene273", "gene278", "gene215", 
-                                 "gene228", "gene248", "gene298"), nrow = 3, ncol = 20, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:20)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 1, top = 20)
-  #Test 20 top genes list in cluster 1
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35", "gene84", "gene14", 
-                          "gene28", "gene82", "gene20", "gene23", "gene48", "gene55", "gene12", "gene79"), nrow = 1, ncol = 20, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:20)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 2:3, top = 20)
-  #Test 20 top genes list in cluster 2 and 3
-  gene_name_to_check <- matrix(c("gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163", "gene121", 
-                          "gene150", "gene168", "gene181", "gene200", "gene171", "gene104", "gene113", "gene165", "gene189", "gene201", "gene279", 
-                          "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277", "gene213", "gene210", "gene290", 
-                          "gene233", "gene273", "gene278", "gene215", "gene228", "gene248", "gene298"), nrow = 2, ncol = 20, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:20)
-  rownames(gene_name_to_check) <- paste0("cluster_", 2:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = "all", top = 10)
-  #Test 20 top genes list in all cluster
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35",
-                                 "gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163",
-                                 "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277"), nrow = 3, ncol = 10, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:10)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 1, top = 10)
-  #Test 20 top genes list in cluster 1
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94", "gene54", "gene4", "gene65", "gene11", "gene35"), nrow = 1, ncol = 10, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:10)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 2:3, top = 10)
-  #Test 20 top genes list in cluster 2 and 3
-  gene_name_to_check <- matrix(c("gene166", "gene186", "gene192", "gene183", "gene117", "gene155", "gene180", "gene114", "gene122", "gene163",
-                                 "gene201", "gene279", "gene212", "gene289", "gene266", "gene249", "gene293", "gene272", "gene242", "gene277"), nrow = 2, ncol = 10, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:10)
-  rownames(gene_name_to_check) <- paste0("cluster_", 2:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = "all", top = 5)
-  #Test 20 top genes list in all cluster
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94",
-                                 "gene166", "gene186", "gene192", "gene183", "gene117", 
-                                 "gene201", "gene279", "gene212", "gene289", "gene266"), nrow = 3, ncol = 5, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:5)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 1, top = 5)
-  #Test 20 top genes list in cluster 1
-  gene_name_to_check <- matrix(c("gene58", "gene37", "gene81", "gene27", "gene94"), nrow = 1, ncol = 5, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:5)
-  rownames(gene_name_to_check) <- paste0("cluster_", 1)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  genes_top <- top_genes(res, cluster = 2:3, top = 5)
-  #Test 20 top genes list in cluster 2 and 3
-  gene_name_to_check <- matrix(c("gene166", "gene186", "gene192", "gene183", "gene117",
-                                 "gene201", "gene279", "gene212", "gene289", "gene266"), nrow = 2, ncol = 5, byrow = T)
-  colnames(gene_name_to_check) <- paste0("gene_top_", 1:5)
-  rownames(gene_name_to_check) <- paste0("cluster_", 2:3)
-  expect_equal(genes_top@top_genes, gene_name_to_check)
-  
-  #Remove output files
-  file.remove("test.dbf_out.txt")
-  file.remove("test.mcl_out.txt")
+
+  # ========================================
+  # Top 20
+  res_20 <- suppressWarnings(top_genes(res, cluster = "all", top = 20))
+
+  # Test top genes list in all cluster
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78", "gene12", "gene88",
+    "gene9", "gene29", "gene2", "gene19", "gene39", "gene70",
+    "gene73", "gene1", "gene146", "gene155", "gene150", "gene189",
+    "gene190", "gene144", "gene165", "gene117", "gene135", "gene108",
+    "gene126", "gene133", "gene145", "gene111", "gene180", "gene106",
+    "gene153", "gene186", "gene112", "gene143", "gene109", "gene192",
+    "gene104", "gene147", "gene166", "gene167", "gene122", "gene132",
+    "gene175", "gene197", "gene129", "gene174", "gene140", "gene172",
+    "gene156", "gene123"
+  )
+  expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
+  expect_that(res@top_genes, is_a("list"))
+
+
+  # Test top genes list in cluster 1
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78", "gene12", "gene88",
+    "gene9", "gene29", "gene2", "gene19", "gene39", "gene70",
+    "gene73", "gene1"
+  )
+  expect_equal(res_20@top_genes$`1`, gene_name_to_check)
+
+
+  # Test top genes list in cluster 2 and 3
+  gene_name_to_check <- c(
+    "gene146", "gene155", "gene150", "gene189", "gene190", "gene144",
+    "gene165", "gene117", "gene135", "gene108", "gene126", "gene133",
+    "gene145", "gene111", "gene180", "gene106", "gene153", "gene186",
+    "gene112", "gene143", "gene109", "gene192", "gene104", "gene147",
+    "gene166", "gene167", "gene122", "gene132", "gene175", "gene197",
+    "gene129", "gene174", "gene140", "gene172", "gene156", "gene123"
+  )
+  expect_equal(c(res_20@top_genes$`2`, res_20@top_genes$`3`),
+               gene_name_to_check)
+
+
+  # ========================================
+  # Top 10
+  res_10 <- top_genes(res, cluster = "all", top = 10)
+
+  # Test top genes list in all cluster
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78", "gene146", "gene155",
+    "gene150", "gene189", "gene190", "gene144", "gene165", "gene117",
+    "gene135", "gene108", "gene109", "gene192", "gene104", "gene147",
+    "gene166", "gene167", "gene122", "gene132", "gene175", "gene197"
+  )
+  expect_equal(unlist(res_10@top_genes, use.names = FALSE), gene_name_to_check)
+  expect_that(res@top_genes, is_a("list"))
+
+
+  # Test top genes list in cluster 1
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78"
+  )
+  expect_equal(res_10@top_genes$`1`, gene_name_to_check)
+
+
+  # Test top genes list in cluster 2 and 3
+  gene_name_to_check <- c(
+    "gene146", "gene155", "gene150", "gene189", "gene190", "gene144",
+    "gene165", "gene117", "gene135", "gene108", "gene109", "gene192",
+    "gene104", "gene147", "gene166", "gene167", "gene122", "gene132",
+    "gene175", "gene197"
+  )
+  expect_equal(
+    c(res_10@top_genes$`2`, res_10@top_genes$`3`),
+    gene_name_to_check
+  )
+
+
+
+  # ========================================
+  # Top 5
+  res_5 <- top_genes(res, cluster = "all", top = 5)
+
+  # Test top genes list in all cluster
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene146",
+    "gene155", "gene150", "gene189", "gene190", "gene109", "gene192",
+    "gene104", "gene147", "gene166"
+  )
+  expect_equal(unlist(res_5@top_genes, use.names = FALSE), gene_name_to_check)
+  expect_that(res@top_genes, is_a("list"))
+
+
+  # Test top genes list in cluster 1
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55"
+  )
+  expect_equal(res_5@top_genes$`1`, gene_name_to_check)
+
+
+  # Test top genes list in cluster 2 and 3
+  gene_name_to_check <- c(
+    "gene146", "gene155", "gene150", "gene189", "gene190", "gene109",
+    "gene192", "gene104", "gene147", "gene166"
+  )
+  expect_equal(c(res_5@top_genes$`2`, res_5@top_genes$`3`), gene_name_to_check)
+
+
+
+  # ========================================
+  # Top 100
+  res_100 <- suppressWarnings(top_genes(res, cluster = "all", top = 100))
+
+  # Test top genes list in all cluster
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78", "gene12", "gene88",
+    "gene9", "gene29", "gene2", "gene19", "gene39", "gene70",
+    "gene73", "gene1", "gene16", "gene7", "gene58", "gene57",
+    "gene34", "gene86", "gene36", "gene74", "gene71", "gene51",
+    "gene64", "gene93", "gene13", "gene45", "gene79", "gene66",
+    "gene96", "gene94", "gene4", "gene56", "gene42", "gene25",
+    "gene61", "gene89", "gene46", "gene28", "gene31", "gene20",
+    "gene6", "gene82", "gene63", "gene52", "gene10", "gene11",
+    "gene81", "gene21", "gene23", "gene95", "gene87", "gene47",
+    "gene68", "gene43", "gene41", "gene40", "gene38", "gene26",
+    "gene91", "gene146", "gene155", "gene150", "gene189", "gene190",
+    "gene144", "gene165", "gene117", "gene135", "gene108", "gene126",
+    "gene133", "gene145", "gene111", "gene180", "gene106", "gene153",
+    "gene186", "gene112", "gene143", "gene184", "gene137", "gene176",
+    "gene168", "gene161", "gene159", "gene188", "gene194", "gene160",
+    "gene105", "gene162", "gene114", "gene118", "gene101", "gene124",
+    "gene142", "gene107", "gene191", "gene103", "gene177", "gene200",
+    "gene173", "gene136", "gene128", "gene183", "gene198", "gene141",
+    "gene195", "gene185", "gene152", "gene134", "gene109", "gene192",
+    "gene104", "gene147", "gene166", "gene167", "gene122", "gene132",
+    "gene175", "gene197", "gene129", "gene174", "gene140", "gene172",
+    "gene156", "gene123"
+  )
+  expect_equal(unlist(res_100@top_genes, use.names = FALSE), gene_name_to_check)
+  expect_that(res@top_genes, is_a("list"))
+
+
+  # Test top genes list in cluster 1
+  gene_name_to_check <- c(
+    "gene76", "gene37", "gene59", "gene80", "gene55", "gene67",
+    "gene84", "gene32", "gene27", "gene78", "gene12", "gene88",
+    "gene9", "gene29", "gene2", "gene19", "gene39", "gene70",
+    "gene73", "gene1", "gene16", "gene7", "gene58", "gene57",
+    "gene34", "gene86", "gene36", "gene74", "gene71", "gene51",
+    "gene64", "gene93", "gene13", "gene45", "gene79", "gene66",
+    "gene96", "gene94", "gene4", "gene56", "gene42", "gene25",
+    "gene61", "gene89", "gene46", "gene28", "gene31", "gene20",
+    "gene6", "gene82", "gene63", "gene52", "gene10", "gene11",
+    "gene81", "gene21", "gene23", "gene95", "gene87", "gene47",
+    "gene68", "gene43", "gene41", "gene40", "gene38", "gene26",
+    "gene91"
+  )
+  expect_equal(res_100@top_genes$`1`, gene_name_to_check)
+
+
+  # Test top genes list in cluster 2 and 3
+  gene_name_to_check <- c(
+    "gene146", "gene155", "gene150", "gene189", "gene190", "gene144",
+    "gene165", "gene117", "gene135", "gene108", "gene126", "gene133",
+    "gene145", "gene111", "gene180", "gene106", "gene153", "gene186",
+    "gene112", "gene143", "gene184", "gene137", "gene176", "gene168",
+    "gene161", "gene159", "gene188", "gene194", "gene160", "gene105",
+    "gene162", "gene114", "gene118", "gene101", "gene124", "gene142",
+    "gene107", "gene191", "gene103", "gene177", "gene200", "gene173",
+    "gene136", "gene128", "gene183", "gene198", "gene141", "gene195",
+    "gene185", "gene152", "gene134", "gene109", "gene192", "gene104",
+    "gene147", "gene166", "gene167", "gene122", "gene132", "gene175",
+    "gene197", "gene129", "gene174", "gene140", "gene172", "gene156",
+    "gene123"
+  )
+  expect_equal(
+    c(res_100@top_genes$`2`, res_100@top_genes$`3`),
+    gene_name_to_check
+  )
 })
+
+
+# Remove output files
+file.remove("test.dbf_out.txt")
+file.remove("test.mcl_out.txt")
