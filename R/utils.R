@@ -84,7 +84,7 @@ get_verbosity <- function() {
 #' options(warn=opt_warn)
 print_msg <-
   function(msg,
-           msg_type = c("INFO", "DEBUG", "WARNING")) {
+           msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
     if (is.null(unlist(options()["scigenex_verbosity"]))) {
       options(scigenex_verbosity = 1)
     }
@@ -96,6 +96,8 @@ print_msg <-
         cat(paste("|-- DEBUG : ", msg, "\n"))
     if (msg_type == "WARNING")
       warning("|-- WARNING : ", msg, call. = FALSE)
+    if (msg_type == "STOP")
+      stop(paste0("|-- STOP : ", msg), call. = FALSE)
   }
 
 #################################################################
