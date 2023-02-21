@@ -589,10 +589,6 @@ DBF <- function(data,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  print_stat("Graph weights (before convertion)", 
-             data = mcl_out_as_df$weight, 
-             msg_type = "DEBUG")
-  
   #############  Convert distances into weights
   # scale dist between 0..1
   mcl_out_as_df$weight <- 
