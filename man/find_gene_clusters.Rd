@@ -133,7 +133,7 @@ res <- find_gene_clusters(data=m,
                              highest=0.3,
                              min_nb_supporting_cell = 0,
                              fdr = 1e-8)
-plot_heatmap(res)
+plot_heatmap(res, row_labels = F)
 
 }
 \references{
