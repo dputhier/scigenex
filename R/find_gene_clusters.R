@@ -628,7 +628,15 @@ DBF <- function(data,
   
   #################### Create the ClusterSet object
   obj <- new("ClusterSet")
-  obj@parameters <- list("algorithm" = "DBFMCL")
+  obj@parameters <- list(algorithm = "DBFMCL",
+                         name = name,
+                         distance_method = distance_method,
+                         k = k,
+                         highest = highest,
+                         fdr = fdr,
+                         row_sum = row_sum,
+                         seed = seed
+                         )
   
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])
