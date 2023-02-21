@@ -297,6 +297,14 @@ plot_heatmap <- function(object,
   if(col_labels){
     htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
   
+    if(!is.null(cell_clusters)){
+    cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
+    htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
+  }
+  
+  if(show_dendro & is.null(cell_clusters)) {
+    htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
+  }
   
   print_msg("Adding Titles.", msg_type="DEBUG")
   
@@ -306,16 +314,6 @@ plot_heatmap <- function(object,
     htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))}
   if(!is.null(name)){
     htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
-  
-  
-  if(!is.null(cell_clusters)){
-    cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
-    htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
-  }
-  
-  if(show_dendro & is.null(cell_clusters)) {
-    htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
-  }
   
   
   return(htmp)
