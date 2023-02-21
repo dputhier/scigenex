@@ -1,4 +1,6 @@
 # Create matrix containing 3 signatures
+set_verbosity(0)
+
 m <- create_4_rnd_clust()
 
 res_scigenex <- find_gene_clusters(

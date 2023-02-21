@@ -1,7 +1,8 @@
+set_verbosity(0)
+
 # Create matrix containing 4 signatures
 m <- create_4_rnd_clust()
-## Set the level of verbosity
-set_verbosity(2)
+
 ## A rather stringent version
 res <- find_gene_clusters(
   data = m,
