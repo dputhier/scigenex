@@ -198,7 +198,7 @@ plot_heatmap <- function(object,
   # Reduce m rows to only keep genes from top_genes
   if(use_top_genes) {
     if (length(object@top_genes) == 0) {
-      stop(paste0("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before."))
+      print_msg("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before.", msg_type = "STOP")
     }
     
     if(is.null(gene_clusters)){
