@@ -14,6 +14,7 @@ DBF(
   k = 100,
   row_sum = 0,
   fdr = 0.05,
+  no_dknn_filter = FALSE,
   seed = 123
 )
 }
@@ -43,6 +44,8 @@ use all the genes.}
 -Inf if no filter needed).}
 
 \item{fdr}{a value for the false discovery rate.}
+
+\item{no_dknn_filter}{Do not perform distance to k nearest neighbor (DBF) step.}
 
 \item{seed}{specify seeds for random number generator.}
 }

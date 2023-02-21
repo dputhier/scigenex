@@ -21,17 +21,16 @@ Extract genes list from each gene clusters. Can extract genes from all clusters 
 }
 \examples{
 
-m <- matrix(rnorm(80000), nc=20)
-m[1:100,1:10] <- m[1:100,1:10] + 4
-m[101:200,11:20] <- m[101:200,11:20] + 3
-m[201:300,5:15] <- m[201:300,5:15] + -2
+m <- create_3_rnd_clust()
 
 res <- find_gene_clusters(data=m,
-                          distance_method="pearson",
-                          av_dot_prod_min = 0,
-                          inflation = 1.2,
-                          k=25,
-                          fdr = 10)
+                             distance_method="pearson",
+                             inflation = 2,
+                             k=75,
+                             row_sum=-Inf,
+                             highest=0.3,
+                             min_nb_supporting_cell = 0,
+                             fdr = 1e-8)
               
 genes <- get_genes(object = res, cluster="1")
 genes

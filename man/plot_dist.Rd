@@ -31,6 +31,7 @@ This function creates a histogram of the simulated and observed distances of a S
 }
 \examples{
 m <- create_4_rnd_clust()
+
 res <- find_gene_clusters(data=m,
                              distance_method="pearson",
                              inflation = 2,

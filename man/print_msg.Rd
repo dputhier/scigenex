@@ -4,7 +4,7 @@
 \alias{print_msg}
 \title{Print a message based on the level of verbosity}
 \usage{
-print_msg(msg, msg_type = c("INFO", "DEBUG", "WARNING"))
+print_msg(msg, msg_type = c("INFO", "DEBUG", "WARNING", "STOP"))
 }
 \arguments{
 \item{msg}{The message to be printed}
