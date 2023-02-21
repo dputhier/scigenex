@@ -18,7 +18,7 @@ test_that("Checking DBF is writting the output in the correct directory...", {
   expect_equal(out, TRUE)
   #Remove temporary files
   file.remove("tmp_output/test_.dbf_out.txt")
-  removeDirectory("tmp_output")
+  unlink("tmp_output", recursive = T)
 })
 
 
