@@ -19,6 +19,7 @@ find_gene_clusters(
   row_sum = 0,
   fdr = 0.05,
   inflation = 2,
+  no_dknn_filter = FALSE,
   seed = 123
 )
 }
@@ -63,6 +64,9 @@ granularity. It is usually chosen somewhere in the range \code{[1.2-3]}.
 whereas \code{inflation = 1.2} will tend to result in very coarse grained
 clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 good results for microarray data when k is set between 70 and 250.}
+
+\item{no_dknn_filter}{Do not perform distance to k nearest neighbor (DBF) step. This may produce
+a very large graph.}
 
 \item{seed}{specify seeds for random number generator.}
 }
@@ -118,13 +122,9 @@ successfully with the 06-058 version).}
 
 \examples{
 
+set_verbosity(2)
 m <- create_4_rnd_clust()
 
-## Set the level of verbosity
-set_verbosity(2)
-
-## A rather stringent version
-## with a 2D artificial dataset
 res <- find_gene_clusters(data=m,
                              distance_method="pearson",
                              inflation = 2,

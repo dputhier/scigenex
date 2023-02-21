@@ -70,6 +70,8 @@
 #' whereas \code{inflation = 1.2} will tend to result in very coarse grained
 #' clusterings. By default, \code{inflation = 2.0}. Default setting gives very
 #' good results for microarray data when k is set between 70 and 250.
+#' @param no_dknn_filter Do not perform distance to k nearest neighbor (DBF) step. This may produce
+#' a very large graph.
 #' @param seed specify seeds for random number generator.
 #' @return a ClusterSets class object.
 #' @section Warnings: With the current implementation, this function only works
@@ -129,6 +131,7 @@ find_gene_clusters <- function(data = NULL,
                                row_sum = 0,
                                fdr = 0.05,
                                inflation = 2,
+                               no_dknn_filter=FALSE,
                                seed = 123) {
   ## testing the system
   if (.Platform$OS.type == "windows") {
@@ -177,19 +180,21 @@ find_gene_clusters <- function(data = NULL,
     msg_type = "INFO"
   )
   
-  ## DBF algorithm, returns a ClusterSet object
-  obj <- DBF(
-    data_matrix,
-    output_path = output_path,
-    name = name,
-    distance_method = distance_method,
-    highest = highest,
-    k = k,
-    row_sum=row_sum,
-    fdr = fdr,
-    seed = seed
-  )
-  
+
+    ## DBF algorithm, returns a ClusterSet object
+    obj <- DBF(
+      data_matrix,
+      output_path = output_path,
+      name = name,
+      distance_method = distance_method,
+      highest = highest,
+      k = k,
+      row_sum=row_sum,
+      fdr = fdr,
+      no_dknn_filter=no_dknn_filter,
+      seed = seed
+    )
+
   dbf_out_file <- paste0(output_path, "/", name, ".dbf_out.txt")
   dbf_out_file <-
     gsub(pattern = "//",
@@ -357,6 +362,7 @@ find_gene_clusters <- function(data = NULL,
 #' @param row_sum Select only lines whose row sum is greater than row_sum (may be 
 #' -Inf if no filter needed).
 #' @param fdr a value for the false discovery rate.
+#' @param no_dknn_filter Do not perform distance to k nearest neighbor (DBF) step.
 #' @param seed specify seeds for random number generator.
 #' @section Warnings: Works only on UNIX-alikes platforms.
 #' @author Bergon A., Bavais J., Textoris J., Lopez F and Puthier D.
@@ -376,6 +382,7 @@ DBF <- function(data,
                 k = 100,
                 row_sum = 0,
                 fdr = 0.05,
+                no_dknn_filter=FALSE,
                 seed = 123) {
   ## testing the system
   if (.Platform$OS.type == "windows") {
@@ -425,7 +432,6 @@ DBF <- function(data,
   #################### Correlation and distance matrices
   # Remove genes with 0 values for all cells
   
-  
   genes_to_keep <- rowSums(data) > row_sum
   select_for_correlation <- data[genes_to_keep, ]
   
@@ -467,7 +473,7 @@ DBF <- function(data,
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix) <- NA
   
-  
+
   # Create a dataframe to store the DKNN values.
   # Gene_id appear both as rownames and column
   # for coding convenience
@@ -500,75 +506,82 @@ DBF <- function(data,
     # This value corresponds to the DKNN of the gene(i)
     df_dknn[gene, "dknn_values"] <- gene_dist[k]
   }
-  
+    
   print_stat("Observed DKNN stats", 
              data = df_dknn$dknn_values, msg_type = "DEBUG")
-  
-  #################### DKNN simulation
-  print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
-  
-  nb_selected_genes <- nrow(select_for_correlation)
-  
-  if (highest == 0) {
-    tresh_dknn <- min(df_dknn$dknn_values)
-  } else if (highest == 1) {
-    tresh_dknn <- max(df_dknn$dknn_values)
-  } else {
-    tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
-  }
-  
-  gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
-  dist_values_sub <- dist_matrix[gene_with_low_dknn, ]
-  dist_values_sub <- dist_values_sub[!is.na(dist_values_sub)]
-  
+
   sim_dknn <- vector()
+  critical_distance <- vector()
   
-  for (sim_nb in 1:nb_selected_genes) {
-    # Randomly sample distances for one simulated gene
-    dist_sim <- sample(dist_values_sub,
-                       size = nb_selected_genes,
-                       replace = FALSE)
+  if(!no_dknn_filter){
     
-    # Extract the k nearest neighbors of these simulated gene
-    dist_sim <- sort(dist_sim)
-    sim_dknn[sim_nb] <- dist_sim[k]
+      #################### DKNN simulation
+      print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
+      
+      nb_selected_genes <- nrow(select_for_correlation)
+      
+      if (highest == 0) {
+        tresh_dknn <- min(df_dknn$dknn_values)
+      } else if (highest == 1) {
+        tresh_dknn <- max(df_dknn$dknn_values)
+      } else {
+        tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
+      }
+      
+      gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
+      dist_values_sub <- dist_matrix[gene_with_low_dknn, ]
+      dist_values_sub <- dist_values_sub[!is.na(dist_values_sub)]
+      
+      
+      for (sim_nb in 1:nb_selected_genes) {
+        # Randomly sample distances for one simulated gene
+        dist_sim <- sample(dist_values_sub,
+                           size = nb_selected_genes,
+                           replace = FALSE)
+        
+        # Extract the k nearest neighbors of these simulated gene
+        dist_sim <- sort(dist_sim)
+        sim_dknn[sim_nb] <- dist_sim[k]
+      }
+    
+      print_stat("Simulated DKNN stats", 
+                  data = sim_dknn, msg_type = "DEBUG")
+    
+      # The simulated DKNN values follow a normal distribution.
+      # Compute the parameters of this distribution
+      mean_sim <- mean(sim_dknn)
+      sd_sim <- sd(sim_dknn)
+    
+      #################### Determine the DKNN threshold (or critical distance)
+      # Order genes by DKNN values
+      print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
+                msg_type = "INFO")
+      
+      # Order the dknn values from low to high
+      df_dknn <- df_dknn[order(df_dknn$dknn_values), ]
+      df_dknn[, "FDR"] <- NA
+    
+      # Compute the FDR
+      for (i in 1:nb_selected_genes) {
+        gene <- df_dknn$gene_id[i]
+        df_dknn[gene, "FDR"] <-
+          stats::pnorm(df_dknn[gene, "dknn_values"],
+                       mean = mean_sim,
+                       sd = sd_sim,
+                       lower.tail = T) / (i / nb_selected_genes) * 100
+      }
+    
+      df_dknn$FDR[df_dknn$FDR > 100] <- 100
+    
+      #################### Select genes with a distance value under critical distance
+      print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
+      fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
+      selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
+      critical_distance <-df_dknn$dknn_values[fdr_tresh_pos]
+
+  }else{
+    selected_genes <- rownames(dist_matrix)
   }
-  
-  print_stat("Simulated DKNN stats", 
-             data = sim_dknn, msg_type = "DEBUG")
-  
-  # The simulated DKNN values follow a normal distribution.
-  # Compute the parameters of this distribution
-  mean_sim <- mean(sim_dknn)
-  sd_sim <- sd(sim_dknn)
-  
-  #################### Determine the DKNN threshold (or critical distance)
-  # Order genes by DKNN values
-  print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
-            msg_type = "INFO")
-  
-  # Order the dknn values from low to high
-  df_dknn <- df_dknn[order(df_dknn$dknn_values), ]
-  df_dknn[, "FDR"] <- NA
-  
-  # Compute the FDR
-  for (i in 1:nb_selected_genes) {
-    gene <- df_dknn$gene_id[i]
-    df_dknn[gene, "FDR"] <-
-      stats::pnorm(df_dknn[gene, "dknn_values"],
-                   mean = mean_sim,
-                   sd = sd_sim,
-                   lower.tail = T) / (i / nb_selected_genes) * 100
-  }
-  
-  df_dknn$FDR[df_dknn$FDR > 100] <- 100
-  
-  #################### Select genes with a distance value under critical distance
-  print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
-  fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
-  selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
-  critical_distance <-df_dknn$dknn_values[fdr_tresh_pos]
-  
   
   # Remove genes not selected on the previously created list including observed distance values
   
