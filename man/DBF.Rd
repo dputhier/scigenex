@@ -6,11 +6,10 @@
 \usage{
 DBF(
   data,
-  output_path = ".",
+  output_path = tempdir(),
   name = NULL,
   dist_threads = 1,
   distance_method = c("pearson", "cosine", "euclidean", "kendall"),
-  silent = FALSE,
   highest = 0.5,
   k = 100,
   row_sum = 0,
@@ -32,9 +31,6 @@ and MCL.}
 
 \item{distance_method}{A method to compute the distance to the k-th nearest neighbor 
 (one of "pearson", "cosine", "euclidean" or "kendall").}
-
-\item{silent}{if set to TRUE (default), the progression of distance matrix
-calculation is not displayed.}
 
 \item{highest}{During the process, genes will be ordered by their distance to their 
 k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
