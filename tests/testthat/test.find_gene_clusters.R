@@ -286,7 +286,7 @@ test_that("Checking that no_dknn_filter is working...", {
   expect_equal(ncol(m), ncol(res))
   expect_equal(paste(colnames(m), collapse = ""), paste(colnames(res), collapse = ""))
   expect_equal(paste0(unlist(res@gene_clusters[[1]]), collapse = ""),
-                         "gene302gene301gene303gene305gene306gene308gene309gene310gene304gene311gene312gene313gene314gene315gene316gene317gene318gene319gene320gene321gene322gene323gene324gene325gene326gene327gene328gene329gene330gene331gene332gene333gene334gene335gene336gene337gene338gene339gene340gene341gene342gene343gene344gene345gene346gene349gene350gene351gene352gene353gene354gene355gene356gene357gene358gene359gene360gene361gene362gene363gene364gene365gene366gene367gene368gene369gene370gene371gene372gene373gene374gene375gene376gene377gene378gene379gene380gene381gene382gene383gene384gene385gene386gene387gene389gene390gene391gene392gene393gene394gene395gene396gene397gene398gene399gene400gene615gene760gene859gene879gene920gene1224gene1393gene1423gene1454gene1644gene1901gene2054gene2181gene2184gene2459gene2490gene2570gene2911gene2999gene3042gene3046gene3232gene3299gene3333gene3609gene3841gene3849gene3933")
+               "gene302gene301gene303gene305gene306gene308gene309gene310gene304gene311gene312gene313gene314gene315gene316gene317gene318gene319gene320gene321gene322gene323gene324gene325gene326gene327gene328gene329gene330gene331gene332gene333gene334gene335gene336gene337gene338gene339gene340gene341gene342gene343gene344gene345gene346gene349gene350gene351gene352gene353gene354gene355gene356gene357gene358gene359gene360gene361gene362gene363gene364gene365gene366gene367gene368gene369gene370gene371gene372gene373gene374gene375gene376gene377gene378gene379gene380gene381gene382gene383gene384gene385gene386gene387gene389gene390gene391gene392gene393gene394gene395gene396gene397gene398gene399gene400gene615gene760gene859gene879gene920gene1224gene1393gene1423gene1454gene1644gene1901gene2054gene2181gene2184gene2459gene2490gene2570gene2911gene2999gene3042gene3046gene3232gene3299gene3333gene3609gene3841gene3849gene3933")
   expect_equal(paste0(unlist(res@gene_clusters[[2]]), collapse = ""), "gene2gene1gene4gene5gene6gene3gene7gene9gene10gene11gene12gene8gene13gene14gene16gene17gene19gene20gene21gene22gene23gene24gene25gene26gene27gene28gene29gene30gene31gene32gene33gene34gene35gene36gene37gene38gene39gene40gene41gene42gene43gene44gene45gene46gene47gene48gene50gene51gene52gene54gene55gene56gene57gene58gene59gene61gene63gene64gene66gene67gene68gene69gene70gene71gene73gene74gene75gene76gene77gene78gene79gene80gene81gene82gene83gene84gene85gene86gene87gene88gene89gene90gene91gene93gene94gene95gene96gene97gene98gene99gene100gene577gene658gene713gene743gene804gene806gene877gene898gene916gene1012gene1277gene1426gene1486gene1528gene1828gene2104gene2260gene2562gene2565gene2586gene2658gene2710gene2962gene3067gene3241gene3251gene3316gene3542gene3745gene3813gene3827gene3977")
   expect_equal(paste0(unlist(res@gene_clusters[[3]]), collapse = ""), "gene202gene201gene203gene205gene206gene207gene208gene209gene210gene204gene211gene212gene213gene214gene215gene216gene217gene218gene219gene220gene221gene222gene223gene224gene225gene226gene227gene228gene229gene230gene231gene232gene233gene234gene235gene236gene237gene238gene239gene240gene241gene242gene243gene244gene245gene246gene247gene248gene249gene250gene251gene252gene253gene254gene255gene256gene257gene258gene259gene260gene261gene262gene263gene264gene265gene266gene267gene268gene269gene270gene271gene272gene273gene274gene275gene276gene277gene278gene279gene280gene281gene282gene283gene284gene285gene286gene287gene288gene289gene290gene291gene292gene293gene294gene295gene296gene297gene298gene299gene300gene847gene893gene1375gene1931gene2036gene2157gene2431gene2859gene3991")
   expect_equal(paste0(unlist(res@gene_clusters[[4]]), collapse = ""), "gene103gene101gene104gene105gene102gene106gene107gene108gene109gene110gene111gene112gene113gene114gene115gene116gene117gene118gene119gene120gene121gene122gene123gene124gene125gene126gene127gene128gene129gene130gene131gene132gene133gene134gene135gene136gene137gene138gene139gene140gene141gene142gene143gene144gene145gene146gene147gene148gene149gene150gene151gene152gene153gene154gene155gene156gene157gene158gene159gene160gene161gene162gene163gene164gene165gene166gene167gene168gene169gene170gene171gene172gene173gene174gene175gene176gene177gene178gene179gene180gene181gene182gene183gene184gene185gene186gene187gene188gene189gene190gene191gene192gene193gene194gene195gene196gene197gene198gene199gene200")
@@ -393,4 +393,102 @@ test_that("Checking that kendall-based distance is working...", {
   
   expect_equal(length(res@gene_clusters), 4)
   expect_equal(round(sum(res@data), 3), 2414.211)
+})
+
+
+# ==============================================================================
+# ==============================================================================
+
+
+test_that("Checking stop if highest argument > 1 or <0", {
+  #Create matrix containing 4 signatures
+  m <- create_4_rnd_clust()
+  
+  expect_error(find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = 1.1,
+    min_nb_supporting_cell = 0,
+    fdr = 1e-8, 
+    output_path = tempdir()
+  ))
+  
+  expect_error(find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = -0.1,
+    min_nb_supporting_cell = 0,
+    fdr = 1e-8, 
+    output_path = tempdir()
+  ))
+})
+
+
+# ==============================================================================
+# ==============================================================================
+
+
+test_that("Checking stop if min_pct_gene_expressed argument > 100 or <0", {
+  #Create matrix containing 4 signatures
+  m <- create_4_rnd_clust()
+  
+  expect_error(find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = 0.3,
+    min_nb_supporting_cell = 2,
+    min_pct_gene_expressed = 101,
+    fdr = 1e-8, 
+    output_path = tempdir()
+  ))
+  
+  expect_error(find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = -0.3,
+    min_nb_supporting_cell = 2,
+    min_pct_gene_expressed = -0.1,
+    fdr = 1e-8, 
+    output_path = tempdir()
+  ))
+})
+
+
+# ==============================================================================
+# ==============================================================================
+
+
+test_that("Checking stop if output directory provided does not exist", {
+  #Create matrix containing 4 signatures
+  m <- create_4_rnd_clust()
+  
+  expect_error(find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = 0.3,
+    min_nb_supporting_cell = 2,
+    fdr = 1e-8, 
+    output_path = "not_a_directory"
+  ))
+  
 })

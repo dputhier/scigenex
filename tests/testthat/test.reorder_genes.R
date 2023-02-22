@@ -16,12 +16,10 @@ res <- find_gene_clusters(
 )
 
 
+test_that("Checking if reorder_genes stops if needed", {
+  expect_error(reorder_genes(res, order_by = "not_ok"))
+})
 
-
-# writeLines(paste0('"', paste(res@gene_clusters$`1`, collapse = '","'), '"'), "genes1.txt")
-# writeLines(paste0('"', paste(res@gene_clusters$`2`, collapse = '","'), '"'), "genes2.txt")
-# writeLines(paste0('"', paste(res@gene_clusters$`3`, collapse = '","'), '"'), "genes3.txt")
-# writeLines(paste0('"', paste(res@gene_clusters$`4`, collapse = '","'), '"'), "genes4.txt")
 
 test_that("Checking reorder_genes function using order_by='gene_names'...", {
   res <- reorder_genes(res, order_by = "gene_names")

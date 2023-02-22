@@ -15,6 +15,9 @@ res <- find_gene_clusters(
   fdr = 1e-8
 )
 
+test_that("Checking if get_genes stop if no slot top_genes in ClusterSet obj", {
+  expect_error(get_genes(res, cluster = "all", top = TRUE))
+})
 
 test_that("Checking get_genes is providing the right list of genes", {
 
