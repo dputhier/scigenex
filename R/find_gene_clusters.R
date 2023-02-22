@@ -324,7 +324,7 @@ find_gene_clusters <- function(data = NULL,
                                 "gene_id" = rownames(obj@data))
       obj@gene_clusters <- split(clusters_df[,"gene_id"], f=clusters_df$gene_clusters)
       obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
-                                         "number" = max(names(obj@gene_clusters)),
+                                         "number" = as.numeric(max(names(obj@gene_clusters))),
                                          "size" = unlist(lapply(obj@gene_clusters, length)))
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
@@ -347,7 +347,7 @@ find_gene_clusters <- function(data = NULL,
         highest = highest,
         fdr = fdr,
         min_nb_supporting_cell = min_nb_supporting_cell,
-        min_pct_gene_expressed, min_pct_gene_expressed,
+        min_pct_gene_expressed = min_pct_gene_expressed,
         min_cluster_size = min_cluster_size,
         row_sum = row_sum,
         seed = seed
@@ -356,6 +356,13 @@ find_gene_clusters <- function(data = NULL,
   } else {
     stop("\t--> There is no conserved gene.\n\n")
   }
+  
+  # Remove temporary files
+  if(output_path == tempdir()) {
+    file.remove(file.path(output_path, paste0(name, ".dbf_out.txt")))
+    file.remove(file.path(output_path, paste0(name, ".mcl_out.txt")))
+  }
+  
   return(obj)
 }
 
