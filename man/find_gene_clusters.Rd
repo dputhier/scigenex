@@ -125,6 +125,7 @@ successfully with the 06-058 version).}
 
 \examples{
 
+# Example with Pearson-based distance
 set_verbosity(2)
 m <- create_4_rnd_clust()
 
@@ -137,6 +138,29 @@ res <- find_gene_clusters(data=m,
                              min_nb_supporting_cell = 0,
                              fdr = 1e-8)
 plot_heatmap(res, row_labels = F)
+
+
+set_verbosity(3)
+m <- create_4_rnd_clust()
+   
+res <- find_gene_clusters(data=m,
+                         distance_method="kendall",
+                         name = "test",
+                         dist_threads = 4,
+                         output_path = ".",
+                         inflation = 2,
+                         k=75,
+                         row_sum=-Inf,
+                         highest=0.3,
+                         min_nb_supporting_cell = 0,
+                         fdr = 1e-8)
+plot_heatmap(res, row_labels = F)
+
+
+
+
+
+
 
 }
 \references{
