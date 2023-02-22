@@ -27,5 +27,6 @@
 #' @importFrom amap hcluster
 #' @importFrom SeuratObject GetAssayData
 #' @importFrom graphics barplot
+#' @importFrom pheatmap pheatmap
 #' 
 NULL

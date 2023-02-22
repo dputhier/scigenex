@@ -13,6 +13,7 @@ plot_heatmap(
   show_dendro = TRUE,
   gene_clusters = NULL,
   use_top_genes = FALSE,
+  interactive = TRUE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
@@ -47,6 +48,8 @@ plot_heatmap(
 \item{gene_clusters}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
+
+\item{interactive}{A logical to indicate if the heatmap should be interactive.}
 
 \item{name}{A title for the heatmap.}
 
