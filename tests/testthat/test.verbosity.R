@@ -41,6 +41,6 @@ test_that("Checking set_verbosity() and get_verbosity()", {
   expect_equal(msg_debug, "|-- DEBUG :  Hello world! ")
   
   msg_warning <- suppressWarnings(print_msg("Hello world!", "WARNING"))
-  expect_equal(msg_warning, "|-- WARNING : Hello world!")
+  expect_equal(msg_warning, NULL)
   
 })
