@@ -403,6 +403,8 @@ find_gene_clusters <- function(data = NULL,
 #' @keywords manip
 #' @importFrom  amap Dist
 #' @importFrom qlcMatrix corSparse cosSparse
+#' @importFrom Matrix rowSums
+#' @importFrom SparseM t
 #' @export DBF
 DBF <- function(data,
                 output_path = ".",
@@ -421,12 +423,14 @@ DBF <- function(data,
                 seed = 123) {
   ## testing the system
   if (.Platform$OS.type == "windows") {
-    stop("\t--> A unix-like OS is required to launch mcl program.")
+    print_msg("A unix-like OS is required to launch mcl program.", 
+              msg_type = "STOP")
   }
   
   if (is.null(data) ||
-      !inherits(data, c("matrix", "data.frame", "Seurat"))) {
-    stop("\t--> Please provide a matrix...\n\n")
+      !inherits(data, c("matrix", "data.frame", "dgCMatrix"))) {
+    print_msg("Please provide a matrix-like object (matrix, data.frame, dgCMatrix)", 
+              msg_type = "STOP")
   }
   
   ## set a seed for reproductibility
@@ -435,7 +439,8 @@ DBF <- function(data,
   }
   
   if (highest < 0 || highest > 1) {
-    stop("highest argument should be >= 0 and <= 1.")
+    print_msg("highest argument should be >= 0 and <= 1.",
+              msg_type = "STOP")              
   }
   
   ## getting data and parameters
@@ -467,7 +472,12 @@ DBF <- function(data,
   #################### Correlation and distance matrices
   # Remove genes with 0 values for all cells
   
-  genes_to_keep <- rowSums(data) > row_sum
+  if(!inherits(data, "dgCMatrix")){
+    genes_to_keep <- rowSums(data) > row_sum
+  }else{
+    genes_to_keep <- Matrix::rowSums(data) > row_sum
+  }
+
   select_for_correlation <- data[genes_to_keep, ]
   
   # Compute gene-gene correlation/distance matrix
@@ -479,6 +489,8 @@ DBF <- function(data,
     ),
     msg_type = "INFO"
   )
+  print_msg(paste0("Number of selected rows/genes:", nrow(select_for_correlation)), 
+            msg_type = "DEBUG")
   
   # Compute correlations and corresponding 
   # distance matrix. Note that for pearson

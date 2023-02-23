@@ -165,6 +165,7 @@ plot_heatmap <- function(object,
     print_msg("Ordering cells.", msg_type="INFO")
     m <- m[,names(sort(cell_clusters))]
   } else {
+    print_msg("Ordering cells/columns using hierarchical clustering.")
     dist_cells <- cor(m, method = "pearson")
     dist_cells <- as.dist((1-dist_cells)/2)
     hclust_cells <- hclust(dist_cells, method = "complete")
