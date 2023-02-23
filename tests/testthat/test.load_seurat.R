@@ -14,8 +14,8 @@ res <- find_gene_clusters(
 )
 
 
-test_that(paste("Checking if load_seurat stops if seurat_obj provided\
-                is not a seurat object"), {
+test_that("Checking if load_seurat stops when\
+          seurat_obj is not a Seurat object", {
   expect_error(load_seurat(
     object = res,
     seurat_obj = "not a seurat object",
@@ -24,8 +24,8 @@ test_that(paste("Checking if load_seurat stops if seurat_obj provided\
 })
 
 
-test_that(paste("Checking if load_seurat stops if dimplot_obj provided\
-                is not a patchwork object"), {
+test_that("Checking if load_seurat stops when\
+          dimplot_obj is not a patchwork object", {
   expect_error(load_seurat(
     object = res,
     seurat_obj = pbmc_small,
@@ -34,8 +34,8 @@ test_that(paste("Checking if load_seurat stops if dimplot_obj provided\
 })
 
 
-test_that(paste("Checking if load_seurat stops if object provided is\
-                not a ClusterSet object"), {
+test_that("Checking if load_seurat stops when\
+          object is not a ClusterSet object", {
   expect_error(load_seurat(
     object = "not a ClusterSet object",
     seurat_obj = pbmc_small,
@@ -44,7 +44,7 @@ test_that(paste("Checking if load_seurat stops if object provided is\
 })
 
 
-test_that(paste("Checking cells metadata provided by load_seurat()"), {
+test_that("Checking cells metadata provided by load_seurat()", {
   res_cells_meta <- load_seurat(
     object = res,
     seurat_obj = pbmc_small,
