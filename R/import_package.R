@@ -26,6 +26,7 @@
 #' @import org.Mm.eg.db
 #' @importFrom amap hcluster
 #' @import SeuratObject
+#' @importFrom Seurat DimPlot
 #' @importFrom graphics barplot
 #' @importFrom pheatmap pheatmap
 #' 
