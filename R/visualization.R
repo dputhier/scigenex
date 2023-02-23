@@ -96,6 +96,7 @@ viz_dist <-  function(object,
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param gene_clusters A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
+#' @param interactive A logical to indicate if the heatmap should be interactive.
 #' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
@@ -137,6 +138,7 @@ plot_heatmap <- function(object,
                          show_dendro = TRUE,
                          gene_clusters = NULL,
                          use_top_genes = FALSE,
+                         interactive = TRUE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
@@ -169,8 +171,10 @@ plot_heatmap <- function(object,
     dist_cells <- cor(m, method = "pearson")
     dist_cells <- as.dist((1-dist_cells)/2)
     hclust_cells <- hclust(dist_cells, method = "complete")
-    # Reorder cells based on hierarchical clustering
-    m <- m[,hclust_cells$order]
+    if(interactive){
+      # Reorder cells based on hierarchical clustering
+      m <- m[,hclust_cells$order]  
+    }
   }
   
   # Centering
@@ -284,39 +288,59 @@ plot_heatmap <- function(object,
   # Main heatmap
   print_msg("Plotting heatmap.", msg_type="INFO")
   
-  htmp <- main_heatmap(data = m,
-                       name = colorbar_name,
-                       show_colorbar = show_legend,
-                       colors = colors,
-                       row_order = seq_len(nrow(m)))
-  
-  htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
-  
-  print_msg("Adding labels.", msg_type="DEBUG")
-  
-  if(row_labels){
-    htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
-  if(col_labels){
-    htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
-  
-  if(!is.null(cell_clusters)){
-    cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
-    htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
+  if(interactive){
+    htmp <- main_heatmap(data = m,
+                         name = colorbar_name,
+                         show_colorbar = show_legend,
+                         colors = colors,
+                         row_order = seq_len(nrow(m)))
+    
+    htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
+    
+    print_msg("Adding labels.", msg_type="DEBUG")
+    
+    if(row_labels){
+      htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
+    if(col_labels){
+      htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
+    
+    if(!is.null(cell_clusters)){
+      cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
+      htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
+    }
+    
+    if(show_dendro & is.null(cell_clusters)) {
+      htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
+    }
+    
+    print_msg("Adding Titles.", msg_type="DEBUG")
+    
+    if(!is.null(ylab)){
+      htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
+    if(!is.null(xlab)){
+      htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))}
+    if(!is.null(name)){
+      htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
+  }else{
+    # Reorder rows to get the same order as the interactive heatmap
+    m <- m[order(nrow(m):1),]
+    
+    if(show_dendro){
+      htmp <- pheatmap(mat = m, 
+                       annotation_legend = show_legend, legend = show_legend,
+                       color = colorRampPalette(colors)(50),
+                       cluster_rows = F, cluster_cols = hclust_cells, 
+                       show_rownames = row_labels, show_colnames = col_labels, 
+                       border_color = NA, scale = "none", na_col = "white")
+    }else{
+      htmp <- pheatmap(mat = m[, hclust_cells$order], 
+                       annotation_legend = show_legend, legend = show_legend,
+                       color = colorRampPalette(colors)(50),
+                       cluster_rows = F, cluster_cols = F, 
+                       show_rownames = row_labels, show_colnames = col_labels, 
+                       border_color = NA, scale = "none", na_col = "white")
+    }
   }
-  
-  if(show_dendro & is.null(cell_clusters)) {
-    htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
-  }
-  
-  print_msg("Adding Titles.", msg_type="DEBUG")
-  
-  if(!is.null(ylab)){
-    htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
-  if(!is.null(xlab)){
-    htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))}
-  if(!is.null(name)){
-    htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
-  
   
   return(htmp)
 }

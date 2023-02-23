@@ -207,22 +207,22 @@ find_gene_clusters <- function(data = NULL,
     msg_type = "INFO"
   )
   
-
-    ## DBF algorithm, returns a ClusterSet object
-    obj <- DBF(
-      data_matrix,
-      output_path = output_path,
-      dist_threads=dist_threads,
-      name = name,
-      distance_method = distance_method,
-      highest = highest,
-      k = k,
-      row_sum=row_sum,
-      fdr = fdr,
-      no_dknn_filter=no_dknn_filter,
-      seed = seed
-    )
-
+  
+  ## DBF algorithm, returns a ClusterSet object
+  obj <- DBF(
+    data_matrix,
+    output_path = output_path,
+    dist_threads=dist_threads,
+    name = name,
+    distance_method = distance_method,
+    highest = highest,
+    k = k,
+    row_sum=row_sum,
+    fdr = fdr,
+    no_dknn_filter=no_dknn_filter,
+    seed = seed
+  )
+  
   dbf_out_file <- paste0(output_path, "/", name, ".dbf_out.txt")
   dbf_out_file <-
     gsub(pattern = "//",
@@ -324,7 +324,7 @@ find_gene_clusters <- function(data = NULL,
                                 "gene_id" = rownames(obj@data))
       obj@gene_clusters <- split(clusters_df[,"gene_id"], f=clusters_df$gene_clusters)
       obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
-                                         "number" = max(names(obj@gene_clusters)),
+                                         "number" = as.numeric(max(names(obj@gene_clusters))),
                                          "size" = unlist(lapply(obj@gene_clusters, length)))
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
@@ -347,7 +347,7 @@ find_gene_clusters <- function(data = NULL,
         highest = highest,
         fdr = fdr,
         min_nb_supporting_cell = min_nb_supporting_cell,
-        min_pct_gene_expressed, min_pct_gene_expressed,
+        min_pct_gene_expressed = min_pct_gene_expressed,
         min_cluster_size = min_cluster_size,
         row_sum = row_sum,
         seed = seed
@@ -356,6 +356,13 @@ find_gene_clusters <- function(data = NULL,
   } else {
     stop("\t--> There is no conserved gene.\n\n")
   }
+  
+  # Remove temporary files
+  if(output_path == tempdir()) {
+    file.remove(file.path(output_path, paste0(name, ".dbf_out.txt")))
+    file.remove(file.path(output_path, paste0(name, ".mcl_out.txt")))
+  }
+  
   return(obj)
 }
 
@@ -381,8 +388,6 @@ find_gene_clusters <- function(data = NULL,
 #' @param distance_method A method to compute the distance to the k-th nearest neighbor 
 #' (one of "pearson", "cosine", "euclidean" or "kendall").
 #' @param dist_threads If the "kendall" distance is used, the number of threads (library amap).
-#' @param silent if set to TRUE (default), the progression of distance matrix
-#' calculation is not displayed.
 #' @param highest During the process, genes will be ordered by their distance to their 
 #' k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
 #' whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
@@ -407,14 +412,13 @@ find_gene_clusters <- function(data = NULL,
 #' @importFrom SparseM t
 #' @export DBF
 DBF <- function(data,
-                output_path = ".",
+                output_path = tempdir(),
                 name = NULL,
                 dist_threads=1,
                 distance_method = c("pearson",
                                     "cosine",
                                     "euclidean",
                                     "kendall"),
-                silent = FALSE,
                 highest = 0.5,
                 k = 100,
                 row_sum = 0,
@@ -453,15 +457,14 @@ DBF <- function(data,
   
   distance_method <- match.arg(distance_method)
   
-  if (silent) {
-    print_msg(
-      paste0(
-        "Computing distances to the kth-nearest neighbors ",
-        "and associated FDR values... \n"
-      ),
-      msg_type = "INFO"
-    )
-  }
+  print_msg(
+    paste0(
+      "Computing distances to the kth-nearest neighbors ",
+      "and associated FDR values... \n"
+    ),
+    msg_type = "INFO"
+  )
+  
   
   # Directory and name of the principal output
   outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
@@ -554,79 +557,79 @@ DBF <- function(data,
     # This value corresponds to the DKNN of the gene(i)
     df_dknn[gene, "dknn_values"] <- gene_dist[k]
   }
-    
+  
   print_stat("Observed DKNN stats", 
              data = df_dknn$dknn_values, msg_type = "DEBUG")
-
+  
   sim_dknn <- vector()
   critical_distance <- vector()
   
   if(!no_dknn_filter){
     
-      #################### DKNN simulation
-      print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
-      
-      nb_selected_genes <- nrow(select_for_correlation)
-      
-      if (highest == 0) {
-        tresh_dknn <- min(df_dknn$dknn_values)
-      } else if (highest == 1) {
-        tresh_dknn <- max(df_dknn$dknn_values)
-      } else {
-        tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
-      }
-      
-      gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
-      dist_values_sub <- dist_matrix[gene_with_low_dknn, ]
-      dist_values_sub <- dist_values_sub[!is.na(dist_values_sub)]
-      
-      
-      for (sim_nb in 1:nb_selected_genes) {
-        # Randomly sample distances for one simulated gene
-        dist_sim <- sample(dist_values_sub,
-                           size = nb_selected_genes,
-                           replace = FALSE)
-        
-        # Extract the k nearest neighbors of these simulated gene
-        dist_sim <- sort(dist_sim)
-        sim_dknn[sim_nb] <- dist_sim[k]
-      }
+    #################### DKNN simulation
+    print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
     
-      print_stat("Simulated DKNN stats", 
-                  data = sim_dknn, msg_type = "DEBUG")
+    nb_selected_genes <- nrow(select_for_correlation)
     
-      # The simulated DKNN values follow a normal distribution.
-      # Compute the parameters of this distribution
-      mean_sim <- mean(sim_dknn)
-      sd_sim <- sd(sim_dknn)
+    if (highest == 0) {
+      tresh_dknn <- min(df_dknn$dknn_values)
+    } else if (highest == 1) {
+      tresh_dknn <- max(df_dknn$dknn_values)
+    } else {
+      tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
+    }
     
-      #################### Determine the DKNN threshold (or critical distance)
-      # Order genes by DKNN values
-      print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
-                msg_type = "INFO")
+    gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
+    dist_values_sub <- dist_matrix[gene_with_low_dknn, ]
+    dist_values_sub <- dist_values_sub[!is.na(dist_values_sub)]
+    
+    
+    for (sim_nb in 1:nb_selected_genes) {
+      # Randomly sample distances for one simulated gene
+      dist_sim <- sample(dist_values_sub,
+                         size = nb_selected_genes,
+                         replace = FALSE)
       
-      # Order the dknn values from low to high
-      df_dknn <- df_dknn[order(df_dknn$dknn_values), ]
-      df_dknn[, "FDR"] <- NA
+      # Extract the k nearest neighbors of these simulated gene
+      dist_sim <- sort(dist_sim)
+      sim_dknn[sim_nb] <- dist_sim[k]
+    }
     
-      # Compute the FDR
-      for (i in 1:nb_selected_genes) {
-        gene <- df_dknn$gene_id[i]
-        df_dknn[gene, "FDR"] <-
-          stats::pnorm(df_dknn[gene, "dknn_values"],
-                       mean = mean_sim,
-                       sd = sd_sim,
-                       lower.tail = T) / (i / nb_selected_genes) * 100
-      }
+    print_stat("Simulated DKNN stats", 
+               data = sim_dknn, msg_type = "DEBUG")
     
-      df_dknn$FDR[df_dknn$FDR > 100] <- 100
+    # The simulated DKNN values follow a normal distribution.
+    # Compute the parameters of this distribution
+    mean_sim <- mean(sim_dknn)
+    sd_sim <- sd(sim_dknn)
     
-      #################### Select genes with a distance value under critical distance
-      print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
-      fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
-      selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
-      critical_distance <-df_dknn$dknn_values[fdr_tresh_pos]
-
+    #################### Determine the DKNN threshold (or critical distance)
+    # Order genes by DKNN values
+    print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
+              msg_type = "INFO")
+    
+    # Order the dknn values from low to high
+    df_dknn <- df_dknn[order(df_dknn$dknn_values), ]
+    df_dknn[, "FDR"] <- NA
+    
+    # Compute the FDR
+    for (i in 1:nb_selected_genes) {
+      gene <- df_dknn$gene_id[i]
+      df_dknn[gene, "FDR"] <-
+        stats::pnorm(df_dknn[gene, "dknn_values"],
+                     mean = mean_sim,
+                     sd = sd_sim,
+                     lower.tail = T) / (i / nb_selected_genes) * 100
+    }
+    
+    df_dknn$FDR[df_dknn$FDR > 100] <- 100
+    
+    #################### Select genes with a distance value under critical distance
+    print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
+    fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
+    selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
+    critical_distance <-df_dknn$dknn_values[fdr_tresh_pos]
+    
   }else{
     selected_genes <- rownames(dist_matrix)
   }
@@ -656,7 +659,7 @@ DBF <- function(data,
     (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
   # Convert scaled dist to weight
   mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
-
+  
   print_stat("Graph weights (after convertion)", 
              data = mcl_out_as_df$weight, 
              msg_type = "DEBUG")
@@ -693,7 +696,7 @@ DBF <- function(data,
                          fdr = fdr,
                          row_sum = row_sum,
                          seed = seed
-                         )
+  )
   
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])

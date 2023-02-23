@@ -1,15 +1,43 @@
 test_that("Just some check about print_msg", {
-  
-  set_verbosity(2)
-  set.seed(2)
-  d <- rnorm(4)
+  set.seed(123)
 
-  msg_info <- capture.output(print_stat("Hello world!",  d, 2,"INFO"))
-  expect_equal(msg_info, "|-- INFO :  Hello world!: Min:-1.13 Q1:-0.96 Med:-0.36 Mean:-0.06 Q3:0.54 Max:1.59 ")
+  data <- rnorm(3)
+  expect_warning(
+    print_stat(
+      "Summary statistics for data",
+      data,
+      round_val = 2,
+      msg_type = "WARNING"
+    ),
+    paste(
+      "|-- WARNING : Summary statistics for data:",
+      "Min:-0.56 Q1:-0.4 Med:-0.23",
+      "Mean:0.26 Q3:0.66 Max:1.56"
+    )
+  )
 
-  msg_debug <- capture.output(print_stat("Hello world!",  d, 2,"DEBUG"))
-  expect_equal(msg_debug, "|-- DEBUG :  Hello world!: Min:-1.13 Q1:-0.96 Med:-0.36 Mean:-0.06 Q3:0.54 Max:1.59 ")
+  data <- rnorm(100)
+  expect_warning(
+    print_stat(
+      "Summary statistics for data",
+      data,
+      round_val = 1,
+      msg_type = "WARNING"
+    ),
+    paste(
+      "|-- WARNING : Summary statistics for data:",
+      "Min:-2.3 Q1:-0.5 Med:0.1 Mean:0.1 Q3:0.7 Max:2.2"
+    )
+  )
 
-  msg_warning <- suppressWarnings(print_msg("Hello world!", "WARNING"))
-  expect_equal(msg_warning, NULL)
+  data <- letters[1:10]
+  expect_warning(
+    print_stat(
+      "Summary statistics for data",
+      data,
+      round_val = 1,
+      msg_type = "WARNING"
+    ),
+    "|-- WARNING : Summary statistics for data: No Statistics"
+  )
 })

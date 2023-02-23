@@ -23,23 +23,24 @@ Extract the highly co-expressed genes of each gene cluster.
 
 m <- create_3_rnd_clust()
 
-res <- find_gene_clusters(data=m,
-                             distance_method="pearson",
-                             inflation = 2,
-                             k=75,
-                             row_sum=-Inf,
-                             highest=0.3,
-                             min_nb_supporting_cell = 0,
-                             fdr = 1e-8)
-              
-res <- top_genes(object = res, top=500, cluster="all")
-res@top_genes
+res <- find_gene_clusters(
+  data = m,
+  distance_method = "pearson",
+  inflation = 2,
+  k = 75,
+  row_sum = -Inf,
+  highest = 0.3,
+  min_nb_supporting_cell = 0,
+  fdr = 1e-8
+)
 
+res <- top_genes(object = res, top = 500, cluster = "all")
+res@top_genes
 \dontrun{
 ## with an artificial dataset
 
 m <- matrix(rnorm(80000), nc = 20)
-res <- get_data_for_scigenex(data=m)
+res <- get_data_for_scigenex(data = m)
 }
 
 }

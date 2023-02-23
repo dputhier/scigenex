@@ -15,6 +15,8 @@ res_scigenex <- find_gene_clusters(
 )
 
 test_that("Checking plot_heatmap()", {
+  set.seed(123)
+  
   htmp <- plot_heatmap(
     object = res_scigenex,
     cell_clusters = NULL,
@@ -64,10 +66,10 @@ test_that("Checking plot_heatmap()", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c(
-    "sample16", "sample19", "sample17", "sample18", "sample14", "sample11",
-    "sample12", "sample13", "sample15", "sample20", "sample1", "sample5",
-    "sample10", "sample4", "sample2", "sample3", "sample6", "sample9",
-    "sample7", "sample8"
+    "sample15", "sample20", "sample14", "sample11", "sample12", "sample13",
+    "sample16", "sample19", "sample17", "sample18", "sample4", "sample6",
+    "sample9", "sample7", "sample8", "sample1", "sample5", "sample10",
+    "sample2", "sample3"
   ))
 
   # Checking order of rows
@@ -164,6 +166,8 @@ test_that("Checking plot_heatmap()", {
 
 
 test_that("Checking plot_heatmap() using top genes", {
+  set.seed(123)
+  
   res_scigenex_top <- top_genes(res_scigenex, top = 20)
   htmp <- plot_heatmap(
     object = res_scigenex_top,
@@ -214,10 +218,10 @@ test_that("Checking plot_heatmap() using top genes", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c(
-    "sample16", "sample19", "sample17", "sample18", "sample14", "sample11",
-    "sample12", "sample13", "sample15", "sample20", "sample1", "sample5",
-    "sample10", "sample4", "sample2", "sample3", "sample6", "sample9",
-    "sample7", "sample8"
+    "sample15", "sample20", "sample14", "sample11", "sample12", "sample13",
+    "sample16", "sample19", "sample17", "sample18", "sample4", "sample6",
+    "sample9", "sample7", "sample8", "sample1", "sample5", "sample10",
+    "sample2", "sample3"
   ))
 
   # Checking order of rows

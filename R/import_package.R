@@ -25,7 +25,8 @@
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 #' @importFrom amap hcluster
-#' @importFrom SeuratObject GetAssayData
+#' @import SeuratObject
 #' @importFrom graphics barplot
+#' @importFrom pheatmap pheatmap
 #' 
 NULL

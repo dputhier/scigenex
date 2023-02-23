@@ -10,8 +10,8 @@ test_that("Checking set_verbosity() and get_verbosity()", {
   msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
   expect_equal(msg_debug, as.character())
   
-  msg_warning <- suppressWarnings(print_msg("Hello world!", "WARNING"))
-  expect_equal(msg_warning, NULL)
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
   
   
   #==============================
@@ -25,8 +25,8 @@ test_that("Checking set_verbosity() and get_verbosity()", {
   msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
   expect_equal(msg_debug, as.character())
   
-  msg_warning <- suppressWarnings(print_msg("Hello world!", "WARNING"))
-  expect_equal(msg_warning, NULL)
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
   
   
   #==============================
@@ -40,7 +40,7 @@ test_that("Checking set_verbosity() and get_verbosity()", {
   msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
   expect_equal(msg_debug, "|-- DEBUG :  Hello world! ")
   
-  msg_warning <- suppressWarnings(print_msg("Hello world!", "WARNING"))
-  expect_equal(msg_warning, NULL)
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
   
 })
