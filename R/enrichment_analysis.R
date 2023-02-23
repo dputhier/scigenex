@@ -58,7 +58,8 @@ setMethod("enrich_go",
             
             
             for(cluster in unique(names(object@gene_clusters))){
-              print(paste0("Enrichment analysis for cluster ", cluster))
+              print_msg(paste0("Enrichment analysis for cluster ", cluster),
+                        msg_type = "INFO")
               cluster_name = paste0("Cluster_", cluster)
               query = object@gene_clusters[[cluster]]
               
@@ -139,6 +140,9 @@ setMethod("viz_enrich",
               }
             }
             
+            list_plot <- list()
+            list_dotplot <- list()
+            list_barplot <- list()
             
             for (cur_cluster in clusters) {
               # Check if the current cluster id provided exists
@@ -156,7 +160,7 @@ setMethod("viz_enrich",
                 print_msg(msg_type = "INFO",
                           msg = paste0("Plot enrichment analysis results for cluster ", cur_cluster))
                 
-                list_plot <- list()
+                
                 
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
@@ -173,7 +177,7 @@ setMethod("viz_enrich",
                                                     label_format = terms_size)
                     dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
-                  list_plot <- append(list_plot, list(dot_plot))
+                  list_dotplot <- append(list_dotplot, list(dot_plot))
                 }
                 
                 # Create a ggplot - barplot
@@ -191,11 +195,12 @@ setMethod("viz_enrich",
                                                   label_format = terms_size)
                     bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
                   }
-                  list_plot <- append(list_plot, list(bar_plot))
+                  list_barplot <- append(list_barplot, list(bar_plot))
                 }
+                list_plot <- append(list_barplot, list_dotplot)
               }
             }
-
-            return(invisible(list_plot))
+            
+            return(invisible(lapply(list_plot, print)))
           }
 )

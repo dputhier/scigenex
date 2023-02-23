@@ -1,7 +1,6 @@
 # Load seurat object
 data(pbmc_small, package = "SeuratObject")
 
-m <- create_4_rnd_clust()
 res <- find_gene_clusters(
   data = pbmc_small,
   distance_method = "pearson",
