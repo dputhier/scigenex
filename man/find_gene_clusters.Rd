@@ -16,6 +16,7 @@ find_gene_clusters(
   min_pct_gene_expressed = 40,
   min_cluster_size = 10,
   highest = 0.25,
+  which_slot = c("data", "sct", "counts"),
   k = 50,
   row_sum = 0,
   fdr = 0.05,
@@ -53,6 +54,9 @@ MCL tend to create lots of clusters with very few (e.g 2) objects.}
 k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
 whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
 use all the genes.}
+
+\item{which_slot}{One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.
+SCT is the recommended method from Seurat package when working with spatial transcriptomics data.}
 
 \item{k}{the neighborhood size.}
 

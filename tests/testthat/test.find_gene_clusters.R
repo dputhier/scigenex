@@ -868,3 +868,24 @@ test_that("Checking find_gene_clusters() when min_cluster_size\
 
   expect_equal(res@gene_clusters_metadata$number, 4)
 })
+
+
+test_that("Checking find_gene_clusters() with euclidean distance.", {
+  
+  set_verbosity(0)
+  data("complex9Noisy")
+  res <- find_gene_clusters(data=complex9Noisy[ ,1:2],
+                            distance_method="euclidean",
+                            inflation = 1.25,
+                            k=20,
+                            min_nb_supporting_cell=0,
+                            highest = 0.95,
+                            row_sum = -Inf,
+                            fdr = 0.0001)
+  
+  expect_equal(res@gene_clusters_metadata$number, 8)
+  expect_equal(paste0(res@gene_clusters_metadata$size, collapse = " "), 
+               "1023 782 419 373 352 126 122 89")
+  expect_equal(ncol(res@data), 2)
+  expect_equal(nrow(res@data), 3286)
+})

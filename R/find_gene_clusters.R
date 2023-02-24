@@ -61,6 +61,8 @@
 #' k nearest neighbors (dknn). This parameter controls the fraction of genes with high dknn (ie. noise)
 #' whose neighborhood (i.e associated distances) will be used to compute simulated values. 0 would mean to 
 #' use all the genes.  
+#' @param which_slot One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.
+#' SCT is the recommended method from Seurat package when working with spatial transcriptomics data. 
 #' @param k the neighborhood size.
 #' @param row_sum Select only lines whose row sum is greater than row_sum (may be 
 #' -Inf if no filter needed).
@@ -154,6 +156,7 @@ find_gene_clusters <- function(data = NULL,
                                min_pct_gene_expressed = 40,
                                min_cluster_size = 10,
                                highest = 0.25,
+                               which_slot=c("data", "sct", "counts"),
                                k = 50,
                                row_sum = 0,
                                fdr = 0.05,
@@ -165,8 +168,6 @@ find_gene_clusters <- function(data = NULL,
     stop("\t--> A unix-like OS is required to launch mcl and cluster programs.")
   }
   
-  ## getting parameters
-  data_matrix <- get_data_for_scigenex(data = data)
   
   if (highest < 0 || highest > 1) {
     stop("highest argument should be >= 0 and <= 1.")
@@ -188,7 +189,14 @@ find_gene_clusters <- function(data = NULL,
     stop("Output directory provided does not exist.")
   }
   
+  which_slot <- match.arg(which_slot)
   distance_method <- match.arg(distance_method)
+  
+  ## getting matrix
+  data_matrix <- get_data_for_scigenex(data = data, which_slot=which_slot)
+  
+
+ 
   
   print_msg(paste0(
     "The following parameters will be used :",
@@ -198,6 +206,8 @@ find_gene_clusters <- function(data = NULL,
     "\n\tMinimum number of cell supporting each cluster: ", min_nb_supporting_cell,
     "\n\tThe min fraction of genes expressed by supporting cells : ", min_pct_gene_expressed,
     "\n\tRow sum threshold: ", row_sum,
+    "\n\tNoise fraction: ", highest,    
+    "\n\tIntensity slot: ", which_slot,    
     "\n\tMinimum cluster size: ", min_cluster_size,
     "\n\tNumber of neighbors: ", k,
     "\n\tFDR: ", fdr, "%",
@@ -353,14 +363,15 @@ find_gene_clusters <- function(data = NULL,
         seed = seed
       )
     }
+    
+    # Remove temporary files
+    if(output_path == tempdir()) {
+      file.remove(file.path(output_path, paste0(name, ".dbf_out.txt")))
+      file.remove(file.path(output_path, paste0(name, ".mcl_out.txt")))
+    }
+    
   } else {
-    stop("\t--> There is no conserved gene.\n\n")
-  }
-  
-  # Remove temporary files
-  if(output_path == tempdir()) {
-    file.remove(file.path(output_path, paste0(name, ".dbf_out.txt")))
-    file.remove(file.path(output_path, paste0(name, ".mcl_out.txt")))
+    print_msg("There is no conserved gene.", msg_type = 'INFO')
   }
   
   return(obj)
@@ -492,7 +503,7 @@ DBF <- function(data,
     ),
     msg_type = "INFO"
   )
-  print_msg(paste0("Number of selected rows/genes:", nrow(select_for_correlation)), 
+  print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
             msg_type = "DEBUG")
   
   # Compute correlations and corresponding 
@@ -650,7 +661,7 @@ DBF <- function(data,
       weight = l_knn_selected[[g]]
     )
   }
-  
+
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
   #############  Convert distances into weights
@@ -698,6 +709,9 @@ DBF <- function(data,
                          seed = seed
   )
   
+  print_msg(paste0("Number of selected rows/genes (DBF): ", length(selected_genes)), 
+            msg_type = "DEBUG")
+  
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])
     obj@gene_clusters <- list("1" = rownames(obj@data))
@@ -707,11 +721,17 @@ DBF <- function(data,
     
     obs_dknn <- as.vector(df_dknn[, "dknn_values"])
     names(obs_dknn) <- df_dknn[, "gene_id"]
-    center = matrix(apply(obj@data[obj@gene_clusters$`1`, ],
-                          2,
-                          mean,
-                          na.rm = TRUE),
-                    nrow = 1)
+    if(length(selected_genes) > 1){
+      center = matrix(apply(obj@data[obj@gene_clusters$`1`, ],
+                            2,
+                            mean,
+                            na.rm = TRUE),
+                      nrow = 1)
+    }else{
+      center = matrix(obj@data[obj@gene_clusters$`1`, ],
+                      nrow = 1)
+    }
+
     obj@dbf_output <- list("dknn" = obs_dknn,
                            "simulated_dknn" = sim_dknn,
                            "critical_distance" = critical_distance,
@@ -719,8 +739,17 @@ DBF <- function(data,
                            "center" = center)
     # obj@normal_model_mean <- mean_sim
     # obj@normal_model_sd <- mean_sd
+  }else{
+    
+    obs_dknn <- as.vector(df_dknn[, "dknn_values"])
+    names(obs_dknn) <- df_dknn[, "gene_id"]
+    obj@dbf_output <- list("dknn" = obs_dknn,
+                           "simulated_dknn" = sim_dknn,
+                           "critical_distance" = critical_distance,
+                           "fdr" = df_dknn$FDR,
+                           "center" = NULL)
   }
-  
+
   return(obj)
 }
 

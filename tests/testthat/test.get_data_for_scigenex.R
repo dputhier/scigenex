@@ -1,17 +1,21 @@
 test_that(paste("Checking get_data_for_scigenex stops if data provided is not",
                 "a dataframe, a matrix or a Seurat object"), {
+                  set_verbosity(0)
                   data_for_scigenex <- seq(1,20)
                   expect_error(get_data_for_scigenex(data_for_scigenex))
                 }
 )
 
 test_that(paste("Checking get_data_for_scigenex stops if data provided NULL"), {
+  set_verbosity(0)
   data_for_scigenex <- NULL
   expect_error(get_data_for_scigenex(data_for_scigenex))
 })
 
 test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                 "using a seurat object as data argument"), {
+                  
+                  set_verbosity(0)
                   data(pbmc_small, package = "SeuratObject")
                   data_for_scigenex <- pbmc_small
                   expr_matrix <- get_data_for_scigenex(data_for_scigenex)
@@ -105,6 +109,7 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
 
 test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                 "using a dataframe as data argument"), {
+                  set_verbosity(0)
                   data_for_scigenex <- as.data.frame(create_4_rnd_clust())
                   expr_matrix <- get_data_for_scigenex(data_for_scigenex)
                   
@@ -134,7 +139,10 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
 
 
 test_that(paste("Checking matrix obtained with get_data_for_scigenex",
-                "using a dataframe as data argument"), {
+                "using a matrix as data argument"), {
+                  
+                  set_verbosity(0)
+
                   data_for_scigenex <- create_4_rnd_clust()
                   expr_matrix <- get_data_for_scigenex(data_for_scigenex)
                   
@@ -162,3 +170,55 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                 }
 )
 
+test_that(paste("Checking matrix obtained with get_data_for_scigenex",
+                "using a data.frame as data argument"), {
+                  
+                  set_verbosity(0)
+
+                  data_for_scigenex <- as.data.frame(create_4_rnd_clust())
+                  expr_matrix <- get_data_for_scigenex(data_for_scigenex)
+                  
+                  expect_equal(round(mean(expr_matrix), 6), 0.029886)
+                  expect_equal(round(median(expr_matrix), 6), 0.00703)
+                  expect_equal(round(sd(expr_matrix), 6), 1.169623)
+                  expect_equal(round(sum(expr_matrix^2), 1), 109511.6)
+                  expect_equal(length(expr_matrix), 80000)
+                  
+                  expect_equal(round(sum(quantile(expr_matrix)["0%"]), 6), -5.806817)
+                  expect_equal(round(sum(quantile(expr_matrix)["25%"]), 6), -0.695268)
+                  expect_equal(round(sum(quantile(expr_matrix)["50%"]), 6), 0.00703)
+                  expect_equal(round(sum(quantile(expr_matrix)["75%"]), 6), 0.718151)
+                  expect_equal(round(sum(quantile(expr_matrix)["100%"]), 6), 7.073935)
+                  
+                  expect_equal(round(sum(colMeans(expr_matrix)),5), 0.59772)
+                  expect_equal(round(sum(rowMeans(expr_matrix)),4), 119.544)
+                  
+                  expect_equal(ncol(expr_matrix), 20)
+                  expect_equal(colnames(expr_matrix), paste0("V", seq(1,20)))
+                  
+                  expect_equal(nrow(expr_matrix), 4000) 
+                  
+                  expect_that(expr_matrix, is_a("matrix"))
+                }
+)
+
+
+test_that(paste("Checking SCT with pmbc_samll"), {
+                  
+                  set_verbosity(0)
+                  data(pbmc_small, package = "SeuratObject")
+                  data_for_scigenex <- pbmc_small
+                  
+                  expect_error(get_data_for_scigenex(data_for_scigenex, which_slot ="sct"))
+                  
+                  data_for_scigenex <- suppressWarnings(Seurat::SCTransform(pbmc_small, verbose = FALSE))
+                  expr_matrix <- get_data_for_scigenex(data_for_scigenex, which_slot ="sct")
+                  
+                  expect_equal(round(mean(as.matrix(expr_matrix[!is.na(expr_matrix)])), 3), 0.282)
+                  expect_equal(ncol(expr_matrix), 80)
+                  expect_equal(nrow(expr_matrix), 220) 
+                  
+                  expect_that(expr_matrix, is_a("dgCMatrix"))
+                }
+)
+  
