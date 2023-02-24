@@ -9,4 +9,5 @@ test_that("Just some check about print_msg", {
 
   expect_warning(print_msg("Hello world!", "WARNING"),
                "|-- WARNING : Hello world!")
+  expect_equal(capture.output(print_msg("Hello world!")), "|-- INFO :  Hello world! ")
 })
