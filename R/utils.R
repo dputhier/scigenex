@@ -142,7 +142,7 @@ print_stat <-
     
     if (!is.numeric(data)) {
       
-      print_msg("Can't print stats from numeric object", msg_type = "WARNING")
+      print_msg("Can't print stats from non numeric object", msg_type = "WARNING")
       stats="No Statistics"
     }else{
       stats <- summary(data)

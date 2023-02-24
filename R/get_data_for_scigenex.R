@@ -27,29 +27,26 @@ get_data_for_scigenex <- function(data = NULL) {
   
   # Stop the function if data not provided
   if (is.null(data)) {
-    stop("Please provide a Seurat Object, a data.frame",
-         " or a matrix.\n")
+    print_msg(paste0("Please provide a Seurat Object, a data.frame",
+                      ", a matrix or dgCMatrix.\n"), 
+              msg_type = "STOP")
   }
-  
   
   if (inherits(data, "Seurat")) { 
     # Extract normalized count matrix in Seurat object
-    data <- as.matrix(SeuratObject::GetAssayData(data, slot = 'data'))
+    data <- SeuratObject::GetAssayData(data, slot = 'data')
+  } else if (is.data.frame(data)) {
+    # Convert dataframe to a matrix
+    data <- as.matrix(data)
+  } else if (is.matrix(data)) {
+    data <- data
+  } else if (inherits(data, "dgCMatrix")) {
+    data <- data
   } else {
-    if (is.data.frame(data)) {
-      # Convert dataframe to a matrix
-      data <- as.matrix(data)
-    } else {
-      if (!is.matrix(data)) {
-        stop(
-          "\t--> Please provide a Seurat Object, a data.frame",
-          " or a matrix.\n"
-        )
-      }
-    }
+        print_msg(paste0("\t--> Please provide a Seurat Object, a data.frame",
+                         " or a matrix."), 
+                  msg_type = "STOP")
   }
-  
-  
 
   ## adding dimnames if not provided
   if (is.null(rownames(data))) {

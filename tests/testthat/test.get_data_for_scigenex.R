@@ -16,17 +16,18 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                   data_for_scigenex <- pbmc_small
                   expr_matrix <- get_data_for_scigenex(data_for_scigenex)
 
-                  expect_equal(round(mean(expr_matrix), 6), 1.110883)
-                  expect_equal(round(median(expr_matrix), 6), 0)
-                  expect_equal(round(sd(expr_matrix), 6), 2.031546)
-                  expect_equal(round(sum(expr_matrix^2), 2), 98642.66)
-                  expect_equal(length(expr_matrix), 18400)
+                  expect_equal(class(expr_matrix)[1], "dgCMatrix")
+                  expect_equal(round(mean(as.matrix(expr_matrix)), 6), 1.110883)
+                  expect_equal(round(median(as.matrix(expr_matrix)), 6), 0)
+                  expect_equal(round(sd(as.matrix(expr_matrix)), 6), 2.031546)
+                  expect_equal(round(sum(as.matrix(expr_matrix^2)), 2), 98642.66)
+                  expect_equal(length(as.matrix(expr_matrix)), 18400)
 
-                  expect_equal(round(sum(quantile(expr_matrix)["0%"]), 6), 0)
-                  expect_equal(round(sum(quantile(expr_matrix)["25%"]), 6), 0)
-                  expect_equal(round(sum(quantile(expr_matrix)["50%"]), 6), 0)
-                  expect_equal(round(sum(quantile(expr_matrix)["75%"]), 6), 0)
-                  expect_equal(round(sum(quantile(expr_matrix)["100%"]), 6), 8.092033)
+                  expect_equal(round(sum(quantile(as.matrix(expr_matrix))["0%"]), 6), 0)
+                  expect_equal(round(sum(quantile(as.matrix(expr_matrix))["25%"]), 6), 0)
+                  expect_equal(round(sum(quantile(as.matrix(expr_matrix))["50%"]), 6), 0)
+                  expect_equal(round(sum(quantile(as.matrix(expr_matrix))["75%"]), 6), 0)
+                  expect_equal(round(sum(quantile(as.matrix(expr_matrix))["100%"]), 6), 8.092033)
 
                   expect_equal(round(sum(colMeans(expr_matrix)),5), 88.87063)
                   expect_equal(round(sum(rowMeans(expr_matrix)),4), 255.5031)
@@ -98,7 +99,7 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                     "SPON2", "S100B"
                   ))
 
-                  expect_that(expr_matrix, is_a("matrix"))
+                  expect_that(expr_matrix, is_a("dgCMatrix"))
                 })
 
 
@@ -160,3 +161,4 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                   expect_that(expr_matrix, is_a("matrix"))
                 }
 )
+

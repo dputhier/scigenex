@@ -37,4 +37,8 @@ test:
 	@rm -rf `ls tests/testthat/| grep -v \R$$`
 	@echo "devtools::test()" | R --slave
 
+coverage:
+	@echo "Checking coverage"
+	@echo "usethis::use_github_action('test-coverage'); cov <- covr::package_coverage(); print(as.data.frame(cov))" | R --slave
+
 all: doc install check test
