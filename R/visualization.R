@@ -1,86 +1,4 @@
 #################################################################
-##    Define the viz_dist function
-#################################################################
-
-#' @title
-#' viz_dist
-#' @description
-#' Plot the observed and simulated distance with the Kth nearest neighbors.
-#' @param object A ClusterSet object.
-#' @param line_type A vector of character defining the line type for the observed distance line and the simulated distance line.
-#' @param line_color A vector of numeric defining the color for the observed distance line and the simulated distance line.
-#' @param line_size A vector of numeric defining the size for the observed distance line and the simulated distance line.
-#' @param vline_type Type of vertical line.
-#' @param vline_color Color of vertical line.
-#' @param vline_size Size of vertical line
-#' @param text_size Size of vertical line text
-#' @param text_hjust Horizontal position adjustment of vertical line text.
-#' @param text_vjust Vertical position adjustment of vertical line text
-#' input file containing distances and cutting threshold is stored. 
-#' Default to current working directory.
-#'
-#' @return A ggplot diagram.
-#' @export
-#'
-#' @examples
-#' # see online examples
-
-#' @rdname viz_dist
-
-
-viz_dist <-  function(object,
-                      line_type = c("solid", "longdash"),
-                      line_color = c("#006D77", "#83C5BE"),
-                      line_size = c(1, 0.8),
-                      vline_type = "dotdash",
-                      vline_color = "#E29578",
-                      vline_size = 0.5,
-                      text_size = 4,
-                      text_hjust = -0.8,
-                      text_vjust = -0.5) {
-  
-  # Extract observed and simulated distances
-  dist_obs <- data.frame("distance_value" = object@dbf_output$dknn, "type" = "Observed")
-  dist_sim <- data.frame("distance_value" = object@dbf_output$simulated_dknn, "type" = "Simulated")
-  dist_p <- rbind(dist_obs, dist_sim)
-  
-  # plot density of distance values for the observed and simulated conditions
-  p <- ggplot(data = dist_p, aes(x = distance_value, color = type)) +
-    stat_density(aes(linetype = type, size = type), geom = "line", position = "identity") +
-    scale_linetype_manual(breaks = c("Observed", "Simulated"), values = line_type) +
-    scale_size_manual(values = line_size) +
-    scale_color_manual(values = line_color) +
-    theme_bw() +
-    theme(panel.grid.minor = element_blank(),
-          panel.grid.major = element_blank(),
-          axis.line = element_line(colour = "black"),
-          panel.border = element_blank(),
-          legend.title = element_text("Distance with KNN"),
-          axis.title = element_text(size = 15),
-          axis.text = element_text(size = 10)) +
-    xlab(label = "Distance with KNN") +
-    ylab(label = "Density") +
-    geom_vline(aes(xintercept = object@dbf_output$critical_distance),
-               color = vline_color,
-               linetype = vline_type,
-               size = vline_size) +
-    geom_text(mapping = aes(x = object@dbf_output$critical_distance,
-                            y = 0,
-                            label = "Critical distance with KNN",
-                            hjust = text_hjust,
-                            vjust = text_vjust,
-                            angle = 90),
-              color = vline_color,
-              size = text_size)
-  
-  return(p)
-  
-}
-
-
-
-
-#################################################################
 ##    Define the plot_heatmap
 #################################################################
 
@@ -365,39 +283,49 @@ plot_heatmap <- function(object,
 #' m <- create_4_rnd_clust()
 #' 
 #' res <- find_gene_clusters(data=m,
-#'                              distance_method="pearson",
-#'                              inflation = 2,
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              highest=0.3,
-#'                              min_nb_supporting_cell = 0,
-#'                              fdr = 1e-8)
+#'                           distance_method="pearson",
+#'                           inflation = 2,
+#'                           k=75,
+#'                           row_sum=-Inf,
+#'                           highest=0.3,
+#'                           min_nb_supporting_cell = 0,
+#'                           fdr = 1e-8)
 #' plot_dist(res)
-#' @import ggplot2
 #' 
 #' @export plot_dist
 #' 
 plot_dist <- function(object,
-                      bins=200,
+                      bins=150,
                       alpha=0.5,
-                      colors=c("Simulated"="blue", "Observed"="red"),
+                      colors=c("Simulated"="#FB8500", "Observed"="#36949D"),
                       xlim=NULL) {
   
   if (!inherits(object, "ClusterSet")) {
     stop("Please provide ClusterSet object.")
   }
   
-  df <- data.frame("distance"=c(object@dbf_output$simulated_dknn, object@dbf_output$dknn),
-                   "type"=c(rep("Simulated", length(object@dbf_output$simulated_dknn)),
-                            rep("Observed", length(object@dbf_output$dknn))))
-  p <-  ggplot(df, aes(x=distance, fill=type)) +
+  df <- data.frame("DKNN"=c(object@dbf_output$simulated_dknn,
+                            object@dbf_output$dknn),
+                   "Type"=c(rep("Simulated",
+                                length(object@dbf_output$simulated_dknn)),
+                            rep("Observed",
+                                length(object@dbf_output$dknn))))
+  p <-  ggplot(df, aes(x=DKNN, fill=Type)) +
     geom_histogram(bins=bins, 
                    position="identity", 
                    alpha=alpha, 
-                   color="white", 
-                   linewidth=0.5) + 
+                   color="white") + 
     theme_bw() + 
-    scale_fill_manual(values=colors)
+    scale_fill_manual(values=colors) +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major.x = element_blank(),
+          axis.line = element_line(colour = "black"),
+          panel.border = element_blank(),
+          legend.title = element_text("Distance with KNN"),
+          axis.title = element_text(size = 15),
+          axis.text = element_text(size = 10)) +
+    xlab(label = "Distance with KNN") +
+    ylab(label = "Count")
   
   if(!is.null(xlim))
     p <- p + xlim(xlim)
