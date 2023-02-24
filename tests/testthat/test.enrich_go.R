@@ -19,10 +19,10 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 })
 
 
-test_that("Check if enrich_go stops when species argument is invalid", {
+test_that("Check message printed by enrich_go()", {
   set_verbosity(2)
 
-  msg <- capture.output(enrich_go(res, species = "Hsapiens"))
+  msg <- capture.output(enrich_go(res, species = "Hsapiens", ontology = "BP"))
 
   expect_equal(msg[1], "|-- INFO :  Species used : Homo sapiens ")
 

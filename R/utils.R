@@ -85,17 +85,24 @@ get_verbosity <- function() {
 print_msg <-
   function(msg,
            msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
+    
     if (is.null(unlist(options()["scigenex_verbosity"]))) {
       options(scigenex_verbosity = 1)
     }
-    if (msg_type == "INFO")
-      if (unlist(options()["scigenex_verbosity"]) > 0)
-        cat(paste("|-- INFO : ", msg, "\n"))
-    if (msg_type == "DEBUG")
-      if (unlist(options()["scigenex_verbosity"]) > 1)
-        cat(paste("|-- DEBUG : ", msg, "\n"))
+    
+    if (msg_type == "INFO" &
+        unname(unlist(options()["scigenex_verbosity"]) > 0)) {
+      cat(paste("|-- INFO : ", msg, "\n"))
+    }
+    
+    if (msg_type == "DEBUG" &
+        unname(unlist(options()["scigenex_verbosity"]) > 1)) {
+      cat(paste("|-- DEBUG : ", msg, "\n"))
+    }
+    
     if (msg_type == "WARNING")
       warning("|-- WARNING : ", msg, call. = FALSE)
+    
     if (msg_type == "STOP")
       stop(paste0("|-- STOP : ", msg), call. = FALSE)
   }
@@ -200,7 +207,7 @@ create_rand_str <- function() {
 #' 
 create_3_rnd_clust <- function(){
   set.seed(123)
-  m <- matrix(rnorm(80000), nc=20)
+  m <- matrix(rnorm(80000), ncol=20)
   m[1:100, 1:10] <- m[1:100, 1:10] + 4
   m[101:200, 11:20] <- m[101:200, 11:20] + 3
   m[201:300, 5:15] <- m[201:300, 5:15] -2
@@ -225,7 +232,7 @@ create_3_rnd_clust <- function(){
 #' 
 create_4_rnd_clust <- function(){
   set.seed(123)
-  m <- matrix(rnorm(80000), nc=20)
+  m <- matrix(rnorm(80000), ncol=20)
   m[1:100, 1:10] <- m[1:100, 1:10] + 2
   m[101:200, 11:20] <- m[101:200, 11:20] + 4
   m[301:400, 5:15] <- m[201:300, 5:15] - 2

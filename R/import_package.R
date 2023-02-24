@@ -10,7 +10,7 @@
 #' @importFrom ggplot2 ggplot geom_line aes geom_tile geom_vline geom_text
 #' @importFrom ggplot2 theme theme_bw element_text element_blank element_line facet_grid guide_legend stat_density xlab ylab
 #' @importFrom ggplot2 scale_fill_gradientn scale_color_manual scale_linetype_manual scale_size_manual 
-#' @importFrom ggplot2 ggplot_build
+#' @importFrom ggplot2 ggplot_build ggtitle geom_histogram scale_fill_manual
 #' @importFrom plotly layout
 #' @importFrom reshape2 melt 
 #' @importFrom magrittr %>%
@@ -20,14 +20,16 @@
 #' @importFrom enrichplot dotplot
 #' @importFrom AnnotationDbi select
 #' @importFrom clusterProfiler enrichGO
-#' @importFrom qlcMatrix corSparse
+#' @importFrom qlcMatrix corSparse cosSparse
 #' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
-#' @importFrom amap hcluster
+#' @importFrom amap hcluster Dist
 #' @import SeuratObject
 #' @importFrom Seurat DimPlot
 #' @importFrom graphics barplot
 #' @importFrom pheatmap pheatmap
+#' @importFrom Matrix rowSums
+#' @importFrom SparseM t
 #' 
 NULL

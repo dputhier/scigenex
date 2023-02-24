@@ -85,7 +85,8 @@ plot_heatmap <- function(object,
     print_msg("Ordering cells.", msg_type="INFO")
     m <- m[,names(sort(cell_clusters))]
   } else {
-    print_msg("Ordering cells/columns using hierarchical clustering.")
+    print_msg("Ordering cells/columns using hierarchical clustering.",
+              msg_type = "INFO")
     dist_cells <- cor(m, method = "pearson")
     dist_cells <- as.dist((1-dist_cells)/2)
     hclust_cells <- hclust(dist_cells, method = "complete")
@@ -319,12 +320,13 @@ plot_dist <- function(object,
     stop("Please provide ClusterSet object.")
   }
   
-  df <- data.frame("DKNN"=c(object@dbf_output$simulated_dknn,
-                            object@dbf_output$dknn),
-                   "Type"=c(rep("Simulated",
-                                length(object@dbf_output$simulated_dknn)),
-                            rep("Observed",
-                                length(object@dbf_output$dknn))))
+  DKNN = c(object@dbf_output$simulated_dknn,
+           object@dbf_output$dknn)
+  Type = c(rep("Simulated",
+               length(object@dbf_output$simulated_dknn)),
+           rep("Observed",
+               length(object@dbf_output$dknn)))
+  df <- data.frame(DKNN, Type)
   p <-  ggplot(df, aes(x=DKNN, fill=Type)) +
     geom_histogram(bins=bins, 
                    position="identity", 

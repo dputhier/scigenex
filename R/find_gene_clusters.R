@@ -115,7 +115,7 @@
 #'                              highest=0.3,
 #'                              min_nb_supporting_cell = 0,
 #'                              fdr = 1e-8)
-#' plot_heatmap(res, row_labels = F)
+#' plot_heatmap(res, row_labels = FALSE)
 #'
 #'
 #' set_verbosity(3)
@@ -132,7 +132,7 @@
 #'                          highest=0.3,
 #'                          min_nb_supporting_cell = 0,
 #'                          fdr = 1e-8)
-#' plot_heatmap(res, row_labels = F)
+#' plot_heatmap(res, row_labels = FALSE)
 #'
 #'
 #'
@@ -406,10 +406,7 @@ find_gene_clusters <- function(data = NULL,
 #' and flexible toolbox to explore productively the transcriptional landscape
 #' of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 #' @keywords manip
-#' @importFrom  amap Dist
-#' @importFrom qlcMatrix corSparse cosSparse
-#' @importFrom Matrix rowSums
-#' @importFrom SparseM t
+#' 
 #' @export DBF
 DBF <- function(data,
                 output_path = tempdir(),
