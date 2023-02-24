@@ -1,6 +1,6 @@
 # Load seurat object
 data(pbmc_small, package = "SeuratObject")
-
+set_verbosity(0)
 res <- find_gene_clusters(
   data = pbmc_small,
   distance_method = "pearson",
