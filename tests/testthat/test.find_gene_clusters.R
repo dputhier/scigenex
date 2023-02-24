@@ -653,7 +653,7 @@ test_that("Checking find_gene_clusters() varying min_nb_supporting_cell\
 
 test_that("Checking find_gene_clusters() when min_cluster_size\
           argument is set to 5", {
-            # Args set to min_nb_supporting_cell = 4 & min_pct_gene_expressed = 90
+            # Args set to min_cluster_size = 5
             res <- find_gene_clusters(
               data = m,
               name = "test",
@@ -674,20 +674,45 @@ test_that("Checking find_gene_clusters() when min_cluster_size\
 
 test_that("Checking find_gene_clusters() when min_cluster_size\
           argument is set to 50", {
-            # Args set to min_nb_supporting_cell = 4 & min_pct_gene_expressed = 90
-            res <- find_gene_clusters(
-              data = m,
-              name = "test",
-              distance_method = "pearson",
-              inflation = 2,
-              k = 75,
-              row_sum = -Inf,
-              highest = 0.3,
-              min_nb_supporting_cell = 0,
-              min_cluster_size = 50,
-              fdr = 1e-8,
-              output_path = tempdir()
-            )
-            
-            expect_equal(res@gene_clusters_metadata$number, 4)
-          })
+  # Create matrix containing 4 signatures
+  m <- create_4_rnd_clust()
+
+  # Args set to min_cluster_size = 50
+  res <- find_gene_clusters(
+    data = m,
+    name = "test",
+    distance_method = "pearson",
+    inflation = 2,
+    k = 75,
+    row_sum = -Inf,
+    highest = 0.3,
+    min_nb_supporting_cell = 0,
+    min_cluster_size = 50,
+    fdr = 1e-8,
+    output_path = tempdir()
+  )
+
+  expect_equal(res@gene_clusters_metadata$number, 4)
+})
+
+
+test_that("Checking find_gene_clusters() with euclidean distance.", {
+  
+  set_verbosity(0)
+  data("complex9Noisy")
+  res <- find_gene_clusters(data=complex9Noisy[ ,1:2],
+                            distance_method="euclidean",
+                            inflation = 1.25,
+                            k=20,
+                            min_nb_supporting_cell=0,
+                            highest = 0.95,
+                            row_sum = -Inf,
+                            fdr = 0.0001)
+  
+  expect_equal(res@gene_clusters_metadata$number, 8)
+  expect_equal(paste0(res@gene_clusters_metadata$size, collapse = " "), 
+               "1023 782 419 373 352 126 122 89")
+  expect_equal(ncol(res@data), 2)
+  expect_equal(nrow(res@data), 3286)
+})
+

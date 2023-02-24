@@ -86,25 +86,26 @@ print_msg <-
   function(msg,
            msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
     
+    msg_type <- match.arg(msg_type)
+    
     if (is.null(unlist(options()["scigenex_verbosity"]))) {
       options(scigenex_verbosity = 1)
     }
     
-    if (msg_type == "INFO" &
-        unname(unlist(options()["scigenex_verbosity"]) > 0)) {
-      cat(paste("|-- INFO : ", msg, "\n"))
-    }
-    
-    if (msg_type == "DEBUG" &
-        unname(unlist(options()["scigenex_verbosity"]) > 1)) {
-      cat(paste("|-- DEBUG : ", msg, "\n"))
-    }
-    
-    if (msg_type == "WARNING")
+    if (msg_type == "DEBUG"){
+      if (unname(unlist(options()["scigenex_verbosity"]) > 1))
+        cat(paste("|-- DEBUG : ", msg, "\n"))
+      
+    }else if (msg_type == "WARNING"){
       warning("|-- WARNING : ", msg, call. = FALSE)
-    
-    if (msg_type == "STOP")
+      
+    }else if (msg_type == "STOP"){
       stop(paste0("|-- STOP : ", msg), call. = FALSE)
+      
+    }else{
+        if (unname(unlist(options()["scigenex_verbosity"]) > 0))
+          cat(paste("|-- INFO : ", msg, "\n"))
+    }
   }
 
 #################################################################
