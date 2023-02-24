@@ -269,13 +269,24 @@ plot_heatmap <- function(object,
 
 #' Plot Distribution of distances
 #' 
-#' This function creates a histogram of the simulated and observed distances of a Seurat clusterSet object.
+#' This function creates a histogram of the simulated and observed distances 
+#' of a ClusterSet object.
 #' 
-#' @param object A "ClusterSet"object.
-#' @param bins The number of bins to use in the histogram (default is 200).
-#' @param alpha Transparency of the histogram bars (default is 0.5).
-#' @param colors A named vector of colors to use for the histograms, with "Simulated" and "Observed" as the named elements (default is c("Simulated"="blue", "Observed"="red")).
+#' @param object A ClusterSet object.
+#' @param bins The number of bins to use in the histogram (default is 150).
+#' @param alpha The level of transparency for the bars in the histogram
+#'  (default is 0.5).
+#' @param colors A named vector of colors to use for the histograms, 
+#' with "Simulated" and "Observed" as the named elements 
+#' (default is c("Simulated" = "#FB8500", "Observed" = "#36949D")).
 #' @param xlim Limits for the x axis of the histogram (e.g. c(0.8, 1)).
+#' @param vline_color Color of the vertical line indicating 
+#' the critical distance with KNN.
+#' @param text_size Font size for the label of the critical distance.
+#' @param text_hjust Horizontal justification for the label 
+#' of the critical distance.
+#' @param text_vjust Vertical justification for the label 
+#' of the critical distance.
 #' 
 #' @return A ggplot object.
 #' 
@@ -298,7 +309,11 @@ plot_dist <- function(object,
                       bins=150,
                       alpha=0.5,
                       colors=c("Simulated"="#FB8500", "Observed"="#36949D"),
-                      xlim=NULL) {
+                      xlim=NULL,
+                      vline_color = "#4f6d7a",
+                      text_size = 4,
+                      text_hjust = -0.8,
+                      text_vjust = -0.5) {
   
   if (!inherits(object, "ClusterSet")) {
     stop("Please provide ClusterSet object.")
@@ -325,7 +340,19 @@ plot_dist <- function(object,
           axis.title = element_text(size = 15),
           axis.text = element_text(size = 10)) +
     xlab(label = "Distance with KNN") +
-    ylab(label = "Count")
+    ylab(label = "Count")  +
+    geom_vline(aes(xintercept = object@dbf_output$critical_distance),
+               color = vline_color,
+               linetype = "dotdash",
+               size = 0.5) +
+    geom_text(mapping = aes(x = object@dbf_output$critical_distance,
+                            y = 0,
+                            label = "Critical distance with KNN",
+                            hjust = text_hjust,
+                            vjust = text_vjust,
+                            angle = 90),
+              color = vline_color,
+              size = text_size)
   
   if(!is.null(xlim))
     p <- p + xlim(xlim)
