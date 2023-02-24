@@ -85,19 +85,25 @@ get_verbosity <- function() {
 print_msg <-
   function(msg,
            msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
+    
+    msg_type <- match.arg(msg_type)
+
     if (is.null(unlist(options()["scigenex_verbosity"]))) {
       options(scigenex_verbosity = 1)
     }
-    if (msg_type == "INFO")
-      if (unlist(options()["scigenex_verbosity"]) > 0)
-        cat(paste("|-- INFO : ", msg, "\n"))
-    if (msg_type == "DEBUG")
+    
+    if (msg_type == "DEBUG"){
       if (unlist(options()["scigenex_verbosity"]) > 1)
         cat(paste("|-- DEBUG : ", msg, "\n"))
-    if (msg_type == "WARNING")
+    }else if (msg_type == "WARNING"){
       warning("|-- WARNING : ", msg, call. = FALSE)
-    if (msg_type == "STOP")
+    }else if (msg_type == "STOP"){
       stop(paste0("|-- STOP : ", msg), call. = FALSE)
+    }else{
+        if (unlist(options()["scigenex_verbosity"]) > 0)
+          cat(paste("|-- INFO : ", msg, "\n"))
+    }
+    
   }
 
 #################################################################
