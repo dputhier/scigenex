@@ -9,25 +9,44 @@ plot_dist(
   bins = 150,
   alpha = 0.5,
   colors = c(Simulated = "#FB8500", Observed = "#36949D"),
-  xlim = NULL
+  xlim = NULL,
+  vline_color = "#4f6d7a",
+  text_size = 4,
+  text_hjust = -0.8,
+  text_vjust = -0.5
 )
 }
 \arguments{
-\item{object}{A "ClusterSet"object.}
+\item{object}{A ClusterSet object.}
 
-\item{bins}{The number of bins to use in the histogram (default is 200).}
+\item{bins}{The number of bins to use in the histogram (default is 150).}
 
-\item{alpha}{Transparency of the histogram bars (default is 0.5).}
+\item{alpha}{The level of transparency for the bars in the histogram
+(default is 0.5).}
 
-\item{colors}{A named vector of colors to use for the histograms, with "Simulated" and "Observed" as the named elements (default is c("Simulated"="blue", "Observed"="red")).}
+\item{colors}{A named vector of colors to use for the histograms, 
+with "Simulated" and "Observed" as the named elements 
+(default is c("Simulated" = "#FB8500", "Observed" = "#36949D")).}
 
 \item{xlim}{Limits for the x axis of the histogram (e.g. c(0.8, 1)).}
+
+\item{vline_color}{Color of the vertical line indicating 
+the critical distance with KNN.}
+
+\item{text_size}{Font size for the label of the critical distance.}
+
+\item{text_hjust}{Horizontal justification for the label 
+of the critical distance.}
+
+\item{text_vjust}{Vertical justification for the label 
+of the critical distance.}
 }
 \value{
 A ggplot object.
 }
 \description{
-This function creates a histogram of the simulated and observed distances of a Seurat clusterSet object.
+This function creates a histogram of the simulated and observed distances 
+of a ClusterSet object.
 }
 \examples{
 m <- create_4_rnd_clust()
