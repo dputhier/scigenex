@@ -48,7 +48,7 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 })
 
 
-test_that("Check if enrich_go stops when species argument is invalid", {
+test_that("Check if enrich_go results with all ontologies", {
   set_verbosity(0)
 
   res_enrich <- enrich_go(res, species = "Hsapiens")
@@ -306,6 +306,122 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 
   expect_equal(unique(res_enrich@gene_cluster_annotations$`3`@result$Count), 1)
   expect_equal(sum(res_enrich@gene_cluster_annotations$`3`@result$Count), 35)
+  
+  
+  # #########################
+  # Test viz_enrich()
+  # #########################
+  plot_res_enrich <- viz_enrich(res_enrich)
+  
+  expect_equal(length(plot_res_enrich), 6)
+  expect_equal(class(plot_res_enrich[[1]]), c("gg", "ggplot"))
+  expect_equal(class(plot_res_enrich[[2]]), c("gg", "ggplot"))
+  expect_equal(class(plot_res_enrich[[3]]), c("gg", "ggplot"))
+  expect_equal(class(plot_res_enrich[[4]]), c("gg", "ggplot"))
+  expect_equal(class(plot_res_enrich[[5]]), c("gg", "ggplot"))
+  expect_equal(class(plot_res_enrich[[6]]), c("gg", "ggplot"))
+  
+  # Barplot
+  expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 1")
+  expect_equal(plot_res_enrich[[1]]$labels$fill, "p.adjust")
+  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC"))
+  
+  expect_equal(round(sum(plot_res_enrich[[1]]$data$GeneRatio), 4), 3.6395)
+  expect_equal(round(mean(plot_res_enrich[[1]]$data$GeneRatio), 4), 0.2275)
+  expect_equal(round(median(plot_res_enrich[[1]]$data$GeneRatio), 4), 0.2105)
+  expect_equal(round(sd(plot_res_enrich[[1]]$data$GeneRatio), 4), 0.0685)
+  
+  expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 1")
+  expect_equal(plot_res_enrich[[1]]$labels$fill, "p.adjust")
+  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC"))
+  
+  expect_equal(plot_res_enrich[[1]]$data$ONTOLOGY,
+               res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY)
+  expect_equal(plot_res_enrich[[1]]$data$ID,
+               res_enrich@gene_cluster_annotations$`1`@result$ID)
+  expect_equal(as.vector(plot_res_enrich[[1]]$data$Description),
+               res_enrich@gene_cluster_annotations$`1`@result$Description)
+  expect_equal(plot_res_enrich[[1]]$data$pvalue,
+               res_enrich@gene_cluster_annotations$`1`@result$pvalue)
+  expect_equal(plot_res_enrich[[1]]$data$p.adjust,
+               res_enrich@gene_cluster_annotations$`1`@result$p.adjust)
+  expect_equal(plot_res_enrich[[1]]$data$qvalue,
+               res_enrich@gene_cluster_annotations$`1`@result$qvalue)
+  expect_equal(plot_res_enrich[[1]]$data$geneID,
+               res_enrich@gene_cluster_annotations$`1`@result$geneID)
+  expect_equal(plot_res_enrich[[1]]$data$Count,
+               res_enrich@gene_cluster_annotations$`1`@result$Count)
+  
+  # Dotplot
+  expect_equal(plot_res_enrich[[4]]$labels$title, "Gene cluster 1")
+  expect_equal(plot_res_enrich[[4]]$labels$size, "Count")
+  expect_equal(plot_res_enrich[[4]]$labels$colour, "p.adjust")
+  expect_equal(plot_res_enrich[[4]]$labels$x, "GeneRatio")
+  
+  expect_equal(unique(plot_res_enrich[[4]]$data$ONTOLOGY), c("BP", "CC"))
+  
+  expect_equal(round(sum(plot_res_enrich[[4]]$data$GeneRatio), 4), 3.6395)
+  expect_equal(round(mean(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.2275)
+  expect_equal(round(median(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.2105)
+  expect_equal(round(sd(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.0685)
+  
+  expect_equal(plot_res_enrich[[4]]$data$ONTOLOGY,
+               res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY)
+  expect_equal(plot_res_enrich[[4]]$data$ID,
+               res_enrich@gene_cluster_annotations$`1`@result$ID)
+  expect_equal(as.vector(plot_res_enrich[[4]]$data$Description),
+               res_enrich@gene_cluster_annotations$`1`@result$Description)
+  expect_equal(plot_res_enrich[[4]]$data$pvalue,
+               res_enrich@gene_cluster_annotations$`1`@result$pvalue)
+  expect_equal(plot_res_enrich[[4]]$data$p.adjust,
+               res_enrich@gene_cluster_annotations$`1`@result$p.adjust)
+  expect_equal(plot_res_enrich[[4]]$data$qvalue,
+               res_enrich@gene_cluster_annotations$`1`@result$qvalue)
+  expect_equal(plot_res_enrich[[4]]$data$geneID,
+               res_enrich@gene_cluster_annotations$`1`@result$geneID)
+  expect_equal(plot_res_enrich[[4]]$data$Count,
+               res_enrich@gene_cluster_annotations$`1`@result$Count)
+  
+  
+  # Test arguments clusters set to 1 and 3
+  plot_res_enrich <- viz_enrich(res_enrich, clusters = c(1,3))
+  expect_equal(length(plot_res_enrich), 4)
+  expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 1")
+  expect_equal(plot_res_enrich[[2]]$labels$title, "Gene cluster 3")
+  expect_equal(plot_res_enrich[[3]]$labels$title, "Gene cluster 1")
+  expect_equal(plot_res_enrich[[4]]$labels$title, "Gene cluster 3")
+  
+  plot_res_enrich <- viz_enrich(res_enrich, clusters = 2)
+  expect_equal(length(plot_res_enrich), 2)
+  expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 2")
+  expect_equal(plot_res_enrich[[2]]$labels$title, "Gene cluster 2")
+  
+  # Test arguments type set to barplot
+  plot_res_enrich <- viz_enrich(res_enrich, clusters = 1, type = "barplot")
+  expect_equal(plot_res_enrich[[1]]$labels$fill, "p.adjust")
+  
+  # Test arguments type set to dotplot
+  plot_res_enrich <- viz_enrich(res_enrich, clusters = 1, type = "dotplot")
+  expect_equal(plot_res_enrich[[1]]$labels$size, "Count")
+  expect_equal(plot_res_enrich[[1]]$labels$colour, "p.adjust")
+  expect_equal(plot_res_enrich[[1]]$labels$x, "GeneRatio")
+  
+  # Test arguments nb_terms set to 10
+  plot_res_enrich <- viz_enrich(res_enrich,
+                                clusters = 1,
+                                type = "dotplot",
+                                nb_terms = 10)
+  expect_equal(nrow(
+    plot_res_enrich[[1]]$data[plot_res_enrich[[1]]$data$ONTOLOGY == "BP", ]
+    ),
+    10
+  )
+  
+  expect_equal(nrow(
+    plot_res_enrich[[1]]$data[plot_res_enrich[[1]]$data$ONTOLOGY == "CC", ]
+  ),
+  4
+  )
 })
 
 
