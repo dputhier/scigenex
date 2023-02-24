@@ -2,12 +2,6 @@
 ##    DEFINITION OF A SPECIFIC CLASS OBJECT : ClusterSet
 #################################################################
 
-library(ggplot2)
-library(reshape2)
-library(dplyr)
-library(igraph)
-library(iheatmapr)
-
 #' @title
 #' ClusterSet
 #' @description
