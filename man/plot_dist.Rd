@@ -6,9 +6,9 @@
 \usage{
 plot_dist(
   object,
-  bins = 200,
+  bins = 150,
   alpha = 0.5,
-  colors = c(Simulated = "blue", Observed = "red"),
+  colors = c(Simulated = "#FB8500", Observed = "#36949D"),
   xlim = NULL
 )
 }
@@ -33,12 +33,13 @@ This function creates a histogram of the simulated and observed distances of a S
 m <- create_4_rnd_clust()
 
 res <- find_gene_clusters(data=m,
-                             distance_method="pearson",
-                             inflation = 2,
-                             k=75,
-                             row_sum=-Inf,
-                             highest=0.3,
-                             min_nb_supporting_cell = 0,
-                             fdr = 1e-8)
+                          distance_method="pearson",
+                          inflation = 2,
+                          k=75,
+                          row_sum=-Inf,
+                          highest=0.3,
+                          min_nb_supporting_cell = 0,
+                          fdr = 1e-8)
 plot_dist(res)
+
 }
