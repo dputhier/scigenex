@@ -185,8 +185,8 @@ plot_heatmap <- function(object,
     
     cell_names <- names(sort(cell_clusters))
     
-    if (0 %in% cell_clusters & is.factor(cell_clusters)){
-      cell_clusters_tmp <- as.numeric(cell_clusters) #Add one to each element in the vector
+    if (0 %in% cell_clusters){
+      cell_clusters_tmp <- as.numeric(as.character(cell_clusters)) + 1 #Add one to each element in the vector
     } else {
       cell_clusters_tmp <- cell_clusters
     }
