@@ -185,9 +185,15 @@ plot_heatmap <- function(object,
     
     cell_names <- names(sort(cell_clusters))
     
-    for (i in sort(unique(cell_clusters))) {
-      col_start <- sum(table(cell_clusters)[0:(i-1)])+1
-      col_end <- sum(table(cell_clusters)[1:i])
+    if (0 %in% cell_clusters & is.factor(cell_clusters)){
+      cell_clusters_tmp <- as.numeric(cell_clusters) #Add one to each element in the vector
+    } else {
+      cell_clusters_tmp <- cell_clusters
+    }
+    
+    for (i in sort(unique(cell_clusters_tmp))) {
+      col_start <- sum(table(cell_clusters_tmp)[0:(i-1)])+1
+      col_end <- sum(table(cell_clusters_tmp)[1:i])
       
       m_blank_loop <- cbind(m[,col_start:col_end], blank_col)
       cell_names_loop <- c(cell_names[col_start:col_end], rep(NA, line_size_vertical))
