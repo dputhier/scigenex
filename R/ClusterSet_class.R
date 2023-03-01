@@ -21,6 +21,8 @@
 #' @examples
 #' 
 #' \dontrun{
+#' ## An artificial example
+#' ## with continuous values
 #' m <- create_3_rnd_clust()
 #' res <- find_gene_clusters(data=m,
 #'                              distance_method="pearson",
@@ -32,6 +34,13 @@
 #'                              fdr = 1e-8)
 #' is(res)
 #' res
+#' plot_heatmap(res, row_labels = F, line_size_horizontal = 2)
+#' 
+#' plot_profiles(res)
+#' ## The subset operator may be used to select clusters/rows
+#' ## and cells/columns of interest
+#' res[1,]
+#' res[1:2,]
 #' }          
 setClass("ClusterSet",
          representation = list(
@@ -129,3 +138,108 @@ setMethod("dim",signature(x="ClusterSet"),
             dim(x@data)
           }
 ) 
+
+################################################################################
+##      Method for function"[". Subsetting 
+##      ClusterSet object
+################################################################################
+
+
+
+setMethod("[", signature(x = "ClusterSet"),
+          function (x, i, j, ..., drop = FALSE) {
+            
+            if(!missing(i)){
+              if(length(i) == 1){
+                if(i < 1)
+                  print_msg("Indexing using negative values is note implemented yet",
+                            msg_type = "STOP")
+              }else{
+                if(any(i < 1))
+                  print_msg("Indexing using negative values is note implemented yet",
+                            msg_type = "STOP")
+              }
+            }
+
+            if (missing(j)) {
+              if (missing(i)) {
+                n_data <- x@data
+                n_gene_clusters <- x@gene_clusters
+                n_top_genes <- x@top_genes
+                n_gene_clusters_metadata <- x@gene_clusters_metadata
+                n_gene_cluster_annotations <- x@gene_cluster_annotations
+                n_cells_metadata <- x@cells_metadata
+                n_dbf_output <- x@dbf_output
+              }else {
+                n_data <- x@data[unlist(x@gene_clusters[i]), , drop=FALSE]
+                n_gene_clusters <- x@gene_clusters[i]
+                
+                if(length(x@top_genes)){
+                  n_top_genes <- x@top_genes[i]
+                }else{
+                  n_top_genes <- x@top_genes
+                }
+                
+                n_gene_clusters_metadata <- x@gene_clusters_metadata
+                n_gene_clusters_metadata$cluster_id <- x@gene_clusters_metadata$cluster_id[i]
+                n_gene_clusters_metadata$number <- length(i)
+                n_gene_clusters_metadata$size <- x@gene_clusters_metadata$size[i]
+                
+                if(length(x@gene_cluster_annotations) > 0){
+                  n_gene_cluster_annotations <- x@gene_cluster_annotations[i]
+                }else{
+                  n_gene_cluster_annotations <- x@gene_cluster_annotations
+                }
+                  
+                n_cells_metadata <- x@cells_metadata
+                n_dbf_output <- x@dbf_output
+                n_dbf_output$center <- n_dbf_output$center[i,]
+              }
+            } else {
+              if (missing(i)) {
+                n_data <- x@data[,j]
+                n_gene_clusters <- x@gene_clusters
+                n_top_genes <- x@top_genes
+                n_gene_clusters_metadata <- x@gene_clusters_metadata
+                n_gene_cluster_annotations <- x@gene_cluster_annotations
+                n_cells_metadata <- x@cells_metadata[j,]
+                n_dbf_output <- x@dbf_output
+                n_dbf_output$center <- n_dbf_output$center[,j]
+              }else {
+                n_data <- x@data[unlist(x@gene_clusters[i]), j, drop=FALSE]
+                n_gene_clusters <- x@gene_clusters[i]
+                
+                if(length(x@top_genes)){
+                  n_top_genes <- x@top_genes[i]
+                }else{
+                  n_top_genes <- x@top_genes
+                }
+                
+                n_gene_clusters_metadata <- x@gene_clusters_metadata
+                n_gene_clusters_metadata$cluster_id <- x@gene_clusters_metadata$cluster_id[i]
+                n_gene_clusters_metadata$number <- length(i)
+                n_gene_clusters_metadata$size <- x@gene_clusters_metadata$size[i]
+                if(length(x@gene_cluster_annotations) > 0){
+                  n_gene_cluster_annotations <- x@gene_cluster_annotations[i]
+                }else{
+                  n_gene_cluster_annotations <- x@gene_cluster_annotations
+                }
+                n_cells_metadata <- x@cells_metadata
+                n_dbf_output <- x@dbf_output
+                n_dbf_output$center <- n_dbf_output$center[i,j]
+              }
+            }
+            
+            
+            new(
+              "ClusterSet",
+              data = n_data,
+              gene_clusters = n_gene_clusters,
+              top_genes = n_top_genes,
+              gene_clusters_metadata = n_gene_clusters_metadata,
+              gene_cluster_annotations = n_gene_cluster_annotations,
+              cells_metadata = n_cells_metadata,
+              dbf_output = n_dbf_output,
+              parameters = x@parameters
+            )
+          })
