@@ -231,7 +231,10 @@ plot_heatmap <- function(object,
     
     if(!is.null(cell_clusters)){
       cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
-      htmp <- htmp %>% add_col_annotation(as.factor(cell_clusters_anno), colors = list(colors_cell_clusters))
+      cell_clusters_anno <- as.factor(cell_clusters_anno)
+      cell_clusters_anno <- as.data.frame(cell_clusters_anno)
+      colnames(cell_clusters_anno) <- "cell_clusters"
+      htmp <- htmp %>% add_col_annotation(cell_clusters_anno, colors = list("cell_clusters" = colors_cell_clusters))
     }
     
     if(show_dendro & is.null(cell_clusters)) {
