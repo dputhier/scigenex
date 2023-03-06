@@ -338,6 +338,9 @@ find_gene_clusters <- function(data = NULL,
                                          "size" = unlist(lapply(obj@gene_clusters, length)))
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
+      rownames(centers) <- names(obj@gene_clusters)
+      colnames(centers) <- colnames(obj@data)
+        
       ## calcul of the mean profils
       for (i in 1:nb) {
         centers[i, ] <- apply(obj@data[obj@gene_clusters[[i]], ],
@@ -345,8 +348,9 @@ find_gene_clusters <- function(data = NULL,
                               na.rm = TRUE)
       }
       obj@dbf_output$center <- centers
-      
-      obj@cells_metadata <- data.frame("cells_barcode" = colnames(obj@data))
+
+      obj@cells_metadata <- data.frame("cells_barcode" = colnames(obj@data),
+                                       row.names = colnames(obj@data))
       
       ## add DBFMCL parameters used to build this object
       obj@parameters <- list(
