@@ -333,9 +333,13 @@ find_gene_clusters <- function(data = NULL,
       clusters_df <- data.frame("gene_clusters" = clusters,
                                 "gene_id" = rownames(obj@data))
       obj@gene_clusters <- split(clusters_df[,"gene_id"], f=clusters_df$gene_clusters)
+
       obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
                                          "number" = as.numeric(max(names(obj@gene_clusters))),
                                          "size" = unlist(lapply(obj@gene_clusters, length)))
+      
+      names(obj@gene_clusters_metadata$cluster_id) <- names(obj@gene_clusters)
+      names(obj@gene_clusters_metadata$size) <- names(obj@gene_clusters)      
       
       centers <- matrix(ncol = ncol(data_matrix), nrow = nb)
       colnames(centers) <- colnames(obj@data)
