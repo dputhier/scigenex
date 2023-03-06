@@ -1,6 +1,8 @@
 # Create matrix containing 4 signatures
 m <- create_4_rnd_clust()
 
+set_verbosity(0)
+
 ## A rather stringent version
 res <- DBF(
   data = m,

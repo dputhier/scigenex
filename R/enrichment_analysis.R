@@ -40,7 +40,8 @@ setMethod("enrich_go",
             
             
             if (!species %in% c("Hsapiens", "Mmusculus")){
-              stop("Species name provided doesn't exists.")}
+              print_msg("This species name is not supported.", 
+                        msg_type = "STOP")}
             
             if (species == "Hsapiens") {
               org_db <- org.Hs.eg.db
@@ -73,17 +74,20 @@ setMethod("enrich_go",
                         msg = paste0("Cluster ",
                                      cluster,
                                      "\n",
-                                     "Number of gene names converted to EntrezId : ", 
+                                     "\t|--Number of gene names converted to EntrezId : ", 
                                      length(which(!is.na(query_entrezid[, "ENTREZID"]))),
                                      "\n", 
-                                     "Number of gene names not converted to EntrezId : ", 
-                                     length(which(is.na(query_entrezid[, "ENTREZID"])))))
+                                     "\t|--Number of gene names not converted to EntrezId : ", 
+                                     length(which(is.na(query_entrezid[, "ENTREZID"]))),
+                                     "\n\t|-- Calling enrichGO."))
+              
               
               # Enrichment analysis using GO database
               enrich_go_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
                                                          OrgDb = go_name,
                                                          ont = ontology,
                                                          readable = TRUE)
+              
               # Store results in the ClusterSet object
               object@gene_cluster_annotations[[cluster]] <- enrich_go_res
             }
@@ -91,9 +95,10 @@ setMethod("enrich_go",
           }
 )
 
-#################################################################
+
+############################################################################
 ##    Visualization of enrichment analyses results from a ClusterSet object
-#################################################################
+############################################################################
 
 #' @title
 #' Visualization of enrichment analyses results from a ClusterSet object
