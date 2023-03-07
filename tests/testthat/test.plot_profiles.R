@@ -1,7 +1,9 @@
-  testthat::test_that("Check if enrich_go stops when species argument is invalid", {
+  testthat::test_that("Check if plot_profile is working properly", {
+  
     set_verbosity(0)
     data(pbmc_small, package = "SeuratObject")
     # Compute the signatures using find_gene_clusters()
+  
     clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
     p <- plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small), size_text_y=5)
     testthat::expect_error(print(p), NA)
