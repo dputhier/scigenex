@@ -274,7 +274,7 @@ setMethod("[", signature(x = "ClusterSet"),
 
 
 ################################################################################
-##      Method nclust for a 
+##      Method nclust/clust_size for a 
 ##      ClusterSet object
 ################################################################################
 
@@ -289,5 +289,19 @@ setMethod(
   "nclust", signature("ClusterSet"),
   function(x) {
     x@gene_clusters_metadata$number
+  }
+)
+
+
+setGeneric("clust_size", 
+           function(x)
+             standardGeneric("clust_size")
+)
+
+#' @export
+setMethod(
+  "clust_size", signature("ClusterSet"),
+  function(x) {
+    x@gene_clusters_metadata$size
   }
 )
