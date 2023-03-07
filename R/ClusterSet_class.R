@@ -104,6 +104,7 @@ setMethod(
 ##      NCOL/NROW/DIM METHOD FOR CLASS OBJECT : ClusterSet
 ################################################################################
 
+
 ncol.ClusterSet <- function (x) {
   ncol(x@data)
 }
@@ -113,6 +114,51 @@ nrow.ClusterSet <- function (x) {
   nrow(x@data)
 }
 
+if (!isGeneric("col_names"))
+  setGeneric("col_names", 
+             function(x)
+               standardGeneric("col_names")
+  )
+
+#' @export
+setMethod("col_names", "ClusterSet",
+          function(x)
+            colnames(x@data)
+)
+
+if (!isGeneric("row_names"))
+  setGeneric("row_names", 
+             function(x)
+               standardGeneric("row_names")
+  )
+
+#' @export
+setMethod("row_names", "ClusterSet",
+          function(x)
+            rownames(x@data)
+)
+
+if (!isGeneric("clust_names"))
+  setGeneric("clust_names", 
+             function(x)
+               standardGeneric("clust_names")
+  )
+
+
+#' @export
+setMethod("clust_names", "ClusterSet",
+          function(x){
+            clust <- unlist(mapply(rep, 
+                                   as.numeric(names(x@gene_clusters)), 
+                                   lapply(x@gene_clusters, length)))
+            names(clust) <- unlist(mapply(rep, 
+                                          names(x@gene_clusters), 
+                                          lapply(x@gene_clusters, length)))
+
+            return(clust)
+          }
+            
+)
 
 if (!isGeneric("dim"))
   setGeneric("dim", 
@@ -120,22 +166,12 @@ if (!isGeneric("dim"))
                standardGeneric("dim")
   )
 
-
+#' @export
 setMethod("dim",signature(x="ClusterSet"),
           function(x) {
             dim(x@data)
           }
 ) 
-
-
-colnames.ClusterSet <- function (x, do.NULL = TRUE, prefix = "col") {
-            colnames(x@data)
-}
-
-rownames.ClusterSet <- function (x, do.NULL = TRUE, prefix = "row") {
-  names(x@data)
-}
-
 
 
 ################################################################################

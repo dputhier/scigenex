@@ -40,6 +40,8 @@ plot_profiles <- function(data = NULL,
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
   
+  ident <- ident[colnames(data@data)]
+  
   centers <- data@dbf_output$center
   
   if (is.null(ident))

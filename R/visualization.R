@@ -45,9 +45,7 @@
 #' plot_heatmap(object = res)
 #' plot_heatmap(object = res, cluster = "1")
 #' 
-
 #' @rdname plot_heatmap
-
 plot_heatmap <- function(object,
                          center = TRUE,
                          ceil = 1,
