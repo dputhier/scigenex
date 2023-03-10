@@ -39,6 +39,9 @@ test:
 	@rm -rf `ls tests/testthat/| grep -v \R$$`
 	@echo "devtools::test()" | R --slave
 
+test_by_file:
+	@echo 'for(i in dir("./tests/testthat/", pattern = ".R$$")){devtools::test_active_file(file.path("./tests/testthat/", i))}' | R --slave
+
 coverage:
 	@echo "Checking coverage"
 	@echo "usethis::use_github_action('test-coverage'); cov <- covr::package_coverage(); print(as.data.frame(cov))" | R --slave

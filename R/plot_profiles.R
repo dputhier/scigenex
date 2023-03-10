@@ -40,6 +40,8 @@ plot_profiles <- function(data = NULL,
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
   
+  ident <- ident[colnames(data@data)]
+  
   centers <- data@dbf_output$center
   
   if (is.null(ident))
@@ -57,24 +59,31 @@ plot_profiles <- function(data = NULL,
     if(nb_cell_type != length(color_cell_type))
       print_msg("The number of colors should be the same as the number of cell types.", 
                 msg_type = "STOP")
+    
     if(is.null(names(color_cell_type)))
       print_msg("The color_cell_type argument should be a named vector.", 
                 msg_type = "STOP")
+    
     if(!all(names(color_cell_type) %in% unique(ident)))
       print_msg("The color_cell_type argument contains unknown cell type.", 
                 msg_type = "STOP")
   }
     
-  print_msg(paste0("Number of cells types:", nb_cell_type),
+  print_msg(paste0("Number of cells types: ", nb_cell_type),
             msg_type = "INFO")
+  
   nb_cells <- ncol(centers)
+  
   print_msg(paste0("Number of cells: ", nb_cells),
             msg_type = "INFO")
-  centers <- data@dbf_output$center
-  colnames(centers) <- colnames(data@data)
-  centers <- centers[, names(ident)]
+  
+  print_msg(paste0("Centers dimension: ", paste0(dim(centers), collapse = " ")),
+            msg_type = "DEBUG")
+  
+  centers <- centers[, names(ident), drop=FALSE]
   
   m <- reshape2::melt(as.matrix(centers))
+  
   colnames(m) <- c("Cluster", "Cell", "Intensity")
   m$Cluster <- factor(
     paste0("Cluster: ", m$Cluster),
@@ -84,12 +93,21 @@ plot_profiles <- function(data = NULL,
   
   m$Ident <- ident[m$Cell]
   
+  print_msg(paste0("Centers dimension: ", paste0(dim(centers), collapse = " ")),
+            msg_type = "DEBUG")
+  
   y_text <- apply(centers, 1, max)
+  print_msg(y_text, msg_type = "DEBUG")
+  
   y_text <- y_text + 0.1 * y_text
-  df_text <-
-    data.frame(x = colnames(centers)[round(nb_cells / 3, 0)], y = y_text)
-  df_text$Cluster <- factor(paste0("Cluster: ", 1:nrow(centers)),
+  df_text <- data.frame(x = colnames(centers)[round(nb_cells / 3, 0)], 
+               y = y_text)
+  df_text$Cluster <- factor(paste0("Cluster: ", 
+                                   rownames(centers)),
                             ordered = T)
+  
+  print_msg(summary(df_text), msg_type = "DEBUG")
+  print_msg(summary(m), msg_type = "DEBUG")
   
   ggplot2::ggplot(m,
                   ggplot2::aes(

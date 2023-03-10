@@ -3,7 +3,7 @@
 \docType{class}
 \name{ClusterSet-class}
 \alias{ClusterSet-class}
-\title{ClusterSet}
+\title{ClusterSet-class}
 \value{
 A ClusterSet object.
 }
@@ -33,6 +33,8 @@ This class is a representation of a partitioning algorithm and is intented to st
 \examples{
 
 \dontrun{
+## An artificial example
+## with continuous values
 m <- create_3_rnd_clust()
 res <- find_gene_clusters(data=m,
                              distance_method="pearson",
@@ -44,5 +46,12 @@ res <- find_gene_clusters(data=m,
                              fdr = 1e-8)
 is(res)
 res
+plot_heatmap(res, row_labels = F, line_size_horizontal = 2)
+
+plot_profiles(res)
+## The subset operator may be used to select clusters/rows
+## and cells/columns of interest
+res[1,]
+res[1:2,]
 }          
 }

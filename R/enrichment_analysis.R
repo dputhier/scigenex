@@ -40,7 +40,8 @@ setMethod("enrich_go",
             
             
             if (!species %in% c("Hsapiens", "Mmusculus")){
-              stop("Species name provided doesn't exists.")}
+              print_msg("This species name is not supported.", 
+                        msg_type = "STOP")}
             
             if (species == "Hsapiens") {
               org_db <- org.Hs.eg.db
@@ -73,17 +74,20 @@ setMethod("enrich_go",
                         msg = paste0("Cluster ",
                                      cluster,
                                      "\n",
-                                     "Number of gene names converted to EntrezId : ", 
+                                     "\t|--Number of gene names converted to EntrezId : ", 
                                      length(which(!is.na(query_entrezid[, "ENTREZID"]))),
                                      "\n", 
-                                     "Number of gene names not converted to EntrezId : ", 
-                                     length(which(is.na(query_entrezid[, "ENTREZID"])))))
+                                     "\t|--Number of gene names not converted to EntrezId : ", 
+                                     length(which(is.na(query_entrezid[, "ENTREZID"]))),
+                                     "\n\t|-- Calling enrichGO."))
+              
               
               # Enrichment analysis using GO database
               enrich_go_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
                                                          OrgDb = go_name,
                                                          ont = ontology,
                                                          readable = TRUE)
+              
               # Store results in the ClusterSet object
               object@gene_cluster_annotations[[cluster]] <- enrich_go_res
             }
@@ -91,9 +95,10 @@ setMethod("enrich_go",
           }
 )
 
-#################################################################
+
+############################################################################
 ##    Visualization of enrichment analyses results from a ClusterSet object
-#################################################################
+############################################################################
 
 #' @title
 #' Visualization of enrichment analyses results from a ClusterSet object
@@ -136,7 +141,7 @@ setMethod("viz_enrich",
             
             if (length(clusters) == 1){
               if (clusters == "all"){
-                clusters <- object@gene_clusters_metadata$cluster_id
+                clusters <- names(object@gene_clusters_metadata$cluster_id)
               }
             }
             
@@ -146,12 +151,12 @@ setMethod("viz_enrich",
             
             for (cur_cluster in clusters) {
               # Check if the current cluster id provided exists
-              if (!(cur_cluster %in% object@gene_clusters_metadata$cluster_id)) {
+              if (!(cur_cluster %in% names(object@gene_clusters_metadata$cluster_id))) {
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
               # Check if there is a result provided by enrich_go function for the current cluster
-              if(nrow(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@result) == 0){
+              if(nrow(object@gene_cluster_annotations[[cur_cluster]]@result) == 0){
                 print_msg(msg_type = "WARNING",
                           msg = paste0("No functional enrichment analysis results for cluster ", cur_cluster, ".")) #Continue through the next cluster without plotting
               } else {
@@ -164,31 +169,33 @@ setMethod("viz_enrich",
                 
                 # Create a ggplot - dotplot
                 if ("dotplot" %in% type){
-                  if(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    dot_plot <- enrichplot::dotplot(object@gene_cluster_annotations[[as.numeric(cur_cluster)]],
+                  if(object@gene_cluster_annotations[[cur_cluster]]@ontology == "GOALL"){
+                    dot_plot <- enrichplot::dotplot(object@gene_cluster_annotations[[cur_cluster]],
                                                     split="ONTOLOGY",
                                                     showCategory=nb_terms,
                                                     label_format = terms_size)
                     dot_plot <- dot_plot + facet_grid(ONTOLOGY~., scales="free")
                     dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
+                    dot_plot <- dot_plot + theme(axis.text = element_text(size=font_size))
                   } else {
                     dot_plot <- enrichplot::dotplot(object@gene_cluster_annotations[[cur_cluster]],
                                                     showCategory=nb_terms,
                                                     label_format = terms_size)
                     dot_plot <- dot_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
+                    dot_plot <- dot_plot + theme(axis.text = element_text(size=font_size))
                   }
                   list_dotplot <- append(list_dotplot, list(dot_plot))
                 }
                 
                 # Create a ggplot - barplot
                 if ("barplot" %in% type){
-                  if(object@gene_cluster_annotations[[as.numeric(cur_cluster)]]@ontology == "GOALL"){
-                    bar_plot <- graphics::barplot(object@gene_cluster_annotations[[as.numeric(cur_cluster)]],
+                  if(object@gene_cluster_annotations[[cur_cluster]]@ontology == "GOALL"){
+                    bar_plot <- graphics::barplot(object@gene_cluster_annotations[[cur_cluster]],
                                                   split="ONTOLOGY",
                                                   showCategory=nb_terms,
                                                   label_format = terms_size)
                     bar_plot <- bar_plot + facet_grid(ONTOLOGY~., scales="free")
-                    bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster))
+                    bar_plot <- bar_plot + ggtitle(paste0("Gene cluster ", cur_cluster)) 
                   } else {
                     bar_plot <- graphics::barplot(object@gene_cluster_annotations[[cur_cluster]],
                                                   showCategory=nb_terms,
