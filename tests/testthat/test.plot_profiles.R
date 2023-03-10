@@ -1,3 +1,4 @@
+
   testthat::test_that("Check if plot_profile is working properly", {
   
     set_verbosity(0)
