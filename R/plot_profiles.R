@@ -93,18 +93,18 @@ plot_profiles <- function(data = NULL,
   
   ggplot2::ggplot(m,
                   ggplot2::aes(
-                    x = Cell,
-                    y = Intensity,
+                    x = "Cell",
+                    y = "Intensity",
                     group = 1,
-                    fill = Ident
+                    fill = "Ident"
                   )) + 
     ggplot2::geom_col()  +
-    ggplot2::facet_wrap(~ Cluster, scales = "free_y",
+    ggplot2::facet_wrap(~ "Cluster", scales = "free_y",
                ncol = nb_col) +
     ggplot2::theme_minimal() +
     ggplot2::geom_text(
       data = df_text,
-      mapping = ggplot2::aes(x = x, y = y, label = Cluster),
+      mapping = ggplot2::aes(x = "x", y = "y", label = "Cluster"),
       size = size_label,
       inherit.aes = F
     ) +

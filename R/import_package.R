@@ -31,5 +31,6 @@
 #' @importFrom pheatmap pheatmap
 #' @importFrom Matrix rowSums
 #' @importFrom SparseM t
+#' @importFrom scales hue_pal
 #' 
 NULL
