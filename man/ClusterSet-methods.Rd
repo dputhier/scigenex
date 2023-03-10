@@ -4,6 +4,7 @@
 \alias{ncol.ClusterSet}
 \alias{nrow.ClusterSet}
 \alias{clust_names}
+\alias{clust_names,ClusterSet-method}
 \alias{dim,ClusterSet-method}
 \alias{col_names,ClusterSet-method}
 \alias{row_names,ClusterSet-method}
@@ -18,6 +19,8 @@
 \method{nrow.ClusterSet}{ClusterSet}(x)
 
 clust_names(x)
+
+\S4method{clust_names}{ClusterSet}(x)
 
 \S4method{dim}{ClusterSet}(x)
 
@@ -56,6 +59,8 @@ The methods of a ClusterSet object.
 \item \code{nrow.ClusterSet(ClusterSet)}: The number of rows of a ClusterSet object.
 
 \item \code{clust_names()}: The names of the gene clusters stored in the ClusterSet object.
+
+\item \code{clust_names(ClusterSet)}: The names of the gene clusters stored in the ClusterSet object.
 
 \item \code{dim(ClusterSet)}: The dimension of a ClusterSet object.
 
