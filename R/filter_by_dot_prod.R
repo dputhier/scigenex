@@ -35,7 +35,8 @@ filter_by_dot_prod <- function(data = NULL,
     print_msg(paste0("Computing dot product for cluster: ", i), 
               msg_type = "DEBUG")
     cur_clust <- data@data[data@gene_clusters[[i]],]
-    cur_clust[cur_clust > 0] <- 1
+    cur_clust[cur_clust >= 1] <- 1
+    cur_clust[cur_clust < 1] <- 0
     cur_dot_prod <- cur_clust %*% t(cur_clust)
     diag(cur_dot_prod) <- NA
     cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 

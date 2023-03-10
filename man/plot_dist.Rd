@@ -49,6 +49,8 @@ This function creates a histogram of the simulated and observed distances
 of a ClusterSet object.
 }
 \examples{
+
+set_verbosity(0)
 m <- create_4_rnd_clust()
 
 res <- find_gene_clusters(data=m,
@@ -59,6 +61,6 @@ res <- find_gene_clusters(data=m,
                           highest=0.3,
                           min_nb_supporting_cell = 0,
                           fdr = 1e-8)
-plot_dist(res)
+p <- plot_dist(res)
 
 }

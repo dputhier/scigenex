@@ -12,7 +12,6 @@
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_clusters A vector of cell clusters with cell barcodes as names.
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
-#' @param gene_clusters A cluster id to plot. Default is NULL for plotting all cluster.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param interactive A logical to indicate if the heatmap should be interactive.
 #' @param name A title for the heatmap.
@@ -21,13 +20,14 @@
 #' @param colorbar_name A title for the colorbar.
 #' @param show_legend A logical to indicate whether to show colorbar.
 #' @param colors A vector of colors.
-#' @param colors_cell_clusters A vector of colors for column annotations.
+#' @param colors_cell_clusters A named vector of colors for cell identity annotations.
 #' @param row_labels A logical to indicate whether to show row labels.
 #' @param col_labels A logical to indicate whether to show col labels.
 #' @param label_size A value for label font size.
 #' @param line_size_vertical An integer for the size of horizontal white line which separate gene clusters.
 #' @param line_size_horizontal An integer for the size of vertical white line  which separate cell clusters.
-#'
+#' @param link The aggloremative criterion for hierarchical clustering. One of "average", "complete" or "single". 
+#' Default to average.
 #' @return Iheatmap-class object.
 #' @export
 #'
@@ -52,47 +52,63 @@ plot_heatmap <- function(object,
                          floor = -1,
                          cell_clusters = NULL,
                          show_dendro = TRUE,
-                         gene_clusters = NULL,
                          use_top_genes = FALSE,
                          interactive = TRUE,
                          name = NULL,
                          xlab = NULL,
                          ylab = NULL,
-                         colorbar_name = "Expression level",
+                         colorbar_name = "Exp. level",
                          show_legend = TRUE,
-                         colors = c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"),
-                         colors_cell_clusters = c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A", "#584178", "#9D1C70",
-                                                  "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", "#9579B9", "#E25CB4", 
-                                                  "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", "#D02494",
-                                                  "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9"),
+                         colors = colors_for_gradient("Ju1"),
+                         colors_cell_clusters = NULL,
                          row_labels = TRUE,
                          col_labels = FALSE,
-                         label_size = 9,
-                         line_size_vertical = 15,
-                         line_size_horizontal = 15) {
+                         label_size = 5,
+                         line_size_vertical = 3,
+                         line_size_horizontal = 3,
+                         link=c("average", "complete", "single")) {
   
-  m <- object@data
+  link <- match.arg(link) 
   
-  # # Config
-  if (is.null(gene_clusters)) {
-    gene_clusters <- object@gene_clusters_metadata$cluster_id
-  }
+  check_format_cluster_set(object)
   
-  # Cell order
-  if (!is.null(cell_clusters)){
-    print_msg("Ordering cells.", msg_type="INFO")
-    m <- m[,names(sort(cell_clusters))]
-  } else {
-    print_msg("Ordering cells/columns using hierarchical clustering.",
+  if(show_dendro & is.null(cell_clusters))
+    print_msg("cell_clusters is not NULL. Setting show_dendro to FALSE",
               msg_type = "INFO")
-    dist_cells <- cor(m, method = "pearson")
-    dist_cells <- as.dist((1-dist_cells)/2)
-    hclust_cells <- hclust(dist_cells, method = "complete")
-    if(interactive){
-      # Reorder cells based on hierarchical clustering
-      m <- m[,hclust_cells$order]  
-    }
+  
+  if(!is.null(cell_clusters) & is.null(colors_cell_clusters))
+    colors_cell_clusters <- discrete_palette(n=length(unique(cell_clusters)), "ggplot")
+  
+  if(!is.null(cell_clusters)){
+    if(is.null(names(cell_clusters)))
+      print_msg("The cell_clusters argument should be a named vector", msg_type="STOP")
+    print_msg("Extracting cell identity.", msg_type="INFO")
+    cell_clusters <- cell_clusters[names(cell_clusters) %in% colnames(object@data)] 
+    if(inherits(cell_clusters, "factor"))
+       cell_clusters <- droplevels(cell_clusters)
   }
+  
+  # Ensure there are enough colors
+  if(length(as.character(colors_cell_clusters)) < length(table(as.character(cell_clusters))))
+    print_msg("Not enough colors for cell_clusters (see colors_cell_clusters).", 
+              msg_type="STOP")
+  
+  # Ensure there is no class equal to zero
+  if(0 %in% cell_clusters){
+    names_cell_clusters <- names(cell_clusters)
+    cell_clusters <- as.numeric(cell_clusters)
+    if(0 %in% cell_clusters){
+      cell_clusters <- cell_clusters + 1
+      print_msg("Found 0 in cell_clusters.", msg_type = "DEBUG")
+    }
+    names(cell_clusters) <- names_cell_clusters
+    cell_clusters <- as.factor(cell_clusters)
+  }
+
+  print_msg(paste0("Color palette for cells: ", paste0(colors_cell_clusters, collapse=", ")),
+            msg_type = "DEBUG")
+  
+  m <- as.matrix(object@data)
   
   # Centering
   if(center){
@@ -111,134 +127,168 @@ plot_heatmap <- function(object,
     m[m < floor] <- floor
   }  
   
+  gene_to_clust <- gene_cluster(object)
   
-  # Reduce matrix to gene clusters in gene_clusters parameter
-  if(!is.null(gene_clusters)){
-    gene_cl_int <- unlist(object@gene_clusters[gene_clusters], use.names = FALSE)
-    m <- m[gene_cl_int,]
+  if(is.null(cell_clusters)){
+    print_msg("Ordering cells/columns using hierarchical clustering.",
+              msg_type = "INFO")
+    
+    dist_cells <- cor(m, method = "pearson")
+    dist_cells <- as.dist((1-dist_cells)/2)
+    hclust_cells <- hclust(dist_cells, method = link)
+    hclust_cells_order <- colnames(m)[hclust_cells$order]
   }
   
-  # Reduce m rows to only keep genes from top_genes
   if(use_top_genes) {
-    if (length(object@top_genes) == 0) {
-      print_msg("The slot top_genes of the input ClusterSet object is empty. Be sure to run top_genes() before.", msg_type = "STOP")
-    }
-    
-    if(is.null(gene_clusters)){
-      genes_top <- unlist(object@top_genes, use.names = FALSE)
-      m <- m[genes_top,]
-    } else {
-      genes_top <- unlist(object@top_genes[gene_clusters], use.names = FALSE)
-      m <- m[genes_top,]
-    }
+    print_msg("Only top genes will be used.", 
+              msg_type = "INFO")
+    if (length(object@top_genes) == 0) 
+      print_msg("If use_top_genes is TRUE, run top_genes() before.", 
+                msg_type = "STOP")
+    gene_top <- unlist(object@top_genes, use.names = FALSE)
+    m <- m[gene_top, ]
+    gene_to_clust <- gene_to_clust[gene_top]
   }
   
-  
-  # Add blank row to separate gene clusters in heatmap
-  if(!length(gene_clusters) == 0){
-    ## Create blank row
-    blank_row <- matrix(nrow = line_size_horizontal, ncol = ncol(m))
+  # Add blank row to separate gene clusters in the heatmap
+
+  if(length(table(as.character(gene_to_clust))) > 1){
     
-    ## Insert blank row in matrix
-    m_blank <- matrix(ncol = ncol(m))
-    m <- rbind(m, matrix(nrow = 1, ncol = ncol(m)))
+    blank_row <- matrix(NA, nrow = line_size_horizontal, ncol = ncol(m))
     
-    for (i in gene_clusters) {
-      if(!use_top_genes) {
-        size <- object@gene_clusters_metadata$size[gene_clusters]
-        row_start <- sum(size[names(size) %in% 0:(i-1)])+1
-        row_end <- sum(size[names(size) %in% 1:i])
-        
-        m_blank_loop <- rbind(m[row_start:row_end,], blank_row)
-      } else {
-        nb_top_genes <- length(object@top_genes[[i]])
-        
-        m_top_i <- m[0:nb_top_genes,]
-        m <- m[(nb_top_genes+1):nrow(m),]
-        
-        m_blank_loop <- rbind(m_top_i, blank_row)
-        #row_start <- i*ncol(object@top_genes) - ncol(object@top_genes) + 1
-        #row_end <- i*nb_top_genes
-      }
-      
-      
-      #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
-      m_blank <- rbind(m_blank, m_blank_loop)
+    print_msg(paste0("line_size_horizontal: ", line_size_horizontal), msg_type = "DEBUG")
+    print_msg(paste0("Dim[1] blank matrix: ", nrow(blank_row)), msg_type = "DEBUG")
+    print_msg(paste0("Dim[2] blank matrix: ", ncol(blank_row)), msg_type = "DEBUG")
+    
+    colnames(blank_row) <- colnames(m)
+    m_split <- split(as.data.frame(m), gene_to_clust)
+    
+    nb_NA_row <- 1
+    
+    for(i in 1:(length(m_split)-1)){
+      print_msg(paste0("Adding blank lines for cluster ", i), 
+                msg_type = "DEBUG")
+      rownames(blank_row) <- paste("NA.", 
+                                   nb_NA_row:(nb_NA_row + line_size_horizontal - 1),
+                                   sep="")
+      nb_NA_row <- nb_NA_row + line_size_horizontal
+      m_split[[i]] <- as.matrix(rbind(m_split[[i]], blank_row))
     }
-    m <- m_blank
+    
+    m_blank <-  do.call(rbind, m_split)
+    m <- as.matrix(m_blank)
+  }
+
+  if(!is.null(cell_clusters) & length(table(as.character(cell_clusters))) > 1){
+    
+    # Add blank col to separate cell clusters in the heatmap
+    blank_col <- matrix(NA, ncol = nrow(m), nrow = line_size_vertical)
+    
+    print_msg(paste0("line_size_vertical: ", line_size_vertical), msg_type = "DEBUG")
+    print_msg(paste0("Dim[1] blank matrix: ", nrow(blank_col)), msg_type = "DEBUG")
+    print_msg(paste0("Dim[2] blank matrix: ", ncol(blank_col)), msg_type = "DEBUG")
+    
+    colnames(blank_col) <- rownames(m)
+    m_split <- split(as.data.frame(t(m)), cell_clusters)
+    
+    cell_clusters <- sort(cell_clusters)
+    m <- m[ , names(cell_clusters)]
+    nb_NA_row <- 1
+
+    for(i in 1:(length(m_split)-1)){
+      print_msg(paste0("Adding blank lines for cell cluster ", i), 
+                msg_type = "DEBUG")
+      rownames(blank_col) <- paste("NA.", 
+                                   nb_NA_row:(nb_NA_row + line_size_vertical - 1),
+                                   sep="")
+      nb_NA_row <- nb_NA_row + line_size_vertical
+      m_split[[i]] <- as.matrix(rbind(m_split[[i]], blank_col))
+    }
+      
+      m_blank <-  do.call(rbind, m_split)
+      # Now correct also the names that have been 
+      # changed by do.call()...
+      row.names(m_blank) <- gsub("^[0-9]+\\.", "", rownames(m_blank), perl=T)
+      m <- as.matrix(m_blank)
+      # These rownames are in fact colnames (it will be transposed).
+      # later on we will need the colnames to be used as rownames 
+      # of the annotation_col dataframe. So we need colnames
+      # to be unique. We wil add 1, 2 (...) space char... (" ").
+      pos_NA <- grep("^NA\\.[0-9]+$", rownames(m), perl=T)
+      row.names(m)[pos_NA] <- unlist(lapply(mapply(rep, ' ', 1:length(pos_NA)), paste0, collapse=""))
+      m <- t(m)
   }
   
+  # Now correct also the rownames that have been 
+  # changed by do.call()
+  if(length(table(as.character(gene_to_clust))) > 1){
+    row.names(m) <- gsub("^[0-9]+\\.", "", rownames(m), perl=T)
+    row.names(m)[grep("^NA\\.[0-9]+$", rownames(m), perl=T)] <- " "
+  }
+
+  if(is.null(cell_clusters)) {
+    # This condition, if(interactive), 
+    # may seem weird. In fact interactive 
+    # and non interactive do not use the 
+    # same plotting function. They have
+    # different requirement regarding 
+    # column sorting
+    if(interactive)
+    m <- m[, hclust_cells_order]
+  }
   
-  
-  # Add blank col to separate cell clusters in heatmap
+  # Preparing a data.frame containing cell annotations
   if(!is.null(cell_clusters)){
-    ## Create blank row
-    blank_col <- matrix(nrow = nrow(m), ncol = line_size_vertical)
-    
-    ## Insert blank row in matrix
-    m_blank <- matrix(nrow = nrow(m))
-    m <- cbind(m, matrix(nrow = nrow(m), ncol = 1))
-    
-    cell_names_blank <- c(NA)
-    
-    cell_names <- names(sort(cell_clusters))
-    
-    if (0 %in% cell_clusters){
-      cell_clusters_tmp <- as.numeric(as.character(cell_clusters)) + 1 #Add one to each element in the vector
-    } else {
-      cell_clusters_tmp <- cell_clusters
-    }
-    
-    for (i in sort(unique(cell_clusters_tmp))) {
-      col_start <- sum(table(cell_clusters_tmp)[0:(i-1)])+1
-      col_end <- sum(table(cell_clusters_tmp)[1:i])
-      
-      m_blank_loop <- cbind(m[,col_start:col_end], blank_col)
-      cell_names_loop <- c(cell_names[col_start:col_end], rep(NA, line_size_vertical))
-      
-      #rownames(test)[(nrow(test)-line_size+1):nrow(test)] <- paste(rep(" ", 2), collapse = '')
-      m_blank <- cbind(m_blank, m_blank_loop)
-      cell_names_blank <- c(cell_names_blank, cell_names_loop)
-    }
-    m <- m_blank
+    column <- as.factor(as.numeric(as.character(cell_clusters[colnames(m)])))
+    cell_clusters_anno <- data.frame("Indent."=column)
+    rownames(cell_clusters_anno) <- colnames(m)
   }
-  
-  #Flip rows
-  m <- m[order(nrow(m):1),]
-  
-  
+
   ####### Heatmap #######
   # Main heatmap
   print_msg("Plotting heatmap.", msg_type="INFO")
   
   if(interactive){
-    htmp <- main_heatmap(data = m,
-                         name = colorbar_name,
-                         show_colorbar = show_legend,
-                         colors = colors,
-                         row_order = seq_len(nrow(m)))
     
-    htmp <- htmp %>% modify_layout(list(margin = list(t=20, r=10, b=20, l=10)))
+    #Flip rows
+    m <- m[order(nrow(m):1),]
+    
+    print_msg("Plot is interactive...")
+    
+    htmp <- iheatmapr::main_heatmap(data = m,
+                                   name = colorbar_name,
+                                   show_colorbar = show_legend,
+                                   colors = colors)
+    
+    htmp <- htmp %>% iheatmapr::modify_layout(list(margin = list(t=20, 
+                                                                 r=10, 
+                                                                 b=20, 
+                                                                 l=20)))
     
     print_msg("Adding labels.", msg_type="DEBUG")
     
     if(row_labels){
-      htmp <- htmp %>% add_row_labels(font = list(size = label_size))}
+      htmp <- htmp %>% iheatmapr::add_row_labels(font = list(size = label_size))}
     if(col_labels){
-      htmp <- htmp %>% add_col_labels(font = list(size = label_size))}
+      htmp <- htmp %>% iheatmapr::add_col_labels(font = list(size = label_size))}
     
     if(!is.null(cell_clusters)){
-      cell_clusters_anno <- cell_clusters[match(cell_names_blank, names(cell_clusters))]
-      cell_clusters_anno <- as.factor(cell_clusters_anno)
-      cell_clusters_anno <- as.data.frame(cell_clusters_anno)
-      colnames(cell_clusters_anno) <- "cell_clusters"
-      htmp <- htmp %>% add_col_annotation(cell_clusters_anno, colors = list("cell_clusters" = colors_cell_clusters))
+      
+      # Here, there is a bug with add_col_annotation()
+      # if a single color is passed then it calls brewer.pal()
+      # with the color as the palette name. To fix, we will
+      # pass it 3 times the same color wich fix the bug...
+      if(length(colors_cell_clusters) == 1)
+        colors_cell_clusters <- rep(colors_cell_clusters, 3)
+
+      htmp <- htmp %>% iheatmapr::add_col_annotation(cell_clusters_anno, 
+                                                     colors = list("Indent." = colors_cell_clusters))
     }
     
     if(show_dendro & is.null(cell_clusters)) {
       htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
     }
-    
+
     print_msg("Adding Titles.", msg_type="DEBUG")
     
     if(!is.null(ylab)){
@@ -249,25 +299,37 @@ plot_heatmap <- function(object,
       htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
   }else{
     # Reorder rows to get the same order as the interactive heatmap
-    m <- m[order(nrow(m):1),]
+    #m <- m[order(nrow(m):1),]
     
-    if(show_dendro){
-      htmp <- pheatmap(mat = m, 
-                       annotation_legend = show_legend, legend = show_legend,
-                       color = colorRampPalette(colors)(50),
-                       cluster_rows = F, cluster_cols = hclust_cells, 
-                       show_rownames = row_labels, show_colnames = col_labels, 
-                       border_color = NA, scale = "none", na_col = "white")
-    }else{
-      htmp <- pheatmap(mat = m[, hclust_cells$order], 
-                       annotation_legend = show_legend, legend = show_legend,
-                       color = colorRampPalette(colors)(50),
-                       cluster_rows = F, cluster_cols = F, 
-                       show_rownames = row_labels, show_colnames = col_labels, 
-                       border_color = NA, scale = "none", na_col = "white")
+    cluster_cols <- F
+    annotation_col <- NA
+    
+    if(is.null(cell_clusters)){
+      if(show_dendro){
+        cluster_cols <- hclust_cells
+      }
     }
+
+    if(!is.null(cell_clusters)){
+      annotation_col <- cell_clusters_anno
+    }
+
+    htmp <- pheatmap(mat = m, 
+                     annotation_legend = show_legend, legend = show_legend,
+                     color = colors,
+                     cluster_rows = F, 
+                     cluster_cols = cluster_cols, 
+                     fontsize_row= label_size,
+                     show_rownames = row_labels, 
+                     show_colnames = col_labels, 
+                     annotation_col = annotation_col,
+                     border_color = NA, 
+                     scale = "none", 
+                     annotation_colors=list("Indent."=setNames(colors_cell_clusters, 
+                                                                    unique(as.character(sort(cell_clusters))))),
+                     na_col = "white")
   }
-  
+
   return(htmp)
 }
 
@@ -299,6 +361,8 @@ plot_heatmap <- function(object,
 #' @return A ggplot object.
 #' 
 #' @examples
+#' 
+#' set_verbosity(0)
 #' m <- create_4_rnd_clust()
 #' 
 #' res <- find_gene_clusters(data=m,
@@ -309,7 +373,7 @@ plot_heatmap <- function(object,
 #'                           highest=0.3,
 #'                           min_nb_supporting_cell = 0,
 #'                           fdr = 1e-8)
-#' plot_dist(res)
+#' p <- plot_dist(res)
 #' 
 #' @export plot_dist
 #' 
@@ -323,9 +387,7 @@ plot_dist <- function(object,
                       text_hjust = -0.8,
                       text_vjust = -0.5) {
   
-  if (!inherits(object, "ClusterSet")) {
-    stop("Please provide ClusterSet object.")
-  }
+  check_format_cluster_set(object)
   
   DKNN = c(object@dbf_output$simulated_dknn,
            object@dbf_output$dknn)
