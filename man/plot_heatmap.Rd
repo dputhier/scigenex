@@ -11,25 +11,21 @@ plot_heatmap(
   floor = -1,
   cell_clusters = NULL,
   show_dendro = TRUE,
-  gene_clusters = NULL,
   use_top_genes = FALSE,
   interactive = TRUE,
   name = NULL,
   xlab = NULL,
   ylab = NULL,
-  colorbar_name = "Expression level",
+  colorbar_name = "Exp. level",
   show_legend = TRUE,
-  colors = c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"),
-  colors_cell_clusters = c("#9F1717", "#AE5B11", "#C48D00", "#517416", "#115C8A",
-    "#584178", "#9D1C70", "#E96767", "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8",
-    "#9579B9", "#E25CB4", "#DB2020", "#DA7316", "#F0AE00", "#6D9D1E", "#1882C0",
-    "#71529A", "#D02494", "#EF9292", "#F2B57D", "#FFDA77", "#B6E36A", "#7BC4EE",
-    "#AD98C9", "#EA8AC9"),
+  colors = colors_for_gradient("Ju1"),
+  colors_cell_clusters = NULL,
   row_labels = TRUE,
   col_labels = FALSE,
-  label_size = 9,
-  line_size_vertical = 15,
-  line_size_horizontal = 15
+  label_size = 5,
+  line_size_vertical = 3,
+  line_size_horizontal = 3,
+  link = c("average", "complete", "single")
 )
 }
 \arguments{
@@ -44,8 +40,6 @@ plot_heatmap(
 \item{cell_clusters}{A vector of cell clusters with cell barcodes as names.}
 
 \item{show_dendro}{A logical to indicate whether to show column dendrogram.}
-
-\item{gene_clusters}{A cluster id to plot. Default is NULL for plotting all cluster.}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
@@ -63,7 +57,7 @@ plot_heatmap(
 
 \item{colors}{A vector of colors.}
 
-\item{colors_cell_clusters}{A vector of colors for column annotations.}
+\item{colors_cell_clusters}{A named vector of colors for cell identity annotations.}
 
 \item{row_labels}{A logical to indicate whether to show row labels.}
 
@@ -74,6 +68,9 @@ plot_heatmap(
 \item{line_size_vertical}{An integer for the size of horizontal white line which separate gene clusters.}
 
 \item{line_size_horizontal}{An integer for the size of vertical white line  which separate cell clusters.}
+
+\item{link}{The aggloremative criterion for hierarchical clustering. One of "average", "complete" or "single". 
+Default to average.}
 }
 \value{
 Iheatmap-class object.

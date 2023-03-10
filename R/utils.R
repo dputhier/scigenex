@@ -242,5 +242,125 @@ create_4_rnd_clust <- function(){
 }
 
 
+#################################################################
+##    Returns a palette for gradients
+#################################################################
+#' Generate a vector of colors for a gradient
+#'
+#' This function generates a vector of colors for a gradient, given 
+#' a specified palette name.
+#'
+#' @param palette A character vector specifying the palette to use. One of: "Je1", 
+#' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8".
+#' @return A character vector of color codes.
+#' @export colors_for_gradient
+#' @examples
+#' colors_for_gradient()
+#' colors_for_gradient(palette = "Ju1")
+#' 
+colors_for_gradient <- function(palette=c("Je1", "SL", "Ju1", "De1", 
+                                          "De2", "De3", "De4", "De5",
+                                          "De6", "De7", "De8")){
+  palette <- match.arg(palette)
+  
+  if(palette == "SL"){
+    return(c("#5D50A3", "#9FD7A4", "#FBFDBA", "#FEB163", "#A80B44"))
+  }else if(palette == "Ju1"){
+    return(c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"))
+  }else if(palette == "De1"){
+    return(c("#d73027","#fc8d59","#fee090","#e0f3f8","#91bfdb","#253494"))
+  }else if(palette == "De2"){
+    return(c("#FFF7FB","#ECE2F0","#D0D1E6","#A6BDDB","#67A9CF","#3690C0","#02818A","#016450"))
+  }else if(palette == "De3"){
+    return(c("#1A1835","#15464E","#2B6F39","#757B33","#C17A70","#D490C6","#C3C1F2","#CFEBEF"))
+  }else if(palette == "De4"){
+    return(c("#0000FF","#00FFFF","#80FF80","#FFFF00","#FF0000"))
+  }else if(palette == "De5"){
+    return(c("#0000AA","#0000FF","#00FFFF","#80FF80","#FFFF00","#FF0000","#AA0000"))
+  }else if(palette == "De6"){
+    return(c("#4575b4","#74add1","#abd9e9","#e0f3f8","#fee090","#fdae61","#f46d43","#d73027"))
+  }else if(palette == "De7"){
+    return(c("#67001f","#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac","#053061"))
+  }else if(palette == "De7"){
+    return(c("#2b83ba","#abdda4","#fdae61","#d7191c"))
+  }else if(palette == "De8"){
+    return(c("#0000BF","#0000FF","#0080FF","#00FFFF","#40FFBF","#80FF80","#BFFF40","#FFFF00","#FF8000","#FF0000","#BF0000"))
+  }else if(palette == "Je1"){
+    return(c("#27408B", "#3A5FCD", "#3288BD", "#66C2A5","#ABDDA4", "#E6F598","#FEE08B", "#FDAE61","#F46D43","#D53E4F","#8B2323"))
+  }
+}
+
+#################################################################
+##    Returns a discrete color palette
+#################################################################
+#' Generate a discrete color palette
+#'
+#' This function generates a vector of colors for a discrete variable, 
+#' given a specified palette name.
+#'
+#' @param n An integer specifying the number of colors to generate. 
+#' @param palette A character vector specifying the palette to use. 
+#' @return A character vector of color codes.
+#' @export discrete_palette
+#' @examples
+#' discrete_palette()
+#' discrete_palette(n=20, palette = "ggplot")
+#' 
+discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
+  
+  palette <- match.arg(palette)
+  
+  if(palette == "Ju1"){
+    palette <- colorRampPalette(c(  "#9F1717", "#AE5B11", "#C48D00", "#517416", 
+                                    "#115C8A", "#584178", "#9D1C70", "#E96767", 
+                                    "#EC9342", "#FFCA3A", "#8AC926", "#4DADE8", 
+                                    "#9579B9", "#E25CB4", "#DB2020", "#DA7316", 
+                                    "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", 
+                                    "#D02494", "#EF9292", "#F2B57D", "#FFDA77", 
+                                    "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9"))(n)
+  }else if(palette == "ggplot"){
+    gg_color_hue <- function(n) {
+      hues = seq(15, 375, length = n + 1)
+      grDevices::hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    palette <- gg_color_hue(n)
+  }
+  
+  names(palette) <- 1:n
+  
+  return(palette)
+  
+}
+
+
+#################################################################
+##    Check the format of a Clusterset object
+#################################################################
+#' Check the format of a Clusterset object
+#'
+#' Check the format of a Clusterset object (ncol, nrow, inherits...)
+#'
+#' @param object the clusterSet object to be tested 
+#' @return None.
+#' @examples 
+#'  set_verbosity(0)
+#'  data(pbmc_small, package = "SeuratObject")
+#'  clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
+#'  check_format_cluster_set(clust_set)
+#' @export check_format_cluster_set
+check_format_cluster_set <- function(object) {
+
+  if(!inherits(object, "ClusterSet"))
+    print_msg("Please provide a ClusterSet as input.", 
+              msg_type = "STOP")
+  
+  if(nrow(object) == 0)
+    print_msg("The ClusterSet object does not contain any gene.", 
+              msg_type = "STOP")
+    
+  if(ncol(object) == 0)
+    print_msg("The ClusterSet object does not contain any cell.", 
+              msg_type = "STOP")
+}
 
 

@@ -47,11 +47,9 @@ res <- find_gene_clusters(data=m,
 is(res)
 res
 plot_heatmap(res, row_labels = F, line_size_horizontal = 2)
+plot_heatmap(res[1,], row_labels = F, line_size_horizontal = 2)
+plot_heatmap(res[1:2,], row_labels = F, line_size_horizontal = 2)
 
-plot_profiles(res)
-## The subset operator may be used to select clusters/rows
-## and cells/columns of interest
-res[1,]
-res[1:2,]
+plot_profiles(res[c(2;3),])
 }          
 }
