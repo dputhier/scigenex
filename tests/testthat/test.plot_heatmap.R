@@ -316,7 +316,7 @@ test_that("Checking plot_heatmap() using cell clusters", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", " ", "sample11", 
+                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "sample11", 
                                         "sample12", "sample13", "sample14", "sample15", "sample16", "sample17", 
                                         "sample18", "sample19", "sample20"))
 
@@ -578,10 +578,10 @@ test_that("Checking plot_heatmap() increasing size of the blank lines", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", " ", " ", " ", 
-                                        " ", " ", " ", " ", " ", " ", "sample11", "sample12", "sample13", 
-                                        "sample14", "sample15", "sample16", "sample17", "sample18", "sample19", 
-                                        "sample20"))
+                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "   ", 
+                                        "    ", "     ", "      ", "       ", "        ", "         ", 
+                                        "          ", "sample11", "sample12", "sample13", "sample14", 
+                                        "sample15", "sample16", "sample17", "sample18", "sample19", "sample20"))
 
   # Checking order of rows
   expect_equal(rownames(htmp_matrix), c(
@@ -919,8 +919,20 @@ testthat::test_that("Test non interactive heatmaps.", {
   
   n_gene_clusters <- 1 
   n_cell_clusters <- 3
-  p_noi <- plot_heatmap(clust_set, cell_clusters=Seurat::Idents(pbmc_small), 
+  p_noi <- plot_heatmap(clust_set[1,], cell_clusters=Seurat::Idents(pbmc_small), 
                         colors_cell_clusters =  c("green", "red", "yellow"),
                         interactive = FALSE)
+  p_noi_rown <- p_noi[["gtable"]][["grobs"]][[2]][["label"]]
+  expect_true(length(grep(" ", p_noi_colnames)) == (n_cell_clusters-1) * 3)
+  expect_true(length(grep(" ", p_noi_rown)) == (n_gene_clusters-1) * 3)
+  
+  n_gene_clusters <- 2 
+  n_cell_clusters <- 3
+  p_noi <- plot_heatmap(clust_set[c(1, 3), colnames(pbmc_small)], cell_clusters=Seurat::Idents(pbmc_small), 
+                        colors_cell_clusters =  c("green", "red", "yellow"),
+                        interactive = FALSE)
+  p_noi_rown <- p_noi[["gtable"]][["grobs"]][[2]][["label"]]
+  expect_true(length(grep(" ", p_noi_colnames)) == (n_cell_clusters-1) * 3)
+  expect_true(length(grep(" ", p_noi_rown)) == (n_gene_clusters-1) * 3)
   
 })

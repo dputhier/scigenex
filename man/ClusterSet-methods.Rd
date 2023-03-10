@@ -35,6 +35,14 @@ clust_names(x)
 }
 \arguments{
 \item{x}{The ClusterSet object}
+
+\item{i}{indices specifying rows to extract. Indices are numeric or character vectors or empty (missing) or NULL.}
+
+\item{j}{indices specifying column to extract. Indices are numeric or character vectors or empty (missing) or NULL.}
+
+\item{...}{See ?'['. Not functionnal here.}
+
+\item{drop}{For matrices and arrays. If TRUE the result is coerced to the lowest possible dimension. Not functionnal here.}
 }
 \description{
 The ClusterSet methods.
