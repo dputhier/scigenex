@@ -467,7 +467,7 @@ test_that("Checking plot_heatmap() using top genes and cell clusters", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", " ", "sample11", 
+                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "sample11", 
                                         "sample12", "sample13", "sample14", "sample15", "sample16", "sample17", 
                                         "sample18", "sample19", "sample20"))
 
@@ -690,7 +690,7 @@ test_that("Checking plot_heatmap() displaying gene clusters 1 and 4", {
 
   # Checking order of columns
   expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", " ", "sample11", 
+                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "sample11", 
                                         "sample12", "sample13", "sample14", "sample15", "sample16", "sample17", 
                                         "sample18", "sample19", "sample20"))
 
@@ -792,7 +792,7 @@ test_that("Checking plot_heatmap() displaying only gene cluster 3", {
   expect_equal(colnames(htmp_matrix), c(
     "sample1", "sample2", "sample3", "sample4", "sample5",
     "sample6", "sample7", "sample8", "sample9", "sample10", " ",
-    " ", "sample11", "sample12", "sample13", "sample14", "sample15",
+    "  ", "sample11", "sample12", "sample13", "sample14", "sample15",
     "sample16", "sample17", "sample18", "sample19", "sample20"
   ))
 
