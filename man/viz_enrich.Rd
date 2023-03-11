@@ -10,7 +10,8 @@ viz_enrich(
   clusters = "all",
   type = "dotplot",
   nb_terms = 20,
-  terms_size = 50
+  terms_size = 50,
+  font_size = 4
 )
 
 \S4method{viz_enrich}{ClusterSet}(
@@ -18,7 +19,8 @@ viz_enrich(
   clusters = "all",
   type = c("dotplot", "barplot"),
   nb_terms = 20,
-  terms_size = 50
+  terms_size = 50,
+  font_size = 4
 )
 }
 \arguments{
@@ -31,6 +33,8 @@ viz_enrich(
 \item{nb_terms}{An integer indicating the number of terms in the plot.}
 
 \item{terms_size}{An interger indicating the wrap length of terms}
+
+\item{font_size}{The font size for the x axis.}
 }
 \value{
 A \code{ClusterSet} object
