@@ -48,7 +48,10 @@ plot_profiles <- function(data = NULL,
     print_msg("Please provide cell identification.", msg_type = "STOP")
   
   ident <- sort(ident)
+  ident <- factor(ident, levels=levels(ident), ordered = T)
   nb_cell_type <- length(unique(ident))
+  
+  
   
   if (is.null(nb_column))
     nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
@@ -77,9 +80,6 @@ plot_profiles <- function(data = NULL,
   print_msg(paste0("Number of cells: ", nb_cells),
             msg_type = "INFO")
   
-  print_msg(paste0("Centers dimension: ", paste0(dim(centers), collapse = " ")),
-            msg_type = "DEBUG")
-  
   centers <- centers[, names(ident), drop=FALSE]
   
   m <- reshape2::melt(as.matrix(centers))
@@ -97,7 +97,6 @@ plot_profiles <- function(data = NULL,
             msg_type = "DEBUG")
   
   y_text <- apply(centers, 1, max)
-  print_msg(y_text, msg_type = "DEBUG")
   
   y_text <- y_text + 0.1 * y_text
   df_text <- data.frame(x = colnames(centers)[round(nb_cells / 3, 0)], 
@@ -106,23 +105,20 @@ plot_profiles <- function(data = NULL,
                                    rownames(centers)),
                             ordered = T)
   
-  print_msg(summary(df_text), msg_type = "DEBUG")
-  print_msg(summary(m), msg_type = "DEBUG")
-  
   ggplot2::ggplot(m,
                   ggplot2::aes(
-                    x = "Cell",
-                    y = "Intensity",
+                    x = Cell,
+                    y = Intensity,
                     group = 1,
-                    fill = "Ident"
+                    fill = Ident
                   )) + 
     ggplot2::geom_col()  +
-    ggplot2::facet_wrap(~ "Cluster", scales = "free_y",
+    ggplot2::facet_wrap(~Cluster, scales = "free_y",
                ncol = nb_column) +
     ggplot2::theme_minimal() +
     ggplot2::geom_text(
       data = df_text,
-      mapping = ggplot2::aes(x = "x", y = "y", label = "Cluster"),
+      mapping = ggplot2::aes(x = x, y = y, label = Cluster),
       size = size_label,
       inherit.aes = F
     ) +
@@ -135,6 +131,5 @@ plot_profiles <- function(data = NULL,
       strip.text = ggplot2::element_blank()
     ) +
     ggplot2::scale_fill_manual(values=color_cell_type, name=legend_name)
-  
   
 }
