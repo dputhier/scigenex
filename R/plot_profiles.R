@@ -6,7 +6,7 @@
 #' @param data A ClusterSet object.
 #' @param ident A named vector containing the cell type identities for each cell.
 #' Typically the result from the Idents() function on a Seurat object (see Seurat library).
-#' @param nb_col The number of columns in the facet grid of the plot. If not provided,
+#' @param nb_column The number of columns in the facet grid of the plot. If not provided,
 #' it is automatically computed as the square root of the number of cell types.
 #' @param color_cell_type A named vector of colors (with cell type as names) used to 
 #' distinguish between different cell types in the plot. If not provided, the default 
@@ -31,7 +31,7 @@
 #' @export
 plot_profiles <- function(data = NULL,
                           ident = NULL,
-                          nb_col = NULL,
+                          nb_column = NULL,
                           color_cell_type = NULL,
                           size_text_y = 5,
                           size_label = 2,
@@ -50,8 +50,8 @@ plot_profiles <- function(data = NULL,
   ident <- sort(ident)
   nb_cell_type <- length(unique(ident))
   
-  if (is.null(nb_col))
-    nb_col <- round(sqrt(nrow(data@dbf_output$center)), 0)
+  if (is.null(nb_column))
+    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
   
   if (is.null(color_cell_type)){
     color_cell_type <- scales::hue_pal()(nb_cell_type)
@@ -118,7 +118,7 @@ plot_profiles <- function(data = NULL,
                   )) + 
     ggplot2::geom_col()  +
     ggplot2::facet_wrap(~ "Cluster", scales = "free_y",
-               ncol = nb_col) +
+               ncol = nb_column) +
     ggplot2::theme_minimal() +
     ggplot2::geom_text(
       data = df_text,
