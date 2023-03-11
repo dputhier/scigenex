@@ -14,6 +14,7 @@
 #' @param ontology a character string indicating the ontology to use for the enrichment analysis. One of "BP", "MF", and "CC" ontology, or "ALL".
 #'
 #' @return A \code{ClusterSet} object
+#' @method enrich_go ClusterSet
 #' @export enrich_go
 #'
 #' @examples
@@ -109,8 +110,10 @@ setMethod("enrich_go",
 #' @param type A vector providing the type of plot.
 #' @param nb_terms An integer indicating the number of terms in the plot.
 #' @param terms_size An interger indicating the wrap length of terms
+#' @param font_size The font size for the x axis.
 #'
 #' @return A \code{ClusterSet} object
+#' @method viz_enrich ClusterSet
 #' @export viz_enrich
 #'
 #' @examples
@@ -126,7 +129,8 @@ setGeneric("viz_enrich",
                     clusters = "all",
                     type = "dotplot",
                     nb_terms = 20,
-                    terms_size = 50) {
+                    terms_size = 50,
+                    font_size=4) {
              standardGeneric("viz_enrich")
            })
 
@@ -137,7 +141,8 @@ setMethod("viz_enrich",
                    clusters = "all",
                    type = c("dotplot", "barplot"),
                    nb_terms = 20,
-                   terms_size = 50) {
+                   terms_size = 50,
+                   font_size=4) {
             
             if (length(clusters) == 1){
               if (clusters == "all"){
