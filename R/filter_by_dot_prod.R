@@ -27,7 +27,7 @@ filter_by_dot_prod <- function(data = NULL,
     print_msg("The av_dot_prod_min argument should be a positive numeric value.", 
               msg_type = "STOP")
 
-  selected_cluster <- names(res@gene_clusters)
+  selected_cluster <- names(data@gene_clusters)
   all_dot_prod <- vector()
 
   for (i in 1:length(data@gene_clusters)) {
