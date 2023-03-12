@@ -90,6 +90,6 @@ res <- find_gene_clusters(data=m,
                              min_nb_supporting_cell = 0,
                              fdr = 1e-8)
 plot_heatmap(object = res)
-plot_heatmap(object = res, cluster = "1")
+plot_heatmap(object = res[1, ])
 
 }
