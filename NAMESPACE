@@ -2,7 +2,6 @@
 
 export(DBF)
 export(check_format_cluster_set)
-export(clust_names)
 export(col_names)
 export(colors_for_gradient)
 export(create_3_rnd_clust)

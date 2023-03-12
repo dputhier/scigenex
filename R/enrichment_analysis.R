@@ -2,6 +2,14 @@
 ##    Running gprofiler2 to perform enrichment analysis
 #################################################################
 
+
+setGeneric("enrich_go",
+           function(object,
+                    species="Hsapiens",
+                    ontology="all") {
+             standardGeneric("enrich_go")
+           })
+
 #' @title
 #' Enrichment analysis using GO database of gene clusters from a ClusterSet object 
 ##' @description
@@ -24,14 +32,6 @@
 #'
 #' go_res <- enrich_go(myobject)
 #' }
-
-setGeneric("enrich_go",
-           function(object,
-                    species="Hsapiens",
-                    ontology="all") {
-             standardGeneric("enrich_go")
-           })
-
 #' @rdname enrich_go
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
@@ -101,6 +101,18 @@ setMethod("enrich_go",
 ##    Visualization of enrichment analyses results from a ClusterSet object
 ############################################################################
 
+
+setGeneric("viz_enrich",
+           function(object,
+                    clusters = "all",
+                    type = "dotplot",
+                    nb_terms = 20,
+                    terms_size = 50,
+                    font_size=4) {
+             standardGeneric("viz_enrich")
+           })
+
+
 #' @title
 #' Visualization of enrichment analyses results from a ClusterSet object
 ##' @description
@@ -123,17 +135,6 @@ setMethod("enrich_go",
 #'
 #' viz_enrich(myobject)
 #' }
-
-setGeneric("viz_enrich",
-           function(object,
-                    clusters = "all",
-                    type = "dotplot",
-                    nb_terms = 20,
-                    terms_size = 50,
-                    font_size=4) {
-             standardGeneric("viz_enrich")
-           })
-
 #' @rdname viz_enrich
 setMethod("viz_enrich",
           signature(object = "ClusterSet"),

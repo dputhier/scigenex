@@ -11,7 +11,7 @@
 \alias{[,ClusterSet,ANY,ANY,ANY-method}
 \alias{nclust,ClusterSet-method}
 \alias{clust_size,ClusterSet-method}
-\alias{gene_cluster}
+\alias{gene_cluster,ClusterSet-method}
 \title{show}
 \usage{
 \S4method{show}{ClusterSet}(object)
@@ -34,9 +34,11 @@
 
 \S4method{clust_size}{ClusterSet}(x)
 
-gene_cluster(object, cluster = 0, core = FALSE)
+\S4method{gene_cluster}{ClusterSet}(object, cluster = 0)
 }
 \arguments{
+\item{object}{a ClusterSet object.}
+
 \item{x}{The ClusterSet object}
 
 \item{i}{indices specifying rows to extract. Indices are numeric or character vectors or empty (missing) or NULL.}
@@ -46,6 +48,8 @@ gene_cluster(object, cluster = 0, core = FALSE)
 \item{...}{See ?'['. Not functionnal here.}
 
 \item{drop}{For matrices and arrays. If TRUE the result is coerced to the lowest possible dimension. Not functionnal here.}
+
+\item{cluster}{The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.}
 }
 \description{
 The show method of a ClusterSet.
@@ -95,7 +99,7 @@ The i axis correspond to clusters and j to column/cells
 
 \item \code{clust_size(ClusterSet)}: The size of the clusters stored in a ClusterSet object.
 
-\item \code{gene_cluster()}: Returns a named vector (gene as names) and cluster
+\item \code{gene_cluster(ClusterSet)}: Returns a named vector (gene as names) and cluster
 as value.
 
 }}

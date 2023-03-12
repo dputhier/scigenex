@@ -396,26 +396,26 @@ setMethod(
 ##    Define get_cells function for ClusterSet object
 #################################################################
 
+setGeneric("gene_cluster", 
+           function(object,
+                    cluster = 0)
+             standardGeneric("gene_cluster")
+)
+
 #' @title
 #' gene_cluster
 #' @description
 #' Returns a named vector (gene as names) and cluster
 #' @describeIn ClusterSet-methods Returns a named vector (gene as names) and cluster
 #' as value.
+#' @param object a ClusterSet object.
+#' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @method gene_cluster ClusterSet
 #' @export gene_cluster
-setGeneric("gene_cluster", 
-           function(object,
-                    cluster = 0,
-                    core = FALSE)
-             standardGeneric("gene_cluster")
-)
-
 setMethod(
   "gene_cluster", signature("ClusterSet"),
       function(object,
-      cluster = 0,
-      core = FALSE) {
+      cluster = 0) {
   
   if(!is.null(object@gene_clusters)){
     nb_clust <- length(object@gene_clusters)
@@ -433,7 +433,6 @@ setMethod(
   if (!all(cluster-floor(cluster)==0) | any(cluster < 0 | any(cluster > nb_clust)))
     print_msg("Please provide a zero (all clusters) or positive integer in the required range.",
               msg_type = 'STOP')
-  
   
   if(length(cluster) == 1){
     if (cluster == 0)
