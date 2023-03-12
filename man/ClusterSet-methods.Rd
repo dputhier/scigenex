@@ -4,7 +4,6 @@
 \alias{show,ClusterSet-method}
 \alias{ncol.ClusterSet}
 \alias{nrow.ClusterSet}
-\alias{clust_names,ClusterSet-method}
 \alias{dim,ClusterSet-method}
 \alias{col_names,ClusterSet-method}
 \alias{row_names,ClusterSet-method}
@@ -19,8 +18,6 @@
 \method{ncol}{ClusterSet}(x)
 
 \method{nrow}{ClusterSet}(x)
-
-\S4method{clust_names}{ClusterSet}(x)
 
 \S4method{dim}{ClusterSet}(x)
 
@@ -60,8 +57,6 @@ The number of column of a ClusterSet object.
 
 The number of rows of a ClusterSet object.
 
-The names of the gene clusters stored in the ClusterSet object.
-
 The dimension of a ClusterSet object.
 
 The column names of a ClusterSet object.
@@ -83,8 +78,6 @@ Returns a named vector (gene as names) and cluster
 \item \code{ncol(ClusterSet)}: The number of column of a ClusterSet object.
 
 \item \code{nrow(ClusterSet)}: The number of rows of a ClusterSet object.
-
-\item \code{clust_names(ClusterSet)}: The names of the gene clusters stored in the ClusterSet object.
 
 \item \code{dim(ClusterSet)}: The dimension of a ClusterSet object.
 

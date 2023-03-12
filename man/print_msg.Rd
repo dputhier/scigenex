@@ -18,6 +18,7 @@ None
 Print a message based on the level of verbosity
 }
 \examples{
+opt_warn <- options()$warn
 set_verbosity(1)
 print_msg("Hello world!", "INFO")
 set_verbosity(3)
