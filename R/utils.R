@@ -70,6 +70,7 @@ get_verbosity <- function() {
 #'
 #' @export
 #' @examples
+#' opt_warn <- options()$warn
 #' set_verbosity(1)
 #' print_msg("Hello world!", "INFO")
 #' set_verbosity(3)
@@ -124,6 +125,7 @@ print_msg <-
 #'
 #' @export
 #' @examples
+#' opt_warn <- options()$warn
 #' print_stat("My data", 1:10, msg_type="INFO")
 #' set_verbosity(3)
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
