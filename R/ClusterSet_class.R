@@ -68,13 +68,16 @@ setClass("ClusterSet",
 ##    REDEFINE SHOW METHOD FOR CLASS OBJECT : ClusterSet
 #################################################################
 
-#' @method clust_size ClusterSet
+#' @title
+#' show
+#' @description
+#' The show method of a ClusterSet.
+#' @method show ClusterSet
+#' @describeIn ClusterSet-methods The number of column of a ClusterSet object.
 #' @export show
 setMethod(
   "show", signature("ClusterSet"),
-  
   function(object) {
-    
     cat("\t\tAn object of class ClusterSet\n")
     cat("\t\tName:", slot(object, "parameters")$name, "\n")
     cat("\t\tMemory used: ", object.size(object), "\n")
@@ -104,6 +107,7 @@ setMethod(
 ################################################################################
 ##      NCOL/NROW/DIM METHOD FOR CLASS OBJECT : ClusterSet
 ################################################################################
+
 #' @title
 #' ClusterSet-methods
 #' @description
@@ -123,30 +127,42 @@ setMethod(
 #'    row_names(clust_set)
 #'    clust_names(clust_set)
 #'    clust_size(clust_set)
+#'    show(clust_set)
 
+#' @title
+#' ncol.ClusterSet
+#' @description
+#' The number of column of a ClusterSet object.
 #' @param x The ClusterSet object
 #' @describeIn ClusterSet-methods The number of column of a ClusterSet object.
-#' @method ncol.ClusterSet ClusterSet
+#' @method ncol ClusterSet
 ncol.ClusterSet <- function (x) {
   ncol(x@data)
 }
 
+#' @title
+#' nrow.ClusterSet 
+#' @description
+#' The number of rows of a ClusterSet object.
 #' @param x The ClusterSet object
 #' @describeIn ClusterSet-methods The number of rows of a ClusterSet object.
-#' @method nrow.ClusterSet ClusterSet
+#' @method nrow ClusterSet
 nrow.ClusterSet <- function (x) {
   nrow(x@data)
 }
 
-#' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The names of the gene clusters stored in the ClusterSet object.
-#' @export
+
 setGeneric("clust_names", 
            function(x)
              standardGeneric("clust_names")
 )
 
+#' @title
+#' clust_names 
+#' @description
+#' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
+#' @describeIn ClusterSet-methods The names of the gene clusters stored in the ClusterSet object.
 #' @method clust_names ClusterSet
 #' @export
 setMethod("clust_names", "ClusterSet",
@@ -163,6 +179,10 @@ setMethod("clust_names", "ClusterSet",
             
 )
 
+#' @title
+#' dim
+#' @description
+#' The dimension of a ClusterSet object.
 #' @param x The ClusterSet object
 #' @describeIn ClusterSet-methods The dimension of a ClusterSet object.
 #' @method dim ClusterSet
@@ -180,8 +200,12 @@ if (!isGeneric("col_names"))
                standardGeneric("col_names")
   )
 
+#' @title
+#' col_names
+#' @description
+#' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The column names.
+#' @describeIn ClusterSet-methods The column names of a ClusterSet object.
 #' @method col_names ClusterSet
 #' @export col_names
 setMethod("col_names", "ClusterSet",
@@ -196,8 +220,12 @@ if (!isGeneric("row_names"))
                standardGeneric("row_names")
   )
 
+#' @title
+#' row_names
+#' @description 
+#' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The row names.
+#' @describeIn ClusterSet-methods The row names of a ClusterSet object.
 #' @method row_names ClusterSet
 #' @export row_names
 #' @export
@@ -213,12 +241,9 @@ setMethod("row_names", "ClusterSet",
 ################################################################################
 
 #' @title
-#' ClusterSet-methods
+#' Extract
 #' @description
-#' The methods of a ClusterSet object.
-#' 
-#' 
-
+#' The subsetting operator of a ClusterSet object.
 #' @describeIn ClusterSet-methods The subsetting operator of a ClusterSet object.
 #' The i axis correspond to clusters and j to column/cells
 #' @param i indices specifying rows to extract. Indices are numeric or character vectors or empty (missing) or NULL.
@@ -332,6 +357,10 @@ setGeneric("nclust",
 )
 
 
+#' @title
+#' nclust
+#' @description
+#' The number of clusters in a ClusterSet object.
 #' @describeIn ClusterSet-methods The number of clusters in a ClusterSet object.
 #' @method nclust ClusterSet
 #' @export
@@ -349,6 +378,10 @@ setGeneric("clust_size",
              standardGeneric("clust_size")
 )
 
+#' @title
+#' clust_size
+#' @description
+#' The size of the clusters stored in a ClusterSet object.
 #' @describeIn ClusterSet-methods The size of the clusters stored in a ClusterSet object.
 #' @method clust_size ClusterSet
 #' @export
@@ -363,14 +396,26 @@ setMethod(
 ##    Define get_cells function for ClusterSet object
 #################################################################
 
+#' @title
+#' gene_cluster
+#' @description
+#' Returns a named vector (gene as names) and cluster
 #' @describeIn ClusterSet-methods Returns a named vector (gene as names) and cluster
 #' as value.
 #' @method gene_cluster ClusterSet
-#'
 #' @export gene_cluster
-gene_cluster <- function(object,
-                         cluster = 0,
-                         core = FALSE) {
+setGeneric("gene_cluster", 
+           function(object,
+                    cluster = 0,
+                    core = FALSE)
+             standardGeneric("gene_cluster")
+)
+
+setMethod(
+  "gene_cluster", signature("ClusterSet"),
+      function(object,
+      cluster = 0,
+      core = FALSE) {
   
   if(!is.null(object@gene_clusters)){
     nb_clust <- length(object@gene_clusters)
@@ -415,4 +460,4 @@ gene_cluster <- function(object,
   } else{
     return(NULL)
   }
-}
+})
