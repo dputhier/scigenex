@@ -24,6 +24,11 @@ check: clean
 	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \
 	R CMD check .
 
+checkfast: clean
+	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
+	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \
+	R CMD check --no-install .
+
 doc:
 	@echo ">>> Creating a package documentation"
 	@echo "library(roxygen2); roxygen2::roxygenise()" | R --slave
