@@ -28,6 +28,7 @@
 #' @importFrom ggplot2 geom_col facet_wrap theme_minimal geom_text scale_color_manual
 #' @importFrom scales hue_pal
 #' @importFrom reshape2 melt
+#' @importFrom ggplot2 .data
 #' @export
 plot_profiles <- function(data = NULL,
                           ident = NULL,
@@ -105,12 +106,12 @@ plot_profiles <- function(data = NULL,
                                    rownames(centers)),
                             ordered = T)
   
-  ggplot2::ggplot(m,
+  ggplot2::ggplot(data= m,
                   ggplot2::aes(
-                    x = .data$Cell,
-                    y = .data$Intensity,
+                    x = .data[["Cell"]],
+                    y = .data[["Intensity"]],
                     group = 1,
-                    fill = .data$Ident
+                    fill = .data[["Ident"]]
                   )) + 
     ggplot2::geom_col()  +
     ggplot2::facet_wrap(~Cluster, scales = "free_y",
@@ -118,7 +119,9 @@ plot_profiles <- function(data = NULL,
     ggplot2::theme_minimal() +
     ggplot2::geom_text(
       data = df_text,
-      mapping = ggplot2::aes(x = .data$x, y = .data$y, label = .data$Cluster),
+      mapping = ggplot2::aes(x = .data[["x"]], 
+                             y =.data[["y"]], 
+                             label = .data[["Cluster"]]),
       size = size_label,
       inherit.aes = F
     ) +
