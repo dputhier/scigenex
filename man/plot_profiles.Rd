@@ -43,10 +43,12 @@ cell type-specific genes across different cell types.
 \examples{
 # Load a Seurat object
 data(pbmc_small, package = "SeuratObject")
+library(Seurat)
 # Compute the signatures using find_gene_clusters()
 clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
 plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small))
 pal <- c("#4E79A7", "#A0CBE8", "#F28E2B")
 names(pal) <- levels(Idents(pbmc_small))
 plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small), color_cell_type = pal)
+plot_profiles(clust_set[2:4,], ident=Seurat::Idents(pbmc_small), color_cell_type = pal)
 }
