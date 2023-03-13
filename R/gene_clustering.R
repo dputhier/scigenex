@@ -1,0 +1,428 @@
+################################################################################
+
+
+gene_clustering <- function(object = NULL,
+                            keep_nn = FALSE,
+                            k = 5,
+                            inflation = 2,
+                            threads = 1) {
+  
+  # Construct graph for mcl and save it in a new file
+  if (keep_nn) {
+    keep_dbf_graph(object = object)
+  } else {
+    construct_new_graph(object = object,
+                        k = k)
+  }
+  
+  # Run MCL algorithm
+  object <- mcl_system_cmd(object = object,
+                           inflation = inflation,
+                           threads = threads)
+  
+  # Update ClusterSet object
+  ## Read mcl out file
+  mcl_out_file <- file.path(object@parameters$output_path,
+                            paste0(object@parameters$name, ".mcl_out.txt"))
+  
+  ## Extract gene clusters
+  mcl_cluster <- readLines(mcl_out_file)
+  mcl_cluster <- strsplit(mcl_cluster, "\t")
+  names(mcl_cluster) <- seq(1, length(mcl_cluster))
+  
+  ## Add gene clusters to ClusterSet object
+  object@gene_clusters <- mcl_cluster
+  
+  ## Update gene_cluster_metadata slots
+  object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
+                                        "number" = max(as.numeric(names(object@gene_clusters))),
+                                        "size" = unlist(lapply(object@gene_clusters, length)))
+  
+  ## Compute centers
+  nb_clusters = length(names(object@gene_clusters))
+  centers <- matrix(ncol = ncol(object@data),
+                    nrow = nb_clusters)
+  colnames(centers) <- colnames(object@data)
+  rownames(centers) <- names(object@gene_clusters)
+  
+  ## calcul of the mean profils
+  for (i in 1:nb_clusters) {
+    if(is(object@data[object@gene_clusters[[i]], ])[2] == "vector") {
+      centers[i, ] <- apply(t(as.matrix(object@data[object@gene_clusters[[i]], ])),
+                            2, mean,
+                            na.rm = TRUE)
+    } else {
+      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], ],
+                            2, mean,
+                            na.rm = TRUE)
+    }
+  }
+  
+  object@dbf_output$center <- centers
+  
+  object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
+                                   row.names = colnames(object@data))
+  
+  return(object)
+}
+
+
+
+
+
+
+
+################################################################################
+#' Constructa new graph based on genes previously selected by DBF.
+#'
+#' This function constructs a graph using genes previously selected by DBF.
+#'
+#' @param object A ClusterSet object.
+#' @param k The number of nearest neighbors to consider for each gene.
+#'
+#' @return A ClusterSet object.
+#'
+#' @examples
+#' # Load sample data
+#' set_verbosity(2)
+#' m <- create_4_rnd_clust()
+#' 
+#' res <- select_genes(data = m,
+#'                     distance_method = "pearson",
+#'                     k = 75,
+#'                     row_sum = -Inf,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     seed = 123)
+#'                     
+#' # Construct graph using DKNN and MCL
+#' my_cluster_set <- construct_new_graph(res,
+#' k = 5)
+#'
+#' @export construct_new_graph
+
+construct_new_graph <- function(object = obj,
+                                k = 5) {
+  
+  selected_genes <- object@gene_clusters$`1`
+  data_selected_genes <- object@data
+  
+  dist_matrix_selected_genes <- qlcMatrix::corSparse(t(data_selected_genes))
+  dist_matrix_selected_genes <- 1 - dist_matrix_selected_genes
+  
+  
+  # Set the rownames / colnames of the distance matrix
+  rownames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
+  colnames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
+  
+  # The distance from a gene to itself is 'hidden'
+  diag(dist_matrix_selected_genes) <- NA
+  
+  # Create a dataframe to store the DKNN values.
+  # Gene_id appear both as rownames and column
+  # for coding convenience
+  df_dknn_selected_genes <- data.frame(
+    dknn_values = rep(NA, nrow(dist_matrix_selected_genes)),
+    row.names = rownames(dist_matrix_selected_genes),
+    gene_id = rownames(dist_matrix_selected_genes)
+  )
+  
+  # This list will be used to store the
+  # dknn values
+  l_knn_selected_genes <- list()
+  
+  #################### DKNN for each genes
+  # Extract the DKNN for each gene
+  print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
+  
+  for (pos in seq_len(nrow(dist_matrix_selected_genes))) {
+    gene <- rownames(df_dknn_selected_genes)[pos]
+    gene_dist <- dist_matrix_selected_genes[gene, ]
+    # Reorder the distance values in increasing order.
+    # The distance from a gene to itself (previously set to NA)
+    # is placed at the end of the vector.
+    gene_dist <- sort(gene_dist, na.last = T)[1:k]
+    
+    # Add the neigbhors to the list
+    l_knn_selected_genes[[gene]] <- gene_dist
+    
+    # Select the kth pearson correlation values. 
+    # This value corresponds to the DKNN of the gene(i)
+    df_dknn_selected_genes[gene, "dknn_values"] <- gene_dist[k]
+  }
+  
+  
+  
+  ####################  Create the input file for mcl algorithm
+  print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "INFO")
+  
+  mcl_out_as_list_of_df <- list()
+  
+  for (g in names(l_knn_selected_genes)) {
+    mcl_out_as_list_of_df[[g]] <- data.frame(
+      src = g,
+      dest = names(l_knn_selected_genes[[g]]),
+      weight = l_knn_selected_genes[[g]]
+    )
+  }
+  
+  mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
+  
+  
+  
+  # # A and B are added if A is in the
+  # # neighborhood of B and B in the neighborhood
+  # # of A
+  # mcl_out_as_df <-
+  #   mcl_out_as_df[duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
+  # 
+  # length(unique(c(mcl_out_as_df[,"src"], mcl_out_as_df[,"dest"])))
+  
+  
+  # Ensure an edge (A->B and B->A)
+  # is not defined twice
+  mcl_out_as_df <-
+    mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
+  
+  
+  #############  Convert distances into weights
+  # scale dist between 0..1
+  min_dist <- min(mcl_out_as_df$weight)
+  max_dist <- max(mcl_out_as_df$weight)
+  mcl_out_as_df$weight <- 
+    (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
+  # Convert scaled dist to weight
+  mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
+  
+  
+  path_input_mcl <- file.path(object@parameters$output_path,
+                              paste0(object@parameters$name, ".input_mcl.txt"))
+  
+  ############# Write input files for mcl
+  print_msg(paste0("Writing table."), msg_type = "INFO")
+  data.table::fwrite(
+    mcl_out_as_df,
+    file = path_input_mcl,
+    sep = "\t",
+    eol = "\n",
+    row.names = F,
+    col.names = FALSE
+  )
+  
+  # Add k used to construct graph to ClusterSet object
+  object@parameters <- append(object@parameters,
+                              list("k_mcl_graph" = k))
+  
+  print_msg(paste0("Input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
+  
+  return(object)
+}
+
+
+
+
+
+
+################################################################################
+#' Generate input file for MCL algorithm
+#'
+#' This function generates the input file required for the MCL (Markov Cluster) algorithm. The input file contains a list of distances for each gene, and each gene's neighbors are specified with their weights. The weights are converted to edge weights using a scaling function, and the resulting edges are then written to a tab-separated file for the MCL algorithm to process.
+#'
+#' @param object The ClusterSet object containing the distance-based features (DBF) output.
+#'
+#' @return The output of this function is a tab-separated file, which serves as input for the MCL algorithm.
+#'
+#' @examples
+#' # Load distance-based features (DBF) output
+#' data(dbf_output)
+#'
+#' # Create MCL input file
+#' mcl_input_file <- keep_dbf_graph(object = dbf_output)
+#'
+#' @export keep_dbf_graph
+
+
+
+keep_dbf_graph <- function(object = NULL) {
+  
+  # Extract list of distances for each gene
+  l_knn_selected <- object@dbf_output$all_neighbor_distances
+  
+  ####################  Create the input file for mcl algorithm
+  print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "INFO")
+  
+  mcl_out_as_list_of_df <- list()
+  
+  for (g in names(l_knn_selected)) {
+    mcl_out_as_list_of_df[[g]] <- data.frame(
+      src = g,
+      dest = names(l_knn_selected[[g]]),
+      weight = l_knn_selected[[g]]
+    )
+  }
+  
+  mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
+  
+  #############  Convert distances into weights
+  # scale dist between 0..1
+  mcl_out_as_df$weight <- 
+    (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
+  # Convert scaled dist to weight
+  mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
+  
+  print_stat("Graph weights (after convertion)", 
+             data = mcl_out_as_df$weight, 
+             msg_type = "DEBUG")
+  
+  # A and B are added if A is in the
+  # neighborhood of B and B in the neighborhood
+  # of A
+  mcl_out_as_df <-
+    mcl_out_as_df[duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
+  
+  # Ensure an edge (A->B and B->A)
+  # is not defined twice
+  mcl_out_as_df <-
+    mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
+  
+  path_input_mcl <- file.path(object@parameters$output_path,
+                              paste0(object@parameters$name, ".input_mcl.txt"))
+  
+  ############# Write input files for mcl
+  print_msg(paste0("Writing table."), msg_type = "INFO")
+  data.table::fwrite(
+    mcl_out_as_df,
+    file = path_input_mcl,
+    sep = "\t",
+    eol = "\n",
+    row.names = F,
+    col.names = FALSE
+  )
+}
+
+
+
+
+
+
+
+################################################################################
+#' Run the MCL program for graph partitioning.
+#'
+#' @param object a ClusterSet object.
+#' @param name character vector. The name of the file used to store the graph.
+#' @param inflation numeric. The inflation parameter used to control the granularity of the clustering.
+#' @param input_path character. The path where the input file is located.
+#' @param threads integer. The number of threads to use.
+#'
+#' @details This function launches the MCL program for graph partitioning. 
+#' MCL is a graph clustering algorithm that detects clusters of nodes in a graph 
+#' based on the flow of information through the edges. 
+#' It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
+#'
+#' @section Warnings: With the current implementation, this function only works
+#' only on UNIX-like plateforms.
+#'
+#' MCL should be installed. One can used the following command lines in a
+#' terminal:
+#'
+#' \code{# Download the latest version of mcl (the script has been tested
+#' successfully with the 06-058 version).}
+#' \code{wget http://micans.org/mcl/src/mcl-latest.tar.gz}
+#' \code{# Uncompress and install mcl}
+#' \code{tar xvfz mcl-latest.tar.gz}
+#' \code{cd mcl-xx-xxx}
+#' \code{./configure}
+#' \code{make}
+#' \code{sudo make install}
+#' \code{# You should get mcl in your path}
+#' \code{mcl -h}
+#'
+#' @references
+#' - Van Dongen S. (2000) A cluster algorithm for graphs. National
+#' Research Institute for Mathematics and Computer Science in the 1386-3681.
+#'
+#' @return a ClusterSet object with the updated parameters.
+#'
+#' @examples
+#' \dontrun{
+#' # create a ClusterSet object
+#' cs <- create_ClusterSet(graph = my_graph)
+#' # run MCL with default parameters
+#' cs <- mcl_system_cmd(cs)
+#' }
+#'
+#' @export
+
+mcl_system_cmd <- function(object = NULL,
+                           inflation = inflation,
+                           threads = 1) {
+  ## testing the system
+  if (.Platform$OS.type == "windows") {
+    stop("--> A unix-like OS is required to launch the MCL program.")
+  }else {
+    print_msg("Running mcl_system_cmd() under a unix-like system.", msg_type = "DEBUG")
+  }
+  
+  ## Testing mcl installation
+  if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
+    print_msg("Found MCL program in the path...", msg_type = "DEBUG")
+  } else {
+    stop(
+      "\t--> Please install mcl on your computer...\n",
+      "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
+    )
+  }
+  
+  
+  print_msg("Running MCL (graph partitioning)...", msg_type = "DEBUG")
+  
+  name <- object@parameters$name
+  input_path <- object@parameters$output_path
+  
+  if (get_verbosity() > 0) {
+    verb <- ""
+  } else {
+    verb <- "-V all "
+  }
+  
+  i <- paste("-I ", as.character(round(inflation, 1)), sep = "")
+  
+  threads <- paste("-te", threads, sep = " ")
+  
+  ## launching mcl program
+  cmd <- paste0("mcl ",
+                input_path,
+                "/",
+                name,
+                ".input_mcl.txt ",
+                i,
+                " --abc -o ",
+                input_path,
+                "/",
+                name,
+                ".mcl_out.txt ",
+                verb,
+                threads)
+  
+  cmd <- gsub(pattern = "//",
+              replacement = "/",
+              x = cmd)
+  
+  print_msg(paste0("Running command: ", cmd), msg_type = "DEBUG")
+  
+  system(cmd)
+  
+  print_msg("MCL step is finished.", msg_type = "DEBUG")
+  print_msg(paste0("creating file : ",
+                   file.path(
+                     getwd(), paste(name, ".mcl_out.txt", sep = "")
+                   )),
+            msg_type = "DEBUG")
+  
+  # Add inflation parameter to ClusterSet object
+  object@parameters <- append(object@parameters,
+                              list("inflation" = inflation))
+  
+  return(object)
+}
