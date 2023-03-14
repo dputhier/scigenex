@@ -414,8 +414,7 @@ plot_dist <- function(object,
     ylab(label = "Count")  +
     geom_vline(aes(xintercept = object@dbf_output$critical_distance),
                color = vline_color,
-               linetype = "dotdash",
-               linewidth = 0.5) +
+               linetype = "dotdash") +
     geom_text(mapping = aes(x = object@dbf_output$critical_distance,
                             y = 0,
                             label = "Critical distance with KNN",
