@@ -1,5 +1,47 @@
 ################################################################################
-
+#' Perform gene clustering using the Markov Cluster Algorithm (MCL) method
+#'
+#' This function performs gene clustering using the MCL algorithm. 
+#' The method starts by creating a graph with genes as nodes and edges connecting each gene to its nearest neighbors.
+#' Two methods are available based on keep_nn argument : 
+#' * when using 'keep_nn = FALSE', the method construct a new graph only based on the previously selected genes.
+#' * when using 'keep_nn = TRUE', the method conserve the graph constructed using select_genes with selected genes and their nearest neighbors.
+#' Then the method apply the MCL algorithm to detect clusters of co-expressed genes.
+#'
+#' @param object A ClusterSet object.
+#' @param keep_nn A logical value indicating whether the nearest neighbors graph from select_genes should be kept or not.
+#' @param k If keep_nn is set to FALSE, k is an integer value indicating the number of nearest neighbors to use in the graph construction. Default is 5.
+#' @param inflation A numeric value indicating the MCL inflation parameter. Default is 2.
+#' @param threads An integer value indicating the number of threads to use for MCL.
+#'
+#' 
+#'
+#' @return A ClusterSet object
+#'
+#' @examples
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
+#' 
+#' # Select informative features
+#' res <- select_genes(matrix_test,
+#'                     distance = "kendall",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' res <- gene_clustering(res, 
+#'                        inflation = 1.2,
+#'                        keep_nn = FALSE,
+#'                        k = 5)
+#' # Plot heatmap of feature clusters
+#' plot_heatmap(res)
+#' 
+#' @export gene_clustering
 
 gene_clustering <- function(object = NULL,
                             keep_nn = FALSE,
@@ -99,7 +141,6 @@ gene_clustering <- function(object = NULL,
 #' my_cluster_set <- construct_new_graph(res,
 #' k = 5)
 #'
-#' @export construct_new_graph
 
 construct_new_graph <- function(object = obj,
                                 k = 5) {
@@ -239,7 +280,6 @@ construct_new_graph <- function(object = obj,
 #' # Create MCL input file
 #' mcl_input_file <- keep_dbf_graph(object = dbf_output)
 #'
-#' @export keep_dbf_graph
 
 
 
@@ -352,7 +392,6 @@ keep_dbf_graph <- function(object = NULL) {
 #' cs <- mcl_system_cmd(cs)
 #' }
 #'
-#' @export
 
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,

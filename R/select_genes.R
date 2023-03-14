@@ -36,18 +36,22 @@
 #'
 #' @examples
 #' 
-#' # Example with Pearson-based distance
-#' set_verbosity(2)
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
 #' m <- create_4_rnd_clust()
 #' 
-#' res <- select_genes(data = m,
-#'                     distance_method = "pearson",
+#' # Select informative genes
+#' res <- select_genes(matrix_test,
+#'                     distance = "kendall",
 #'                     k = 75,
-#'                     row_sum = -Inf,
 #'                     highest = 0.3,
 #'                     fdr = 1e-8,
-#'                     seed = 123)
+#'                     row_sum = -Inf)
 #' 
+#' # Display selected genes
+#' res@gene_clusters
 #'
 #' @export select_genes
 
