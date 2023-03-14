@@ -1,4 +1,18 @@
 ############################## filters all fct ##############################
+#' Filter out gene clusters
+#'
+#' This function filters out gene clusters from a ClusterSet object
+#' 
+#' @param object A ClusterSet object.
+#' @param min_cluster_size An integer indicating the minimum size of clusters to keep.
+#' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
+#' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
+#' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
+#' 
+#' @return A ClusterSet object where clusters that did not pass the filter have been removed.
+#' 
+#' @export filter_gene_clusters
+
 filter_gene_clusters <- function(object = NULL,
                                  min_cluster_size = 5,
                                  min_nb_supporting_cell = 3,
@@ -18,11 +32,8 @@ filter_gene_clusters <- function(object = NULL,
 
 
 
-
-
-
 ############################## filter_cluster_size ##############################
-#' Filter gene clusters based on their size
+#' Filter out gene clusters based on their size
 #'
 #' This function filters out gene clusters from a ClusterSet object based on their size.
 #'
@@ -31,17 +42,7 @@ filter_gene_clusters <- function(object = NULL,
 #'
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'
-#' @examples
-#' # Load example data
-#' 
-#'
-#' # Filter clusters with less than 10 genes
-#' filtered_clusters <- filter_cluster_size(object = example_clusters, min_cluster_size = 10)
-#'
-#' @export
-
-
-
+#' @export filter_cluster_size
 
 filter_cluster_size <- function(object = NULL,
                                 min_cluster_size = 5) {
@@ -111,6 +112,18 @@ filter_cluster_size <- function(object = NULL,
 
 
 ############################## filter_nb_supporting_cells ##############################
+#' Filter out gene clusters based on the number of cells expressing at least a provided percentage of genes
+#' 
+#' This function filters out the gene clusters based on the number of cells expressing a certain percentage of genes present in this gene cluster.
+#' 
+#' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
+#' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
+#' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
+#' 
+#' @return A ClusterSet object where clusters that did not pass the filter have been removed.
+#'
+#' @export filter_nb_supporting_cells
+
 filter_nb_supporting_cells <- function(object = NULL,
                                        min_nb_supporting_cell = 3,
                                        min_pct_gene_expressed = 50) {
@@ -183,14 +196,14 @@ filter_nb_supporting_cells <- function(object = NULL,
 
 
 ############################## filter_av_dot_prod ##############################
-filter_av_dot_prod <- function(object = NULL) {
-  
-}
+# filter_av_dot_prod <- function(object = NULL) {
+#   
+# }
 
 
 ############################## filter_manual ##############################
-filter_manual <- function(object = NULL) {
-  
-}
+# filter_manual <- function(object = NULL) {
+#   
+# }
 
 

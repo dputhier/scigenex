@@ -26,7 +26,7 @@
 #' m <- create_4_rnd_clust()
 #' 
 #' # Select informative features
-#' res <- select_genes(matrix_test,
+#' res <- select_genes(m,
 #'                     distance = "kendall",
 #'                     k = 75,
 #'                     highest = 0.3,
@@ -115,9 +115,10 @@ gene_clustering <- function(object = NULL,
 
 
 ################################################################################
-#' Constructa new graph based on genes previously selected by DBF.
+#' Construct a new graph for a ClusterSet object
 #'
-#' This function constructs a graph using genes previously selected by DBF.
+#' This function constructs a new graph for a given ClusterSet object based on selected genes. 
+#' The graph is constructed using the Density K-Nearest Neighbor (DKNN) method.
 #'
 #' @param object A ClusterSet object.
 #' @param k The number of nearest neighbors to consider for each gene.
@@ -125,21 +126,22 @@ gene_clustering <- function(object = NULL,
 #' @return A ClusterSet object.
 #'
 #' @examples
-#' # Load sample data
-#' set_verbosity(2)
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
 #' m <- create_4_rnd_clust()
 #' 
-#' res <- select_genes(data = m,
-#'                     distance_method = "pearson",
+#' # Select informative features
+#' res <- select_genes(m,
+#'                     distance = "kendall",
 #'                     k = 75,
-#'                     row_sum = -Inf,
 #'                     highest = 0.3,
 #'                     fdr = 1e-8,
-#'                     seed = 123)
+#'                     row_sum = -Inf)
 #'                     
-#' # Construct graph using DKNN and MCL
-#' my_cluster_set <- construct_new_graph(res,
-#' k = 5)
+#' # Construct a new graph based on genes selected with select_genes()
+#' res <- construct_new_graph(object = res, k = 5)
 #'
 
 construct_new_graph <- function(object = obj,
@@ -265,23 +267,34 @@ construct_new_graph <- function(object = obj,
 
 
 ################################################################################
-#' Generate input file for MCL algorithm
+#' Construct a graph based on selected genes in a ClusterSet object and their neighbors
 #'
-#' This function generates the input file required for the MCL (Markov Cluster) algorithm. The input file contains a list of distances for each gene, and each gene's neighbors are specified with their weights. The weights are converted to edge weights using a scaling function, and the resulting edges are then written to a tab-separated file for the MCL algorithm to process.
+#' This function creates a graph based on the gene selected by select_genes() and their neighbors.
+#' It generates an input file required for the MCL (Markov Cluster) algorithm. 
+#'  
 #'
-#' @param object The ClusterSet object containing the distance-based features (DBF) output.
+#' @param object A ClusterSet object.
 #'
 #' @return The output of this function is a tab-separated file, which serves as input for the MCL algorithm.
 #'
 #' @examples
-#' # Load distance-based features (DBF) output
-#' data(dbf_output)
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
+#' 
+#' # Select informative features
+#' res <- select_genes(m,
+#'                     distance = "kendall",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
+#'                     
+#' # Construct a graph based on genes selected with select_genes() and their neighbors
+#' keep_dbf_graph(object = res)
 #'
-#' # Create MCL input file
-#' mcl_input_file <- keep_dbf_graph(object = dbf_output)
-#'
-
-
 
 keep_dbf_graph <- function(object = NULL) {
   
@@ -305,6 +318,8 @@ keep_dbf_graph <- function(object = NULL) {
   
   #############  Convert distances into weights
   # scale dist between 0..1
+  min_dist <- min(mcl_out_as_df$weight)
+  max_dist <- max(mcl_out_as_df$weight)
   mcl_out_as_df$weight <- 
     (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
   # Convert scaled dist to weight
@@ -349,16 +364,16 @@ keep_dbf_graph <- function(object = NULL) {
 ################################################################################
 #' Run the MCL program for graph partitioning.
 #'
+#' @details This function launches the MCL program for graph partitioning. 
+#' MCL is a graph clustering algorithm that detects clusters of nodes in a graph 
+#' based on the flow of information through the edges. 
+#' It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
+#' 
 #' @param object a ClusterSet object.
 #' @param name character vector. The name of the file used to store the graph.
 #' @param inflation numeric. The inflation parameter used to control the granularity of the clustering.
 #' @param input_path character. The path where the input file is located.
 #' @param threads integer. The number of threads to use.
-#'
-#' @details This function launches the MCL program for graph partitioning. 
-#' MCL is a graph clustering algorithm that detects clusters of nodes in a graph 
-#' based on the flow of information through the edges. 
-#' It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
 #'
 #' @section Warnings: With the current implementation, this function only works
 #' only on UNIX-like plateforms.
@@ -383,14 +398,6 @@ keep_dbf_graph <- function(object = NULL) {
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #'
 #' @return a ClusterSet object with the updated parameters.
-#'
-#' @examples
-#' \dontrun{
-#' # create a ClusterSet object
-#' cs <- create_ClusterSet(graph = my_graph)
-#' # run MCL with default parameters
-#' cs <- mcl_system_cmd(cs)
-#' }
 #'
 
 mcl_system_cmd <- function(object = NULL,
