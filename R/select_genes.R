@@ -116,18 +116,9 @@ select_genes <- function(data = NULL,
   
   
   # ======================
-  ## Compute distance matrix
+  #### Compute distance matrix ####
   # ======================
-  
-  print_msg(
-    paste0(
-      "Computing distances to the kth-nearest neighbors ",
-      "and associated FDR values... \n"
-    ),
-    msg_type = "INFO"
-  )
-  
-  
+
   # Directory and name of the principal output
   outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
   outfile <- gsub(pattern = "//",
@@ -172,11 +163,6 @@ select_genes <- function(data = NULL,
     dist_matrix <- as.matrix(dist(select_for_correlation))
   }
   
-  
-  
-  
-  
-  
   print_stat("Distance matrix stats", 
              data = dist_matrix, msg_type = "DEBUG")
   
@@ -192,6 +178,14 @@ select_genes <- function(data = NULL,
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix) <- NA
   
+  
+  
+  # ======================
+  #### Compute distance to KNN ####
+  # ======================
+  
+  print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
+  
   # Create a dataframe to store the DKNN values.
   # Gene_id appear both as rownames and column
   # for coding convenience
@@ -205,10 +199,7 @@ select_genes <- function(data = NULL,
   # dknn values
   l_knn <- list()
   
-  #################### DKNN for each genes
   # Extract the DKNN for each gene
-  print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
-  
   for (pos in seq_len(nrow(dist_matrix))) {
     gene <- rownames(df_dknn)[pos]
     gene_dist <- dist_matrix[gene, ]
@@ -227,6 +218,11 @@ select_genes <- function(data = NULL,
   
   print_stat("Observed DKNN stats", 
              data = df_dknn$dknn_values, msg_type = "DEBUG")
+  
+  
+  # ======================
+  #### Compute simulated distance to KNN ####
+  # ======================
   
   sim_dknn <- vector()
   critical_distance <- vector()
@@ -270,9 +266,12 @@ select_genes <- function(data = NULL,
     mean_sim <- mean(sim_dknn)
     sd_sim <- sd(sim_dknn)
     
-    #################### Determine the DKNN threshold (or critical distance)
+    
+    # ======================
+    #### Compute the DKNN threshold (or critical distance) ####
+    # ======================
     # Order genes by DKNN values
-    print_msg(paste0("Computing distances to KNN (DKNN) threshold."),
+    print_msg(paste0("Computing threshold of distances to KNN (DKNN threshold)."),
               msg_type = "INFO")
     
     # Order the dknn values from low to high
@@ -291,7 +290,10 @@ select_genes <- function(data = NULL,
     
     df_dknn$FDR[df_dknn$FDR > 100] <- 100
     
-    #################### Select genes with a distance value under critical distance
+
+    # ======================
+    #### Select genes with a distance value under critical distance ####
+    # ======================
     print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
     fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
     selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
@@ -301,7 +303,12 @@ select_genes <- function(data = NULL,
     selected_genes <- rownames(dist_matrix)
   }
   
-  # Create the ClusterSet object
+
+  # ======================
+    #### Create the ClusterSet object ####
+  # ======================
+  print_msg(paste0("Create the ClusterSet object."), msg_type = "INFO")
+  
   obj <- new("ClusterSet")
   
   if (length(selected_genes) > 0) {

@@ -1,37 +1,3 @@
-############################## filters all fct ##############################
-#' Filter out gene clusters
-#'
-#' This function filters out gene clusters from a ClusterSet object
-#' 
-#' @param object A ClusterSet object.
-#' @param min_cluster_size An integer indicating the minimum size of clusters to keep.
-#' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
-#' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
-#' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
-#' 
-#' @return A ClusterSet object where clusters that did not pass the filter have been removed.
-#' 
-#' @export filter_gene_clusters
-
-filter_gene_clusters <- function(object = NULL,
-                                 min_cluster_size = 5,
-                                 min_nb_supporting_cell = 3,
-                                 min_pct_gene_expressed = 50) {
-  
-  object <- filter_cluster_size(object = object,
-                                min_cluster_size = min_cluster_size)
-  
-  object <- filter_nb_supporting_cells(object = object,
-                                       min_nb_supporting_cell = min_nb_supporting_cell,
-                                       min_pct_gene_expressed = min_pct_gene_expressed)
-  
-  return(object)
-}
-
-
-
-
-
 ############################## filter_cluster_size ##############################
 #' Filter out gene clusters based on their size
 #'
@@ -69,7 +35,7 @@ filter_cluster_size <- function(object = NULL,
   object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
                                         "number" = max(as.numeric(names(object@gene_clusters))),
                                         "size" = unlist(lapply(object@gene_clusters, length)))
-
+  
   ## Remove filtered out genes in data slot
   object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
   
@@ -214,10 +180,10 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' @export filter_by_dot_prod
-filter_by_dot_prod <- function(data = NULL,
+filter_by_dot_prod <- function(object = NULL,
                                av_dot_prod_min = 2) {
   
-  if (is.null(data) | !inherits(data, "ClusterSet"))
+  if (is.null(object) | !inherits(object, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", 
               msg_type = "STOP")
   
@@ -225,14 +191,14 @@ filter_by_dot_prod <- function(data = NULL,
     print_msg("The av_dot_prod_min argument should be a positive numeric value.", 
               msg_type = "STOP")
   
-  selected_cluster <- names(data@gene_clusters)
+  selected_cluster <- names(object@gene_clusters)
   all_dot_prod <- vector()
   
-  for (i in 1:length(data@gene_clusters)) {
+  for (i in 1:length(object@gene_clusters)) {
     
     print_msg(paste0("Computing dot product for cluster: ", i), 
               msg_type = "DEBUG")
-    cur_clust <- data@data[data@gene_clusters[[i]],]
+    cur_clust <- object@data[object@gene_clusters[[i]],]
     cur_clust[cur_clust >= 1] <- 1
     cur_clust[cur_clust < 1] <- 0
     cur_dot_prod <- cur_clust %*% t(cur_clust)
@@ -249,14 +215,58 @@ filter_by_dot_prod <- function(data = NULL,
     }
   }
   
+  # Extract selected clusters
   selected_cluster <- selected_cluster[!is.na(selected_cluster)]
+  
+  # Extract number of filtered out clusters
+  nb_cluster_out <- length(selected_cluster[is.na(selected_cluster)])
+  
+  print_msg(paste0(nb_cluster_out, " clusters are filtered out based on their dot product."),
+            msg_type = "INFO")
   print_msg(paste0("Number of selected clusters: ", length(selected_cluster)), 
             msg_type = "DEBUG")
-  n_data <- data[selected_cluster, ]
-  n_data@gene_clusters_metadata$dot_product <- all_dot_prod
-  names(n_data@gene_clusters_metadata$dot_product) <- names(n_data@gene_clusters)
-  return(data[selected_cluster, ])
   
+  
+  # Update ClusterSet object
+  ## Add dot product values
+  object@gene_clusters_metadata$all_dot_prod <- all_dot_prod
+  names(object@gene_clusters_metadata$all_dot_prod) <- object@gene_clusters_metadata$cluster_id
+  
+  ## Remove clusters that did not pass the filter
+  object@gene_clusters <- object@gene_clusters[selected_cluster]
+  names(object@gene_clusters) <- seq(1, length(object@gene_clusters))
+  
+  ## Update gene_cluster_metadata slots
+  object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
+                                        "number" = max(as.numeric(names(object@gene_clusters))),
+                                        "size" = unlist(lapply(object@gene_clusters, length)))
+  
+  ## Remove filtered out genes in data slot
+  object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
+  
+  ## Compute centers
+  nb_clusters = length(names(object@gene_clusters))
+  centers <- matrix(ncol = ncol(object@data),
+                    nrow = nb_clusters)
+  colnames(centers) <- colnames(object@data)
+  rownames(centers) <- names(object@gene_clusters)
+  
+  ## calcul of the mean profils
+  for (i in 1:nb_clusters) {
+    if(is(object@data[object@gene_clusters[[i]], ])[2] == "vector") {
+      centers[i, ] <- apply(t(as.matrix(object@data[object@gene_clusters[[i]], ])),
+                            2, mean,
+                            na.rm = TRUE)
+    } else {
+      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], ],
+                            2, mean,
+                            na.rm = TRUE)
+    }
+  }
+  
+  object@dbf_output$center <- centers
+  
+  return(object[selected_cluster, ])
 }
 
 
@@ -267,3 +277,32 @@ filter_by_dot_prod <- function(data = NULL,
 # }
 
 
+#' ############################## filters all fct ##############################
+#' #' Filter out gene clusters
+#' #'
+#' #' This function filters out gene clusters from a ClusterSet object
+#' #' 
+#' #' @param object A ClusterSet object.
+#' #' @param min_cluster_size An integer indicating the minimum size of clusters to keep.
+#' #' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
+#' #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
+#' #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
+#' #' 
+#' #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
+#' #' 
+#' #' @export filter_gene_clusters
+#' 
+#' filter_gene_clusters <- function(object = NULL,
+#'                                  min_cluster_size = 5,
+#'                                  min_nb_supporting_cell = 3,
+#'                                  min_pct_gene_expressed = 50) {
+#'   
+#'   object <- filter_cluster_size(object = object,
+#'                                 min_cluster_size = min_cluster_size)
+#'   
+#'   object <- filter_nb_supporting_cells(object = object,
+#'                                        min_nb_supporting_cell = min_nb_supporting_cell,
+#'                                        min_pct_gene_expressed = min_pct_gene_expressed)
+#'   
+#'   return(object)
+#' }

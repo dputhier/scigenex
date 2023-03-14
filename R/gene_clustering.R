@@ -62,12 +62,15 @@ gene_clustering <- function(object = NULL,
                            inflation = inflation,
                            threads = threads)
   
+  print_msg(paste0("Add results to the ClusterSet object."), msg_type = "INFO")
+  
   # Update ClusterSet object
   ## Read mcl out file
   mcl_out_file <- file.path(object@parameters$output_path,
                             paste0(object@parameters$name, ".mcl_out.txt"))
   
   ## Extract gene clusters
+  print_msg(paste0("Read MCL output file."), msg_type = "DEBUG")
   mcl_cluster <- readLines(mcl_out_file)
   mcl_cluster <- strsplit(mcl_cluster, "\t")
   names(mcl_cluster) <- seq(1, length(mcl_cluster))
@@ -81,6 +84,7 @@ gene_clustering <- function(object = NULL,
                                         "size" = unlist(lapply(object@gene_clusters, length)))
   
   ## Compute centers
+  print_msg(paste0("Compute centers."), msg_type = "DEBUG")
   nb_clusters = length(names(object@gene_clusters))
   centers <- matrix(ncol = ncol(object@data),
                     nrow = nb_clusters)
@@ -147,12 +151,20 @@ gene_clustering <- function(object = NULL,
 construct_new_graph <- function(object = obj,
                                 k = 5) {
   
+  # Extract selected genes
   selected_genes <- object@gene_clusters$`1`
+  # Extract normalized gene expression matrix
   data_selected_genes <- object@data
   
+  
+  
+  # ======================
+  #### Compute distances ####
+  # ======================
+  # Compute distances between selected genes
+  print_msg(paste0("Compute distances between selected genes."), msg_type = "INFO")
   dist_matrix_selected_genes <- qlcMatrix::corSparse(t(data_selected_genes))
   dist_matrix_selected_genes <- 1 - dist_matrix_selected_genes
-  
   
   # Set the rownames / colnames of the distance matrix
   rownames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
@@ -161,6 +173,11 @@ construct_new_graph <- function(object = obj,
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix_selected_genes) <- NA
   
+  
+  # ======================
+  #### Compute distances to KNN ####
+  # ======================
+  print_msg(paste0("Compute distances to KNN between selected genes."), msg_type = "INFO")
   # Create a dataframe to store the DKNN values.
   # Gene_id appear both as rownames and column
   # for coding convenience
@@ -195,8 +212,9 @@ construct_new_graph <- function(object = obj,
   }
   
   
-  
-  ####################  Create the input file for mcl algorithm
+  # ======================
+  #### Create the input file for mcl algorithm ####
+  # ======================
   print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
@@ -211,8 +229,6 @@ construct_new_graph <- function(object = obj,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  
-  
   # # A and B are added if A is in the
   # # neighborhood of B and B in the neighborhood
   # # of A
@@ -221,14 +237,13 @@ construct_new_graph <- function(object = obj,
   # 
   # length(unique(c(mcl_out_as_df[,"src"], mcl_out_as_df[,"dest"])))
   
-  
   # Ensure an edge (A->B and B->A)
   # is not defined twice
   mcl_out_as_df <-
     mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
   
   
-  #############  Convert distances into weights
+  ############# Convert distances into weights
   # scale dist between 0..1
   min_dist <- min(mcl_out_as_df$weight)
   max_dist <- max(mcl_out_as_df$weight)
@@ -237,12 +252,15 @@ construct_new_graph <- function(object = obj,
   # Convert scaled dist to weight
   mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
   
+  print_stat("Graph weights (after convertion)", 
+             data = mcl_out_as_df$weight, 
+             msg_type = "DEBUG")
   
   path_input_mcl <- file.path(object@parameters$output_path,
                               paste0(object@parameters$name, ".input_mcl.txt"))
   
   ############# Write input files for mcl
-  print_msg(paste0("Writing table."), msg_type = "INFO")
+  print_msg(paste0("Writing the input file."), msg_type = "INFO")
   data.table::fwrite(
     mcl_out_as_df,
     file = path_input_mcl,
@@ -256,7 +274,7 @@ construct_new_graph <- function(object = obj,
   object@parameters <- append(object@parameters,
                               list("k_mcl_graph" = k))
   
-  print_msg(paste0("Input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
+  print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
   
   return(object)
 }
@@ -344,7 +362,7 @@ keep_dbf_graph <- function(object = NULL) {
                               paste0(object@parameters$name, ".input_mcl.txt"))
   
   ############# Write input files for mcl
-  print_msg(paste0("Writing table."), msg_type = "INFO")
+  print_msg(paste0("Writing the input file."), msg_type = "INFO")
   data.table::fwrite(
     mcl_out_as_df,
     file = path_input_mcl,
@@ -353,6 +371,7 @@ keep_dbf_graph <- function(object = NULL) {
     row.names = F,
     col.names = FALSE
   )
+  print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
 }
 
 
@@ -420,9 +439,6 @@ mcl_system_cmd <- function(object = NULL,
     )
   }
   
-  
-  print_msg("Running MCL (graph partitioning)...", msg_type = "DEBUG")
-  
   name <- object@parameters$name
   input_path <- object@parameters$output_path
   
@@ -455,7 +471,7 @@ mcl_system_cmd <- function(object = NULL,
               replacement = "/",
               x = cmd)
   
-  print_msg(paste0("Running command: ", cmd), msg_type = "DEBUG")
+  print_msg(paste0("Running mcl command: ", cmd), msg_type = "DEBUG")
   
   system(cmd)
   
