@@ -4,12 +4,16 @@
 \alias{construct_new_graph}
 \title{Construct a new graph for a ClusterSet object}
 \usage{
-construct_new_graph(object = obj, k = 5)
+construct_new_graph(object = obj, k = 5, output_path = tempdir(), name = NULL)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
 \item{k}{The number of nearest neighbors to consider for each gene.}
+
+\item{output_path}{a character indicating the path where the output files will be stored.}
+
+\item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
 }
 \value{
 A ClusterSet object.

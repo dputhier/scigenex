@@ -4,10 +4,14 @@
 \alias{keep_dbf_graph}
 \title{Construct a graph based on selected genes in a ClusterSet object and their neighbors}
 \usage{
-keep_dbf_graph(object = NULL)
+keep_dbf_graph(object = NULL, output_path = tempdir(), name = NULL)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
+
+\item{output_path}{a character indicating the path where the output files will be stored.}
+
+\item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
 }
 \value{
 The output of this function is a tab-separated file, which serves as input for the MCL algorithm.

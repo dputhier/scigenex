@@ -6,8 +6,6 @@
 \usage{
 select_genes(
   data = NULL,
-  output_path = tempdir(),
-  name = NULL,
   dist_threads = 1,
   distance_method = c("pearson", "cosine", "euclidean", "kendall"),
   highest = 5e-05,
@@ -21,10 +19,6 @@ select_genes(
 }
 \arguments{
 \item{data}{a matrix, data.frame or Seurat object.}
-
-\item{output_path}{a character indicating the path where the output files will be stored.}
-
-\item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
 
 \item{dist_threads}{an integer specifying the number of threads for the kendall correlation.}
 

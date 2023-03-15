@@ -9,7 +9,9 @@ gene_clustering(
   keep_nn = FALSE,
   k = 5,
   inflation = 2,
-  threads = 1
+  threads = 1,
+  output_path = tempdir(),
+  name = NULL
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ gene_clustering(
 \item{inflation}{A numeric value indicating the MCL inflation parameter. Default is 2.}
 
 \item{threads}{An integer value indicating the number of threads to use for MCL.}
+
+\item{output_path}{a character indicating the path where the output files will be stored.}
+
+\item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
 }
 \value{
 A ClusterSet object

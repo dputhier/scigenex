@@ -22,7 +22,7 @@ plot_heatmap(
   colors_cell_clusters = NULL,
   row_labels = TRUE,
   col_labels = FALSE,
-  label_size = 5,
+  label_size = 10,
   line_size_vertical = 3,
   line_size_horizontal = 3,
   link = c("average", "complete", "single")

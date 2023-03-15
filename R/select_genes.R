@@ -6,8 +6,6 @@
 #' a set of parameters that affect the selection of genes.
 #'
 #' @param data a matrix, data.frame or Seurat object.
-#' @param output_path a character indicating the path where the output files will be stored.
-#' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #' @param dist_threads an integer specifying the number of threads for the kendall correlation.
 #' @param distance_method a character string indicating the method for computing distances (one of "pearson", "cosine", "euclidean" or "kendall").
 #' @param highest During the process, genes will be ordered by their distance to their k nearest neighbors (dknn). 
@@ -56,8 +54,6 @@
 #' @export select_genes
 
 select_genes <- function(data = NULL,
-                         output_path = tempdir(),
-                         name = NULL,
                          dist_threads = 1,
                          distance_method = c("pearson",
                                              "cosine",
@@ -74,20 +70,6 @@ select_genes <- function(data = NULL,
   # ======================
   ## Set parameters
   # ======================
-  
-  # Get working directory if output_path is "."
-  if (output_path == ".") {
-    output_path <- getwd()
-  }
-  # Check if output directory exists. If not stop the command.
-  if (!file.exists(output_path)) {
-    stop("Output directory provided does not exist.")
-  }
-  
-  # Create a random string if name is not provided
-  if (is.null(name)){
-    name <- create_rand_str()
-  }
   
   ## set a seed for reproductibility
   if (!is.null(seed)) {
@@ -118,12 +100,6 @@ select_genes <- function(data = NULL,
   # ======================
   #### Compute distance matrix ####
   # ======================
-
-  # Directory and name of the principal output
-  outfile <- paste(output_path, "/", name, ".dbf_out.txt", sep = "")
-  outfile <- gsub(pattern = "//",
-                  replacement = "/",
-                  x = outfile)
   
   #################### Correlation and distance matrices
   # Remove genes with 0 values for all cells
@@ -353,9 +329,7 @@ select_genes <- function(data = NULL,
                            "all_neighbor_distances" = NULL)
   }
   
-  obj@parameters <- list("output_path" = output_path,
-                         "name" = name,
-                         "distance_method" = distance_method,
+  obj@parameters <- list("distance_method" = distance_method,
                          "k" = k,
                          "highest" = highest,
                          "fdr" = fdr,

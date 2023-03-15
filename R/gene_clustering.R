@@ -13,6 +13,8 @@
 #' @param k If keep_nn is set to FALSE, k is an integer value indicating the number of nearest neighbors to use in the graph construction. Default is 5.
 #' @param inflation A numeric value indicating the MCL inflation parameter. Default is 2.
 #' @param threads An integer value indicating the number of threads to use for MCL.
+#' @param output_path a character indicating the path where the output files will be stored.
+#' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #'
 #' 
 #'
@@ -47,14 +49,20 @@ gene_clustering <- function(object = NULL,
                             keep_nn = FALSE,
                             k = 5,
                             inflation = 2,
-                            threads = 1) {
+                            threads = 1,
+                            output_path = tempdir(),
+                            name = NULL) {
   
   # Construct graph for mcl and save it in a new file
   if (keep_nn) {
-    keep_dbf_graph(object = object)
+    object <- keep_dbf_graph(object = object,
+                             output_path = output_path,
+                             name = name)
   } else {
-    construct_new_graph(object = object,
-                        k = k)
+    object <- construct_new_graph(object = object,
+                                  k = k,
+                                  output_path = output_path,
+                                  name = name)
   }
   
   # Run MCL algorithm
@@ -83,6 +91,9 @@ gene_clustering <- function(object = NULL,
                                         "number" = max(as.numeric(names(object@gene_clusters))),
                                         "size" = unlist(lapply(object@gene_clusters, length)))
   
+  ## Update data slot
+  object@data <- object@data[unlist(object@gene_clusters, use.names = F), ]
+  
   ## Compute centers
   print_msg(paste0("Compute centers."), msg_type = "DEBUG")
   nb_clusters = length(names(object@gene_clusters))
@@ -107,7 +118,7 @@ gene_clustering <- function(object = NULL,
   object@dbf_output$center <- centers
   
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
-                                   row.names = colnames(object@data))
+                                      row.names = colnames(object@data))
   
   return(object)
 }
@@ -126,6 +137,8 @@ gene_clustering <- function(object = NULL,
 #'
 #' @param object A ClusterSet object.
 #' @param k The number of nearest neighbors to consider for each gene.
+#' @param output_path a character indicating the path where the output files will be stored.
+#' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #'
 #' @return A ClusterSet object.
 #'
@@ -149,7 +162,32 @@ gene_clustering <- function(object = NULL,
 #'
 
 construct_new_graph <- function(object = obj,
-                                k = 5) {
+                                k = 5,
+                                output_path = tempdir(),
+                                name = NULL) {
+  ## Generate output path
+  # Get working directory if output_path is "."
+  if (output_path == ".") {
+    output_path <- getwd()
+  }
+  # Check if output directory exists. If not stop the command.
+  if (!file.exists(output_path)) {
+    stop("Output directory provided does not exist.")
+  }
+  
+  # Create a random string if name is not provided
+  if (is.null(name)){
+    name <- create_rand_str()
+  }
+  
+  # Directory and name of the principal output
+  path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
+  path_input_mcl <- gsub(pattern = "//",
+                         replacement = "/",
+                         x = outfile)
+  
+  
+  
   
   # Extract selected genes
   selected_genes <- object@gene_clusters$`1`
@@ -256,8 +294,6 @@ construct_new_graph <- function(object = obj,
              data = mcl_out_as_df$weight, 
              msg_type = "DEBUG")
   
-  path_input_mcl <- file.path(object@parameters$output_path,
-                              paste0(object@parameters$name, ".input_mcl.txt"))
   
   ############# Write input files for mcl
   print_msg(paste0("Writing the input file."), msg_type = "INFO")
@@ -272,7 +308,10 @@ construct_new_graph <- function(object = obj,
   
   # Add k used to construct graph to ClusterSet object
   object@parameters <- append(object@parameters,
-                              list("k_mcl_graph" = k))
+                              list("keep_nn" = FALSE,
+                                   "k_mcl_graph" = k,
+                                   "output_path" = output_path,
+                                   "name" = name))
   
   print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
   
@@ -292,6 +331,8 @@ construct_new_graph <- function(object = obj,
 #'  
 #'
 #' @param object A ClusterSet object.
+#' @param output_path a character indicating the path where the output files will be stored.
+#' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #'
 #' @return The output of this function is a tab-separated file, which serves as input for the MCL algorithm.
 #'
@@ -314,7 +355,31 @@ construct_new_graph <- function(object = obj,
 #' keep_dbf_graph(object = res)
 #'
 
-keep_dbf_graph <- function(object = NULL) {
+keep_dbf_graph <- function(object = NULL,
+                           output_path = tempdir(),
+                           name = NULL) {
+  
+  ## Generate output path
+  # Get working directory if output_path is "."
+  if (output_path == ".") {
+    output_path <- getwd()
+  }
+  # Check if output directory exists. If not stop the command.
+  if (!file.exists(output_path)) {
+    stop("Output directory provided does not exist.")
+  }
+  
+  # Create a random string if name is not provided
+  if (is.null(name)){
+    name <- create_rand_str()
+  }
+  
+  # Directory and name of the principal output
+  path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
+  path_input_mcl <- gsub(pattern = "//",
+                         replacement = "/",
+                         x = outfile)
+  
   
   # Extract list of distances for each gene
   l_knn_selected <- object@dbf_output$all_neighbor_distances
@@ -358,8 +423,11 @@ keep_dbf_graph <- function(object = NULL) {
   mcl_out_as_df <-
     mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
   
-  path_input_mcl <- file.path(object@parameters$output_path,
-                              paste0(object@parameters$name, ".input_mcl.txt"))
+  # Add parameters to ClusterSet object
+  object@parameters <- append(object@parameters,
+                              list("keep_nn" = TRUE,
+                                   "output_path" = output_path,
+                                   "name" = name))
   
   ############# Write input files for mcl
   print_msg(paste0("Writing the input file."), msg_type = "INFO")
@@ -372,6 +440,8 @@ keep_dbf_graph <- function(object = NULL) {
     col.names = FALSE
   )
   print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
+  
+  return(object)
 }
 
 

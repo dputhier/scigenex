@@ -55,7 +55,12 @@ reorder_genes <- function(object,
     if (order_by == "gene_names") {
       gene_cluster_names <- object@gene_clusters[[gene_cluster]]
       gene_cluster_names <- sort(gene_cluster_names)
+      
+      # Reorder genes in gene_clusters slot
       object@gene_clusters[[gene_cluster]] <- gene_cluster_names
+      
+      # Reorder genes in data slot
+      object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
     }
     
     # Reorder using hierarchical clustering (amap::hcluster)
@@ -73,7 +78,11 @@ reorder_genes <- function(object,
                              nbproc = 2,
                              doubleprecision = TRUE)
       
+      # Reorder genes in gene_clusters slot
       object@gene_clusters[[gene_cluster]] <- hclust_res$labels[hclust_res$order]
+      
+      # Reorder genes in data slot
+      object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
     }
     
     # Reorder using top_genes
@@ -83,7 +92,11 @@ reorder_genes <- function(object,
                                       cluster = gene_cluster,
                                       top = length(gene_cluster_names))@top_genes[[gene_cluster]]
       
+      # Reorder genes in gene_clusters slot
       object@gene_clusters[[gene_cluster]] <- gene_cluster_names
+      
+      # Reorder genes in data slot
+      object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
     }
   }
   
