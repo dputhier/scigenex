@@ -1,25 +1,34 @@
 test_that("Checking gene_cluster() is working...", { 
   
+  # Set verbosity to 0
   set_verbosity(0)
-  data("complex9Noisy")
-  res <- find_gene_clusters(data=complex9Noisy[ ,1:2],
-                            distance_method="euclidean",
-                            inflation = 1.25,
-                            k=20,
-                            min_nb_supporting_cell=0,
-                            highest = 0.95,
-                            row_sum = -Inf,
-                            fdr = 0.0001)
   
-  expect_equal(length(gene_cluster(res)), 3286)
-  expect_equal(paste0(table(gene_cluster(res)), collapse = " "), "1023 782 419 373 352 126 122 89")
-  expect_equal(as.vector(table(gene_cluster(res, cluster = 1))), 1023)
-  expect_equal(as.vector(table(gene_cluster(res, cluster = 2))), 782)
-  expect_equal(as.vector(table(gene_cluster(res, cluster = 3))), 419)
-  expect_equal(as.vector(table(gene_cluster(res, cluster = 8))), 89)
-  expect_equal(as.vector(table(gene_cluster(res, cluster = 8))), 89)
-  expect_equal(as.vector(table(gene_cluster(res, cluster = c(1,8)))), c(1023, 89))
-  expect_equal(as.vector(table(gene_cluster(res, cluster = c(8,8)))), 89)
+  #Create matrix containing 3 signatures
+  m <- create_4_rnd_clust()
+  
+  ## Select informative genes
+  res <- select_genes(data=m,
+                      distance_method="kendall",
+                      k=75,
+                      row_sum=-Inf,
+                      highest=0.3,
+                      fdr = 1e-8)
+  
+  ## Cluster genes
+  res <- gene_clustering(object = res,
+                         inflation = 1.2,
+                         keep_nn = FALSE,
+                         k = 5,
+                         threads = 1)
+  
+  expect_equal(length(gene_cluster(res)), 359)
+  expect_equal(paste0(table(gene_cluster(res)), collapse = " "), "123 88 81 67")
+  expect_equal(as.vector(table(gene_cluster(res, cluster = 1))), 123)
+  expect_equal(as.vector(table(gene_cluster(res, cluster = 2))), 88)
+  expect_equal(as.vector(table(gene_cluster(res, cluster = 3))), 81)
+  expect_equal(as.vector(table(gene_cluster(res, cluster = 4))), 67)
+  expect_equal(as.vector(table(gene_cluster(res, cluster = c(1,4)))), c(123, 67))
+  expect_equal(as.vector(table(gene_cluster(res, cluster = c(4,4)))), 67)
   expect_error(gene_cluster(res, cluster = c(-1,8)))
   expect_error(gene_cluster(res, cluster = c(0,9)))
   expect_error(gene_cluster(res, cluster = c(0:8)))
@@ -28,6 +37,6 @@ test_that("Checking gene_cluster() is working...", {
                paste0(names(gene_cluster(res, cluster = 1)), collapse = " "))
   expect_equal(paste0(unlist(res@gene_clusters[1:2]), collapse = " "), 
                paste0(names(gene_cluster(res, cluster = 1:2)), collapse = " "))
-  expect_equal(paste0(unlist(res@gene_clusters[1:8]), collapse = " "), 
-               paste0(names(gene_cluster(res, cluster = 1:8)), collapse = " "))
+  expect_equal(paste0(unlist(res@gene_clusters[1:4]), collapse = " "), 
+               paste0(names(gene_cluster(res, cluster = 1:4)), collapse = " "))
 })

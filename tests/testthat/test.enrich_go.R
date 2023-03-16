@@ -1,19 +1,23 @@
+# Set verbosity to 0
+set_verbosity(0)
+
 # Load seurat object
 data(pbmc_small, package = "SeuratObject")
 
-set_verbosity(0)
+## Select informative genes
+res <- select_genes(data=pbmc_small,
+                    distance_method="pearson",
+                    k=10,
+                    row_sum=-Inf,
+                    highest=0.95,
+                    fdr = 1e-6)
 
-res <- find_gene_clusters(
-  data = pbmc_small,
-  distance_method = "kendall",
-  inflation = 2,
-  k = 20,
-  row_sum = -Inf,
-  highest = 0.1,
-  min_nb_supporting_cell = 0,
-  fdr = 1e-8,
-  min_cluster_size = 0
-)
+## Cluster genes
+res <- gene_clustering(object = res,
+                       inflation = 1.2,
+                       keep_nn = FALSE,
+                       k = 5,
+                       threads = 1)
 
 
 test_that("Check if enrich_go stops when species argument is invalid", {
@@ -23,14 +27,14 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 
 test_that("Check message printed by enrich_go()", {
   set_verbosity(2)
-
+  
   msg <- capture.output(res <- enrich_go(res, species = "Hsapiens", ontology = "BP"))
   
   # I'm commenting some of the following message 
   # as the number of EntrezId will change from one
   # release to another one.
   expect_equal(msg[1], "|-- INFO :  Species used : Homo sapiens ")
-
+  
   expect_equal(msg[2], "|-- INFO :  Enrichment analysis for cluster 1 ")
   expect_equal(msg[3], "|-- DEBUG :  Cluster 1")
   #expect_equal(msg[4], "\t|--Number of gene names converted to EntrezId : 20")
@@ -45,7 +49,8 @@ test_that("Check message printed by enrich_go()", {
   expect_equal(msg[12], "|-- INFO :  Enrichment analysis for cluster 3 ")
   expect_equal(msg[13], "|-- DEBUG :  Cluster 3")
   #expect_equal(msg[14], "\t|--Number of gene names converted to EntrezId : 3")
-  expect_equal(msg[15], "\t|--Number of gene names not converted to EntrezId : 0")
+  #expect_equal(msg[15], "\t|--Number of gene names not converted to EntrezId : 0")
+  expect_equal(msg[16], "\t|-- Calling enrichGO. ")
 })
 
 
@@ -54,11 +59,11 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 })
 
 
-test_that("Check if enrich_go results with all ontologies", {
+test_that("Check enrich_go results with all ontologies", {
   set_verbosity(0)
-
+  
   res_enrich <- enrich_go(res, species = "Hsapiens")
-
+  
   # Check results from gene cluster 1
   expect_equal(length(res_enrich@gene_cluster_annotations), 3)
   expect_equal(res_enrich@gene_cluster_annotations$`1`@pvalueCutoff, 0.05)
@@ -88,8 +93,8 @@ test_that("Check if enrich_go results with all ontologies", {
   # Adding a more flexible test
   expect_true(length(res_enrich@gene_cluster_annotations$`1`@geneSets) > 1000)
   expect_true(res_enrich@gene_cluster_annotations$`1`@readable)
-
-
+  
+  
   #expect_equal(
   #  res_enrich@gene_cluster_annotations$`1`@result$Description[1:10],
   #  c(
@@ -108,7 +113,7 @@ test_that("Check if enrich_go results with all ontologies", {
   
   # Adding a more flexible test
   
-  expect_true("platelet activation" %in% res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])
+  expect_true("neutrophil degranulation" %in% res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])
   
   #expect_equal(res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY, c(
   #  "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP",
@@ -122,7 +127,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #  "6/19", "5/19", "6/19", "6/19", "6/19", "3/19", "3/19", "3/19", "4/19",
   #  "3/19", "4/19", "4/19", "6/20", "3/20", "5/20", "3/20"
   #))
-
+  
   #expect_equal(round(median(
   #  res_enrich@gene_cluster_annotations$`1`@result$pvalue
   #), 4), 0)
@@ -135,7 +140,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #expect_equal(round(sd(
   #  res_enrich@gene_cluster_annotations$`1`@result$pvalue
   #), 4), 2e-04)
-
+  
   #expect_equal(round(median(
   #  res_enrich@gene_cluster_annotations$`1`@result$p.adjust
   #), 4), 7e-04)
@@ -148,7 +153,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #expect_equal(round(sd(
   #  res_enrich@gene_cluster_annotations$`1`@result$p.adjust
   #), 4), 0.0091)
-
+  
   
   # expect_equal(res_enrich@gene_cluster_annotations$`1`@result$geneID, c(
   #   "GP9/TREML1/PF4/MYL9/ITGA2B/CD9", "PF4/CLU/SPARC/ITGA2B/CD9",
@@ -160,10 +165,10 @@ test_that("Check if enrich_go results with all ontologies", {
   #   "TREML1/PF4/CLU/SPARC/ITGA2B/CD9", "SPARC/ITGA2B/CD9",
   #   "SPARC/ITGA2B/PGRMC1/CD9/ACRBP", "PF4/CLU/SPARC"
   # ))
-
+  
   # Adding a more flexible test
-  expect_true(length(grep("CD9", res_enrich@gene_cluster_annotations$`1`@result$geneID)) > 0)
-  expect_true(length(grep("MYL9", res_enrich@gene_cluster_annotations$`1`@result$geneID)) > 0)
+  expect_true(length(grep("CST3", res_enrich@gene_cluster_annotations$`1`@result$geneID)) > 0)
+  expect_true(length(grep("HLA-DMB", res_enrich@gene_cluster_annotations$`1`@result$geneID)) > 0)
   
   #expect_equal(
   #  unique(res_enrich@gene_cluster_annotations$`1`@result$Count),
@@ -171,8 +176,8 @@ test_that("Check if enrich_go results with all ontologies", {
   #)
   
   #expect_equal(sum(res_enrich@gene_cluster_annotations$`1`@result$Count), 70)
-
-
+  
+  
   # Check results from gene cluster 2
   expect_equal(res_enrich@gene_cluster_annotations$`2`@pvalueCutoff, 0.05)
   expect_equal(res_enrich@gene_cluster_annotations$`2`@pAdjustMethod, "BH")
@@ -185,7 +190,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #))
   
   # Adding a more flexible test
-  expect_true(all(c("2205", "27309", "649446", "282969", "5996") %in% res_enrich@gene_cluster_annotations$`2`@gene))
+  expect_true(all(c("3002", "6351", "83888", "5551", "10578") %in% res_enrich@gene_cluster_annotations$`2`@gene))
   
   expect_equal(res_enrich@gene_cluster_annotations$`2`@keytype, "ENTREZID")
   #expect_equal(unname(res_enrich@gene_cluster_annotations$`2`@gene2Symbol), c(
@@ -193,7 +198,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #))
   
   # Adding a more flexible test
-  expect_true(all(c("FCER1A", "ZNF330", "DLGAP1-AS1", "FUOM", "RGS1") %in% unname(res_enrich@gene_cluster_annotations$`2`@gene2Symbol)))
+  expect_true(all(c("GZMB", "GNLY", "GZMA", "IL7R", "FCGR3A") %in% unname(res_enrich@gene_cluster_annotations$`2`@gene2Symbol)))
   
   # expect_equal(length(res_enrich@gene_cluster_annotations$`2`@geneSets), 130)
   
@@ -201,7 +206,7 @@ test_that("Check if enrich_go results with all ontologies", {
   expect_true(length(res_enrich@gene_cluster_annotations$`2`@geneSets) > 100)
   
   expect_true(res_enrich@gene_cluster_annotations$`2`@readable)
-
+  
   
   # expect_equal(
   #   res_enrich@gene_cluster_annotations$`2`@result$Description[1:10],
@@ -223,7 +228,7 @@ test_that("Check if enrich_go results with all ontologies", {
   # )
   
   # Adding a more flexible test 
-  expect_true(grep("fucose",
+  expect_true(grep("cytolysis",
                    res_enrich@gene_cluster_annotations$`2`@result$Description[1:10])
               > 0)
   
@@ -236,7 +241,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #expect_equal(res_enrich@gene_cluster_annotations$`2`@result$GeneRatio, c(
   #  "1/4", "1/4", "1/4", "1/4", "1/4", "1/4", "1/4"
   #))
-
+  
   # expect_equal(round(median(
   #   res_enrich@gene_cluster_annotations$`2`@result$pvalue
   # ), 4), 0.0037)
@@ -249,7 +254,7 @@ test_that("Check if enrich_go results with all ontologies", {
   # expect_equal(round(sd(
   #   res_enrich@gene_cluster_annotations$`2`@result$pvalue
   # ), 4), 0.0041)
-
+  
   # expect_equal(round(median(
   #   res_enrich@gene_cluster_annotations$`2`@result$p.adjust
   # ), 4), 0.015)
@@ -262,16 +267,16 @@ test_that("Check if enrich_go results with all ontologies", {
   # expect_equal(round(sd(
   #   res_enrich@gene_cluster_annotations$`2`@result$p.adjust
   # ), 4), 0.0064)
-
+  
   # expect_equal(res_enrich@gene_cluster_annotations$`2`@result$geneID, c(
   #   "FUOM", "FUOM", "FUOM", "FUOM", "FCER1A", "RGS1", "FUOM"
   # ))
   # Adding a more flexible tests
-  expect_true(all(c("FUOM", "RGS1") %in% res_enrich@gene_cluster_annotations$`2`@result$geneID))
+  expect_true(all(c("CCR7/CCL5", "GZMB/GZMH/GZMA/GZMM") %in% res_enrich@gene_cluster_annotations$`2`@result$geneID))
   expect_true(all(res_enrich@gene_cluster_annotations$`2`@result$Count > 0))
   expect_true(sum(res_enrich@gene_cluster_annotations$`2`@result$Count) > 0)
-
-
+  
+  
   # Check results from gene cluster 3
   expect_equal(res_enrich@gene_cluster_annotations$`3`@pvalueCutoff, 0.05)
   expect_equal(res_enrich@gene_cluster_annotations$`3`@pAdjustMethod, "BH")
@@ -284,15 +289,15 @@ test_that("Check if enrich_go results with all ontologies", {
   # Adding a more flexible tests
   expect_true(length(res_enrich@gene_cluster_annotations$`3`@gene) > 0)
   expect_equal(res_enrich@gene_cluster_annotations$`3`@keytype, "ENTREZID")
-  expect_true(all(c("CD200", "SIT1", "IGLL5") %in% unname(res_enrich@gene_cluster_annotations$`3`@gene2Symbol)))
+  expect_true(all(c("PF4", "PPBP", "GP9") %in% unname(res_enrich@gene_cluster_annotations$`3`@gene2Symbol)))
   
   # expect_equal(length(res_enrich@gene_cluster_annotations$`3`@geneSets), 315)
   
   # Adding a more flexible tests
   expect_true(length(res_enrich@gene_cluster_annotations$`3`@geneSets) > 200)
   expect_true(res_enrich@gene_cluster_annotations$`3`@readable)
-
-  expect_true(length(grep("macrophage",  res_enrich@gene_cluster_annotations$`3`@result$Description[1:10])) > 0)
+  
+  expect_true(length(grep("platelet activation",  res_enrich@gene_cluster_annotations$`3`@result$Description[1:10])) > 0)
   
   # expect_equal(res_enrich@gene_cluster_annotations$`3`@result$ONTOLOGY, c(
   #   "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP",
@@ -309,7 +314,7 @@ test_that("Check if enrich_go results with all ontologies", {
   #   "1/3", "1/3", "1/3", "1/3", "1/3", "1/3", "1/3", "1/3", "1/3", "1/3",
   #   "1/3", "1/3", "1/3", "1/3", "1/3"
   # ))
-
+  
   # expect_equal(round(median(
   #   res_enrich@gene_cluster_annotations$`3`@result$pvalue
   # ), 4), 0.007)
@@ -335,7 +340,7 @@ test_that("Check if enrich_go results with all ontologies", {
   # expect_equal(round(sd(
   #   res_enrich@gene_cluster_annotations$`3`@result$p.adjust
   # ), 4), 0.0102)
-
+  
   
   # expect_equal(res_enrich@gene_cluster_annotations$`3`@result$geneID, c(
   #   "CD200", "CD200", "CD200", "CD200", "CD200", "CD200",
@@ -345,10 +350,9 @@ test_that("Check if enrich_go results with all ontologies", {
   #   "CD200", "CD200", "SIT1", "CD200", "IGLL5", "CD200",
   #   "SIT1", "CD200", "CD200", "IGLL5", "IGLL5"
   # ))
-
+  
   # Adding a more flexible tests
-  expect_true(all(c("CD200", "SIT1") %in% res_enrich@gene_cluster_annotations$`3`@result$geneID))
-  expect_true(unique(res_enrich@gene_cluster_annotations$`3`@result$Count) > 0)
+  expect_true(all(c("PF4/PPBP", "PF4/CLU/PPBP") %in% res_enrich@gene_cluster_annotations$`3`@result$geneID))
   expect_true(sum(res_enrich@gene_cluster_annotations$`3`@result$Count) > 20)
   
   
@@ -368,7 +372,7 @@ test_that("Check if enrich_go results with all ontologies", {
   # Barplot
   expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 1")
   expect_equal(plot_res_enrich[[1]]$labels$fill, "p.adjust")
-  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC"))
+  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC", "MF"))
   
   #expect_equal(round(sum(plot_res_enrich[[1]]$data$GeneRatio), 4), 3.6395)
   #expect_equal(round(mean(plot_res_enrich[[1]]$data$GeneRatio), 4), 0.2275)
@@ -377,24 +381,25 @@ test_that("Check if enrich_go results with all ontologies", {
   
   expect_equal(plot_res_enrich[[1]]$labels$title, "Gene cluster 1")
   expect_equal(plot_res_enrich[[1]]$labels$fill, "p.adjust")
-  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC"))
+  expect_equal(unique(plot_res_enrich[[1]]$data$ONTOLOGY), c("BP", "CC", "MF"))
   
-  expect_equal(plot_res_enrich[[1]]$data$ONTOLOGY,
-               res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY)
-  expect_equal(plot_res_enrich[[1]]$data$ID,
-               res_enrich@gene_cluster_annotations$`1`@result$ID)
-  expect_equal(as.vector(plot_res_enrich[[1]]$data$Description),
-               res_enrich@gene_cluster_annotations$`1`@result$Description)
-  expect_equal(plot_res_enrich[[1]]$data$pvalue,
-               res_enrich@gene_cluster_annotations$`1`@result$pvalue)
-  expect_equal(plot_res_enrich[[1]]$data$p.adjust,
-               res_enrich@gene_cluster_annotations$`1`@result$p.adjust)
-  expect_equal(plot_res_enrich[[1]]$data$qvalue,
-               res_enrich@gene_cluster_annotations$`1`@result$qvalue)
-  expect_equal(plot_res_enrich[[1]]$data$geneID,
-               res_enrich@gene_cluster_annotations$`1`@result$geneID)
-  expect_equal(plot_res_enrich[[1]]$data$Count,
-               res_enrich@gene_cluster_annotations$`1`@result$Count)
+  expect_equal(plot_res_enrich[[1]]$data$ONTOLOGY, c(rep("BP", 20),
+                                                     rep("CC", 20),
+                                                     rep("MF", 20)))
+  expect_equal(plot_res_enrich[[1]]$data$ID[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$ID[1:20])
+  expect_equal(as.vector(plot_res_enrich[[1]]$data$Description[1:20]),
+               res_enrich@gene_cluster_annotations$`1`@result$Description[1:20])
+  expect_equal(plot_res_enrich[[1]]$data$pvalue[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$pvalue[1:20])
+  expect_equal(plot_res_enrich[[1]]$data$p.adjust[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$p.adjust[1:20])
+  expect_equal(plot_res_enrich[[1]]$data$qvalue[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$qvalue[1:20])
+  expect_equal(plot_res_enrich[[1]]$data$geneID[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$geneID[1:20])
+  expect_equal(plot_res_enrich[[1]]$data$Count[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$Count[1:20])
   
   # Dotplot
   expect_equal(plot_res_enrich[[4]]$labels$title, "Gene cluster 1")
@@ -402,29 +407,29 @@ test_that("Check if enrich_go results with all ontologies", {
   expect_equal(plot_res_enrich[[4]]$labels$colour, "p.adjust")
   expect_equal(plot_res_enrich[[4]]$labels$x, "GeneRatio")
   
-  expect_equal(unique(plot_res_enrich[[4]]$data$ONTOLOGY), c("BP", "CC"))
+  expect_equal(unique(plot_res_enrich[[4]]$data$ONTOLOGY), c("BP", "CC", "MF"))
   
   #expect_equal(round(sum(plot_res_enrich[[4]]$data$GeneRatio), 4), 3.6395)
   #expect_equal(round(mean(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.2275)
   #expect_equal(round(median(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.2105)
   #expect_equal(round(sd(plot_res_enrich[[4]]$data$GeneRatio), 4), 0.0685)
   
-  expect_equal(plot_res_enrich[[4]]$data$ONTOLOGY,
-               res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY)
-  expect_equal(plot_res_enrich[[4]]$data$ID,
-               res_enrich@gene_cluster_annotations$`1`@result$ID)
-  expect_equal(as.vector(plot_res_enrich[[4]]$data$Description),
-               res_enrich@gene_cluster_annotations$`1`@result$Description)
-  expect_equal(plot_res_enrich[[4]]$data$pvalue,
-               res_enrich@gene_cluster_annotations$`1`@result$pvalue)
-  expect_equal(plot_res_enrich[[4]]$data$p.adjust,
-               res_enrich@gene_cluster_annotations$`1`@result$p.adjust)
-  expect_equal(plot_res_enrich[[4]]$data$qvalue,
-               res_enrich@gene_cluster_annotations$`1`@result$qvalue)
-  expect_equal(plot_res_enrich[[4]]$data$geneID,
-               res_enrich@gene_cluster_annotations$`1`@result$geneID)
-  expect_equal(plot_res_enrich[[4]]$data$Count,
-               res_enrich@gene_cluster_annotations$`1`@result$Count)
+  expect_equal(plot_res_enrich[[4]]$data$ONTOLOGY[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$ID[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$ID[1:20])
+  expect_equal(as.vector(plot_res_enrich[[4]]$data$Description[1:20]),
+               res_enrich@gene_cluster_annotations$`1`@result$Description[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$pvalue[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$pvalue[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$p.adjust[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$p.adjust[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$qvalue[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$qvalue[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$geneID[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$geneID[1:20])
+  expect_equal(plot_res_enrich[[4]]$data$Count[1:20],
+               res_enrich@gene_cluster_annotations$`1`@result$Count[1:20])
   
   
   # Test arguments clusters set to 1 and 3
@@ -469,28 +474,28 @@ test_that("Check if enrich_go results with all ontologies", {
 })
 
 
-test_that("", {
+test_that("Check enrich_go results with BP ontology", {
   set_verbosity(0)
-
+  
   # Use Biological Process (BP)
   res_enrich <- enrich_go(res, species = "Hsapiens", ontology = "BP")
   expect_equal(res_enrich@gene_cluster_annotations$`1`@ontology, "BP")
   expect_equal(res_enrich@gene_cluster_annotations$`2`@ontology, "BP")
   expect_equal(res_enrich@gene_cluster_annotations$`3`@ontology, "BP")
-
+  
   # ## For cluster 1
   # expect_equal(sort(unique(
   #   res_enrich@gene_cluster_annotations$`1`@result$Count
   # )), seq(1, 6))
   # expect_equal(sum(res_enrich@gene_cluster_annotations$`1`@result$Count), 553)
-
+  
   # expect_equal(
   #   length(
   #     res_enrich@gene_cluster_annotations$`1`@result$Description
   #   ),
   #   465
   # )
-
+  
   # expect_equal(
   #   res_enrich@gene_cluster_annotations$`1`@result$Description[1:10],
   #   c(
@@ -506,14 +511,13 @@ test_that("", {
   #     "megakaryocyte differentiation"
   #   )
   # )
-
+  
   # Adding a more flexible test
-  expect_true(length(grep("platelet", 
-                   res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])) > 0) 
+  expect_true(length(grep("neutrophil", 
+                          res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])) > 0) 
   ## For cluster 2
-  expect_true(unique(res_enrich@gene_cluster_annotations$`2`@result$Count) > 0)
   expect_true(sum(res_enrich@gene_cluster_annotations$`2`@result$Count) > 0)
-
+  
   # expect_equal(
   #   length(
   #     res_enrich@gene_cluster_annotations$`2`@result$Description
@@ -542,20 +546,19 @@ test_that("", {
   #     "monosaccharide metabolic process"
   #   )
   # )
-
-  expect_true(length(grep("fucose", 
+  
+  expect_true(length(grep("T cell", 
                           res_enrich@gene_cluster_annotations$`2`@result$Description[1:10])) > 0) 
   
-
+  
   ## For cluster 3
-  expect_true(unique(res_enrich@gene_cluster_annotations$`3`@result$Count) > 0)
   expect_true(sum(res_enrich@gene_cluster_annotations$`3`@result$Count) > 50)
-
+  
   expect_true(
     length(
       res_enrich@gene_cluster_annotations$`3`@result$Description
     ) > 50
   )
   expect_true(
-    length(grep("migration" , res_enrich@gene_cluster_annotations$`3`@result$Description[1:10])) > 0)
+    length(grep("platelet" , res_enrich@gene_cluster_annotations$`3`@result$Description[1:10])) > 0)
 })

@@ -240,7 +240,7 @@ plot_heatmap <- function(object,
   # Preparing a data.frame containing cell annotations
   if(!is.null(cell_clusters)){
     column <- as.factor(as.numeric(as.character(cell_clusters[colnames(m)])))
-    cell_clusters_anno <- data.frame("Indent."=column)
+    cell_clusters_anno <- data.frame("Ident."=column)
     rownames(cell_clusters_anno) <- colnames(m)
   }
 
@@ -282,7 +282,7 @@ plot_heatmap <- function(object,
         colors_cell_clusters <- rep(colors_cell_clusters, 3)
 
       htmp <- htmp %>% iheatmapr::add_col_annotation(cell_clusters_anno, 
-                                                     colors = list("Indent." = colors_cell_clusters))
+                                                     colors = list("Ident." = colors_cell_clusters))
     }
     
     if(show_dendro & is.null(cell_clusters)) {
@@ -325,7 +325,7 @@ plot_heatmap <- function(object,
                      annotation_col = annotation_col,
                      border_color = NA, 
                      scale = "none", 
-                     annotation_colors=list("Indent."=setNames(colors_cell_clusters, 
+                     annotation_colors=list("Ident."=setNames(colors_cell_clusters, 
                                                                     unique(as.character(sort(cell_clusters))))),
                      na_col = "white")
   }

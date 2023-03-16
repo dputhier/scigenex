@@ -26,9 +26,15 @@ filter_cluster_size <- function(object = NULL,
     }
   }
   
+  # Stop if all the clusters are filtered out
+  if(is.null(cluster_to_keep)){
+    print_msg("No clusters conserved.", msg_type = "STOP")
+  }
+  
   # Update ClusterSet object
   ## Remove clusters that did not pass the filter
   object@gene_clusters <- object@gene_clusters[cluster_to_keep]
+  
   names(object@gene_clusters) <- seq(1, length(object@gene_clusters))
   
   ## Update gene_cluster_metadata slots
@@ -101,13 +107,27 @@ filter_nb_supporting_cells <- function(object = NULL,
   
   for (i in seq_along(object@gene_clusters)) {
     cur_clust <- object@data[object@gene_clusters[[i]], ]
-    cur_clust[cur_clust > 0] <- 1
-    min_pct_gene_expressed_cur <- apply(cur_clust, 2, sum) / nrow(cur_clust) * 100
+    
+    # Check if the current cluster is only one gene
+    if (is(cur_clust)[2] == "vector"){
+      # If the gene is expressed by a cell, put 100%
+      cur_clust[cur_clust > 0 | cur_clust < 0] <- 100
+      min_pct_gene_expressed_cur <- cur_clust
+    } else {
+      # Compute the percentage of genes expressed per cell
+      cur_clust[cur_clust > 0 | cur_clust < 0] <- 1
+      min_pct_gene_expressed_cur <- apply(cur_clust, 2, sum) / nrow(cur_clust) * 100
+    }
     min_nb_supporting_cell_cur <- length(min_pct_gene_expressed_cur[min_pct_gene_expressed_cur >= min_pct_gene_expressed])
     
     if (min_nb_supporting_cell_cur >= min_nb_supporting_cell) {
       cluster_to_keep <- c(cluster_to_keep, i)
     }
+  }
+  
+  # Stop if all the clusters are filtered out
+  if(is.null(cluster_to_keep)){
+    print_msg("No clusters conserved.", msg_type = "STOP")
   }
   
   # Update ClusterSet object
@@ -215,11 +235,16 @@ filter_by_dot_prod <- function(object = NULL,
     }
   }
   
+  # Extract number of filtered out clusters
+  nb_cluster_out <- length(selected_cluster[is.na(selected_cluster)])
+  
   # Extract selected clusters
   selected_cluster <- selected_cluster[!is.na(selected_cluster)]
   
-  # Extract number of filtered out clusters
-  nb_cluster_out <- length(selected_cluster[is.na(selected_cluster)])
+  # Stop if all the clusters are filtered out
+  if(length(selected_cluster) == 0){
+    print_msg("No clusters conserved.", msg_type = "STOP")
+  }
   
   print_msg(paste0(nb_cluster_out, " clusters are filtered out based on their dot product."),
             msg_type = "INFO")
@@ -266,7 +291,7 @@ filter_by_dot_prod <- function(object = NULL,
   
   object@dbf_output$center <- centers
   
-  return(object[selected_cluster, ])
+  return(object)
 }
 
 

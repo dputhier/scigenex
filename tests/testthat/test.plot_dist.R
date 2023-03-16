@@ -4,16 +4,12 @@ m <- create_4_rnd_clust()
 set_verbosity(0)
 
 ## A rather stringent version
-res <- DBF(
-  data = m,
-  name = "test",
-  distance_method = "pearson",
-  k = 75,
-  row_sum = -Inf,
-  highest = 0.3,
-  fdr = 1e-8,
-  output_path = tempdir()
-)
+res <- select_genes(data = m,
+                    distance_method = "pearson",
+                    k = 75,
+                    row_sum = -Inf,
+                    highest = 0.3,
+                    fdr = 1e-8)
 
 test_that("Checking results obtained with plot_dist()", {
   p_dist <- plot_dist(res)
@@ -43,5 +39,5 @@ test_that("Checking results obtained with plot_dist()", {
 
 test_that("Checking if plot_dist() stops when object argument is not a\
           ClusterSet object", {
-  expect_error(plot_dist(object = "Not a ClusterSet object"))
-})
+            expect_error(plot_dist(object = "Not a ClusterSet object"))
+          })

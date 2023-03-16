@@ -184,7 +184,7 @@ construct_new_graph <- function(object = obj,
   path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
   path_input_mcl <- gsub(pattern = "//",
                          replacement = "/",
-                         x = outfile)
+                         x = path_input_mcl)
   
   
   
@@ -378,7 +378,7 @@ keep_dbf_graph <- function(object = NULL,
   path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
   path_input_mcl <- gsub(pattern = "//",
                          replacement = "/",
-                         x = outfile)
+                         x = path_input_mcl)
   
   
   # Extract list of distances for each gene

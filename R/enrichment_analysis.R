@@ -147,7 +147,7 @@ setMethod("viz_enrich",
             
             if (length(clusters) == 1){
               if (clusters == "all"){
-                clusters <- names(object@gene_clusters_metadata$cluster_id)
+                clusters <- object@gene_clusters_metadata$cluster_id
               }
             }
             
@@ -157,7 +157,7 @@ setMethod("viz_enrich",
             
             for (cur_cluster in clusters) {
               # Check if the current cluster id provided exists
-              if (!(cur_cluster %in% names(object@gene_clusters_metadata$cluster_id))) {
+              if (!(cur_cluster %in% object@gene_clusters_metadata$cluster_id)) {
                 stop(paste0("Cluster ", cur_cluster, " doesn't exist."))
               }
               
