@@ -242,7 +242,7 @@ plot_heatmap <- function(object,
   
   # Preparing a data.frame containing cell annotations
   if(!is.null(cell_clusters)){
-    if(length(grep("[0-9]", cell_clusters)) > 0){
+    if(length(grep("^[0-9]*$", cell_clusters)) > 0){
       column <- as.factor(as.numeric(as.character(cell_clusters[colnames(m)])))
     } else {
       column <- as.factor(as.character(cell_clusters[colnames(m)]))
