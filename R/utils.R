@@ -251,19 +251,19 @@ create_4_rnd_clust <- function(){
 #' a specified palette name.
 #'
 #' @param palette A character vector specifying the palette to use. One of: "Je1", 
-#' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8".
+#' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9.
 #' @return A character vector of color codes.
 #' @export colors_for_gradient
 #' @examples
 #' colors_for_gradient()
 #' colors_for_gradient(palette = "Ju1")
 #' 
-colors_for_gradient <- function(palette=c("Je1", "SL", "Ju1", "De1", 
+colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1", 
                                           "De2", "De3", "De4", "De5",
-                                          "De6", "De7", "De8")){
+                                          "De6", "De7", "De8", "De9")){
   palette <- match.arg(palette)
   
-  if(palette == "SL"){
+  if(palette == "Seurat_Like"){
     return(c("#5D50A3", "#9FD7A4", "#FBFDBA", "#FEB163", "#A80B44"))
   }else if(palette == "Ju1"){
     return(c("#A9D6E5", "#2166AC", "#000000", "#B2182B", "#FFCA3A"))
@@ -281,9 +281,9 @@ colors_for_gradient <- function(palette=c("Je1", "SL", "Ju1", "De1",
     return(c("#4575b4","#74add1","#abd9e9","#e0f3f8","#fee090","#fdae61","#f46d43","#d73027"))
   }else if(palette == "De7"){
     return(c("#67001f","#b2182b","#d6604d","#f4a582","#fddbc7","#f7f7f7","#d1e5f0","#92c5de","#4393c3","#2166ac","#053061"))
-  }else if(palette == "De7"){
-    return(c("#2b83ba","#abdda4","#fdae61","#d7191c"))
   }else if(palette == "De8"){
+    return(c("#2b83ba","#abdda4","#fdae61","#d7191c"))
+  }else if(palette == "De9"){
     return(c("#0000BF","#0000FF","#0080FF","#00FFFF","#40FFBF","#80FF80","#BFFF40","#FFFF00","#FF8000","#FF0000","#BF0000"))
   }else if(palette == "Je1"){
     return(c("#27408B", "#3A5FCD", "#3288BD", "#66C2A5","#ABDDA4", "#E6F598","#FEE08B", "#FDAE61","#F46D43","#D53E4F","#8B2323"))
