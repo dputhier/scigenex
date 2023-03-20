@@ -5,12 +5,13 @@
 \title{Generate a vector of colors for a gradient}
 \usage{
 colors_for_gradient(
-  palette = c("Je1", "SL", "Ju1", "De1", "De2", "De3", "De4", "De5", "De6", "De7", "De8")
+  palette = c("Je1", "Seurat_Like", "Ju1", "De1", "De2", "De3", "De4", "De5", "De6",
+    "De7", "De8", "De9")
 )
 }
 \arguments{
 \item{palette}{A character vector specifying the palette to use. One of: "Je1", 
-"Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8".}
+"Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9.}
 }
 \value{
 A character vector of color codes.

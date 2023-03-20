@@ -68,6 +68,9 @@ plot_heatmap <- function(object,
                          line_size_horizontal = 3,
                          link=c("average", "complete", "single")) {
   
+  ## Check format object arg
+  check_format_cluster_set(object)
+  
   link <- match.arg(link) 
   
   check_format_cluster_set(object)
@@ -208,7 +211,7 @@ plot_heatmap <- function(object,
       m_blank <-  do.call(rbind, m_split)
       # Now correct also the names that have been 
       # changed by do.call()...
-      row.names(m_blank) <- gsub("^[0-9]+\\.", "", rownames(m_blank), perl=T)
+      row.names(m_blank) <- gsub("^[^.]+.", "", rownames(m_blank), perl=T)
       m <- as.matrix(m_blank)
       # These rownames are in fact colnames (it will be transposed).
       # later on we will need the colnames to be used as rownames 
@@ -239,7 +242,11 @@ plot_heatmap <- function(object,
   
   # Preparing a data.frame containing cell annotations
   if(!is.null(cell_clusters)){
-    column <- as.factor(as.numeric(as.character(cell_clusters[colnames(m)])))
+    if(length(grep("[0-9]", cell_clusters)) > 0){
+      column <- as.factor(as.numeric(as.character(cell_clusters[colnames(m)])))
+    } else {
+      column <- as.factor(as.character(cell_clusters[colnames(m)]))
+    }
     cell_clusters_anno <- data.frame("Ident."=column)
     rownames(cell_clusters_anno) <- colnames(m)
   }
@@ -316,7 +323,7 @@ plot_heatmap <- function(object,
 
     htmp <- pheatmap(mat = m, 
                      annotation_legend = show_legend, legend = show_legend,
-                     color = colors,
+                     color = colorRampPalette(colors)(50),
                      cluster_rows = F, 
                      cluster_cols = cluster_cols, 
                      fontsize_row= label_size,
@@ -387,6 +394,7 @@ plot_dist <- function(object,
                       text_hjust = -0.8,
                       text_vjust = -0.5) {
   
+  ## Check format object arg
   check_format_cluster_set(object)
   
   DKNN = c(object@dbf_output$simulated_dknn,

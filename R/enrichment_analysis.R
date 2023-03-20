@@ -39,6 +39,8 @@ setMethod("enrich_go",
                    species="Hsapiens",
                    ontology="all") {
             
+            ## Check format object arg
+            check_format_cluster_set(object)
             
             if (!species %in% c("Hsapiens", "Mmusculus")){
               print_msg("This species name is not supported.", 
@@ -144,6 +146,9 @@ setMethod("viz_enrich",
                    nb_terms = 20,
                    terms_size = 50,
                    font_size=4) {
+            
+            ## Check format object arg
+            check_format_cluster_set(object)
             
             if (length(clusters) == 1){
               if (clusters == "all"){

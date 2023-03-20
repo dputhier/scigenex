@@ -161,10 +161,13 @@ gene_clustering <- function(object = NULL,
 #' res <- construct_new_graph(object = res, k = 5)
 #'
 
-construct_new_graph <- function(object = obj,
+construct_new_graph <- function(object = NULL,
                                 k = 5,
                                 output_path = tempdir(),
                                 name = NULL) {
+  ## Check format object arg
+  check_format_cluster_set(object)
+  
   ## Generate output path
   # Get working directory if output_path is "."
   if (output_path == ".") {
@@ -459,9 +462,7 @@ keep_dbf_graph <- function(object = NULL,
 #' It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
 #' 
 #' @param object a ClusterSet object.
-#' @param name character vector. The name of the file used to store the graph.
 #' @param inflation numeric. The inflation parameter used to control the granularity of the clustering.
-#' @param input_path character. The path where the input file is located.
 #' @param threads integer. The number of threads to use.
 #'
 #' @section Warnings: With the current implementation, this function only works

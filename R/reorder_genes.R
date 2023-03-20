@@ -40,8 +40,8 @@
 reorder_genes <- function(object,
                           order_by = c("gene_names", "hclust", "correlation")) {
   
-  
-  
+  ## Check format object arg
+  check_format_cluster_set(object)
   
   if (!order_by %in% c("gene_names", "hclust", "correlation")) {
     stop("Provided order_by parameter does not exist.")

@@ -11,6 +11,8 @@ filter_nb_supporting_cells(
 )
 }
 \arguments{
+\item{object}{A ClusterSet object.}
+
 \item{min_nb_supporting_cell}{An integer indicating the minimum number of cell supporting a cluster.
 A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.}
 

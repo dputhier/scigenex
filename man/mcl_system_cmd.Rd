@@ -12,10 +12,6 @@ mcl_system_cmd(object = NULL, inflation = inflation, threads = 1)
 \item{inflation}{numeric. The inflation parameter used to control the granularity of the clustering.}
 
 \item{threads}{integer. The number of threads to use.}
-
-\item{name}{character vector. The name of the file used to store the graph.}
-
-\item{input_path}{character. The path where the input file is located.}
 }
 \value{
 a ClusterSet object with the updated parameters.

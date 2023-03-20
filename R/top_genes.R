@@ -40,6 +40,10 @@
 top_genes <- function(object,
                       top = 20,
                       cluster = "all") {
+  
+  ## Check format object arg
+  check_format_cluster_set(object)
+  
   if (unique(cluster == "all")) {
     cluster <- object@gene_clusters_metadata$cluster_id
   }

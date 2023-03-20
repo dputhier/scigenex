@@ -13,6 +13,9 @@
 filter_cluster_size <- function(object = NULL,
                                 min_cluster_size = 5) {
   
+  ## Check format object arg
+  check_format_cluster_set(object)
+  
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
   nb_clusters_before_filtering <- names(object@gene_clusters)
   
@@ -88,6 +91,7 @@ filter_cluster_size <- function(object = NULL,
 #' 
 #' This function filters out the gene clusters based on the number of cells expressing a certain percentage of genes present in this gene cluster.
 #' 
+#' @param object A ClusterSet object.
 #' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
 #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
@@ -99,6 +103,9 @@ filter_cluster_size <- function(object = NULL,
 filter_nb_supporting_cells <- function(object = NULL,
                                        min_nb_supporting_cell = 3,
                                        min_pct_gene_expressed = 50) {
+  
+  ## Check format object arg
+  check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
   nb_clusters_before_filtering <- names(object@gene_clusters)
@@ -196,12 +203,15 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' maximum concordances across all genes, which can be used to 
 #' determine whether a cluster should be filtered out or not.
 #' 
-#' @param data A ClusterSet object.
+#' @param object A ClusterSet object.
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' @export filter_by_dot_prod
 filter_by_dot_prod <- function(object = NULL,
                                av_dot_prod_min = 2) {
+  
+  ## Check format object arg
+  check_format_cluster_set(object)
   
   if (is.null(object) | !inherits(object, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", 

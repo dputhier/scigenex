@@ -7,10 +7,10 @@
 filter_by_dot_prod(object = NULL, av_dot_prod_min = 2)
 }
 \arguments{
+\item{object}{A ClusterSet object.}
+
 \item{av_dot_prod_min}{Any cluster with average dot product below this value is discarded. This allow to delete
 clusters in which correlation is influenced/supported by very few samples (typically 1).}
-
-\item{data}{A ClusterSet object.}
 }
 \description{
 This function filters clusters of gene expression data based 
