@@ -323,7 +323,7 @@ plot_heatmap <- function(object,
 
     htmp <- pheatmap(mat = m, 
                      annotation_legend = show_legend, legend = show_legend,
-                     color = colorRampPalette(colors)(50),
+                     color = colorRampPalette(colors)(100),
                      cluster_rows = F, 
                      cluster_cols = cluster_cols, 
                      fontsize_row= label_size,
