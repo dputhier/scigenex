@@ -152,6 +152,14 @@ nrow.ClusterSet <- function (x) {
 }
 
 
+#' @title
+#' clust_names 
+#' @description
+#' The names of the gene clusters stored in the ClusterSet object.
+#' @param x The ClusterSet object
+#' @describeIn ClusterSet-methods The names of the gene clusters stored in the ClusterSet object.
+#' @method clust_names ClusterSet
+#' @export
 setGeneric("clust_names", 
            function(x)
              standardGeneric("clust_names")
@@ -193,7 +201,14 @@ setMethod("dim",signature(x="ClusterSet"),
 ) 
 
 
-
+#' @title
+#' col_names
+#' @description
+#' The column names of a ClusterSet object.
+#' @param x The ClusterSet object
+#' @describeIn ClusterSet-methods The column names of a ClusterSet object.
+#' @method col_names ClusterSet
+#' @export col_names
 if (!isGeneric("col_names"))
   setGeneric("col_names", 
              function(x)
