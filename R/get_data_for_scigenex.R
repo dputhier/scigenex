@@ -14,14 +14,11 @@
 #' @export get_data_for_scigenex
 #'
 #' @examples
-#'
-#' \dontrun{
 #' ## with an artificial dataset
-#'
 #' m <- create_3_rnd_clust()
 #'
 #' res <- get_data_for_scigenex(data=m)
-#' }
+#' 
 #'
 get_data_for_scigenex <- function(data = NULL,
                                   which_slot = c("data", "sct", "counts")) {

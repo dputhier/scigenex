@@ -14,29 +14,36 @@
 #' @export get_genes
 #'
 #' @examples
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
 #' 
-#' m <- create_3_rnd_clust()
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
 #' 
-#' res <- find_gene_clusters(data=m,
-#'                              distance_method="pearson",
-#'                              inflation = 2,
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              highest=0.3,
-#'                              min_nb_supporting_cell = 0,
-#'                              fdr = 1e-8)
-#'               
-#'genes <- get_genes(object = res, cluster="1")
-#'genes
+#' # Select informative genes
+#' clust_set <- select_genes(m,
+#'                           distance = "kendall",
+#'                           k = 75,
+#'                           highest = 0.3,
+#'                          fdr = 1e-8,
+#'                          row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.2,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
 #' 
-#' \dontrun{
-#' ## with an artificial dataset
-#'
-#' m <- matrix(rnorm(80000), nc = 20)
-#' res <- get_data_for_scigenex(data=m)
-#' }
+#' # Get all selected genes
+#' get_genes(clust_set)
 #' 
-
+#' # Get genes from gene cluster 1
+#' get_genes(clust_set, cluster = 1)
+#' 
+#' # Get top 5 genes from cluster 1
+#' clust_set <- top_genes(clust_set, top = 5)
+#' get_genes(clust_set, cluster = 1, top = TRUE)
+#' 
 get_genes <- function(object,
                       cluster = "all",
                       top = FALSE) {

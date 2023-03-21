@@ -27,7 +27,7 @@
 #' # Create a matrix with 4 signatures
 #' m <- create_4_rnd_clust()
 #' 
-#' # Select informative features
+#' # Select informative genes
 #' res <- select_genes(m,
 #'                     distance = "kendall",
 #'                     k = 75,
@@ -36,11 +36,21 @@
 #'                     row_sum = -Inf)
 #'                     
 #' # Cluster informative features
+#' 
+#' ## Method 1 - Reconstruct a graph based on selected genes
 #' res <- gene_clustering(res, 
 #'                        inflation = 1.2,
 #'                        keep_nn = FALSE,
 #'                        k = 5)
-#' # Plot heatmap of feature clusters
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(res)
+#' 
+#' 
+#' ## Method 2 - Conserve dknn from graph constrcut previously
+#' res <- gene_clustering(res, 
+#'                        inflation = 1.2,
+#'                        keep_nn = TRUE)
+#' # Plot heatmap of gene clusters
 #' plot_heatmap(res)
 #' 
 #' @export gene_clustering

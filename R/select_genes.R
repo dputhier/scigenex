@@ -22,7 +22,7 @@
 #'
 #' @return a ClusterSet class object
 #' 
-#' @author Julie Bavais, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
+#' @author Julie Bavais, Sebastien Nin, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
 #' 
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
@@ -41,7 +41,7 @@
 #' m <- create_4_rnd_clust()
 #' 
 #' # Select informative genes
-#' res <- select_genes(matrix_test,
+#' res <- select_genes(m,
 #'                     distance = "kendall",
 #'                     k = 75,
 #'                     highest = 0.3,
@@ -49,7 +49,7 @@
 #'                     row_sum = -Inf)
 #' 
 #' # Display selected genes
-#' res@gene_clusters
+#' res@gene_clusters$`1`
 #'
 #' @export select_genes
 

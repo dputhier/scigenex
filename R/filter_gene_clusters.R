@@ -7,7 +7,39 @@
 #' @param min_cluster_size An integer indicating the minimum size of clusters to keep.
 #'
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
-#'
+#' 
+#' @example 
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
+#' # Add a signature of 10 genes
+#' m <- rbind(m, matrix(rep(c(rep(5, 10*2),
+#'                            rep(0, 10*17),
+#'                            rep(5, 10*1)), 20), nrow = 10, ncol = 20))
+#' 
+#' # Select informative genes
+#' clust_set <- select_genes(m,
+#'                          distance = "kendall",
+#'                          k = 75,
+#'                          highest = 0.3,
+#'                          fdr = 1e-8,
+#'                          row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.2,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(clust_set)
+#' 
+#' # Remove the cluster 5 containing less than 10 genes
+#' clust_set <- filter_cluster_size(clust_set,
+#'                                  min_cluster_size = 10)
+#' plot_heatmap(clust_set)
+#' 
 #' @export filter_cluster_size
 
 filter_cluster_size <- function(object = NULL,
@@ -95,6 +127,39 @@ filter_cluster_size <- function(object = NULL,
 #' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
 #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
+#' 
+#' @example
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
+#' # Add a signature of 10 genes
+#' m <- rbind(m, matrix(rep(c(rep(5, 10*2),
+#'                            rep(0, 10*17),
+#'                            rep(5, 10*1)), 20), nrow = 10, ncol = 20))
+#' 
+#' # Select informative genes
+#' clust_set <- select_genes(m,
+#'                          distance = "kendall",
+#'                          k = 75,
+#'                          highest = 0.3,
+#'                          fdr = 1e-8,
+#'                          row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.2,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(clust_set)
+#' 
+#' # Remove the cluster 5 containing less than 4 cells expressing 100% of the genes in cluster 4
+#' clust_set <- filter_nb_supporting_cells(clust_set,
+#'                                         min_nb_supporting_cell = 4,
+#'                                         min_pct_gene_expressed = 100)
+#' plot_heatmap(clust_set)
 #' 
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'
@@ -206,6 +271,34 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' @param object A ClusterSet object.
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
+#' 
+#' @example
+#' # Load a Seurat object
+#' data(pbmc_small, package = "SeuratObject")
+#' 
+#' # Compute the signatures using find_gene_clusters()
+#' clust_set <- select_genes(pbmc_small,
+#'                           distance = "kendall",
+#'                           k = 75,
+#'                           highest = 0.3,
+#'                           fdr = 1e-8,
+#'                           row_sum = -Inf,
+#'                           no_dknn_filter = TRUE)
+#'                           
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.6,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
+#'                             
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(clust_set)
+#' 
+#' # Remove the cluster 5 containing less than 4 cells expressing 100% of the genes in cluster 4
+#' clust_set <- filter_by_dot_prod(clust_set,
+#'                                 av_dot_prod_min = 5)
+#' plot_heatmap(clust_set)
+#' 
 #' @export filter_by_dot_prod
 filter_by_dot_prod <- function(object = NULL,
                                av_dot_prod_min = 2) {

@@ -26,12 +26,28 @@ setGeneric("enrich_go",
 #' @export enrich_go
 #'
 #' @examples
+#' # Load a Seurat object
+#' data(pbmc_small, package = "SeuratObject")
 #' 
-#' \dontrun{
-#' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
-#'
-#' go_res <- enrich_go(myobject)
-#' }
+#' # Compute the signatures using find_gene_clusters()
+#' clust_set <- select_genes(pbmc_small,
+#'                           distance = "kendall",
+#'                           k = 75,
+#'                           highest = 0.3,
+#'                           fdr = 1e-8,
+#'                           row_sum = -Inf,
+#'                           no_dknn_filter = TRUE)
+#'                           
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.6,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
+#' 
+#' # Do enrichment analysis using GO ontology
+#' clust_set <- enrich_go(clust_set)
+#' # Results of enrichment analysis are stored in clust_set@gene_cluster_annotations slot
+#' 
 #' @rdname enrich_go
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
@@ -131,12 +147,28 @@ setGeneric("viz_enrich",
 #' @export viz_enrich
 #'
 #' @examples
+#' # Load a Seurat object
+#' data(pbmc_small, package = "SeuratObject")
 #' 
-#' \dontrun{
-#' ## Assuming myobject is a ClusterSet object with at least 1 cluster.
-#'
-#' viz_enrich(myobject)
-#' }
+#' # Compute the signatures using find_gene_clusters()
+#' clust_set <- select_genes(pbmc_small,
+#'                           distance = "kendall",
+#'                           k = 75,
+#'                           highest = 0.3,
+#'                           fdr = 1e-8,
+#'                           row_sum = -Inf,
+#'                           no_dknn_filter = TRUE)
+#'                           
+#' # Cluster informative features
+#' clust_set <- gene_clustering(clust_set, 
+#'                             inflation = 1.6,
+#'                             keep_nn = FALSE,
+#'                             k = 5)
+#' 
+#' # Do enrichment analysis using GO ontology
+#' clust_set <- enrich_go(clust_set)
+#' viz_enrich(clust_set, cluster = 1, nb_terms = 5)
+#' 
 #' @rdname viz_enrich
 setMethod("viz_enrich",
           signature(object = "ClusterSet"),

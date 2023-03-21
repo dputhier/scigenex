@@ -15,25 +15,31 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' m <- create_3_rnd_clust()
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
 #' 
-#' res <- find_gene_clusters(data=m,
-#'                              distance_method="pearson",
-#'                              inflation = 2,
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              highest=0.3,
-#'                              min_nb_supporting_cell = 0,
-#'                              fdr = 1e-8)
-#'                              
-#' res <- reorder_genes(res, "correlation")
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
 #' 
-#' plot_heatmap(res,
-#'              use_core_cells = FALSE,
-#'              use_top_genes = FALSE)
+#' # Select informative genes
+#' res <- select_genes(m,
+#'                     distance = "kendall",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' res <- gene_clustering(res, 
+#'                        inflation = 1.2,
+#'                        keep_nn = FALSE,
+#'                        k = 5)
+#'                        
+#' # Reorder genes using hierarchical clustering
+#' res <- reorder_genes(res, order_by = "hclust")
 #' 
-#' }
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(res)
 #' 
 #' @rdname reorder_genes
 
@@ -103,4 +109,3 @@ reorder_genes <- function(object,
   
   return(object)
 }
-
