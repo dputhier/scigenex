@@ -185,7 +185,7 @@ plot_cmp_geneset <- function(set_1=NULL,
   
   res <- compare_genesets(set_1=set_1, 
                           set_2=set_2, 
-                          method=method)
+                          stat=method)
   
   res_melt <- reshape2::melt(as.matrix(res))
   colnames(res_melt) <- c("Set_1", "Set_2", "value")
