@@ -33,10 +33,26 @@ A \code{ClusterSet} object
 Display enrichment analyses results for a ClusterSet object.
 }
 \examples{
+# Load a Seurat object
+data(pbmc_small, package = "SeuratObject")
 
-\dontrun{
-## Assuming myobject is a ClusterSet object with at least 1 cluster.
+# Compute the signatures using find_gene_clusters()
+clust_set <- select_genes(pbmc_small,
+                          distance = "kendall",
+                          k = 75,
+                          highest = 0.3,
+                          fdr = 1e-8,
+                          row_sum = -Inf,
+                          no_dknn_filter = TRUE)
+                          
+# Cluster informative features
+clust_set <- gene_clustering(clust_set, 
+                            inflation = 1.6,
+                            keep_nn = FALSE,
+                            k = 5)
 
-viz_enrich(myobject)
-}
+# Do enrichment analysis using GO ontology
+clust_set <- enrich_go(clust_set)
+viz_enrich(clust_set, cluster = 1, nb_terms = 5)
+
 }

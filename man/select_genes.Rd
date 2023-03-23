@@ -59,7 +59,7 @@ set_verbosity(1)
 m <- create_4_rnd_clust()
 
 # Select informative genes
-res <- select_genes(matrix_test,
+res <- select_genes(m,
                     distance = "kendall",
                     k = 75,
                     highest = 0.3,
@@ -67,7 +67,7 @@ res <- select_genes(matrix_test,
                     row_sum = -Inf)
 
 # Display selected genes
-res@gene_clusters
+res@gene_clusters$`1`
 
 }
 \references{
@@ -79,5 +79,5 @@ and flexible toolbox to explore productively the transcriptional landscape
 of the Gene Expression Omnibus database. PLoSONE, 2008;3(12):e4001.
 }
 \author{
-Julie Bavais, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
+Julie Bavais, Sebastien Nin, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
 }

@@ -79,17 +79,29 @@ Iheatmap-class object.
 Plot the observed and simulated distance with the Kth nearest neighbors.
 }
 \examples{
-m <- create_3_rnd_clust()
+# Set verbosity to 1 to only display info messages.
+set_verbosity(1)
 
-res <- find_gene_clusters(data=m,
-                             distance_method="pearson",
-                             inflation = 2,
-                             k=75,
-                             row_sum=-Inf,
-                             highest=0.3,
-                             min_nb_supporting_cell = 0,
-                             fdr = 1e-8)
-plot_heatmap(object = res)
-plot_heatmap(object = res[1, ])
+# Create a matrix with 4 signatures
+m <- create_4_rnd_clust()
+
+# Select informative genes
+res <- select_genes(m,
+                    distance = "kendall",
+                    k = 75,
+                    highest = 0.3,
+                    fdr = 1e-8,
+                    row_sum = -Inf)
+                    
+# Cluster informative features
+res <- gene_clustering(res,
+                       inflation = 1.2,
+                       keep_nn = FALSE,
+                       k = 5)
+# Plot heatmap of all gene clusters
+plot_heatmap(res)
+
+# Plot heatmap of gene cluster 1
+plot_heatmap(res[1,]) 
 
 }

@@ -19,13 +19,10 @@ An expression matrix.
 This function fetchs an expression matrix from a file, dataframe or Seurat object.
 }
 \examples{
-
-\dontrun{
 ## with an artificial dataset
-
 m <- create_3_rnd_clust()
 
 res <- get_data_for_scigenex(data=m)
-}
+
 
 }

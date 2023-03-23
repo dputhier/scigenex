@@ -23,10 +23,26 @@ This function performs enrichment analysis of all gene clusters from a ClusterSe
  and store the results in the cluster_annotations slot.
 }
 \examples{
+# Load a Seurat object
+data(pbmc_small, package = "SeuratObject")
 
-\dontrun{
-## Assuming myobject is a ClusterSet object with at least 1 cluster.
+# Compute the signatures using find_gene_clusters()
+clust_set <- select_genes(pbmc_small,
+                          distance = "kendall",
+                          k = 75,
+                          highest = 0.3,
+                          fdr = 1e-8,
+                          row_sum = -Inf,
+                          no_dknn_filter = TRUE)
+                          
+# Cluster informative features
+clust_set <- gene_clustering(clust_set, 
+                            inflation = 1.6,
+                            keep_nn = FALSE,
+                            k = 5)
 
-go_res <- enrich_go(myobject)
-}
+# Do enrichment analysis using GO ontology
+clust_set <- enrich_go(clust_set)
+# Results of enrichment analysis are stored in clust_set@gene_cluster_annotations slot
+
 }

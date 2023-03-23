@@ -49,18 +49,19 @@ This function creates a histogram of the simulated and observed distances
 of a ClusterSet object.
 }
 \examples{
+# Set verbosity to 1 to only display info messages.
+set_verbosity(1)
 
-set_verbosity(0)
+# Create a matrix with 4 signatures
 m <- create_4_rnd_clust()
 
-res <- find_gene_clusters(data=m,
-                          distance_method="pearson",
-                          inflation = 2,
-                          k=75,
-                          row_sum=-Inf,
-                          highest=0.3,
-                          min_nb_supporting_cell = 0,
-                          fdr = 1e-8)
-p <- plot_dist(res)
+# Select informative genes
+res <- select_genes(m,
+                    distance = "kendall",
+                    k = 75,
+                    highest = 0.3,
+                    fdr = 1e-8,
+                    row_sum = -Inf)
+plot_dist(res)
 
 }
