@@ -13,7 +13,7 @@
 \alias{nclust,ClusterSet-method}
 \alias{clust_size,ClusterSet-method}
 \alias{gene_cluster,ClusterSet-method}
-\title{show}
+\title{The ClusterSet methods.}
 \usage{
 \S4method{show}{ClusterSet}(object)
 
@@ -83,7 +83,7 @@ Returns a named vector (gene as names) and cluster
 }
 \section{Functions}{
 \itemize{
-\item \code{show(ClusterSet)}: The number of column of a ClusterSet object.
+\item \code{show(ClusterSet)}: The show method of a ClusterSet.
 
 \item \code{ncol(ClusterSet)}: The number of column of a ClusterSet object.
 

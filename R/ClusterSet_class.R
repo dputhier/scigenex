@@ -69,11 +69,11 @@ setClass("ClusterSet",
 #################################################################
 
 #' @title
-#' show
+#' The ClusterSet methods.
 #' @description
 #' The show method of a ClusterSet.
 #' @method show ClusterSet
-#' @describeIn ClusterSet-methods The number of column of a ClusterSet object.
+#' @describeIn ClusterSet-methods The show method of a ClusterSet.
 #' @export show
 setMethod(
   "show", signature("ClusterSet"),
