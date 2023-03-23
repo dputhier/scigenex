@@ -206,14 +206,9 @@ setMethod("dim",signature(x="ClusterSet"),
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The column names of a ClusterSet object.
-#' @method col_names ClusterSet
 #' @export col_names
-if (!isGeneric("col_names"))
-  setGeneric("col_names", 
-             function(x)
-               standardGeneric("col_names")
-  )
+#'
+setGeneric(name="col_names", def=function(x) standardGeneric("col_names"))
 
 #' @title
 #' col_names
@@ -223,17 +218,20 @@ if (!isGeneric("col_names"))
 #' @describeIn ClusterSet-methods The column names of a ClusterSet object.
 #' @method col_names ClusterSet
 #' @export col_names
-setMethod("col_names", "ClusterSet",
-          function(x)
-            colnames(x@data)
-)
+#'
+setMethod(f="col_names", signature="ClusterSet", definition=function(x) colnames(x@data))
 
 
-if (!isGeneric("row_names"))
-  setGeneric("row_names", 
+#' @title
+#' row_names
+#' @description 
+#' The row names of a ClusterSet object.
+#' @param x The ClusterSet object
+#' @export row_names
+#' @export
+setGeneric("row_names", 
              function(x)
-               standardGeneric("row_names")
-  )
+               standardGeneric("row_names"))
 
 #' @title
 #' row_names
