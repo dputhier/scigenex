@@ -49,7 +49,7 @@ m <- create_4_rnd_clust()
 
 # Select informative genes
 res <- select_genes(m,
-                    distance = "kendall",
+                    distance = "pearson",
                     k = 75,
                     highest = 0.3,
                     fdr = 1e-8,
@@ -66,7 +66,7 @@ res <- gene_clustering(res,
 plot_heatmap(res)
 
 
-## Method 2 - Conserve dknn from graph constrcut previously
+## Method 2 - Conserve dknn from graph build previously
 res <- gene_clustering(res, 
                        inflation = 1.2,
                        keep_nn = TRUE)
