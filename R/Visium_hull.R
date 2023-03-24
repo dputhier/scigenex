@@ -13,6 +13,7 @@
 #' @return a seurat object with slots $x_coord and $y_coord.
 #' @seealso display_visium_hull
 #' @examples
+#' \dontrun{
 #' #' ## Install and process the brain dataset
 #' library(SeuratData)
 #' library(Seurat)
@@ -20,9 +21,9 @@
 #' anterior1 <- LoadData("stxBrain", type = "anterior1")
 #' anterior1_df <- getFlippedTissueCoordinates(anterior1, as_data_frame=TRUE)
 #' plot(anterior1_df)
+#' }
 #' @export getFlippedTissueCoordinates
 getFlippedTissueCoordinates <- function(seurat_obj, 
-                                        feature=NULL,
                                         as_data_frame=FALSE){
   # Get coord and flip
   coord_spot <- GetTissueCoordinates(seurat_obj)[,2:1] # rotation
@@ -41,9 +42,9 @@ getFlippedTissueCoordinates <- function(seurat_obj,
     seurat_obj$y_coord <-coord_spot$x   
     return(seurat_obj)
   }else{
-    m <- data.frame(x=coord_spot$x, 
-                    y=coord_spot$y,
-                    row.names = colnames(seurat_obj))
+    m <- data.frame("x"=coord_spot$x, 
+                    "y"=coord_spot$y,
+                    "row.names" = colnames(seurat_obj))
   }
   
 }
@@ -250,10 +251,10 @@ visium_hull <- function(data,
       
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
 
-        df_coord[paste0(p_name, "west"),] <- c(x1 = x_p - size_x,
-                                               x2 = x_p - size_x,
-                                               y1 = y_p -  size_y,
-                                               y2 = y_p +  size_y
+        df_coord[paste0(p_name, "west"),] <- c("x1" = x_p - size_x,
+                                               "x2" = x_p - size_x,
+                                               "y1" = y_p -  size_y,
+                                               "y2" = y_p +  size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -276,10 +277,10 @@ visium_hull <- function(data,
       
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
         
-        df_coord[paste0(p_name, "east"),] <- c(x1 = x_p + size_x,
-                                               x2 = x_p + size_x,
-                                               y1 = y_p -  size_y,
-                                               y2 = y_p +  size_y
+        df_coord[paste0(p_name, "east"),] <- c("x1" = x_p + size_x,
+                                               "x2" = x_p + size_x,
+                                               "y1" = y_p -  size_y,
+                                               "y2" = y_p +  size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -300,10 +301,10 @@ visium_hull <- function(data,
 
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
         
-        df_coord[paste0(p_name, "north_east"),] <- c(x1 = x_p,
-                                                     x2 = x_p + size_x,
-                                                     y1 = y_p +  size_y,
-                                                     y2 = y_p +  size_y
+        df_coord[paste0(p_name, "north_east"),] <- c("x1" = x_p,
+                                                     "x2" = x_p + size_x,
+                                                     "y1" = y_p +  size_y,
+                                                     "y2" = y_p +  size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -324,10 +325,10 @@ visium_hull <- function(data,
       
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
         
-        df_coord[paste0(p_name, "north_west"),] <- c(x1 = x_p -  size_x,
-                                                     x2 = x_p ,
-                                                     y1 = y_p +  size_y,
-                                                     y2 = y_p +  size_y
+        df_coord[paste0(p_name, "north_west"),] <- c("x1" = x_p -  size_x,
+                                                     "x2" = x_p ,
+                                                     "y1" = y_p +  size_y,
+                                                     "y2" = y_p +  size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -348,10 +349,10 @@ visium_hull <- function(data,
       
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
         
-        df_coord[paste0(p_name, "south_west"),] <- c(x1 = x_p - size_x,
-                                                     x2 = x_p,
-                                                     y1 = y_p - size_y,
-                                                     y2 = y_p - size_y
+        df_coord[paste0(p_name, "south_west"),] <- c("x1" = x_p - size_x,
+                                                     "x2" = x_p,
+                                                     "y1" = y_p - size_y,
+                                                     "y2" = y_p - size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -372,10 +373,10 @@ visium_hull <- function(data,
       
       if(isTRUE(neighbor_class == 0) | is.null(neighbor_class)){
         
-        df_coord[paste0(p_name, "south_east"),] <- c(x1 = x_p,
-                                                     x2 = x_p +  size_x,
-                                                     y1 = y_p - size_y,
-                                                     y2 = y_p - size_y
+        df_coord[paste0(p_name, "south_east"),] <- c("x1" = x_p,
+                                                     "x2" = x_p +  size_x,
+                                                     "y1" = y_p - size_y,
+                                                     "y2" = y_p - size_y
         )
       }else if(neighbor_class == 1){
         neighborhoods <- merging_neighborhood(neighborhoods, 
@@ -418,6 +419,7 @@ visium_hull <- function(data,
 #' @return A ggplot object (with segments).
 #' @export display_hull
 #' @examples 
+#' \dontrun{
 #' library(Seurat)
 #' library(SeuratData)
 #' library(ggplot)
@@ -433,7 +435,7 @@ visium_hull <- function(data,
 #' ## Add the segments to the ggplot diagram
 #' spatial_plot <- SpatialDimPlot(anterior1_preprocessed, label = TRUE, label.size = 3, pt.size.factor = 1.5)
 #' spatial_plot + display_hull(anterior1_preprocessed)
-#' 
+#' }
 display_hull <- function(data=NULL,
                          ident=NULL,
                          size_x=2.4,
