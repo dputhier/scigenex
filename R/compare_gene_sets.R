@@ -25,7 +25,7 @@ hyper_fun <- function(a, b, N) {
                    k,
                    ", lower.tail = FALSE)"), msg_type = "DEBUG")
   
-  pval <- phyper(q=q, 
+  pval <- stats::phyper(q=q, 
                  m=m, 
                  n=n, 
                  k=k, 
@@ -286,11 +286,11 @@ plot_cmp_genesets <- function(set_1=NULL,
       theme_bw() +
       theme(panel.grid = element_blank()) +
       scale_x_continuous(expand=expansion(mult = c(0, 0), 
-                                             add = c(0, 0)), 
+                                             add = c(0, 0.5)), 
                          breaks = res_melt$Set_1, 
                          labels = res_melt$label_set_1) +
       scale_y_continuous(expand=expansion(mult = c(0, 0), 
-                                          add = c(0, 0)), 
+                                          add = c(0, 0.5)), 
                          breaks = res_melt$Set_2, 
                          labels = res_melt$label_set_2) +
       scale_size_area("Jaccard", max_size = 1, guide = "legend") +
