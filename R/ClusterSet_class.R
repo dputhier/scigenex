@@ -19,27 +19,39 @@
 #' @export
 #'
 #' @examples
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
 #' 
-#' \dontrun{
-#' ## An artificial example
-#' ## with continuous values
+#' # Create a matrix with 4 signatures
 #' m <- create_3_rnd_clust()
-#' res <- find_gene_clusters(data=m,
-#'                              distance_method="pearson",
-#'                              inflation = 2,
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              highest=0.3,
-#'                              min_nb_supporting_cell = 0,
-#'                              fdr = 1e-8)
+#' 
+#' # Select informative genes
+#' res <- select_genes(m,
+#'                     distance = "kendall",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' res <- gene_clustering(res, 
+#'                        inflation = 1.2,
+#'                        keep_nn = FALSE,
+#'                        k = 5)
 #' is(res)
 #' res
-#' plot_heatmap(res, row_labels = F, line_size_horizontal = 2)
-#' plot_heatmap(res[1,], row_labels = F, line_size_horizontal = 2)
-#' plot_heatmap(res[1:2,], row_labels = F, line_size_horizontal = 2)
 #' 
-#' plot_profiles(res[c(2;3),])
-#' }          
+#' # Plot heatmap of gene clusters
+#' plot_heatmap(res, row_labels = FALSE, line_size_horizontal = 2)
+#' plot_heatmap(res[1,], row_labels = FALSE, line_size_horizontal = 2)
+#' plot_heatmap(res[1:2,], row_labels = FALSE, line_size_horizontal = 2)
+#' 
+#' idents <- c(rep(1,10), rep(2,10))
+#' names(idents) <- colnames(res@data)
+#' plot_profiles(res[c(1:2),],
+#'               ident = idents,
+#'              color_cell_type = c("1" = "#4E79A7", "2" = "#A0CBE8"))
+#'         
 setClass("ClusterSet",
          representation = list(
            data = "matrix",
@@ -116,8 +128,21 @@ setMethod(
 #'    set_verbosity(0)
 #'    data(pbmc_small, package = "SeuratObject")
 #'    ident <- Seurat::Idents(pbmc_small)
-#     # Compute the signatures using find_gene_clusters()
-#'    clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
+#'    # Compute the signatures
+#'    ## Select informative genes
+#'    clust_set <- select_genes(data=pbmc_small,
+#'                              distance_method="pearson",
+#'                              k=10,
+#'                              row_sum=-Inf,
+#'                              highest=0.95,
+#'                              fdr = 1e-6)
+#'    ## Cluster genes
+#'    clust_set <- gene_clustering(object = clust_set,
+#'                                 inflation = 1.2,
+#'                                 keep_nn = FALSE,
+#'                                 k = 5,
+#'                                 threads = 1)
+#'                     
 #'    gene_cluster(clust_set)
 #'    ncol(clust_set)
 #'    nrow(clust_set)
