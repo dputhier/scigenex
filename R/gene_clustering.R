@@ -154,21 +154,21 @@ gene_clustering <- function(object = NULL,
 #'
 #' @examples
 #' # Set verbosity to 1 to only display info messages.
-#' set_verbosity(1)
+#' #set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
+#' #m <- create_4_rnd_clust()
 #' 
 #' # Select informative features
-#' res <- select_genes(m,
-#'                     distance = "kendall",
-#'                     k = 75,
-#'                     highest = 0.3,
-#'                     fdr = 1e-8,
-#'                     row_sum = -Inf)
+#' #res <- select_genes(m,
+#' #                    distance = "kendall",
+#' #                    k = 75,
+#' #                    highest = 0.3,
+#' #                    fdr = 1e-8,
+#' #                    row_sum = -Inf)
 #'                     
 #' # Construct a new graph based on genes selected with select_genes()
-#' res <- construct_new_graph(object = res, k = 5)
+#' #res <- construct_new_graph(object = res, k = 5)
 #'
 
 construct_new_graph <- function(object = NULL,
@@ -351,21 +351,21 @@ construct_new_graph <- function(object = NULL,
 #'
 #' @examples
 #' # Set verbosity to 1 to only display info messages.
-#' set_verbosity(1)
+#' #set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
+#' #m <- create_4_rnd_clust()
 #' 
 #' # Select informative features
-#' res <- select_genes(m,
-#'                     distance = "kendall",
-#'                     k = 75,
-#'                     highest = 0.3,
-#'                     fdr = 1e-8,
-#'                     row_sum = -Inf)
+#' #res <- select_genes(m,
+#' #                    distance = "kendall",
+#' #                    k = 75,
+#' #                    highest = 0.3,
+#' #                    fdr = 1e-8,
+#' #                    row_sum = -Inf)
 #'                     
 #' # Construct a graph based on genes selected with select_genes() and their neighbors
-#' keep_dbf_graph(object = res)
+#' #keep_dbf_graph(object = res)
 #'
 
 keep_dbf_graph <- function(object = NULL,
