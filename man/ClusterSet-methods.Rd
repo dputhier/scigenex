@@ -57,8 +57,6 @@ clust_names(x)
 \description{
 The show method of a ClusterSet.
 
-The ClusterSet methods.
-
 The number of column of a ClusterSet object.
 
 The number of rows of a ClusterSet object.
