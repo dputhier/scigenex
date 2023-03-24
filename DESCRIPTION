@@ -6,7 +6,7 @@ Date: 2020-07-22
 Author: J. Bavais, Sebastien Nin, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Lionel Spinelli and Denis Puthier
 Maintainer: J. Bavais <julie.bavais@yahoo.fr>
 Depends: R (>= 4.0.0), methods
-Imports: scales, reshape2, ggplot2, dplyr, igraph, plotly, qlcMatrix, clusterProfiler, org.Hs.eg.db, org.Mm.eg.db, dynamicTreeCut, amap, grDevices, stats, utils, magrittr, testthat, iheatmapr, AnnotationDbi, data.table, enrichplot, SeuratObject, pheatmap, Seurat, Matrix, SparseM
+Imports: scales, reshape2, ggplot2, dplyr, igraph, plotly, qlcMatrix, clusterProfiler, org.Hs.eg.db, org.Mm.eg.db, dynamicTreeCut, amap, grDevices, stats, utils, magrittr, testthat, iheatmapr, AnnotationDbi, data.table, enrichplot, SeuratObject, pheatmap, Seurat, Matrix, SparseM, ggforce
 Collate: ClusterSet_class.R import_package.R enrichment_analysis.R top_genes.R visualization.R get_data_for_scigenex.R get_genes.R reorder_genes.R utils.R dataset_doc.R plot_profiles.R filter_gene_clusters.R gene_clustering.R select_genes.R Visium_hull.R compare_gene_sets.R zzz.R 
 Description: The scigenex package (Single-Cell Informative GENe Explorer) proposes a set of functions to extract informative genes from a scRNA-seq experiment, search and store clusters of co-expressed genes. These clusters are annotated and can be mapped onto UMAP or t-SNE diagram to functionally annotate cell populations.
 biocViews: Clustering, Classification, Transcriptomics, SingleCell, ReportWriting, GeneRegulation
