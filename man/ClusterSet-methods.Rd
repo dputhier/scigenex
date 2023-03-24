@@ -114,7 +114,21 @@ as value.
    set_verbosity(0)
    data(pbmc_small, package = "SeuratObject")
    ident <- Seurat::Idents(pbmc_small)
-   clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
+   # Compute the signatures
+   ## Select informative genes
+   clust_set <- select_genes(data=pbmc_small,
+                             distance_method="pearson",
+                             k=10,
+                             row_sum=-Inf,
+                             highest=0.95,
+                             fdr = 1e-6)
+   ## Cluster genes
+   clust_set <- gene_clustering(object = clust_set,
+                                inflation = 1.2,
+                                keep_nn = FALSE,
+                                k = 5,
+                                threads = 1)
+                    
    gene_cluster(clust_set)
    ncol(clust_set)
    nrow(clust_set)

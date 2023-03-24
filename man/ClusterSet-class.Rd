@@ -31,25 +31,37 @@ This class is a representation of a partitioning algorithm and is intented to st
 }}
 
 \examples{
+# Set verbosity to 1 to only display info messages.
+set_verbosity(1)
 
-\dontrun{
-## An artificial example
-## with continuous values
+# Create a matrix with 4 signatures
 m <- create_3_rnd_clust()
-res <- find_gene_clusters(data=m,
-                             distance_method="pearson",
-                             inflation = 2,
-                             k=75,
-                             row_sum=-Inf,
-                             highest=0.3,
-                             min_nb_supporting_cell = 0,
-                             fdr = 1e-8)
+
+# Select informative genes
+res <- select_genes(m,
+                    distance = "kendall",
+                    k = 75,
+                    highest = 0.3,
+                    fdr = 1e-8,
+                    row_sum = -Inf)
+                    
+# Cluster informative features
+res <- gene_clustering(res, 
+                       inflation = 1.2,
+                       keep_nn = FALSE,
+                       k = 5)
 is(res)
 res
-plot_heatmap(res, row_labels = F, line_size_horizontal = 2)
-plot_heatmap(res[1,], row_labels = F, line_size_horizontal = 2)
-plot_heatmap(res[1:2,], row_labels = F, line_size_horizontal = 2)
 
-plot_profiles(res[c(2;3),])
-}          
+# Plot heatmap of gene clusters
+plot_heatmap(res, row_labels = FALSE, line_size_horizontal = 2)
+plot_heatmap(res[1,], row_labels = FALSE, line_size_horizontal = 2)
+plot_heatmap(res[1:2,], row_labels = FALSE, line_size_horizontal = 2)
+
+idents <- c(rep(1,10), rep(2,10))
+names(idents) <- colnames(res@data)
+plot_profiles(res[c(1:2),],
+              ident = idents,
+             color_cell_type = c("1" = "#4E79A7", "2" = "#A0CBE8"))
+        
 }

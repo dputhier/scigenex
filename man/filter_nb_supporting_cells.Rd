@@ -24,3 +24,37 @@ A ClusterSet object where clusters that did not pass the filter have been remove
 \description{
 This function filters out the gene clusters based on the number of cells expressing a certain percentage of genes present in this gene cluster.
 }
+\examples{
+# Set verbosity to 1 to only display info messages.
+set_verbosity(1)
+
+# Create a matrix with 4 signatures
+m <- create_4_rnd_clust()
+# Add a signature of 10 genes
+m <- rbind(m, matrix(rep(c(rep(5, 10*2),
+                           rep(0, 10*17),
+                           rep(5, 10*1)), 20), nrow = 10, ncol = 20))
+
+# Select informative genes
+clust_set <- select_genes(m,
+                         distance = "kendall",
+                         k = 75,
+                         highest = 0.3,
+                         fdr = 1e-8,
+                         row_sum = -Inf)
+                    
+# Cluster informative features
+clust_set <- gene_clustering(clust_set, 
+                            inflation = 1.2,
+                            keep_nn = FALSE,
+                            k = 5)
+# Plot heatmap of gene clusters
+plot_heatmap(clust_set)
+
+# Remove the cluster 5 containing less than 4 cells expressing 100\% of the genes in cluster 4
+clust_set <- filter_nb_supporting_cells(clust_set,
+                                        min_nb_supporting_cell = 4,
+                                        min_pct_gene_expressed = 100)
+plot_heatmap(clust_set)
+
+}

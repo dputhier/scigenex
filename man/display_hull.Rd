@@ -58,6 +58,7 @@ A ggplot object (with segments).
 Draw a hull around a region of interest of Visium data.
 }
 \examples{
+\dontrun{
 library(Seurat)
 library(SeuratData)
 library(ggplot)
@@ -73,7 +74,7 @@ path <- visium_hull(coord_st_data, size_x=3.2, size_y=3.6, delta=0.5)
 ## Add the segments to the ggplot diagram
 spatial_plot <- SpatialDimPlot(anterior1_preprocessed, label = TRUE, label.size = 3, pt.size.factor = 1.5)
 spatial_plot + display_hull(anterior1_preprocessed)
-
+}
 }
 \keyword{hull,}
 \keyword{spatial}
