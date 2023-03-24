@@ -31,6 +31,11 @@ is taken into account. Note that hypergeometric tests check for enrichment.}
 
 \item{layout}{The type of diagram. Either "raster" (a scatter plot showing the statistics of interest) or "square".
 The "square" layout shows the hypergeometric pvalue (color) and the Jaccard result (size of the square).}
+
+\item{background}{The background (universe) to consider. Default to the non-redundant list of elements 
+merged from set_1 and set2. You may provide a vector with all genes of the genome for instance.}
+
+\item{coord_equal}{make sure that the an equal length on both axis represents the same change in units}
 }
 \value{
 A ggplot object representing the comparison results.
