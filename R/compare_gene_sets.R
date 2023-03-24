@@ -177,6 +177,7 @@ compare_genesets <- function(set_1=NULL,
 #' @param layout The type of diagram. Either "raster" (a scatter plot showing the statistics of interest) or "square".
 #' The "square" layout shows the hypergeometric pvalue (color) and the Jaccard result (size of the square). 
 #' @details see compare_genesets. 
+#' @importFrom ggplot2 geom_hline scale_x_continuous expansion scale_y_continuous scale_size_area
 #' @return A ggplot object representing the comparison results.
 #'
 #' @export plot_cmp_genesets
@@ -284,7 +285,8 @@ plot_cmp_genesets <- function(set_1=NULL,
       geom_hline(yintercept = seq(0.5, length(set_2), by=1), col="black", size=0.3) + 
       geom_tile() +
       theme_bw() +
-      theme(panel.grid = element_blank()) +
+      theme(panel.grid = element_blank(),
+            axis.text.x = element_text(angle=45, vjust = 0.9, hjust=1)) +
       scale_x_continuous(expand=expansion(mult = c(0, 0), 
                                              add = c(0, 0.5)), 
                          breaks = res_melt$Set_1, 
