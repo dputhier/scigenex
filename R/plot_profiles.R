@@ -65,7 +65,7 @@ plot_profiles <- function(data = NULL,
     print_msg("Please provide cell identification.", msg_type = "STOP")
   
   ident <- sort(ident)
-  ident <- factor(ident, levels=levels(ident), ordered = T)
+  ident <- factor(ident, levels=levels(as.factor(ident)), ordered = T)
   nb_cell_type <- length(unique(ident))
   
   
