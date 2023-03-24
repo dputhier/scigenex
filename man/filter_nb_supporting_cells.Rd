@@ -2,7 +2,7 @@
 % Please edit documentation in R/filter_gene_clusters.R
 \name{filter_nb_supporting_cells}
 \alias{filter_nb_supporting_cells}
-\title{Filter out gene clusters based on the number of cells expressing at least a provided percentage of genes}
+\title{Filter out gene clusters based on the number of cells expressing at least a user-defined percentage of genes}
 \usage{
 filter_nb_supporting_cells(
   object = NULL,
