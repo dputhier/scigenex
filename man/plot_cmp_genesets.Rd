@@ -49,5 +49,6 @@ set_2 <- list(x[1:5], x[6:20], letters[21:30])
 res <- compare_genesets(set_1, set_2, stat = "jaccard")
 plot_cmp_genesets(set_1, set_2, stat = "jaccard")
 plot_cmp_genesets(set_1, set_2, stat = "hypergeom", transform = "log10")
+plot_cmp_genesets(set_1, set_2, layout="square", transform = "-log10")
 
 }

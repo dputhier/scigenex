@@ -45,7 +45,7 @@ set.seed(123)
 set_1 <- list(letters[1:10], letters[11:20])
 x <- sample(letters[1:20])
 set_2 <- list(x[1:5], x[6:20])
-compare_genesets(set_1, set_2, stat = "jaccard")
-compare_genesets(set_1, set_2, stat = "hypergeom")
+comp <- compare_genesets(set_1, set_2, stat = "jaccard")
+comp <- compare_genesets(set_1, set_2, stat = "hypergeom")
 
 }
