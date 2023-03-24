@@ -4,13 +4,13 @@
 #' 
 #' @importFrom methods new slot slotNames setClass signature setMethod setGeneric
 #' @importFrom grDevices colorRampPalette
-#' @importFrom stats sd dist hclust heatmap median rnorm setNames as.dist hclust cor pnorm quantile
+#' @importFrom stats sd dist hclust heatmap median rnorm setNames as.dist hclust cor pnorm quantile phyper
 #' @importFrom utils object.size read.table write.table read.csv
 #' @importFrom dplyr summarise group_by distinct
 #' @importFrom ggplot2 ggplot geom_line aes geom_tile geom_vline geom_text
 #' @importFrom ggplot2 theme theme_bw element_text element_blank element_line facet_grid guide_legend stat_density xlab ylab
 #' @importFrom ggplot2 scale_fill_gradientn scale_color_manual scale_linetype_manual scale_size_manual 
-#' @importFrom ggplot2 ggplot_build ggtitle geom_histogram scale_fill_manual
+#' @importFrom ggplot2 ggplot_build ggtitle geom_histogram scale_fill_manual geom_segment
 #' @importFrom plotly layout
 #' @importFrom reshape2 melt 
 #' @importFrom magrittr %>%
@@ -32,5 +32,7 @@
 #' @importFrom Matrix rowSums
 #' @importFrom SparseM t
 #' @importFrom scales hue_pal
+#' @importFrom ggforce geom_mark_hull
+#' @importFrom grid unit
 #' 
 NULL
