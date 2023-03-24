@@ -77,7 +77,7 @@ The subsetting operator of a ClusterSet object.
 
 The number of clusters in a ClusterSet object.
 
-The size of the clusters stored in a ClusterSet object.
+The sizes of the clusters stored in a ClusterSet object.
 
 Returns a named vector (gene as names) and cluster
 }

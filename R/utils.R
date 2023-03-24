@@ -338,18 +338,17 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #################################################################
 ##    Check the format of a Clusterset object
 #################################################################
-#' Check the format of a Clusterset object
-#'
-#' Check the format of a Clusterset object (ncol, nrow, inherits...)
-#'
-#' @param object the clusterSet object to be tested 
-#' @return None.
-#' @examples 
-#'  set_verbosity(0)
-#'  data(pbmc_small, package = "SeuratObject")
-#'  clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
-#'  check_format_cluster_set(clust_set)
-#' @export check_format_cluster_set
+# Check the format of a Clusterset object
+#
+# Check the format of a Clusterset object (ncol, nrow, inherits...)
+#
+# @param object the clusterSet object to be tested 
+# @return None.
+# @examples 
+#  set_verbosity(0)
+#  data(pbmc_small, package = "SeuratObject")
+#  clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
+#  check_format_cluster_set(clust_set)
 check_format_cluster_set <- function(object) {
 
   if(!inherits(object, "ClusterSet"))

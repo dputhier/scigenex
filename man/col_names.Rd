@@ -2,7 +2,7 @@
 % Please edit documentation in R/ClusterSet_class.R
 \name{col_names}
 \alias{col_names}
-\title{col_names}
+\title{Column names of an object}
 \usage{
 col_names(x)
 }

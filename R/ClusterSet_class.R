@@ -63,7 +63,6 @@ setClass("ClusterSet",
          )
 )
 
-
 #################################################################
 ##    REDEFINE SHOW METHOD FOR CLASS OBJECT : ClusterSet
 #################################################################
@@ -103,15 +102,12 @@ setMethod(
   }
 )
 
-
 ################################################################################
 ##      NCOL/NROW/DIM METHOD FOR CLASS OBJECT : ClusterSet
 ################################################################################
 
 #' @title
 #' ClusterSet-methods
-#' @description
-#' The ClusterSet methods.
 #' @examples
 #'    set_verbosity(0)
 #'    data(pbmc_small, package = "SeuratObject")
@@ -165,8 +161,7 @@ setGeneric("clust_names",
              standardGeneric("clust_names")
 )
 
-#' @title
-#' clust_names 
+#' @title Names of gene clusters stored in the ClusterSet object
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
@@ -187,7 +182,7 @@ setMethod("clust_names", "ClusterSet",
             
 )
 
-#' @title
+#' @title Dimension of a ClusterSet object.
 #' dim
 #' @description
 #' The dimension of a ClusterSet object.
@@ -201,8 +196,7 @@ setMethod("dim",signature(x="ClusterSet"),
 ) 
 
 
-#' @title
-#' col_names
+#' @title Column names of an object
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
@@ -210,8 +204,7 @@ setMethod("dim",signature(x="ClusterSet"),
 #'
 setGeneric(name="col_names", def=function(x) standardGeneric("col_names"))
 
-#' @title
-#' col_names
+#' @title Column names of a ClusterSet object.
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
@@ -222,8 +215,7 @@ setGeneric(name="col_names", def=function(x) standardGeneric("col_names"))
 setMethod(f="col_names", signature="ClusterSet", definition=function(x) colnames(x@data))
 
 
-#' @title
-#' row_names
+#' @title Row names of an object.
 #' @description 
 #' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
@@ -233,7 +225,7 @@ setGeneric("row_names",
              function(x)
                standardGeneric("row_names"))
 
-#' @title
+#' @title Row names of a ClusterSet object.
 #' row_names
 #' @description 
 #' The row names of a ClusterSet object.
@@ -253,7 +245,7 @@ setMethod("row_names", "ClusterSet",
 ##      ClusterSet object
 ################################################################################
 
-#' @title
+#' @title Subsetting operator of a ClusterSet object
 #' Extract
 #' @description
 #' The subsetting operator of a ClusterSet object.
@@ -370,7 +362,7 @@ setGeneric("nclust",
 )
 
 
-#' @title
+#' @title Number of clusters in a ClusterSet object.
 #' nclust
 #' @description
 #' The number of clusters in a ClusterSet object.
@@ -391,10 +383,10 @@ setGeneric("clust_size",
              standardGeneric("clust_size")
 )
 
-#' @title
+#' @title Sizes of the clusters stored in a ClusterSet object
 #' clust_size
 #' @description
-#' The size of the clusters stored in a ClusterSet object.
+#' The sizes of the clusters stored in a ClusterSet object.
 #' @describeIn ClusterSet-methods The size of the clusters stored in a ClusterSet object.
 #' @method clust_size ClusterSet
 #' @export
@@ -406,7 +398,7 @@ setMethod(
 )
 
 #################################################################
-##    Define get_cells function for ClusterSet object
+##    Define gene_cluster function for ClusterSet object
 #################################################################
 
 setGeneric("gene_cluster", 
@@ -415,7 +407,7 @@ setGeneric("gene_cluster",
              standardGeneric("gene_cluster")
 )
 
-#' @title
+#' @title The gene clusters stored in a ClusterSet.
 #' gene_cluster
 #' @description
 #' Returns a named vector (gene as names) and cluster
