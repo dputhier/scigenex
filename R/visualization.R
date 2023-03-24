@@ -428,7 +428,6 @@ plot_dist <- function(object,
           panel.grid.major.x = element_blank(),
           axis.line = element_line(colour = "black"),
           panel.border = element_blank(),
-          legend.title = element_text("Distance with KNN"),
           axis.title = element_text(size = 15),
           axis.text = element_text(size = 10)) +
     xlab(label = "Distance with KNN") +
