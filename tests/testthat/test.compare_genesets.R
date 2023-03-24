@@ -52,3 +52,8 @@ j <- i/u
 test_that("compare_genesets returns correct output when method='intersection' is used", {
   expect_equal(as.vector(compare_genesets(set_1, set_2, stat = "jaccard")), j) 
 })
+
+test_that("compare_genesets returns correct output when method='hypergeom' is used", {
+  expect_equal(round(as.vector(compare_genesets(set_1, set_2, stat = "hypergeom")), 2), 
+               c(1, 0.2, 0.67, 0.8))
+})

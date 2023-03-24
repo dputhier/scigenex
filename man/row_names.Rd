@@ -2,7 +2,7 @@
 % Please edit documentation in R/ClusterSet_class.R
 \name{row_names}
 \alias{row_names}
-\title{row_names}
+\title{Row names of an object.}
 \usage{
 row_names(x)
 }

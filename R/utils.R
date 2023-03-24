@@ -359,7 +359,6 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #'                               k = 5,
 #'                               threads = 1)
 #'  check_format_cluster_set(clust_set)
-#' @export check_format_cluster_set
 check_format_cluster_set <- function(object) {
 
   if(!inherits(object, "ClusterSet"))

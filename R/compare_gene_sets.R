@@ -14,7 +14,7 @@ hyper_fun <- function(a, b, N) {
   m <- length(a)
   k <- length(b)
   n <- N - m 
-  print(N)
+
   print_msg(paste0("Calling phyper(q=", 
                    q, 
                    ", m=", 
@@ -25,7 +25,7 @@ hyper_fun <- function(a, b, N) {
                    k,
                    ", lower.tail = FALSE)"), msg_type = "DEBUG")
   
-  pval <- phyper(q=q, 
+  pval <- stats::phyper(q=q, 
                  m=m, 
                  n=n, 
                  k=k, 
@@ -74,8 +74,8 @@ check_inter <- function(a, b,
 
 vcheck_inter <- Vectorize(check_inter)
 
-#' Compare two lists of gene sets
-#'
+#' @title Compare two lists of gene sets
+#' @description  
 #' This function compares two lists of gene sets using either the Jaccard index or the hypergeometric test.
 #'
 #' @param set_1 A list containing gene sets to be compared.
@@ -94,14 +94,14 @@ vcheck_inter <- Vectorize(check_inter)
 #' "size_set_1", "size_set_2", "diff_set_1" and "diff_set_2" compute the union of the two sets, the size 
 #' of gene sets from set_1, the size of gene sets from set_2, the gene that are specific to set_1,  the 
 #' gene that are specific to set_2, respectively. 
-#' @export
+#' @export compare_genesets
 #' @examples
 #' set.seed(123)
 #' set_1 <- list(letters[1:10], letters[11:20])
 #' x <- sample(letters[1:20])
 #' set_2 <- list(x[1:5], x[6:20])
-#' compare_genesets(set_1, set_2, stat = "jaccard")
-#' compare_genesets(set_1, set_2, stat = "hypergeom")
+#' comp <- compare_genesets(set_1, set_2, stat = "jaccard")
+#' comp <- compare_genesets(set_1, set_2, stat = "hypergeom")
 #' 
 compare_genesets <- function(set_1=NULL, 
                              set_2=NULL,
@@ -114,7 +114,7 @@ compare_genesets <- function(set_1=NULL,
                                     "diff_set_1",
                                     "diff_set_2"),
                              background=NULL){
-  
+
   if(is.null(set_1) | is.null(set_2))
     print_msg('Please provide two lists as input.', msg_type = "STOP")
   
@@ -150,7 +150,7 @@ compare_genesets <- function(set_1=NULL,
   }
   
   if(is.null(names(set_2))){
-    colnames(res) <- paste0("Set_2_", 1:length(set_1))
+    colnames(res) <- paste0("Set_2_", 1:length(set_2))
   }else{
     colnames(res) <- names(set_2)
   }
@@ -162,42 +162,143 @@ compare_genesets <- function(set_1=NULL,
 #################################################################
 ##    Plot the result of compare_genesets
 #################################################################
-# Plot the result of compare_genesets
+#' @title Plot the result of compare_genesets
+#'
+#' @description
+#' This function plots the results of compare_genesets.
+#'
+#' @param set_1 A list containing gene sets to be compared.
+#' @param set_2 A list containing gene sets to be compared.
+#' @param stat The statistics to be computed between gene sets. It can be either "jaccard", "hypergeom", "intersection"
+#' "size_set_1", "size_set_2", "diff_set_1" (specific to set_1), "diff_set_2" (specific to set_2). The background
+#' is taken into account. Note that hypergeometric tests check for enrichment.
+#' @param transform The transformation to be applied to the values. It can be either "NA", "log10", or "log2", "-log10", "-log2.
+#' @param colors The color palette to be used in the plot.
+#' @param layout The type of diagram. Either "raster" (a scatter plot showing the statistics of interest) or "square".
+#' The "square" layout shows the hypergeometric pvalue (color) and the Jaccard result (size of the square). 
+#' @details see compare_genesets. 
+#' @importFrom ggplot2 geom_hline scale_x_continuous expansion scale_y_continuous scale_size_area
+#' @return A ggplot object representing the comparison results.
+#'
+#' @export plot_cmp_genesets
+#'
+#' @examples
+#' set.seed(123)
+#' set_1 <- list(letters[1:10], letters[11:20], letters[21:30])
+#' x <- sample(letters[1:30])
+#' set_2 <- list(x[1:5], x[6:20], letters[21:30])
+#' res <- compare_genesets(set_1, set_2, stat = "jaccard")
+#' plot_cmp_genesets(set_1, set_2, stat = "jaccard")
+#' plot_cmp_genesets(set_1, set_2, stat = "hypergeom", transform = "log10")
+#' plot_cmp_genesets(set_1, set_2, layout="square", transform = "-log10")
+#'
+plot_cmp_genesets <- function(set_1=NULL, 
+                              set_2=NULL,
+                              stat=c("jaccard",
+                                     "hypergeom",
+                                     "intersection",
+                                     "union",
+                                     "size_set_1",
+                                     "size_set_2",
+                                     "diff_set_1",
+                                     "diff_set_2"),
+                              transform=c("None", "log10", "log2", "-log10", "-log2"),
+                              colors=colors_for_gradient("Ju1"),
+                              layout=c("raster", "square"),
+                              background=NULL,
+                              coord_equal=TRUE){
 
-plot_cmp_geneset <- function(set_1=NULL, 
-                             set_2=NULL,
-                             method=c("Jaccard",
-                                      "hypergeom"),
-                             transform=c(NA,"log10", "log2"),
-                             colors=colors_for_gradient("Ju1")){
   if(is.null(set_1) | is.null(set_2))
     print_msg('Please provide two lists as input.', msg_type = "STOP")
   
   if(!is.list(set_1) | !is.list(set_2))
     print_msg('Please provide two lists as input.', msg_type = "STOP")
   
-  method <- match.arg(method)
-  
-  
+  stat <- match.arg(stat)
+  layout <- match.arg(layout)
   transform <- match.arg(transform)
   
-  print(paste0("Using transformation: ", transform))
+  print_msg(paste0("Using transformation: ", transform),
+            msg_type="INFO")
   
-  res <- compare_genesets(set_1=set_1, 
+  if(layout == "raster"){
+    res <- compare_genesets(set_1=set_1, 
                           set_2=set_2, 
-                          stat=method)
+                          stat=stat)
+  }else{
+    res <- compare_genesets(set_1=set_1, 
+                            set_2=set_2, 
+                            stat="hypergeom")
+  }
   
   res_melt <- reshape2::melt(as.matrix(res))
-  colnames(res_melt) <- c("Set_1", "Set_2", "value")
+  colnames(res_melt) <- c("Set_1", "Set_2", "stat")
   
-  if(!is.na(transform))
-    res_melt$value <- do.call(transform, list(res_melt$value))
+  if(transform != "None"){
+    res_melt$stat <- do.call(gsub("-","", transform), list(res_melt$stat))
+    if(transform %in% c("-log10", "-log2")){
+      res_melt$stat <- -res_melt$stat
+    }
+  }
   
-  ggplot(res_melt, mapping=aes(x=Set_1, 
-                               y=Set_2, 
-                               fill=value)) + 
-    geom_tile(color="white", size=2) +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle=45, vjust = 0.5)) +
-    scale_fill_gradientn(colours = colors)
+  if(coord_equal){
+    coord_equal <- coord_equal()
+  }else{
+    coord_equal <- NULL
+  }
+  
+  if(layout == "raster"){
+    ggplot(res_melt, mapping=aes(x=Set_1, 
+                                 y=Set_2, 
+                                 fill=stat)) + 
+      geom_tile(color="white", size=2) +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle=45, vjust = 0.5)) +
+      scale_fill_gradientn(colours = colors) +
+      coord_equal
+  }else if(layout == "square"){
+    
+    if(is.na(transform)){
+      legend_label <- "p-value"
+    }else{
+      legend_label <- paste0(transform, "(p-value)")
+    }
+    inter <-compare_genesets(set_1=set_1, 
+                             set_2=set_2, 
+                             stat="jaccard")
+
+    inter_melt <- reshape2::melt(as.matrix(inter))    
+    res_melt$jaccard <- inter_melt$value
+    res_melt$jaccard_2 <- inter_melt$value
+    
+    res_melt$label_set_1 <- as.character(res_melt$Set_1)
+    res_melt$label_set_2 <- as.character(res_melt$Set_2)
+    res_melt$Set_1 <- as.numeric(as.factor(res_melt$Set_1))
+    res_melt$Set_2 <- as.numeric(as.factor(res_melt$Set_2))
+    
+    ggplot(res_melt, mapping=aes(x=Set_1, 
+                                 y=Set_2, 
+                                 fill=stat,
+                                 width=jaccard,
+                                 height=jaccard)) + 
+      geom_vline(xintercept = seq(0.5, length(set_1), by=1), col="black", size=0.3) + 
+      geom_hline(yintercept = seq(0.5, length(set_2), by=1), col="black", size=0.3) + 
+      geom_tile() +
+      theme_bw() +
+      theme(panel.grid = element_blank(),
+            axis.text.x = element_text(angle=45, vjust = 0.9, hjust=1)) +
+      scale_x_continuous(expand=expansion(mult = c(0, 0), 
+                                             add = c(0, 0.5)), 
+                         breaks = res_melt$Set_1, 
+                         labels = res_melt$label_set_1) +
+      scale_y_continuous(expand=expansion(mult = c(0, 0), 
+                                          add = c(0, 0.5)), 
+                         breaks = res_melt$Set_2, 
+                         labels = res_melt$label_set_2) +
+      scale_size_area("Jaccard", max_size = 1, guide = "legend") +
+      scale_fill_gradientn(legend_label, colours = colors, ) +
+
+      coord_equal 
+  }
+
 }
