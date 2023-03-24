@@ -8,7 +8,7 @@
 #'
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #' 
-#' @example 
+#' @examples 
 #' # Set verbosity to 1 to only display info messages.
 #' set_verbosity(1)
 #' 
@@ -128,7 +128,7 @@ filter_cluster_size <- function(object = NULL,
 #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
 #' 
-#' @example
+#' @examples
 #' # Set verbosity to 1 to only display info messages.
 #' set_verbosity(1)
 #' 
@@ -272,7 +272,7 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' 
-#' @example
+#' @examples
 #' # Load a Seurat object
 #' data(pbmc_small, package = "SeuratObject")
 #' 
