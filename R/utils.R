@@ -345,6 +345,7 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #' @param object the clusterSet object to be tested 
 #' @return None.
 #' @examples 
+#' \dontrun{
 #'  set_verbosity(0)
 #'  data(pbmc_small, package = "SeuratObject")
 #'  clust_set <- select_genes(data=pbmc_small,
@@ -359,6 +360,7 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #'                               k = 5,
 #'                               threads = 1)
 #'  check_format_cluster_set(clust_set)
+#' }
 check_format_cluster_set <- function(object) {
 
   if(!inherits(object, "ClusterSet"))

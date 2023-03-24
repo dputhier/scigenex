@@ -16,6 +16,7 @@ None.
 Check the format of a Clusterset object (ncol, nrow, inherits...)
 }
 \examples{
+\dontrun{
  set_verbosity(0)
  data(pbmc_small, package = "SeuratObject")
  clust_set <- select_genes(data=pbmc_small,
@@ -30,4 +31,5 @@ Check the format of a Clusterset object (ncol, nrow, inherits...)
                               k = 5,
                               threads = 1)
  check_format_cluster_set(clust_set)
+}
 }
