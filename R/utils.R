@@ -347,7 +347,17 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #' @examples 
 #'  set_verbosity(0)
 #'  data(pbmc_small, package = "SeuratObject")
-#'  clust_set <- find_gene_clusters(pbmc_small, k=50, no_dknn_filter=TRUE)
+#'  clust_set <- select_genes(data=pbmc_small,
+#'                            distance_method="pearson",
+#'                            k=10,
+#'                            row_sum=-Inf,
+#'                            highest=0.95,
+#'                            fdr = 1e-6)
+#'  clust_set <- gene_clustering(object = clust_set,
+#'                               inflation = 1.2,
+#'                               keep_nn = FALSE,
+#'                               k = 5,
+#'                               threads = 1)
 #'  check_format_cluster_set(clust_set)
 #' @export check_format_cluster_set
 check_format_cluster_set <- function(object) {
