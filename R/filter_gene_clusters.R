@@ -119,7 +119,7 @@ filter_cluster_size <- function(object = NULL,
 
 
 ############################## filter_nb_supporting_cells ##############################
-#' Filter out gene clusters based on the number of cells expressing at least a provided percentage of genes
+#' Filter out gene clusters based on the number of cells expressing at least a user-defined percentage of genes
 #' 
 #' This function filters out the gene clusters based on the number of cells expressing a certain percentage of genes present in this gene cluster.
 #' 
