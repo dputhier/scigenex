@@ -13,6 +13,9 @@
 \alias{nclust,ClusterSet-method}
 \alias{clust_size,ClusterSet-method}
 \alias{gene_cluster,ClusterSet-method}
+\alias{\%in\%,character,ClusterSet-method}
+\alias{which_clust,ClusterSet-method}
+\alias{rename,ClusterSet-method}
 \title{The ClusterSet methods.}
 \usage{
 \S4method{show}{ClusterSet}(object)
@@ -38,11 +41,17 @@ clust_names(x)
 \S4method{clust_size}{ClusterSet}(x)
 
 \S4method{gene_cluster}{ClusterSet}(object, cluster = 0)
+
+\S4method{\%in\%}{character,ClusterSet}(x, table)
+
+\S4method{which_clust}{ClusterSet}(object, genes = NULL)
+
+\S4method{rename}{ClusterSet}(object, new_names = NULL)
 }
 \arguments{
 \item{object}{a ClusterSet object.}
 
-\item{x}{The ClusterSet object}
+\item{x}{The gene to be searched;}
 
 \item{i}{indices specifying rows to extract. Indices are numeric or character vectors or empty (missing) or NULL.}
 
@@ -53,6 +62,8 @@ clust_names(x)
 \item{drop}{For matrices and arrays. If TRUE the result is coerced to the lowest possible dimension. Not functionnal here.}
 
 \item{cluster}{The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.}
+
+\item{table}{The ClusterSet object.}
 }
 \description{
 The show method of a ClusterSet.
@@ -78,6 +89,12 @@ The number of clusters in a ClusterSet object.
 The sizes of the clusters stored in a ClusterSet object.
 
 Returns a named vector (gene as names) and cluster
+
+The match operator of a ClusterSet object
+
+Which clusters contain a set of genes.
+
+Rename the gene clusters of a ClusterSet.
 }
 \section{Functions}{
 \itemize{
@@ -106,6 +123,12 @@ The i axis correspond to clusters and j to column/cells
 
 \item \code{gene_cluster(ClusterSet)}: Returns a named vector (gene as names) and cluster
 as value.
+
+\item \code{x \%in\% table}: The Match operator of a ClusterSet object
+
+\item \code{which_clust(ClusterSet)}: Returns which clusters contain a set of genes.
+
+\item \code{rename(ClusterSet)}: Rename the gene clusters of a ClusterSet
 
 }}
 \examples{
