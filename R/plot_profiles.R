@@ -56,13 +56,19 @@ plot_profiles <- function(data = NULL,
   
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
-  
-  ident <- ident[colnames(data@data)]
-  
+
   centers <- data@dbf_output$center
   
   if (is.null(ident))
     print_msg("Please provide cell identification.", msg_type = "STOP")
+  
+  if (length(ident) != ncol(data@data))
+    print_msg("The ident argument should be of the same length as ncol(data).", msg_type = "STOP")
+  
+  if (is.null(names(ident)))
+    names(ident) <- colnames(data@data)
+    
+  ident <- ident[colnames(data@data)]
   
   ident <- sort(ident)
   ident <- factor(ident, levels=levels(as.factor(ident)), ordered = T)
