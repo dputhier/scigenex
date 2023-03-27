@@ -490,3 +490,77 @@ setMethod(
     return(NULL)
   }
 })
+
+
+################################################################################
+##      Method for function matching genes in a ClusterSet.
+################################################################################
+
+#' @title Match operator of a ClusterSet object
+#' @description The match operator of a ClusterSet object
+#' @describeIn ClusterSet-methods The Match operator of a ClusterSet object
+#' @param x The gene to be searched;
+#' @param table The ClusterSet object.
+#' @method "%in%" ClusterSet
+setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, table) {
+  x %in% names(gene_cluster(table))
+})
+
+setGeneric("which_clust", 
+           function(object,
+                    genes = NULL)
+             standardGeneric("which_clust")
+)
+
+#' @title Which clusters contain a set of genes.
+#' @description Which clusters contain a set of genes.
+#' @describeIn ClusterSet-methods Returns which clusters contain a set of genes.
+#' @method which_clust ClusterSet
+#' @export
+setMethod("which_clust", 
+          signature("ClusterSet"), 
+          function(object, genes) {
+            check_format_cluster_set(object)
+            gc <- gene_cluster(object)
+            tmp <- gc[which(names(gc) %in% genes)]
+            tmp[genes]
+})
+
+
+setGeneric("rename", 
+           function(object, new_names=NULL)
+             standardGeneric("rename")
+)
+
+#' @title Rename the gene clusters of a ClusterSet
+#' @description Rename the gene clusters of a ClusterSet.
+#' @describeIn ClusterSet-methods Rename the gene clusters of a ClusterSet
+#' @method rename ClusterSet
+#' @export
+setMethod("rename", 
+          signature("ClusterSet"), 
+          function(object, 
+                   new_names=NULL) {
+            
+            check_format_cluster_set(object)
+            
+            if(length(new_names) != nclust(object))
+              print_msg("The number of labels should be the same a the number of clusters.")
+            
+            names(object@gene_clusters) <- new_names
+            
+            if(length(object@top_genes) > 0)
+              names(object@top_genes) <- new_names
+            
+            object@gene_clusters_metadata$cluster_id <- new_names
+            
+            names(object@gene_clusters_metadata$size) <- new_names
+            
+            if(length(object@gene_cluster_annotations) > 0)
+              names(object@gene_cluster_annotations) <- new_names
+            
+            rownames(object@dbf_output$center) <- new_names
+            
+            return(object)
+            
+})
