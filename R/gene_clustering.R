@@ -80,7 +80,7 @@ gene_clustering <- function(object = NULL,
                            inflation = inflation,
                            threads = threads)
   
-  print_msg(paste0("Add results to the ClusterSet object."), msg_type = "INFO")
+  print_msg(paste0("Adding results to a ClusterSet object."), msg_type = "INFO")
   
   # Update ClusterSet object
   ## Read mcl out file
