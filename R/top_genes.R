@@ -2,12 +2,11 @@
 ##    Define top_genes function for ClusterSet object
 #################################################################
 
-#' @title
-#' Best co-expressed genes from each gene cluster
+#' @title Most co-expressed genes from each gene cluster
 #' @description
-#' Extract the highly co-expressed genes of each gene cluster.
+#' Extract the most highly co-expressed genes of each gene cluster.
 #' @param object A \code{ClusterSet} object.
-#' @param top A value for the number of the most similar genes in gene clusters.
+#' @param top A value for the number of genes to select from each cluster.
 #' @param cluster A vector of gene cluster identity.
 #'
 #' @return A \code{ClusterSet} object.
@@ -54,9 +53,13 @@ top_genes <- function(object,
   # Display a warning message if there is less than n top genes in a gene cluster
   loop <- 0
   for (size in object@gene_clusters_metadata$size[cluster]) {
-    loop <- 1 + loop
+    loop <- loop + 1
+
     if (top > size) {
-      warning(paste0("Number of top genes is greater than the number of genes in cluster ", loop, ". All genes will be used and ordered by similarity rank."))
+      print_msg(paste0("Number of top genes is greater than the number of genes in cluster ", 
+                       loop, 
+                       ". All genes will be used and ordered by similarity rank."),
+                msg_type = "WARNING")
     }
   }
   
@@ -107,16 +110,17 @@ top_genes <- function(object,
     genes_top <- rbind(genes_top, names(dist_means[1:top]))
   }
   
-  # Prepare genes_top matrix
+  # Prepare top gene matrix
   if (length(cluster) > 1) {
     genes_top <- genes_top[2:(length(cluster) + 1), ]
   } else {
     genes_top <- as.matrix(t(genes_top[2:(length(cluster) + 1), ]))
   }
+  
   colnames(genes_top) <- paste0("gene_top_", 1:top)
   rownames(genes_top) <- paste0("cluster_", cluster)
   
-  # Put genes_top matrix in object@top_genes
+  # Put top gene matrix in object@top_genes
   object@top_genes <- split(x = unname(genes_top), f = cluster)
   
   for (clust in cluster) {
