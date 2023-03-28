@@ -536,13 +536,16 @@ setGeneric("rename",
 #' @description Rename the gene clusters of a ClusterSet.
 #' @describeIn ClusterSet-methods Rename the gene clusters of a ClusterSet
 #' @method rename ClusterSet
-#' @export
+#' @export rename
 setMethod("rename", 
           signature("ClusterSet"), 
           function(object, 
                    new_names=NULL) {
             
             check_format_cluster_set(object)
+            
+            if(is.null(new_names))
+              new_names <- 1:nclust(object)
             
             if(length(new_names) != nclust(object))
               print_msg("The number of labels should be the same a the number of clusters.")
