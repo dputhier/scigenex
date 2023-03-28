@@ -13,22 +13,22 @@ setMethod(
                      row.names = names(clust_size(object)))
     
     gene_clust <- as.factor(gene_cluster(object))
-    df_split <- split(object@data, gene_clust)
+    df_split <- split(as.data.frame(object@data), gene_clust)
     
     tmp <- unlist(lapply(df_split, sum))
-    df$sum_count <- tmp[row.names(df)]
+    df$sum_count <- tmp
     
     tmp <- unlist(lapply(df_split, var))
-    df$var_total <- tmp[row.names(df)]
+    df$var_total <- tmp
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp[row.names(df)]
+    df$sd_total <- tmp
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp[row.names(df)]
+    df$sd_total <- tmp
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp[row.names(df)]
+    df$sd_total <- tmp
     
     all_dot_prod <- vector()
     
@@ -50,7 +50,7 @@ setMethod(
     }
     
     df$dot_prod <- all_dot_prod
-    
+  
     return(df)
     
 }
@@ -83,19 +83,18 @@ plot_cluster_stats <- function(x, highlight=NULL){
                       levels=sort(unique(x$stat)),
                       ordered=T)
   if(!is.null(highlight)){
-  ggplot2::ggplot(data=x, 
-         mapping=ggplot2::aes(x=cluster,
-                 y=value,
-                 fill=highlight)) +
-    ggplot2::geom_col() + 
-    ggplot2::facet_grid(~stat, scales = "free") +
-    coord_flip() +
-    theme_bw()
-  }else{
     ggplot2::ggplot(data=x, 
                     mapping=ggplot2::aes(x=cluster,
                                          y=value,
-                                         color=)) +
+                                         fill=highlight)) +
+            ggplot2::geom_col() + 
+            ggplot2::facet_grid(~stat, scales = "free") +
+            coord_flip() +
+            theme_bw()
+  }else{
+    ggplot2::ggplot(data=x, 
+                    mapping=ggplot2::aes(x=cluster,
+                                         y=value)) +
             ggplot2::geom_col() + 
             ggplot2::facet_grid(~stat, scales = "free") +
             coord_flip()+
