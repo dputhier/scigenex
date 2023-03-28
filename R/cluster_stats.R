@@ -4,31 +4,37 @@ setGeneric("cluster_stats",
              standardGeneric("cluster_stats")
 )
 
+#' @title Compute statistics about the clusters
+#' @description Compute statistics about the clusters
+#' @describeIn ClusterSet-methods Compute statistics about the clusters
+#' @param object a ClusterSet object..
+#' @method cluster_stats ClusterSet
+#' @export cluster_stats
 setMethod(
   "cluster_stats", signature("ClusterSet"),
   function(object) {
-    #object <- scigenex::check_format_cluster_set(object)
+    object <- scigenex::check_format_cluster_set(object)
     
     df <- data.frame(size=clust_size(object), 
                      row.names = names(clust_size(object)))
     
     gene_clust <- as.factor(gene_cluster(object))
-    df_split <- split(as.data.frame(object@data), gene_clust)
+    df_split <- split(object@data, gene_clust)
     
     tmp <- unlist(lapply(df_split, sum))
-    df$sum_count <- tmp
+    df$sum_count <- tmp[row.names(df)]
     
     tmp <- unlist(lapply(df_split, var))
-    df$var_total <- tmp
+    df$var_total <- tmp[row.names(df)]
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp
+    df$sd_total <- tmp[row.names(df)]
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp
+    df$sd_total <- tmp[row.names(df)]
     
     tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp
+    df$sd_total <- tmp[row.names(df)]
     
     all_dot_prod <- vector()
     
@@ -50,14 +56,54 @@ setMethod(
     }
     
     df$dot_prod <- all_dot_prod
-  
+    
     return(df)
     
-}
+  }
 )
 
-plot_cluster_stats <- function(x, highlight=NULL){
 
+#' @title Plot the result of cluster_stats()
+#' @description Plot the result of cluster_stats()
+#' @param object A \code{ClusterSet} object.
+#' @param highlight a vector with two modalities indicating which clusters to highlight
+#' @return A \code{ClusterSet} object.
+#' @importFrom ggplot2 ggplot geom_col facet_grid coord_flip theme_bw
+#' @importFrom reshape2 melt
+#' @export plot_cluster_stats
+#'
+#' @examples
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+#' 
+#' # Create a matrix with 4 signatures
+#' m <- create_4_rnd_clust()
+#' 
+#' # Select informative genes
+#' res <- select_genes(m,
+#'                     distance = "pearson",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
+#'                     
+#' # Cluster informative features
+#' 
+#' res <- gene_clustering(res, 
+#'                        inflation = 1.2,
+#'                        keep_nn = FALSE,
+#'                        k = 5)
+#'                        
+#' # Compute some statistics about the clusters
+#' df <- cluster_stats(res)  
+#' plot_cluster_stats(df)
+#' plot_cluster_stats(df, highlight=df$sd_total > 1.5) 
+#' 
+#' # Select the cluster of interest
+#' res <- res[df$sd_total > 1.5, ] 
+#' nclust(res)          
+plot_cluster_stats <- function(x, highlight=NULL){
+  
   if(!is.null(highlight)){
     if(length(highlight) != nrow(x))
       print_msg("The number of clusters to highlight should have same length as nrow(x).",
@@ -69,7 +115,7 @@ plot_cluster_stats <- function(x, highlight=NULL){
       print_msg("The 'highlight' vector should have two modalities.",
                 msg_type = "STOP")
   }
-
+  
   x <- reshape2::melt(as.matrix(x))
   colnames(x) <- c("cluster", "stat", "value")
   
@@ -77,27 +123,28 @@ plot_cluster_stats <- function(x, highlight=NULL){
     x$highlight <- highlight 
   
   x$cluster <- factor(x$cluster, 
-                         levels=sort(unique(x$cluster)),
-                         ordered=T)
-  x$stat <- factor(x$stat, 
-                      levels=sort(unique(x$stat)),
+                      levels=sort(unique(x$cluster)),
                       ordered=T)
+  x$stat <- factor(x$stat, 
+                   levels=sort(unique(x$stat)),
+                   ordered=T)
   if(!is.null(highlight)){
     ggplot2::ggplot(data=x, 
                     mapping=ggplot2::aes(x=cluster,
                                          y=value,
                                          fill=highlight)) +
-            ggplot2::geom_col() + 
-            ggplot2::facet_grid(~stat, scales = "free") +
-            coord_flip() +
-            theme_bw()
+      ggplot2::geom_col() + 
+      ggplot2::facet_grid(~stat, scales = "free") +
+      ggplot2::coord_flip() +
+      ggplot2::theme_bw()
   }else{
     ggplot2::ggplot(data=x, 
                     mapping=ggplot2::aes(x=cluster,
-                                         y=value)) +
-            ggplot2::geom_col() + 
-            ggplot2::facet_grid(~stat, scales = "free") +
-            coord_flip()+
-            theme_bw()
+                                         y=value,
+                                         color=)) +
+      ggplot2::geom_col() + 
+      ggplot2::facet_grid(~stat, scales = "free") +
+      ggplot2::coord_flip()+
+      ggplot2::theme_bw()
   }
 }
