@@ -2,20 +2,21 @@
 % Please edit documentation in R/filter_gene_clusters.R
 \name{filter_cluster_size}
 \alias{filter_cluster_size}
-\title{Filter out gene clusters based on their size}
+\title{Filter out gene clusters containing few genes}
 \usage{
 filter_cluster_size(object = NULL, min_cluster_size = 5)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{min_cluster_size}{An integer indicating the minimum size of clusters to keep.}
+\item{min_cluster_size}{An integer indicating the minimum size for a clusters to be kept.}
 }
 \value{
-A ClusterSet object where clusters that did not pass the filter have been removed.
+A ClusterSet object where clusters not passing the filter have been removed.
 }
 \description{
-This function filters out gene clusters from a ClusterSet object based on their size.
+This function filters out gene clusters from a ClusterSet object 
+based on their size.
 }
 \examples{
 # Set verbosity to 1 to only display info messages.
@@ -30,7 +31,7 @@ m <- rbind(m, matrix(rep(c(rep(5, 10*2),
 
 # Select informative genes
 clust_set <- select_genes(m,
-                         distance = "kendall",
+                         distance = "pearson",
                          k = 75,
                          highest = 0.3,
                          fdr = 1e-8,
