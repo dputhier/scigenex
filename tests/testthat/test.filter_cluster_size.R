@@ -17,6 +17,7 @@ res <- select_genes(data=m,
 res <- gene_clustering(object = res,
                        inflation = 4,
                        keep_nn = FALSE,
+                       threads = 6,
                        k = 5)
 
 test_that("Checking filter_cluster_size() when min_cluster_size\

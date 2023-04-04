@@ -10,6 +10,7 @@ res <- select_genes(data=m,
                     k=75,
                     row_sum=-Inf,
                     highest=0.3,
+                    dist_threads = 6,
                     fdr = 1e-8)
 
 ## Cluster genes
@@ -17,7 +18,7 @@ res <- gene_clustering(object = res,
                        inflation = 1.2,
                        keep_nn = FALSE,
                        k = 5,
-                       threads = 1)
+                       threads = 6)
 
 
 test_that("Checking if reorder_genes stops if needed", {

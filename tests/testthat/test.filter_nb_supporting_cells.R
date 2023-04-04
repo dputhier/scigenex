@@ -15,6 +15,7 @@ res <- select_genes(data=m,
                     distance_method="kendall",
                     k=75,
                     row_sum=-Inf,
+                    dist_threads = 6,
                     highest=0.3,
                     fdr = 1e-8)
 
@@ -22,6 +23,7 @@ res <- select_genes(data=m,
 res <- gene_clustering(object = res,
                        inflation = 1.2,
                        keep_nn = FALSE,
+                       threads = 6,
                        k = 5)
 
 

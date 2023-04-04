@@ -14,6 +14,7 @@ test_that("Cheking get_genes is providing the right list of genes - pearson", {
                       k=75,
                       row_sum=-Inf,
                       highest=0.3,
+                      dist_threads = 6,
                       fdr = 1e-8)
   
   ## Cluster genes
@@ -21,7 +22,7 @@ test_that("Cheking get_genes is providing the right list of genes - pearson", {
                          inflation = 1.2,
                          keep_nn = FALSE,
                          k = 5,
-                         threads = 1)
+                         threads = 6)
   
   # ========================================
   # Top 20
@@ -368,6 +369,7 @@ test_that("Cheking get_genes is providing the right list of genes - kendall", {
                       k=75,
                       row_sum=-Inf,
                       highest=0.3,
+                      dist_threads = 6,
                       fdr = 1e-8)
   
   ## Cluster genes
@@ -375,7 +377,7 @@ test_that("Cheking get_genes is providing the right list of genes - kendall", {
                          inflation = 1.2,
                          keep_nn = FALSE,
                          k = 5,
-                         threads = 1)
+                         threads = 6)
   
   # ========================================
   # Top 20

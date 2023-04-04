@@ -11,6 +11,7 @@ test_that("Checking gene_cluster() is working...", {
                       distance_method="kendall",
                       k=75,
                       row_sum=-Inf,
+                      dist_threads = 6,
                       highest=0.3,
                       fdr = 1e-8)
   
@@ -19,7 +20,7 @@ test_that("Checking gene_cluster() is working...", {
                          inflation = 1.2,
                          keep_nn = FALSE,
                          k = 5,
-                         threads = 1)
+                         threads = 6)
   
   expect_equal(length(gene_cluster(res)), 359)
   expect_equal(paste0(table(gene_cluster(res)), collapse = " "), "123 88 81 67")

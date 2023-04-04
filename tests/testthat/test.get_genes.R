@@ -8,6 +8,7 @@ m <- create_4_rnd_clust()
 res <- select_genes(data=m,
                     distance_method="kendall",
                     k=75,
+                    dist_threads = 6,
                     row_sum=-Inf,
                     highest=0.3,
                     fdr = 1e-8)
@@ -17,7 +18,7 @@ res <- gene_clustering(object = res,
                        inflation = 1.2,
                        keep_nn = FALSE,
                        k = 5,
-                       threads = 1)
+                       threads = 6)
 
 
 
