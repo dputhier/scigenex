@@ -1,5 +1,5 @@
 library(testthat)
-
+set_verbosity(0)
 
 test_that("compare_genesets returns a message when input is empty", {
   expect_error(compare_genesets(set_1 = NULL, set_2 = NULL, stat = "jaccard"))
