@@ -62,8 +62,8 @@ plot_profiles <- function(data = NULL,
   if (is.null(ident))
     print_msg("Please provide cell identification.", msg_type = "STOP")
   
-  if (length(ident) != ncol(data@data))
-    print_msg("The ident argument should be of the same length as ncol(data).", msg_type = "STOP")
+  if (length(ident) < ncol(data@data))
+    print_msg("The length of the 'ident' argument should be equal or greater to ncol(data).", msg_type = "STOP")
   
   if (is.null(names(ident)))
     names(ident) <- colnames(data@data)
