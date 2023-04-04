@@ -2,14 +2,14 @@
 % Please edit documentation in R/top_genes.R
 \name{top_genes}
 \alias{top_genes}
-\title{Best co-expressed genes from each gene cluster}
+\title{Most co-expressed genes from each gene cluster}
 \usage{
 top_genes(object, top = 20, cluster = "all")
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
-\item{top}{A value for the number of the most similar genes in gene clusters.}
+\item{top}{A value for the number of genes to select from each cluster.}
 
 \item{cluster}{A vector of gene cluster identity.}
 }
@@ -17,7 +17,7 @@ top_genes(object, top = 20, cluster = "all")
 A \code{ClusterSet} object.
 }
 \description{
-Extract the highly co-expressed genes of each gene cluster.
+Extract the most highly co-expressed genes of each gene cluster.
 }
 \examples{
 # Set verbosity to 1 to only display info messages.
