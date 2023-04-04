@@ -7,6 +7,14 @@ nclust}
 \usage{
 \S4method{nclust}{ClusterSet}(x)
 }
+\arguments{
+\item{x}{The ClusterSet object}
+}
 \description{
 The number of clusters in a ClusterSet object.
+}
+\examples{
+# load a dataset
+data("scigenex_test_I1.2")
+n_clust <- nclust(scigenex_test_I1.2)
 }

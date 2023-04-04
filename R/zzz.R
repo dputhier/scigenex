@@ -14,6 +14,8 @@ utils::globalVariables(c("x",
                          "y2",
                          "Set_1",
                          "Set_2",
-                         "jaccard"))
+                         "jaccard",
+                         "cluster",
+                         "value"))
 
   

@@ -47,8 +47,6 @@ setGeneric("enrich_go",
 #' # Do enrichment analysis using GO ontology
 #' clust_set <- enrich_go(clust_set)
 #' # Results of enrichment analysis are stored in clust_set@gene_cluster_annotations slot
-#' 
-#' @rdname enrich_go
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
@@ -168,8 +166,6 @@ setGeneric("viz_enrich",
 #' # Do enrichment analysis using GO ontology
 #' clust_set <- enrich_go(clust_set)
 #' viz_enrich(clust_set, cluster = 1, nb_terms = 5)
-#' 
-#' @rdname viz_enrich
 setMethod("viz_enrich",
           signature(object = "ClusterSet"),
           function(object,

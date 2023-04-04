@@ -14,3 +14,8 @@
 \description{
 Rename the gene clusters of a ClusterSet.
 }
+\examples{
+# load a dataset
+data("scigenex_test_I1.2")
+new_obj <- rename(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+}

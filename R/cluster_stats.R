@@ -6,10 +6,13 @@ setGeneric("cluster_stats",
 
 #' @title Compute statistics about the clusters
 #' @description Compute statistics about the clusters
-#' @describeIn ClusterSet-methods Compute statistics about the clusters
 #' @param object a ClusterSet object..
 #' @method cluster_stats ClusterSet
 #' @importFrom stats var
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' df <- cluster_stats(scigenex_test_I1.2)
 #' @export cluster_stats
 setMethod(
   "cluster_stats", signature("ClusterSet"),

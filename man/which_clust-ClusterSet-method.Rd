@@ -14,3 +14,8 @@
 \description{
 Which clusters contain a set of genes.
 }
+\examples{
+# load a dataset
+data("scigenex_test_I1.2")
+hit <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
+}

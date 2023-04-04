@@ -10,6 +10,7 @@ select_genes(
   distance_method = c("pearson", "cosine", "euclidean", "kendall"),
   highest = 5e-05,
   k = 80,
+  no_anti_cor = F,
   row_sum = 1,
   fdr = 0.005,
   which_slot = c("data", "sct", "counts"),

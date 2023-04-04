@@ -16,3 +16,8 @@ gene_cluster}
 Returns a named vector (gene as names) and cluster
 as value.
 }
+\examples{
+# load a dataset
+data("scigenex_test_I1.2")
+g_clust <- gene_cluster(scigenex_test_I1.2)
+}

@@ -10,3 +10,8 @@ clust_size}
 \description{
 The sizes of the clusters stored in a ClusterSet object.
 }
+\examples{
+# load a dataset
+data("scigenex_test_I1.2")
+x <- clust_size(scigenex_test_I1.2)
+}
