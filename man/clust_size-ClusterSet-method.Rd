@@ -7,6 +7,9 @@ clust_size}
 \usage{
 \S4method{clust_size}{ClusterSet}(x)
 }
+\arguments{
+\item{x}{A ClusterSet object.}
+}
 \description{
 The sizes of the clusters stored in a ClusterSet object.
 }

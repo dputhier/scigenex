@@ -29,7 +29,7 @@ setGeneric("top_genes",
 #' @export top_genes
 #'
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures

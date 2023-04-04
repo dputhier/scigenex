@@ -8,7 +8,7 @@
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
 #' 
 #' @examples 
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
@@ -77,7 +77,7 @@ filter_cluster_size <- function(object = NULL,
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
 #' 
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
@@ -355,7 +355,7 @@ filter_by_dot_prod <- function(object = NULL,
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
 #' 
 #' @examples 
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 filter_cluster_sd <- function(object = NULL,
                               min_sd = 0.1) {

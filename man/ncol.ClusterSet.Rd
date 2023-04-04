@@ -4,7 +4,7 @@
 \alias{ncol.ClusterSet}
 \title{ncol.ClusterSet}
 \usage{
-\method{ncol}{ClusterSet}(x)
+ncol.ClusterSet(x)
 }
 \arguments{
 \item{x}{The ClusterSet object}

@@ -18,6 +18,6 @@ A ClusterSet object where clusters not passing the filter have been removed.
 Filter out gene clusters with small standard deviation.
 }
 \examples{
-# Set verbosity to 1 to only display info messages.
+# Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 }

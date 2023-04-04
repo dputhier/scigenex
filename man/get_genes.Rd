@@ -20,7 +20,7 @@ A character vector.
 Extract genes list from each gene clusters. Can extract genes from all clusters (default) or from specified clusters.
 }
 \examples{
-# Set verbosity to 1 to only display info messages.
+# Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
 # Create a matrix with 4 signatures

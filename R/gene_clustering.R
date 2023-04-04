@@ -21,7 +21,7 @@
 #' @return A ClusterSet object
 #'
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
@@ -153,7 +153,7 @@ gene_clustering <- function(object = NULL,
 #' @return A ClusterSet object.
 #'
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' #set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
@@ -350,7 +350,7 @@ construct_new_graph <- function(object = NULL,
 #' @return The output of this function is a tab-separated file, which serves as input for the MCL algorithm.
 #'
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' #set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures

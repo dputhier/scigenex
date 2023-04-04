@@ -79,7 +79,7 @@ Iheatmap-class object.
 Plot the observed and simulated distance with the Kth nearest neighbors.
 }
 \examples{
-# Set verbosity to 1 to only display info messages.
+# Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
 # Create a matrix with 4 signatures

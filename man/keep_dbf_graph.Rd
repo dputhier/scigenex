@@ -21,7 +21,7 @@ This function creates a graph based on the gene selected by select_genes() and t
 It generates an input file required for the MCL (Markov Cluster) algorithm.
 }
 \examples{
-# Set verbosity to 1 to only display info messages.
+# Set verbosity to 1 to display info messages only.
 #set_verbosity(1)
 
 # Create a matrix with 4 signatures

@@ -25,7 +25,7 @@ A ClusterSet object where clusters that did not pass the filter have been remove
 This function filters out the gene clusters based on the number of cells expressing a certain percentage of genes present in this gene cluster.
 }
 \examples{
-# Set verbosity to 1 to only display info messages.
+# Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
 # Create a matrix with 4 signatures

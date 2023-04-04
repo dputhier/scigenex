@@ -4,7 +4,7 @@
 \alias{nrow.ClusterSet}
 \title{nrow.ClusterSet}
 \usage{
-\method{nrow}{ClusterSet}(x)
+nrow.ClusterSet(x)
 }
 \arguments{
 \item{x}{The ClusterSet object}

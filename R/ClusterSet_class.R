@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#' # Set verbosity to 1 to only display info messages.
+#' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
@@ -141,7 +141,6 @@ setMethod(
 #' @description
 #' The number of column of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @method ncol ClusterSet
 #' @keywords internal
 ncol.ClusterSet <- function (x) {
   ncol(x@data)
@@ -152,7 +151,6 @@ ncol.ClusterSet <- function (x) {
 #' @description
 #' The number of rows of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @method nrow ClusterSet
 #' @keywords internal
 nrow.ClusterSet <- function (x) {
   nrow(x@data)
@@ -161,8 +159,7 @@ nrow.ClusterSet <- function (x) {
 #' @title Names of gene clusters stored in the ClusterSet object
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
-#' @param x The ClusterSet object
-#' @method clust_names ClusterSet
+#' @param x The ClusterSet object.
 #' @export clust_names
 #' @keywords internal
 setGeneric("clust_names", 
@@ -174,7 +171,6 @@ setGeneric("clust_names",
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
-#' @method clust_names ClusterSet
 #' @export clust_names
 setMethod("clust_names", "ClusterSet",
           function(x){
@@ -195,7 +191,6 @@ setMethod("clust_names", "ClusterSet",
 #' @description
 #' The dimension of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @method dim ClusterSet
 #' @keywords internal
 setMethod("dim",signature(x="ClusterSet"),
           function(x) {
@@ -216,7 +211,6 @@ setGeneric(name="col_names", def=function(x) standardGeneric("col_names"))
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @method col_names ClusterSet
 #' @export col_names
 setMethod(f="col_names", 
           signature="ClusterSet", 
@@ -413,6 +407,7 @@ setGeneric("clust_size",
 #' clust_size
 #' @description
 #' The sizes of the clusters stored in a ClusterSet object.
+#' @param x A ClusterSet object.
 #' @export
 #' @examples
 #' # load a dataset
@@ -518,7 +513,6 @@ setMethod(
 #' @description The match operator of a ClusterSet object
 #' @param x The gene to be searched;
 #' @param table The ClusterSet object.
-#' @method "%in%" ClusterSet
 #' @keywords internal
 setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, table) {
   x %in% names(gene_cluster(table))

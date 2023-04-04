@@ -7,7 +7,7 @@
 clust_names(x)
 }
 \arguments{
-\item{x}{The ClusterSet object}
+\item{x}{The ClusterSet object.}
 }
 \description{
 The names of the gene clusters stored in the ClusterSet object.
