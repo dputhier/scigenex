@@ -9,11 +9,12 @@ setGeneric("cluster_stats",
 #' @describeIn ClusterSet-methods Compute statistics about the clusters
 #' @param object a ClusterSet object..
 #' @method cluster_stats ClusterSet
+#' @importFrom stats var
 #' @export cluster_stats
 setMethod(
   "cluster_stats", signature("ClusterSet"),
   function(object) {
-    object <- scigenex::check_format_cluster_set(object)
+    #object <- scigenex::check_format_cluster_set(object)
     
     df <- data.frame(size=clust_size(object), 
                      row.names = names(clust_size(object)))
@@ -24,16 +25,10 @@ setMethod(
     tmp <- unlist(lapply(df_split, sum))
     df$sum_count <- tmp[row.names(df)]
     
-    tmp <- unlist(lapply(df_split, var))
+    tmp <- unlist(lapply(df_split, stats::var))
     df$var_total <- tmp[row.names(df)]
     
-    tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp[row.names(df)]
-    
-    tmp <- unlist(lapply(df_split, sd))
-    df$sd_total <- tmp[row.names(df)]
-    
-    tmp <- unlist(lapply(df_split, sd))
+    tmp <- unlist(lapply(df_split, stats::sd))
     df$sd_total <- tmp[row.names(df)]
     
     all_dot_prod <- vector()
@@ -65,7 +60,7 @@ setMethod(
 
 #' @title Plot the result of cluster_stats()
 #' @description Plot the result of cluster_stats()
-#' @param object A \code{ClusterSet} object.
+#' @param x A \code{ClusterSet} object.
 #' @param highlight a vector with two modalities indicating which clusters to highlight
 #' @return A \code{ClusterSet} object.
 #' @importFrom ggplot2 ggplot geom_col facet_grid coord_flip theme_bw
