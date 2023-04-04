@@ -19,6 +19,8 @@ res <- gene_clustering(object = res,
                        k = 5,
                        threads = 1)
 
+msg <- R.utils::captureOutput(res_enrich <- enrich_go(res, 
+                                             species = "Hsapiens"))
 
 test_that("Check if enrich_go stops when species argument is invalid", {
   expect_error(enrich_go(res, species = "Not working"))
@@ -27,10 +29,6 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 
 test_that("Check message printed by enrich_go()", {
   set_verbosity(2)
-  
-  msg <- capture.output(res <- enrich_go(res, 
-                                         species = "Hsapiens", 
-                                         ontology = "BP"))
   
   # I'm commenting some of the following message 
   # as the number of EntrezId will change from one
@@ -61,8 +59,6 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 
 test_that("Check enrich_go results with all ontologies", {
   set_verbosity(0)
-  
-  res_enrich <- enrich_go(res, species = "Hsapiens")
   
   # Check results from gene cluster 1
   expect_equal(length(res_enrich@gene_cluster_annotations), 3)
