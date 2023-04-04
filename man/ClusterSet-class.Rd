@@ -51,17 +51,35 @@ res <- gene_clustering(res,
                        keep_nn = FALSE,
                        k = 5)
 is(res)
-res
 
 # Plot heatmap of gene clusters
 plot_heatmap(res, row_labels = FALSE, line_size_horizontal = 2)
 plot_heatmap(res[1,], row_labels = FALSE, line_size_horizontal = 2)
-plot_heatmap(res[1:2,], row_labels = FALSE, line_size_horizontal = 2)
+plot_heatmap(res[1:2, ], row_labels = FALSE, line_size_horizontal = 2)
+plot_heatmap(res[1:2, 1:15], row_labels = FALSE, line_size_horizontal = 2)
 
+# plot the profiles
 idents <- c(rep(1,10), rep(2,10))
 names(idents) <- colnames(res@data)
-plot_profiles(res[c(1:2),],
+plot_profiles(res,
               ident = idents,
              color_cell_type = c("1" = "#4E79A7", "2" = "#A0CBE8"))
-        
+             
+# Some methods of the ClusterSet object
+x <- ncol(res)
+x <- nrow(res)
+x <- dim(res)
+x <- col_names(res)
+x <- row_names(res)
+x <- get_genes(res)
+x<-  clust_size(res)
+x <- c("gene400", "gene141") \%in\% res
+x <- which_clust(res, genes = c("gene400", "gene141"))
+res <- top_genes(res, top=5)
+res <- res[2:3, ]
+clust_names(res)
+scigenex_test_I1.2 <- rename_clust(res)
+clust_names(res)
+res <- res[,col_names(res)[1:10]]
+show(res)    
 }

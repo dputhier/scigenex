@@ -19,31 +19,4 @@ A \code{ClusterSet} object.
 \description{
 Extract the most highly co-expressed genes of each gene cluster.
 }
-\examples{
-# Set verbosity to 1 to only display info messages.
-set_verbosity(1)
-
-# Create a matrix with 4 signatures
-m <- create_4_rnd_clust()
-
-# Select informative genes
-res <- select_genes(m,
-                    distance = "kendall",
-                    k = 75,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
-                    
-# Cluster informative features
-res <- gene_clustering(res, 
-                       inflation = 1.2,
-                       keep_nn = FALSE,
-                       k = 5)
-                       
-# Identify top 5 genes of each gene cluster
-res <- top_genes(res, top = 5)
-
-# Plot heatmap of gene clusters
-plot_heatmap(res, use_top_genes = TRUE)
-
-}
+\keyword{internal}

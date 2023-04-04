@@ -17,11 +17,11 @@ test_that("Checking dim()", {
 })
 
 test_that("Checking cluster_names()", {
-  expect_equal(unname(clust_names(res)), c(rep(1, 123),
-                                           rep(2, 88),
-                                           rep(3, 81),
-                                           rep(4, 67)))
-  expect_that(clust_names(res), is_a("numeric"))
+  expect_equal(unname(clust_names(res)), c(rep("1", 123),
+                                           rep("2", 88),
+                                           rep("3", 81),
+                                           rep("4", 67)))
+  expect_that(clust_names(res), is_a("character"))
 })
 
 test_that("Checking colnames()", {
@@ -110,3 +110,4 @@ test_that("Checking gene_cluster()", {
                                             rep(4, 67)))
   expect_that(gene_cluster(res), is_a("integer"))
 })
+

@@ -3,24 +3,8 @@ test_that("Checking gene_cluster() is working...", {
   # Set verbosity to 0
   set_verbosity(0)
   
-  #Create matrix containing 3 signatures
-  m <- create_4_rnd_clust()
-  
-  ## Select informative genes
-  res <- select_genes(data=m,
-                      distance_method="kendall",
-                      k=75,
-                      row_sum=-Inf,
-                      dist_threads = 6,
-                      highest=0.3,
-                      fdr = 1e-8)
-  
-  ## Cluster genes
-  res <- gene_clustering(object = res,
-                         inflation = 1.2,
-                         keep_nn = FALSE,
-                         k = 5,
-                         threads = 6)
+  data("scigenex_test_I1.2")
+  res <- scigenex_test_I1.2
   
   expect_equal(length(gene_cluster(res)), 359)
   expect_equal(paste0(table(gene_cluster(res)), collapse = " "), "123 88 81 67")

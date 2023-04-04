@@ -39,19 +39,37 @@
 #'                        keep_nn = FALSE,
 #'                        k = 5)
 #' is(res)
-#' res
 #' 
 #' # Plot heatmap of gene clusters
 #' plot_heatmap(res, row_labels = FALSE, line_size_horizontal = 2)
 #' plot_heatmap(res[1,], row_labels = FALSE, line_size_horizontal = 2)
-#' plot_heatmap(res[1:2,], row_labels = FALSE, line_size_horizontal = 2)
+#' plot_heatmap(res[1:2, ], row_labels = FALSE, line_size_horizontal = 2)
+#' plot_heatmap(res[1:2, 1:15], row_labels = FALSE, line_size_horizontal = 2)
 #' 
+#' # plot the profiles
 #' idents <- c(rep(1,10), rep(2,10))
 #' names(idents) <- colnames(res@data)
-#' plot_profiles(res[c(1:2),],
+#' plot_profiles(res,
 #'               ident = idents,
 #'              color_cell_type = c("1" = "#4E79A7", "2" = "#A0CBE8"))
-#'         
+#'              
+#' # Some methods of the ClusterSet object
+#' x <- ncol(res)
+#' x <- nrow(res)
+#' x <- dim(res)
+#' x <- col_names(res)
+#' x <- row_names(res)
+#' x <- get_genes(res)
+#' x<-  clust_size(res)
+#' x <- c("gene400", "gene141") %in% res
+#' x <- which_clust(res, genes = c("gene400", "gene141"))
+#' res <- top_genes(res, top=5)
+#' res <- res[2:3, ]
+#' clust_names(res)
+#' scigenex_test_I1.2 <- rename_clust(res)
+#' clust_names(res)
+#' res <- res[,col_names(res)[1:10]]
+#' show(res)    
 setClass("ClusterSet",
          representation = list(
            data = "matrix",
@@ -80,13 +98,12 @@ setClass("ClusterSet",
 #################################################################
 
 #' @title
-#' The ClusterSet methods.
+#' The show method of a ClusterSet.
 #' @description
 #' The show method of a ClusterSet.
 #' @param object A ClusterSet object.
-#' @method show ClusterSet
-#' @describeIn ClusterSet-methods The show method of a ClusterSet.
 #' @export show
+#' @keywords internal
 setMethod(
   "show", signature("ClusterSet"),
   function(object) {
@@ -120,34 +137,12 @@ setMethod(
 ################################################################################
 
 #' @title
-#' ClusterSet-methods
-#' @examples
-#'    data("scigenex_test_I1.2")               
-#'    x <- ncol(scigenex_test_I1.2)
-#'    x <- nrow(scigenex_test_I1.2)
-#'    x <- dim(scigenex_test_I1.2)
-#'    x <- col_names(scigenex_test_I1.2)
-#'    x <- row_names(scigenex_test_I1.2)
-#'    x <- get_genes(scigenex_test_I1.2)
-#'    x<-  clust_size(scigenex_test_I1.2)
-#'    scigenex_test_I1.2 <- rename(scigenex_test_I1.2)
-#'.   x <- c("gene400", "gene141") %in% scigenex_test_I1.2
-#'.   x <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
-#'.   scigenex_test_I1.2 <- top_genes(scigenex_test_I1.2, top=5)
-#'.   scigenex_test_I1.2 <- scigenex_test_I1.2[2:3, ]
-#'    clust_names(scigenex_test_I1.2)
-#'    scigenex_test_I1.2 <- rename(scigenex_test_I1.2)
-#'    clust_names(scigenex_test_I1.2)
-#'    scigenex_test_I1.2 <- scigenex_test_I1.2[,col_names(scigenex_test_I1.2)[1:10]]
-#'    show(scigenex_test_I1.2)
-
-#' @title
 #' ncol.ClusterSet
 #' @description
 #' The number of column of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The number of column of a ClusterSet object.
 #' @method ncol ClusterSet
+#' @keywords internal
 ncol.ClusterSet <- function (x) {
   ncol(x@data)
 }
@@ -157,21 +152,19 @@ ncol.ClusterSet <- function (x) {
 #' @description
 #' The number of rows of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The number of rows of a ClusterSet object.
 #' @method nrow ClusterSet
+#' @keywords internal
 nrow.ClusterSet <- function (x) {
   nrow(x@data)
 }
 
-
-#' @title
-#' clust_names 
+#' @title Names of gene clusters stored in the ClusterSet object
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The names of the gene clusters stored in the ClusterSet object.
 #' @method clust_names ClusterSet
-#' @export
+#' @export clust_names
+#' @keywords internal
 setGeneric("clust_names", 
            function(x)
              standardGeneric("clust_names")
@@ -182,7 +175,7 @@ setGeneric("clust_names",
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
 #' @method clust_names ClusterSet
-#' @export
+#' @export clust_names
 setMethod("clust_names", "ClusterSet",
           function(x){
             clust <- unlist(mapply(rep, 
@@ -202,8 +195,8 @@ setMethod("clust_names", "ClusterSet",
 #' @description
 #' The dimension of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The dimension of a ClusterSet object.
 #' @method dim ClusterSet
+#' @keywords internal
 setMethod("dim",signature(x="ClusterSet"),
           function(x) {
             dim(x@data)
@@ -216,26 +209,27 @@ setMethod("dim",signature(x="ClusterSet"),
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
 #' @export col_names
-#'
+#' @keywords internal
 setGeneric(name="col_names", def=function(x) standardGeneric("col_names"))
 
 #' @title Column names of a ClusterSet object.
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The column names of a ClusterSet object.
 #' @method col_names ClusterSet
 #' @export col_names
-#'
-setMethod(f="col_names", signature="ClusterSet", definition=function(x) colnames(x@data))
+setMethod(f="col_names", 
+          signature="ClusterSet", 
+          definition=function(x) colnames(x@data))
 
 
-#' @title Row names of an object.
+#' @title Row names of a ClusterSet object.
+#' row_names
 #' @description 
 #' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
 #' @export row_names
-#' @export
+#' @keywords internal
 setGeneric("row_names", 
              function(x)
                standardGeneric("row_names"))
@@ -245,10 +239,7 @@ setGeneric("row_names",
 #' @description 
 #' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @describeIn ClusterSet-methods The row names of a ClusterSet object.
-#' @method row_names ClusterSet
 #' @export row_names
-#' @export
 setMethod("row_names", "ClusterSet",
           function(x)
             rownames(x@data)
@@ -264,13 +255,12 @@ setMethod("row_names", "ClusterSet",
 #' Extract
 #' @description
 #' The subsetting operator of a ClusterSet object.
-#' @describeIn ClusterSet-methods The subsetting operator of a ClusterSet object.
 #' The i axis correspond to clusters and j to column/cells
 #' @param i indices specifying rows to extract. Indices are numeric or character vectors or empty (missing) or NULL.
 #' @param j indices specifying column to extract. Indices are numeric or character vectors or empty (missing) or NULL.
 #' @param ... See ?'['. Not functionnal here.
 #' @param drop For matrices and arrays. If TRUE the result is coerced to the lowest possible dimension. Not functionnal here.
-#' @method "[" ClusterSet
+#' @keywords internal
 setMethod("[", signature(x = "ClusterSet"),
           function (x, i, j, ..., drop = FALSE) {
             
@@ -369,8 +359,17 @@ setMethod("[", signature(x = "ClusterSet"),
 ##      Method nclust/clust_size for a 
 ##      ClusterSet object
 ################################################################################
-
-#' @export
+#' @title Number of clusters in a ClusterSet object.
+#' nclust
+#' @description
+#' The number of clusters in a ClusterSet object.
+#' @param x The ClusterSet object
+#' @export nclust
+#' @examples 
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' n_clust <- nclust(scigenex_test_I1.2)
+#' @keywords internal
 setGeneric("nclust", 
            function(x)
              standardGeneric("nclust")
@@ -382,8 +381,7 @@ setGeneric("nclust",
 #' @description
 #' The number of clusters in a ClusterSet object.
 #' @param x The ClusterSet object
-#' @method nclust ClusterSet
-#' @export
+#' @export nclust
 #' @examples 
 #' # load a dataset
 #' data("scigenex_test_I1.2")
@@ -395,8 +393,17 @@ setMethod(
   }
 )
 
-
-
+#' @title Sizes of the clusters stored in a ClusterSet object
+#' clust_size
+#' @description
+#' The sizes of the clusters stored in a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @export clust_size
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' x <- clust_size(scigenex_test_I1.2)
+#' @keywords internal
 setGeneric("clust_size", 
            function(x)
              standardGeneric("clust_size")
@@ -406,7 +413,6 @@ setGeneric("clust_size",
 #' clust_size
 #' @description
 #' The sizes of the clusters stored in a ClusterSet object.
-#' @method clust_size ClusterSet
 #' @export
 #' @examples
 #' # load a dataset
@@ -423,6 +429,19 @@ setMethod(
 ##    Define gene_cluster function for ClusterSet object
 #################################################################
 
+#' @title The gene clusters stored in a ClusterSet.
+#' gene_cluster
+#' @description
+#' Returns a named vector (gene as names) and cluster
+#' as value.
+#' @param object a ClusterSet object.
+#' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' g_clust <- gene_cluster(scigenex_test_I1.2)
+#' @export gene_cluster
+#' @keywords internal
 setGeneric("gene_cluster", 
            function(object,
                     cluster = 0)
@@ -440,7 +459,6 @@ setGeneric("gene_cluster",
 #' # load a dataset
 #' data("scigenex_test_I1.2")
 #' g_clust <- gene_cluster(scigenex_test_I1.2)
-#' @method gene_cluster ClusterSet
 #' @export gene_cluster
 setMethod(
   "gene_cluster", signature("ClusterSet"),
@@ -498,14 +516,25 @@ setMethod(
 
 #' @title Match operator of a ClusterSet object
 #' @description The match operator of a ClusterSet object
-#' @describeIn ClusterSet-methods The Match operator of a ClusterSet object
 #' @param x The gene to be searched;
 #' @param table The ClusterSet object.
 #' @method "%in%" ClusterSet
+#' @keywords internal
 setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, table) {
   x %in% names(gene_cluster(table))
 })
 
+
+#' @title Which clusters contain a set of genes.
+#' @description Which clusters contain a set of genes.
+#' @param object a ClusterSet object.
+#' @param genes The genes to be searched in the ClusterSet.
+#' @export which_clust
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' hit <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
+#' @keywords internal
 setGeneric("which_clust", 
            function(object,
                     genes = NULL)
@@ -516,8 +545,7 @@ setGeneric("which_clust",
 #' @description Which clusters contain a set of genes.
 #' @param object a ClusterSet object.
 #' @param genes The genes to be searched in the ClusterSet.
-#' @method which_clust ClusterSet
-#' @export
+#' @export which_clust
 #' @examples
 #' # load a dataset
 #' data("scigenex_test_I1.2")
@@ -531,23 +559,31 @@ setMethod("which_clust",
             tmp[genes]
 })
 
-
-setGeneric("rename", 
+#' @title Rename the gene clusters of a ClusterSet
+#' @description Rename the gene clusters of a ClusterSet.
+#' @param object a ClusterSet object.
+#' @param new_names The new names for the clusters.
+#' @export rename_clust
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' new_obj <- rename_clust(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+#' @keywords internal
+setGeneric("rename_clust", 
            function(object, new_names=NULL)
-             standardGeneric("rename")
+             standardGeneric("rename_clust")
 )
 
 #' @title Rename the gene clusters of a ClusterSet
 #' @description Rename the gene clusters of a ClusterSet.
 #' @param object a ClusterSet object.
 #' @param new_names The new names for the clusters.
-#' @method rename ClusterSet
-#' @export rename
+#' @export rename_clust
 #' @examples
 #' # load a dataset
 #' data("scigenex_test_I1.2")
-#' new_obj <- rename(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
-setMethod("rename", 
+#' new_obj <- rename_clust(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+setMethod("rename_clust", 
           signature("ClusterSet"), 
           function(object, 
                    new_names=NULL) {

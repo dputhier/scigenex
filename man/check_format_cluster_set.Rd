@@ -33,3 +33,4 @@ Check the format of a Clusterset object (ncol, nrow, inherits...)
  check_format_cluster_set(clust_set)
 }
 }
+\keyword{internal}

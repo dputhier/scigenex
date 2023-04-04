@@ -254,7 +254,7 @@ plot_cmp_genesets <- function(set_1=NULL,
     ggplot(res_melt, mapping=aes(x=Set_1, 
                                  y=Set_2, 
                                  fill=stat)) + 
-      geom_tile(color="white", size=2) +
+      geom_tile(color="white", linewidth=2) +
       theme_bw() +
       theme(axis.text.x = element_text(angle=45, vjust = 0.5)) +
       scale_fill_gradientn(colours = colors) +
@@ -284,8 +284,8 @@ plot_cmp_genesets <- function(set_1=NULL,
                                  fill=stat,
                                  width=jaccard,
                                  height=jaccard)) + 
-      geom_vline(xintercept = seq(0.5, length(set_1), by=1), col="black", size=0.3) + 
-      geom_hline(yintercept = seq(0.5, length(set_2), by=1), col="black", size=0.3) + 
+      geom_vline(xintercept = seq(0.5, length(set_1), by=1), col="black", linewidth=0.3) + 
+      geom_hline(yintercept = seq(0.5, length(set_2), by=1), col="black", linewidth=0.3) + 
       geom_tile() +
       theme_bw() +
       theme(panel.grid = element_blank(),

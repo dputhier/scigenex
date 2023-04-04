@@ -86,9 +86,6 @@ test_that("Checking filter_by_dot_prod() when av_dot_prod_min argument is set to
 })
 
 
-
-
-
 test_that("Checking filter_by_dot_prod() stops when there is no conserved clusters", {
   
   nb_clusters_before_filtering <- length(res@gene_clusters)

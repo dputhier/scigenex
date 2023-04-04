@@ -61,7 +61,7 @@ filter_cluster_size <- function(object = NULL,
   )
   
   object <- object[cluster_to_keep, ]
-  object <- rename(object)
+  object <- rename_clust(object)
 
   return(object)
 }
@@ -381,7 +381,7 @@ filter_cluster_sd <- function(object = NULL,
   )
   
   object <- object[cluster_to_keep, ]
-  object <- rename(object)
+  object <- rename_clust(object)
   
   return(object)
 }

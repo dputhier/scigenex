@@ -1,6 +1,22 @@
 #################################################################
 ##    Define top_genes function for ClusterSet object
 #################################################################
+#' @title Most co-expressed genes from each gene cluster
+#' @description
+#' Extract the most highly co-expressed genes of each gene cluster.
+#' @param object A \code{ClusterSet} object.
+#' @param top A value for the number of genes to select from each cluster.
+#' @param cluster A vector of gene cluster identity.
+#'
+#' @return A \code{ClusterSet} object.
+#' @export top_genes
+#' @keywords internal
+setGeneric("top_genes", 
+           function(object,
+                    top = 20,
+                    cluster = "all")
+             standardGeneric("top_genes")
+)
 
 #' @title Most co-expressed genes from each gene cluster
 #' @description
@@ -39,7 +55,9 @@
 #' # Plot heatmap of gene clusters
 #' plot_heatmap(res, use_top_genes = TRUE)
 #'
-top_genes <- function(object,
+setMethod("top_genes", 
+          signature("ClusterSet"), 
+              function(object,
                       top = 20,
                       cluster = "all") {
   
@@ -134,4 +152,4 @@ top_genes <- function(object,
   )
   
   return(object)
-}
+})

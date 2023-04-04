@@ -83,6 +83,7 @@ get_verbosity <- function() {
 #' options(warn=-1)
 #' print_msg("A warning message not displayed", "WARNING")
 #' options(warn=opt_warn)
+#' @keywords internal
 print_msg <-
   function(msg,
            msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
@@ -136,6 +137,7 @@ print_msg <-
 #' options(warn=-1)
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
 #' options(warn=opt_warn)
+#' @keywords internal
 print_stat <-
   function(msg,
            data,
@@ -368,6 +370,7 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #'  check_format_cluster_set(clust_set)
 #' }
 #' @export check_format_cluster_set
+#' @keywords internal
 check_format_cluster_set <- function(object) {
 
   if(!inherits(object, "ClusterSet"))

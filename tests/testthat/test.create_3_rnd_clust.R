@@ -1,3 +1,4 @@
+set_verbosity(0)
 test_that("Just some check for create_3_rnd_clust()", {
   m <- create_3_rnd_clust()
   expect_equal(ncol(m), 20)

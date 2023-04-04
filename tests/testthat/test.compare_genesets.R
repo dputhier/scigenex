@@ -57,3 +57,4 @@ test_that("compare_genesets returns correct output when method='hypergeom' is us
   expect_equal(round(as.vector(compare_genesets(set_1, set_2, stat = "hypergeom")), 2), 
                c(1, 0.2, 0.67, 0.8))
 })
+

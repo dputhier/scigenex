@@ -2,7 +2,21 @@
 ##    Running gprofiler2 to perform enrichment analysis
 #################################################################
 
-
+#' @title
+#' Enrichment analysis using GO database of gene clusters from a ClusterSet object 
+##' @description
+#' This function performs enrichment analysis of all gene clusters from a ClusterSet object
+#'  and store the results in the cluster_annotations slot.
+#' @param object an object of class \code{ClusterSet}.
+#' @param species a character string indicating the species name,
+#'  as a concatenation of the first letter of the name (uppercase) and the family name (lowercase),
+#'   e.g human -> Hsapiens, mouse -> Mmusculus
+#' @param ontology a character string indicating the ontology to use for the enrichment analysis. One of "BP", "MF", and "CC" ontology, or "ALL".
+#'
+#' @return A \code{ClusterSet} object
+#' @method enrich_go ClusterSet
+#' @export enrich_go
+#' @keywords internal
 setGeneric("enrich_go",
            function(object,
                     species="Hsapiens",
@@ -116,8 +130,21 @@ setMethod("enrich_go",
 ############################################################################
 ##    Visualization of enrichment analyses results from a ClusterSet object
 ############################################################################
-
-
+#' @title
+#' Visualization of enrichment analyses results from a ClusterSet object
+##' @description
+#' Display enrichment analyses results for a ClusterSet object.
+#' @param object A \code{ClusterSet} object.
+#' @param clusters  A vector of cluster id to plot.
+#' @param type A vector providing the type of plot.
+#' @param nb_terms An integer indicating the number of terms in the plot.
+#' @param terms_size An interger indicating the wrap length of terms
+#' @param font_size The font size for the x axis.
+#'
+#' @return A \code{ClusterSet} object
+#' @method viz_enrich ClusterSet
+#' @export viz_enrich
+#' @keywords internal
 setGeneric("viz_enrich",
            function(object,
                     clusters = "all",

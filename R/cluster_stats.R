@@ -1,4 +1,13 @@
-
+#' @title Compute statistics about the clusters
+#' @description Compute statistics about the clusters
+#' @param object a ClusterSet object..
+#' @importFrom stats var
+#' @examples
+#' # load a dataset
+#' data("scigenex_test_I1.2")
+#' df <- cluster_stats(scigenex_test_I1.2)
+#' @export cluster_stats
+#' @keywords internal
 setGeneric("cluster_stats", 
            function(object)
              standardGeneric("cluster_stats")
@@ -7,7 +16,6 @@ setGeneric("cluster_stats",
 #' @title Compute statistics about the clusters
 #' @description Compute statistics about the clusters
 #' @param object a ClusterSet object..
-#' @method cluster_stats ClusterSet
 #' @importFrom stats var
 #' @examples
 #' # load a dataset

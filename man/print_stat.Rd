@@ -38,3 +38,4 @@ options(warn=-1)
 print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
 options(warn=opt_warn)
 }
+\keyword{internal}

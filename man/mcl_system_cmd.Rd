@@ -29,23 +29,11 @@ It is a fast and efficient algorithm that can be used for clustering large-scale
  With the current implementation, this function only works
 only on UNIX-like plateforms.
 
-MCL should be installed. One can used the following command lines in a
-terminal:
-
-\code{# Download the latest version of mcl (the script has been tested
-successfully with the 06-058 version).}
-\code{wget http://micans.org/mcl/src/mcl-latest.tar.gz}
-\code{# Uncompress and install mcl}
-\code{tar xvfz mcl-latest.tar.gz}
-\code{cd mcl-xx-xxx}
-\code{./configure}
-\code{make}
-\code{sudo make install}
-\code{# You should get mcl in your path}
-\code{mcl -h}
+MCL should be installed. Run the \code{install_mcl} command to install it.
 }
 
 \references{
 - Van Dongen S. (2000) A cluster algorithm for graphs. National
 Research Institute for Mathematics and Computer Science in the 1386-3681.
 }
+\keyword{internal}
