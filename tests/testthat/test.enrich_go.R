@@ -18,9 +18,10 @@ res <- gene_clustering(object = res,
                        keep_nn = FALSE,
                        k = 5,
                        threads = 1)
-
+set_verbosity(2)
 msg <- R.utils::captureOutput(res_enrich <- enrich_go(res, 
                                              species = "Hsapiens"))
+
 
 test_that("Check if enrich_go stops when species argument is invalid", {
   expect_error(enrich_go(res, species = "Not working"))
@@ -28,7 +29,7 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 
 
 test_that("Check message printed by enrich_go()", {
-  set_verbosity(2)
+
   
   # I'm commenting some of the following message 
   # as the number of EntrezId will change from one
