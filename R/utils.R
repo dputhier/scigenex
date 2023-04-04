@@ -208,9 +208,10 @@ create_rand_str <- function() {
 #' @examples
 #' m <- create_3_rnd_clust()
 #' 
-create_3_rnd_clust <- function(n=80000, m=20){
+create_3_rnd_clust <- function(){
   set.seed(123)
-  n <- n - (n %% m)
+  n <- 80000
+  m <- 20
   m <- matrix(rnorm(n), ncol=m)
   print_msg(paste0("Creating a matrix of size: ", 
                    paste0(dim(m), collapse = " x "), 
@@ -396,6 +397,7 @@ check_format_cluster_set <- function(object) {
 #'   already installed. Default is \code{FALSE}.
 #'
 #' @examples
+#' @importFrom utils download.file
 #' # Install MCL
 #' install_mcl()
 #' @export install_mcl
@@ -413,7 +415,7 @@ install_mcl <- function(force=FALSE){
                   msg_type = "INFO")
         dir.create(dir_path, showWarnings = FALSE)
         setwd(dir_path)
-        download.file("http://micans.org/mcl/src/mcl-latest.tar.gz",
+        utils::download.file("http://micans.org/mcl/src/mcl-latest.tar.gz",
                       destfile="mcl-latest.tar.gz")
         system("tar xvfz mcl-latest.tar.gz")
         system("rm -f mcl-latest.tar.gz")
@@ -431,4 +433,3 @@ install_mcl <- function(force=FALSE){
     }
   }
 }
-
