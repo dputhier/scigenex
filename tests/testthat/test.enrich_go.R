@@ -28,7 +28,9 @@ test_that("Check if enrich_go stops when species argument is invalid", {
 test_that("Check message printed by enrich_go()", {
   set_verbosity(2)
   
-  msg <- capture.output(res <- enrich_go(res, species = "Hsapiens", ontology = "BP"))
+  msg <- capture.output(res <- enrich_go(res, 
+                                         species = "Hsapiens", 
+                                         ontology = "BP"))
   
   # I'm commenting some of the following message 
   # as the number of EntrezId will change from one
@@ -53,11 +55,9 @@ test_that("Check message printed by enrich_go()", {
   expect_equal(msg[16], "\t|-- Calling enrichGO. ")
 })
 
-
 test_that("Check if enrich_go stops when species argument is invalid", {
   expect_error(enrich_go(res, species = "Not working"))
 })
-
 
 test_that("Check enrich_go results with all ontologies", {
   set_verbosity(0)
@@ -113,7 +113,7 @@ test_that("Check enrich_go results with all ontologies", {
   
   # Adding a more flexible test
   
-  expect_true("neutrophil degranulation" %in% res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])
+  expect_true("MHC class II protein complex assembly" %in% res_enrich@gene_cluster_annotations$`1`@result$Description[1:10])
   
   #expect_equal(res_enrich@gene_cluster_annotations$`1`@result$ONTOLOGY, c(
   #  "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP",
@@ -352,7 +352,7 @@ test_that("Check enrich_go results with all ontologies", {
   # ))
   
   # Adding a more flexible tests
-  expect_true(all(c("PF4/PPBP", "PF4/CLU/PPBP") %in% res_enrich@gene_cluster_annotations$`3`@result$geneID))
+  expect_true(all(c("CD9/MYL9/FERMT3", "CLU/GPX1") %in% res_enrich@gene_cluster_annotations$`3`@result$geneID))
   expect_true(sum(res_enrich@gene_cluster_annotations$`3`@result$Count) > 20)
   
   
