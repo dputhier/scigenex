@@ -9,6 +9,7 @@ res <- select_genes(data=m,
                     distance_method="kendall",
                     k=75,
                     row_sum=-Inf,
+                    dist_threads = 6,
                     highest=0.3,
                     fdr = 1e-8)
 
@@ -18,12 +19,11 @@ res <- gene_clustering(object = res,
                        keep_nn = FALSE,
                        k = 5)
 
-
-
 test_that("Checking filter_cluster_size() when min_cluster_size\
           argument is set to 5", {
             
             nb_clusters_before_filtering <- length(res@gene_clusters)
+
             # Args set to min_cluster_size = 5
             res_size5 <- filter_cluster_size(object = res,
                                              min_cluster_size = 5)
@@ -46,9 +46,6 @@ test_that("Checking filter_cluster_size() when min_cluster_size\
             expect_equal(round(median(res_size5@dbf_output$center), 4), -0.3019)
             expect_equal(round(sd(res_size5@dbf_output$center), 4), 1.5521)
           })
-
-
-
 
 
 test_that("Checking filter_cluster_size() when min_cluster_size\
@@ -124,3 +121,4 @@ test_that("Checking if filter_cluster_size() stops when all clusters are filtere
             expect_error(filter_cluster_size(object = res,
                                              min_cluster_size = 50))
           })
+
