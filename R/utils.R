@@ -396,10 +396,11 @@ check_format_cluster_set <- function(object) {
 #' @param force logical indicating whether to force installation even if MCL is
 #'   already installed. Default is \code{FALSE}.
 #'
-#' @examples
 #' @importFrom utils download.file
+#' @examples
 #' # Install MCL
 #' install_mcl()
+#' 
 #' @export install_mcl
 install_mcl <- function(force=FALSE){
   if (.Platform$OS.type == "windows") {
