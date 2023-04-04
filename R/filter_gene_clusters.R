@@ -65,10 +65,7 @@ filter_cluster_size <- function(object = NULL,
 
   return(object)
 }
-
-
-
-
+  
 ############################## filter_nb_supporting_cells ##############################
 #' Filter out gene clusters based on the number of cells expressing at least a user-defined percentage of genes
 #' 
@@ -205,9 +202,10 @@ filter_nb_supporting_cells <- function(object = NULL,
 
 
 ############################## filter_by_dot_prod ##############################
-#' Filter cluster from a ClusterSet object using dot product. 
+#' @title Filter cluster from a ClusterSet object using dot product. 
 #' 
-#' This function filters clusters of gene expression data based 
+#' @description
+#'  This function filters clusters of gene expression data based 
 #' on their dot products. It aims to remove clusters that have a 
 #' lot of zeros and are supported by only a few cells or spots. 
 #' To do this, the function first converts the gene expression 
@@ -348,6 +346,45 @@ filter_by_dot_prod <- function(object = NULL,
   return(object)
 }
 
+############################## filter_cluster_sd ##############################
+#' @title Filter out gene clusters with small standard deviation.
+#' @description Filter out gene clusters with small standard deviation.
+#' @param object A ClusterSet object.
+#' @param min_sd An integer indicating the minimum standard deviation for a clusters to be kept.
+#'
+#' @return A ClusterSet object where clusters not passing the filter have been removed.
+#' 
+#' @examples 
+#' # Set verbosity to 1 to only display info messages.
+#' set_verbosity(1)
+filter_cluster_sd <- function(object = NULL,
+                              min_sd = 0.1) {
+  
+  ## Check format object arg
+  check_format_cluster_set(object)
+  
+  # Store the initial number of clusters (used to compute the number of cluster filtered out)
+  nb_clusters_before_filtering <- names(object@gene_clusters)
+  
+  gene_clust <- as.factor(gene_cluster(object))
+  df_split <- split(object@data, gene_clust)
+  sd_total <- unlist(lapply(df_split, sd))
+
+  cluster_to_keep <- sd_total < min_sd
+  
+  print_msg(
+    paste(
+      sum(!cluster_to_keep),
+      " clusters with std dev lower than", min_sd, " will be filtered out."
+    ),
+    msg_type = "INFO"
+  )
+  
+  object <- object[cluster_to_keep, ]
+  object <- rename(object)
+  
+  return(object)
+}
 
 
 ############################## filter_manual ##############################
