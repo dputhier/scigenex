@@ -1,28 +1,12 @@
 # Set verbosity to 0
 set_verbosity(0)
 
-#Create matrix containing 3 signatures
-m <- create_4_rnd_clust()
 
-
-
-
-test_that("Cheking get_genes is providing the right list of genes - pearson", {
+test_that("Cheking get_genes is providing the right list of genes - kendall", {
   ## Select informative genes
-  res <- select_genes(data=m,
-                      distance_method="kendall",
-                      k=75,
-                      row_sum=-Inf,
-                      highest=0.3,
-                      dist_threads = 6,
-                      fdr = 1e-8)
   
-  ## Cluster genes
-  res <- gene_clustering(object = res,
-                         inflation = 1.2,
-                         keep_nn = FALSE,
-                         k = 5,
-                         threads = 6)
+  data("scigenex_test_I1.2")
+  res <- scigenex_test_I1.2
   
   # ========================================
   # Top 20
@@ -284,6 +268,9 @@ test_that("Cheking get_genes is providing the right list of genes - pearson", {
 
 test_that("Cheking get_genes is providing the right list of genes - cosine", {
   
+  #Create matrix containing 3 signatures
+  m <- create_4_rnd_clust()
+  
   ## Select informative genes
   res <- select_genes(data=m,
                       distance_method="cosine",
@@ -328,6 +315,9 @@ test_that("Cheking get_genes is providing the right list of genes - cosine", {
 
 test_that("Cheking get_genes is providing the right list of genes - euclidean", {
   
+  #Create matrix containing 3 signatures
+  m <- create_4_rnd_clust()
+  
   ## Select informative genes
   res <- select_genes(data=m,
                       distance_method="euclidean",
@@ -358,48 +348,3 @@ test_that("Cheking get_genes is providing the right list of genes - euclidean", 
   expect_that(res@top_genes, is_a("list"))
 })
 
-
-
-
-test_that("Cheking get_genes is providing the right list of genes - kendall", {
-  
-  ## Select informative genes
-  res <- select_genes(data=m,
-                      distance_method="kendall",
-                      k=75,
-                      row_sum=-Inf,
-                      highest=0.3,
-                      dist_threads = 6,
-                      fdr = 1e-8)
-  
-  ## Cluster genes
-  res <- gene_clustering(object = res,
-                         inflation = 1.2,
-                         keep_nn = FALSE,
-                         k = 5,
-                         threads = 6)
-  
-  # ========================================
-  # Top 20
-  res_20 <- suppressWarnings(top_genes(res, cluster = "all", top = 20))
-  
-  # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene126", "gene120",
-    "gene122", "gene109", "gene198", "gene158", "gene163", "gene155",
-    "gene119", "gene115", "gene286", "gene245", "gene223", "gene206",
-    "gene207", "gene273", "gene256", "gene281", "gene282", "gene283",
-    "gene285", "gene277", "gene219", "gene248", "gene269", "gene229",
-    "gene212", "gene202", "gene232", "gene288", "gene315", "gene364",
-    "gene312", "gene390", "gene320", "gene314", "gene334", "gene398",
-    "gene393", "gene368", "gene316", "gene350", "gene387", "gene382",
-    "gene397", "gene339", "gene369", "gene349", "gene363", "gene326",
-    "gene37", "gene84", "gene19", "gene51", "gene64", "gene32",
-    "gene76", "gene88", "gene7", "gene78", "gene57", "gene27",
-    "gene55", "gene61", "gene80", "gene31", "gene29", "gene12",
-    "gene70", "gene2"
-  )
-  expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
-})

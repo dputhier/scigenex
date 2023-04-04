@@ -1,27 +1,9 @@
 # Set verbosity to 0
 set_verbosity(0)
 
-#Create matrix containing 3 signatures
-m <- create_4_rnd_clust()
+data("scigenex_test_I1.2")
 
-## Select informative genes
-res <- select_genes(data=m,
-                    distance_method="kendall",
-                    k=75,
-                    row_sum=-Inf,
-                    highest=0.3,
-                    dist_threads = 6,
-                    fdr = 1e-8)
-
-## Cluster genes
-res <- gene_clustering(object = res,
-                       inflation = 1.2,
-                       keep_nn = FALSE,
-                       k = 5,
-                       threads = 6)
-
-
-
+res <- scigenex_test_I1.2
 
 test_that("Checking plot_heatmap()", {
   set.seed(123)
