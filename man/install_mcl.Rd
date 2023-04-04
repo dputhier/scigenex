@@ -12,7 +12,7 @@ already installed. Default is \code{FALSE}.}
 }
 \description{
 This function installs the MCL (Markov Cluster) program, which is required for
-some of the functions in the \code{\link{scigenex}} package. MCL is a cluster
+the main functions of the scigenex package. MCL is a cluster
 algorithm that uses stochastic flow simulation to cluster graphs.
 }
 \examples{

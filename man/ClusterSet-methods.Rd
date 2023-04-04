@@ -67,6 +67,10 @@ clust_names(x)
 \item{cluster}{The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.}
 
 \item{table}{The ClusterSet object.}
+
+\item{genes}{The genes to be searched in the ClusterSet.}
+
+\item{new_names}{The new names for the clusters.}
 }
 \description{
 The show method of a ClusterSet.

@@ -514,6 +514,8 @@ setGeneric("which_clust",
 
 #' @title Which clusters contain a set of genes.
 #' @description Which clusters contain a set of genes.
+#' @param object a ClusterSet object.
+#' @param genes The genes to be searched in the ClusterSet.
 #' @describeIn ClusterSet-methods Returns which clusters contain a set of genes.
 #' @method which_clust ClusterSet
 #' @export
@@ -534,6 +536,8 @@ setGeneric("rename",
 
 #' @title Rename the gene clusters of a ClusterSet
 #' @description Rename the gene clusters of a ClusterSet.
+#' @param object a ClusterSet object.
+#' @param new_names The new names for the clusters.
 #' @describeIn ClusterSet-methods Rename the gene clusters of a ClusterSet
 #' @method rename ClusterSet
 #' @export rename
@@ -567,3 +571,4 @@ setMethod("rename",
             return(object)
             
 })
+
