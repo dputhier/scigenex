@@ -1,4 +1,5 @@
 MAKEFILE=Makefile
+VERSION=1.3.1
 
 .PHONY: help
 
@@ -18,12 +19,12 @@ help:
 clean:
 	@rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; rm -rf ./dbfmcl.Rcheck; rm -rf ..Rcheck, rm -rf ./..Rcheck/
 	@rm -rf /tmp/dbfmcl; rm -rf *dbf_out.txt; rm -rf *mcl_out.txt  rm -rf ./scigenex.Rcheck
-	@rm -f tests/testthat/Rplot*
+	@rm -f tests/testthat/Rplot*; rm -f tests/testthat/_snaps
 
 check: clean
 	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
 	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \
-	R CMD check .
+	cd ..; R CMD build scigenex; R CMD check scigenex_$(VERSION).tar.gz
 
 checkfast: clean
 	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
