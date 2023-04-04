@@ -7,9 +7,9 @@
 plot_cluster_stats(x, highlight = NULL)
 }
 \arguments{
-\item{highlight}{a vector with two modalities indicating which clusters to highlight}
+\item{x}{A \code{ClusterSet} object.}
 
-\item{object}{A \code{ClusterSet} object.}
+\item{highlight}{a vector with two modalities indicating which clusters to highlight}
 }
 \value{
 A \code{ClusterSet} object.
