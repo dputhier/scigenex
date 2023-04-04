@@ -5,14 +5,9 @@ set_verbosity(0)
 m <- create_4_rnd_clust()
 
 ## Select informative genes
-res <- select_genes(m,
-                    distance = "pearson",
-                    k = 80,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
 
-gn <- gene_clustering(res, keep_nn = TRUE, inflation = 1.1)
+data("scigenex_test_I1.2")
+gn <- scigenex_test_I1.2
 
 test_that("Check 'rename' is working.", {
   expect_true(nclust(rename_clust(gn, 1:nclust(gn))) == nclust(gn))
