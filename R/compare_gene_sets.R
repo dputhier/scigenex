@@ -180,7 +180,7 @@ compare_genesets <- function(set_1=NULL,
 #' merged from set_1 and set2. You may provide a vector with all genes of the genome for instance. 
 #' @param coord_equal make sure that the an equal length on both axis represents the same change in units
 #' @details see compare_genesets. 
-#' @importFrom ggplot2 geom_hline scale_x_continuous expansion scale_y_continuous scale_size_area
+#' @importFrom ggplot2 geom_hline scale_x_continuous expansion scale_y_continuous scale_size_area coord_equal
 #' @return A ggplot object representing the comparison results.
 #'
 #' @export plot_cmp_genesets
@@ -245,7 +245,7 @@ plot_cmp_genesets <- function(set_1=NULL,
   }
   
   if(coord_equal){
-    coord_equal <- coord_equal()
+    coord_equal <- ggplot2::coord_equal()
   }else{
     coord_equal <- NULL
   }
