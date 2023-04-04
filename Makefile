@@ -22,7 +22,7 @@ clean:
 check: clean
 	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
 	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \
-	R CMD check .
+	mkdir -p /tmp/scigenex_test; R CMD check --output /tmp/scigenex_test .
 
 checkfast: clean
 	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
