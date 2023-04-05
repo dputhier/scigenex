@@ -6,7 +6,7 @@
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
 #' @importFrom SeuratObject GetAssayData
 #' @examples
-#' # Load the pbmc_small
+#' ## From a scRNA-seq/Seurat object
 #' data("pbmc_small")
 #' cs <- cluster_set_from_seurat(pbmc_small, FindAllMarkers(pbmc_small))
 #' plot_heatmap(cs)
@@ -16,6 +16,7 @@
 #' plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
 #' cell_clusters = Idents(pbmc_small), label_size = 6)
 #' plot_profiles(cs, ident = Idents(pbmc_small))
+#' @export cluster_set_from_seurat
 cluster_set_from_seurat <- function(object=NULL, 
                                     markers=NULL,
                                     which_slot=c('data', 'counts', 'sct')){
@@ -41,11 +42,11 @@ cluster_set_from_seurat <- function(object=NULL,
   }else if(is.vector(markers)){
     if(is.null(names(markers)))
       print_msg("The 'markers' argument should be a named vector.",
-                msg_type="ERROR")
+                msg_type="STOP")
     clusters <- markers
   }else{
     print_msg("The 'markers' argument should be a data.frame or named vector.",
-              msg_type="ERROR")
+              msg_type="STOP")
   }
   
   gn <- split(names(clusters), clusters)
