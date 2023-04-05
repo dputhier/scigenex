@@ -2,48 +2,36 @@
 % Please edit documentation in R/reorder_genes.R
 \name{reorder_genes}
 \alias{reorder_genes}
-\title{reorder_genes}
+\title{Reorder genes in a ClusterSet object.}
 \usage{
-reorder_genes(object, order_by = c("gene_names", "hclust", "correlation"))
+reorder_genes(
+  object = NULL,
+  order_by = NULL,
+  method = NULL,
+  link = NULL,
+  nb_proc = 2
+)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{order_by}{A character string related to the reordering type. 
-Default is "correlation" which reorder genes based on their correlation 
-within their respective gene cluster.}
+\item{order_by}{A character string specifying the ordering rule. 
+Default is "gene_names" which reorder genes in alphanumerical 
+order. If 'hclust', hierarchical clustering is applied. If 
+'correlation' the gene as ordered based on there similarity 
+with the cluster center.}
+
+\item{method}{The distance measure to be used order_by=='hclust'.}
+
+\item{link}{The agglomeration method to be used if order_by=='hclust'.}
+
+\item{nb_proc}{The number of processor to be used if order_by=='hclust'.}
 }
 \value{
 ClusterSet-class object
 }
 \description{
-Reorder genes in gene cluster.
+Reorder genes in a ClusterSet object according to various
+ordering rules.
 }
-\examples{
-# Set verbosity to 1 to display info messages only.
-set_verbosity(1)
-
-# Create a matrix with 4 signatures
-m <- create_4_rnd_clust()
-
-# Select informative genes
-res <- select_genes(m,
-                    distance = "kendall",
-                    k = 75,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
-                    
-# Cluster informative features
-res <- gene_clustering(res, 
-                       inflation = 1.2,
-                       keep_nn = FALSE,
-                       k = 5)
-                       
-# Reorder genes using hierarchical clustering
-res <- reorder_genes(res, order_by = "hclust")
-
-# Plot heatmap of gene clusters
-plot_heatmap(res)
-
-}
+\keyword{internal}
