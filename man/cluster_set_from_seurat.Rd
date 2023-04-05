@@ -22,7 +22,7 @@ SCT is the recommended method from Seurat package when working with spatial tran
 Transform a Seurat objects into a ClusterSet.
 }
 \examples{
-# Load the pbmc_small
+## From a scRNA-seq/Seurat object
 data("pbmc_small")
 cs <- cluster_set_from_seurat(pbmc_small, FindAllMarkers(pbmc_small))
 plot_heatmap(cs)

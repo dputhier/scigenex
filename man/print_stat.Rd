@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{print_stat}
 \alias{print_stat}
-\title{Mostly a debugging function that will print some summary
-statistics about a numeric vector, matrix or dataframe.}
+\title{Debugging statistics (vector, matrix or dataframe)}
 \usage{
 print_stat(msg, data, round_val = 2, msg_type = c("INFO", "DEBUG", "WARNING"))
 }

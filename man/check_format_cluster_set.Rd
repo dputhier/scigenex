@@ -16,21 +16,7 @@ None.
 Check the format of a Clusterset object (ncol, nrow, inherits...)
 }
 \examples{
-\dontrun{
- set_verbosity(0)
- data(pbmc_small, package = "SeuratObject")
- clust_set <- select_genes(data=pbmc_small,
-                           distance_method="pearson",
-                           k=10,
-                           row_sum=-Inf,
-                           highest=0.95,
-                           fdr = 1e-6)
- clust_set <- gene_clustering(object = clust_set,
-                              inflation = 1.2,
-                              keep_nn = FALSE,
-                              k = 5,
-                              threads = 1)
- check_format_cluster_set(clust_set)
-}
+data("scigenex_test_I1.2")
+check_format_cluster_set(scigenex_test_I1.2)
 }
 \keyword{internal}
