@@ -1,6 +1,7 @@
 # Set verbosity to 0
 set_verbosity(0)
 
+library(Seurat)
 data("pbmc_small")
 markers <- FindAllMarkers(pbmc_small)
 cs <- cluster_set_from_seurat(pbmc_small, markers)
