@@ -105,14 +105,16 @@ print_msg <-
       stop(paste0("|-- STOP : ", msg), call. = FALSE)
       
     }else{
-        if (unname(unlist(options()["scigenex_verbosity"]) > 0))
-          cat(paste("|-- INFO : ", msg, "\n"))
+      if (unname(unlist(options()["scigenex_verbosity"]) > 0))
+        cat(paste("|-- INFO : ", msg, "\n"))
     }
   }
 
 #################################################################
 ##    print_stat
 #################################################################
+#' @title Debugging statistics (vector, matrix or dataframe)
+#' @description
 #' Mostly a debugging function that will print some summary
 #' statistics about a numeric vector, matrix or dataframe.
 #'
@@ -175,12 +177,12 @@ print_stat <-
 #################################################################
 ##    A simple function to create a random string
 #################################################################
-#' Generate a random string of letters and numbers
-#'
+#' @title Generate a random string of letters and numbers
+#' @description
 #' This function generates a random string of 10 characters, consisting of 3 uppercase letters,
 #' 4 digits, and 3 lowercase letters.
 #'
-#' @return A character string of length 10, consisting of random letters and numbers
+#' @returns A character string of length 10, consisting of random letters and numbers
 #' 
 #' @export
 #' 
@@ -198,12 +200,13 @@ create_rand_str <- function() {
 #################################################################
 ##    A simple function that return a dataset (1)
 #################################################################
-#' Generate an example dataset with three clusters of profiles 
+#' @title Generate an example dataset with three clusters of profiles 
 #'
+#' @description 
 #' Generate an artificial matrix with with random noise and 3 
 #' clusters of 'expression' profiles (as row). 
 #'
-#' @return a matrix.
+#' @returns a matrix.
 #' 
 #' @export
 #' 
@@ -228,8 +231,8 @@ create_3_rnd_clust <- function(){
 #################################################################
 ##    A simple function that return a dataset (2)
 #################################################################
-#' Generate an example dataset with four clusters of profiles 
-#'
+#' @title Generate an example dataset with four clusters of profiles 
+#' @description
 #' Generate an artificial matrix with with random noise and 4 
 #' clusters of 'expression' profiles (as row). 
 #'
@@ -255,8 +258,9 @@ create_4_rnd_clust <- function(){
 #################################################################
 ##    Returns a palette for gradients
 #################################################################
-#' Generate a vector of colors for a gradient
+#' @title Generate a vector of colors for a gradient
 #'
+#' @description 
 #' This function generates a vector of colors for a gradient, given 
 #' a specified palette name.
 #'
@@ -300,11 +304,13 @@ colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1",
   }
 }
 
-#################################################################
-##    Returns a discrete color palette
-#################################################################
-#' Generate a discrete color palette
+
+# -------------------------------------------------------------------------
+# Returns a discrete color palette ----------------------------------------
+# -------------------------------------------------------------------------
+#' @title Generate a discrete color palette
 #'
+#' @description
 #' This function generates a vector of colors for a discrete variable, 
 #' given a specified palette name.
 #'
@@ -343,36 +349,23 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 }
 
 
-#################################################################
-##    Check the format of a Clusterset object
-#################################################################
-#' Check the format of a Clusterset object
-#'
+
+# -------------------------------------------------------------------------
+# Check the format of a Clusterset object ---------------------------------
+# ------------------------------------------------------------------------
+#' @title Check the format of a Clusterset object
+#' @description
 #' Check the format of a Clusterset object (ncol, nrow, inherits...)
 #'
 #' @param object the clusterSet object to be tested 
-#' @return None.
+#' @returns None.
 #' @examples 
-#' \dontrun{
-#'  set_verbosity(0)
-#'  data(pbmc_small, package = "SeuratObject")
-#'  clust_set <- select_genes(data=pbmc_small,
-#'                            distance_method="pearson",
-#'                            k=10,
-#'                            row_sum=-Inf,
-#'                            highest=0.95,
-#'                            fdr = 1e-6)
-#'  clust_set <- gene_clustering(object = clust_set,
-#'                               inflation = 1.2,
-#'                               keep_nn = FALSE,
-#'                               k = 5,
-#'                               threads = 1)
-#'  check_format_cluster_set(clust_set)
-#' }
+#' data("scigenex_test_I1.2")
+#' check_format_cluster_set(scigenex_test_I1.2)
 #' @export check_format_cluster_set
 #' @keywords internal
 check_format_cluster_set <- function(object) {
-
+  
   if(!inherits(object, "ClusterSet"))
     print_msg("Please provide a ClusterSet as input.", 
               msg_type = "STOP")
@@ -380,18 +373,19 @@ check_format_cluster_set <- function(object) {
   if(nrow(object) == 0)
     print_msg("The ClusterSet object does not contain any gene.", 
               msg_type = "STOP")
-    
+  
   if(ncol(object) == 0)
     print_msg("The ClusterSet object does not contain any cell.", 
               msg_type = "STOP")
 }
 
 
-#################################################################
-##    Install MCL
-#################################################################
-#' Install MCL
-#'
+
+# -------------------------------------------------------------------------
+# Install MCL -------------------------------------------------------------
+# -------------------------------------------------------------------------
+#' @title Install MCL
+#' @description
 #' This function installs the MCL (Markov Cluster) program, which is required for
 #' the main functions of the scigenex package. MCL is a cluster
 #' algorithm that uses stochastic flow simulation to cluster graphs.
@@ -408,7 +402,7 @@ check_format_cluster_set <- function(object) {
 install_mcl <- function(force=FALSE){
   if (.Platform$OS.type == "windows") {
     print_msg("A unix-like OS is required to launch the MCL program.",
-              msg_type = "ERROR")
+              msg_type = "STOP")
   }else{
     if(nchar(Sys.which("mcl")) == 0 | force ){
       
@@ -420,7 +414,7 @@ install_mcl <- function(force=FALSE){
         dir.create(dir_path, showWarnings = FALSE)
         setwd(dir_path)
         utils::download.file("http://micans.org/mcl/src/mcl-latest.tar.gz",
-                      destfile="mcl-latest.tar.gz")
+                             destfile="mcl-latest.tar.gz")
         system("tar xvfz mcl-latest.tar.gz")
         system("rm -f mcl-latest.tar.gz")
         mcl_version <- dir()
@@ -436,4 +430,29 @@ install_mcl <- function(force=FALSE){
       }
     }
   }
+}
+
+
+# -------------------------------------------------------------------------
+# Show available methods --------------------------------------------------
+# -------------------------------------------------------------------------
+#' @title List the method for the ClusterSet object.
+#' @description
+#' List the method for the ClusterSet object.
+#' @param class The name of the class. Default to "ClusterSet".
+#' @param where The package name. Default to "scigenex".
+#' @returns A vector with the available methods.
+#' @importFrom methods showMethods
+#' @examples
+#' show_methods()
+#' @export show_methods
+show_methods <- function(class="ClusterSet",
+                         where="scigenex"){
+  class_method <- capture.output(methods::showMethods(class="ClusterSet", 
+                                                      where = paste0("package:", where)))
+  
+  class_method <- class_method[grep("Function", class_method, perl=T)]
+  class_method <- gsub("Function: ([^ ]+) \\(.*", "\\1", class_method)
+  
+  return(class_method)
 }
