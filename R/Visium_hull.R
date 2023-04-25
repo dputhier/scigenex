@@ -398,7 +398,7 @@ visium_hull <- function(data,
 
 #' @name display_hull
 #' @title Draw a hull around a region of interest of Visium data.
-#' @param data A Seurat spatial object (Visium technology).
+#' @param data A Seurat spatial object (Visium technology) or a data.frame (spot coordinates).
 #' @param ident A binary vector whose length correspond to the number
 #' of columns/spots in the seurat object. 1 corresponds to the spots 
 #' of the class of interest for which a hull is to be displayed
@@ -450,23 +450,27 @@ display_hull <- function(data=NULL,
                          concavity=1,
                          size=0.7
                          ){
-
-  if(length(ident) != length(colnames(data)))
-    print_msg("The 'ident' vector should heave same length as the number of spots.",
-              msg_type = "STOP")
   
-  if(!inherits(data, "Seurat"))
-    print_msg("Please provide a Seurat object.",
-              msg_type = "STOP")
-  
-  if(! "Spatial" %in% names(data))
-    print_msg("Please provide a Spatial Seurat object.",
-              msg_type = "STOP")
-
   hull_type <- match.arg(hull_type)
-
-  coord_st_data <- getFlippedTissueCoordinates(data, 
-                                               as_data_frame=TRUE)
+  
+  if(inherits(data, "Seurat")){
+    if(length(ident) != length(colnames(data)))
+      print_msg("The 'ident' vector should heave same length as the number of spots.",
+                msg_type = "STOP")
+    
+    if(! "Spatial" %in% names(data))
+      print_msg("Please provide a Spatial Seurat object.",
+                msg_type = "STOP")
+  
+    coord_st_data <- getFlippedTissueCoordinates(data, 
+                                                 as_data_frame=TRUE)
+  }else if(inherits(data, "data.frame")){
+    if(length(ident) != length(rownames(data)))
+      print_msg("The 'ident' vector should heave same length as the number of spots.",
+                msg_type = "STOP")
+    coord_st_data <- data[,1:2]
+    colnames(coord_st_data) <- c("x", "y")
+  }
   
   coord_st_data$k <- ident
   

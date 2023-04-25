@@ -21,7 +21,7 @@ display_hull(
 )
 }
 \arguments{
-\item{data}{A Seurat spatial object (Visium technology).}
+\item{data}{A Seurat spatial object (Visium technology) or a data.frame (spot coordinates).}
 
 \item{ident}{A binary vector whose length correspond to the number
 of columns/spots in the seurat object. 1 corresponds to the spots 
