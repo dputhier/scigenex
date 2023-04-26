@@ -79,9 +79,11 @@ plot_spatial <- function(seurat_obj=NULL,
   print_msg("Getting x/y coordinates", msg_type = "DEBUG")
   
   if(coord_flip){
+    print_msg("Using flipped coordinates.", msg_type = "DEBUG")
     xy_coord <- getFlippedTissueCoordinates(seurat_obj, 
                                             as_data_frame = TRUE)
   }else{
+    print_msg("Coordinates won't be flipped.", msg_type = "DEBUG")
     xy_coord <- GetTissueCoordinates(seurat_obj)
     colnames(xy_coord) <- c("x", "y")
   }
@@ -182,7 +184,7 @@ plot_spatial <- function(seurat_obj=NULL,
 #' @param stroke The thickness of margin of points.
 #' @param coord_flip Whether to flip coordinates.
 #' @param colours A vector of colors.
-#' @importFrom ggplot2 ggplot theme_void coord_flip
+#' @importFrom ggplot2 ggplot theme_void
 #' @importFrom patchwork plot_layout
 #'
 #' @return A ggplot2 object containing the panel of scatter plots.
