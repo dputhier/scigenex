@@ -305,7 +305,8 @@ plot_spatial_panel <- function(seurat_obj=NULL,
                                     pt_star=pt_star,
                                     size_title=size_title,
                                     stroke=stroke,
-                                    colours=colours)
+                                    colours=colours,
+                                    coord_flip=coord_flip)
       
       if(is.null(plot_panels)){
         plot_panels <- plot_cur
