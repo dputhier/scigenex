@@ -157,3 +157,30 @@
 #'                                  k = 5)
 #' 
 'scigenex_test_I4'
+
+
+#---------------------------------------
+# The lymph_node_selected_spot dataset
+#---------------------------------------
+
+#' @title The lymph_node_selected_spot dataset
+#' @description
+#'  A vector with selected spots from 10X Visium Lymph node dataset.
+#'  See https://tinyurl.com/y9hv7vj3
+#'  and https://tinyurl.com/4bwh759j
+#' 
+#' 
+#' Dataset information:
+#'  ·        Number of spots: 601
+#'
+#'
+#' @docType data
+#' @keywords datasets
+#' @name lymph_node_selected_spot
+#' @usage data(lymph_node_selected_spot)
+#' @format A vector containing 601 Visium spots.
+#' 
+#' @note
+#' # This dataset was produced using loupe browser (10X genomics)
+#' 
+'lymph_node_selected_spot'
