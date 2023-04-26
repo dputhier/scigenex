@@ -31,10 +31,11 @@
 #' @param pt_star A boolean. Whether to use ggstar shapes.
 #' @param stroke The thickness of margin of points.
 #' @param colours A vector of colors.
+#' @param coord_flip Whether to flip coordinates.
 #' @return A ggplot2 object containing the scatter plot.
 #'
 #' @importFrom ggplot2 ggplot geom_point scale_color_gradientn theme_void
-#'              ggtitle element_text margin guide_colourbar
+#'              ggtitle element_text margin guide_colourbar coord_flip
 #' @importFrom Seurat NoLegend
 #' @importFrom ggstar geom_star
 #'
@@ -63,7 +64,8 @@ plot_spatial <- function(seurat_obj=NULL,
                          pt_shape=6,
                          pt_star=TRUE,
                          stroke=0,
-                         colours=colors_for_gradient("Ju1")){
+                         colours=colors_for_gradient("Ju1"),
+                         coord_flip=T){
 
   intensity_slot <- match.arg(intensity_slot)
   face_title <- match.arg(face_title)
@@ -76,8 +78,14 @@ plot_spatial <- function(seurat_obj=NULL,
   
   print_msg("Getting x/y coordinates", msg_type = "DEBUG")
   
-  xy_coord <- getFlippedTissueCoordinates(seurat_obj, 
-                                          as_data_frame = TRUE)
+  if(coord_flip){
+    xy_coord <- getFlippedTissueCoordinates(seurat_obj, 
+                                            as_data_frame = TRUE)
+  }else{
+    xy_coord <- GetTissueCoordinates(seurat_obj)
+    colnames(xy_coord) <- c("x", "y")
+  }
+
   
   print_msg("Extracting expression values", msg_type = "DEBUG")
   
@@ -217,12 +225,6 @@ plot_spatial_panel <- function(seurat_obj=NULL,
   intensity_slot <- match.arg(intensity_slot)
   face_title <- match.arg(face_title)
   
-  if(coord_flip){
-    coord_flip <- ggplot2::coord_flip()
-  }else{
-    coord_flip <- NULL
-  }
-  
   if(is.null(panel_names)){
     if(is.null(genes)){
       panel_names <- LETTERS[1:length(metadata)]
@@ -275,7 +277,8 @@ plot_spatial_panel <- function(seurat_obj=NULL,
                                     pt_star=pt_star,
                                     size_title=size_title,
                                     stroke=stroke,
-                                    colours=colours) + coor_flip
+                                    colours=colours,
+                                    coord_flip=coord_flip)
       
       if(is.null(plot_panels)){
         plot_panels <- plot_cur

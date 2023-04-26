@@ -20,7 +20,8 @@ plot_spatial(
   pt_shape = 6,
   pt_star = TRUE,
   stroke = 0,
-  colours = colors_for_gradient("Ju1")
+  colours = colors_for_gradient("Ju1"),
+  coord_flip = T
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ Default value is legend.key.height or legend.key.size in theme() or theme.}
 \item{stroke}{The thickness of margin of points.}
 
 \item{colours}{A vector of colors.}
+
+\item{coord_flip}{Whether to flip coordinates.}
 }
 \value{
 A ggplot2 object containing the scatter plot.
