@@ -74,12 +74,7 @@ expression level of the gene. This function as been tested with visium
 data at the moment. Defaut shape is hexagon.
 }
 \examples{
-library(SeuratData)
-library(Seurat)
-if(! "stxBrain" \%in\% InstalledData()$Dataset){ InstallData("stxBrain") }
-anterior1 <- LoadData("stxBrain", type = "anterior1")
-plot_spatial(seurat_obj = anterior1, gene_name = "Hpca")
-anterior1 <- SCTransform(anterior1, assay = "Spatial")
-plot_spatial(seurat_obj = anterior1, gene_name = "Hpca", intensity_slot="sct")
-plot_spatial(seurat_obj = anterior1, metadata = "nCount_SCT")
+load_example_dataset("lymph_node_tiny")
+plot_spatial(seurat_obj = lymph_node_tiny, gene_name = "IGKC", intensity_slot="data")
+plot_spatial(seurat_obj = lymph_node_tiny, metadata = "nCount_Spatial")
 }

@@ -58,23 +58,20 @@ A ggplot object (with segments).
 Draw a hull around a region of interest of Visium data.
 }
 \examples{
-\dontrun{
-library(Seurat)
-library(SeuratData)
-library(ggplot)
-if (! "stxBrain" \%in\% InstalledData()$Dataset) InstallData('stxBrain')
-LoadData("stxBrain", type = "anterior1")
-# Preprocess the data
-anterior1_preprocessed <- preprocess_seurat_data(anterior1, normalization_method = "NormalizeData", approx=F)
-
-# Create a hull around cluster 0
-coord_st_data$k <- ifelse(Idents(anterior1_preprocessed)==0, 1, 0)
-## Compute the segments of the hull.
-path <- visium_hull(coord_st_data, size_x=3.2, size_y=3.6, delta=0.5)
-## Add the segments to the ggplot diagram
-spatial_plot <- SpatialDimPlot(anterior1_preprocessed, label = TRUE, label.size = 3, pt.size.factor = 1.5)
-spatial_plot + display_hull(anterior1_preprocessed)
-}
+load_example_dataset("lymph_node_tiny")
+load_example_dataset("lymph_node_tiny_clusters")
+lymph_node_tiny <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters@gene_clusters, nbin = 19)
+p <- SpatialDimPlot(lymph_node_tiny, pt.size.factor = 4)
+p
+hull <- display_hull(lymph_node_tiny, 
+        ident=ifelse(Idents(lymph_node_tiny) \%in\% c(7, 8), 1, 0),
+        delta=1, size_x=3.4, size_y=3)
+p + hull
+p <- plot_spatial(lymph_node_tiny, metadata = "Cluster3", pt_size = 5)
+hull <- display_hull(lymph_node_tiny, 
+        ident=ifelse(Idents(lymph_node_tiny) \%in\% c(7, 8), 1, 0),
+        delta=1, size_x=3.4, size_y=3, color="black")
+p + hull
 }
 \keyword{hull,}
 \keyword{spatial}

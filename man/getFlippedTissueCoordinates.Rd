@@ -14,7 +14,7 @@ getFlippedTissueCoordinates(seurat_obj, as_data_frame = FALSE)
 \item{as_data_frame}{return x/y coords as data.frame. Default to SeuratObject.}
 }
 \value{
-a seurat object with slots $x_coord and $y_coord.
+a seurat object with slots/metadata $x_coord and $y_coord (or a dataframe if as_data_frame is TRUE).
 }
 \description{
 Seurat object internally store spot coordinates (see Seurat::GetTissueCoordinates()). 
@@ -22,15 +22,9 @@ However, at least in the case of Visium, data are flipped and rotated before Spa
 This function  return the rotated/flipped tissue Coordinates from a Seurat object.
 }
 \examples{
-\dontrun{
-#' ## Install and process the brain dataset
-library(SeuratData)
-library(Seurat)
-#InstallData("stxBrain")
-anterior1 <- LoadData("stxBrain", type = "anterior1")
-anterior1_df <- getFlippedTissueCoordinates(anterior1, as_data_frame=TRUE)
-plot(anterior1_df)
-}
+load_example_dataset("lymph_node_tiny")
+lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny)
+df <- getFlippedTissueCoordinates(lymph_node_tiny, as_data_frame=TRUE)
 }
 \seealso{
 display_visium_hull

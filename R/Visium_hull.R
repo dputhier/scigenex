@@ -10,18 +10,12 @@
 #' This function  return the rotated/flipped tissue Coordinates from a Seurat object.
 #' @param seurat_obj a seurat object with tissue coordinates.
 #' @param as_data_frame return x/y coords as data.frame. Default to SeuratObject.
-#' @return a seurat object with slots $x_coord and $y_coord.
+#' @return a seurat object with slots/metadata $x_coord and $y_coord (or a dataframe if as_data_frame is TRUE).
 #' @seealso display_visium_hull
 #' @examples
-#' \dontrun{
-#' #' ## Install and process the brain dataset
-#' library(SeuratData)
-#' library(Seurat)
-#' #InstallData("stxBrain")
-#' anterior1 <- LoadData("stxBrain", type = "anterior1")
-#' anterior1_df <- getFlippedTissueCoordinates(anterior1, as_data_frame=TRUE)
-#' plot(anterior1_df)
-#' }
+#' load_example_dataset("lymph_node_tiny")
+#' lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny)
+#' df <- getFlippedTissueCoordinates(lymph_node_tiny, as_data_frame=TRUE)
 #' @export getFlippedTissueCoordinates
 getFlippedTissueCoordinates <- function(seurat_obj, 
                                         as_data_frame=FALSE){
@@ -419,23 +413,20 @@ visium_hull <- function(data,
 #' @return A ggplot object (with segments).
 #' @export display_hull
 #' @examples 
-#' \dontrun{
-#' library(Seurat)
-#' library(SeuratData)
-#' library(ggplot)
-#' if (! "stxBrain" %in% InstalledData()$Dataset) InstallData('stxBrain')
-#' LoadData("stxBrain", type = "anterior1")
-#' # Preprocess the data
-#' anterior1_preprocessed <- preprocess_seurat_data(anterior1, normalization_method = "NormalizeData", approx=F)
-#' 
-#' # Create a hull around cluster 0
-#' coord_st_data$k <- ifelse(Idents(anterior1_preprocessed)==0, 1, 0)
-#' ## Compute the segments of the hull.
-#' path <- visium_hull(coord_st_data, size_x=3.2, size_y=3.6, delta=0.5)
-#' ## Add the segments to the ggplot diagram
-#' spatial_plot <- SpatialDimPlot(anterior1_preprocessed, label = TRUE, label.size = 3, pt.size.factor = 1.5)
-#' spatial_plot + display_hull(anterior1_preprocessed)
-#' }
+#' load_example_dataset("lymph_node_tiny")
+#' load_example_dataset("lymph_node_tiny_clusters")
+#' lymph_node_tiny <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters@gene_clusters, nbin = 19)
+#' p <- SpatialDimPlot(lymph_node_tiny, pt.size.factor = 4)
+#' p
+#' hull <- display_hull(lymph_node_tiny, 
+#'         ident=ifelse(Idents(lymph_node_tiny) %in% c(7, 8), 1, 0),
+#'         delta=1, size_x=3.4, size_y=3)
+#' p + hull
+#' p <- plot_spatial(lymph_node_tiny, metadata = "Cluster3", pt_size = 5)
+#' hull <- display_hull(lymph_node_tiny, 
+#'         ident=ifelse(Idents(lymph_node_tiny) %in% c(7, 8), 1, 0),
+#'         delta=1, size_x=3.4, size_y=3, color="black")
+#' p + hull
 display_hull <- function(data=NULL,
                          ident=NULL,
                          size_x=2.4,

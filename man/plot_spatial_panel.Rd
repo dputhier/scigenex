@@ -78,15 +78,15 @@ where the X and Y coordinates represent the spatial location of spots and the co
 expression level of the gene.
 }
 \examples{
-library(SeuratData)
-library(Seurat)
-#InstallData("stxBrain")
-set_verbosity(3)
-anterior1 <- LoadData("stxBrain", type = "anterior1")
-anterior1 <- SCTransform(anterior1, assay = "Spatial")
-genes_to_plot <- c("Hpca", "Olig1", "Klf2")
-panel <- c("Panel A", "Panel B", "Panel C")
-plot_spatial(seurat_obj = anterior1, genes = genes_to_plot, panel_names = panel)
-metadata <- c("nCount_Spatial", "nFeature_Spatial", "nCount_SCT", "nFeature_SCT")
-plot_spatial_panel(seurat_obj = anterior1, metadata = metadata)
+load_example_dataset("lymph_node_tiny_clusters")
+load_example_dataset("lymph_node_tiny_clusters")
+lymph_node_tiny <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters@gene_clusters, nbin = 19)
+for(i in 1:nclust(lymph_node_tiny_clusters)){ # Normalizing module scores
+    tmp <- lymph_node_tiny[[paste0("Cluster", i, sep="")]] 
+    max_tmp <- max(tmp)
+    min_tmp <- min(tmp)
+    lymph_node_tiny[[paste0("Cluster", i, sep="")]]  <- (tmp[,1] - min(tmp))/(max_tmp - min_tmp)
+}
+plot_spatial_panel(lymph_node_tiny, metadata=paste0("Cluster", 1:8), 
+                   guides='collect', pt_size=2.2, coord_flip=F)
 }
