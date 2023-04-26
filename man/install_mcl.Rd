@@ -18,5 +18,4 @@ algorithm that uses stochastic flow simulation to cluster graphs.
 \examples{
 # Install MCL
 install_mcl()
-
 }

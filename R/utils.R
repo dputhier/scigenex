@@ -390,7 +390,6 @@ check_format_cluster_set <- function(object) {
 #' @examples
 #' # Install MCL
 #' install_mcl()
-#' 
 #' @export install_mcl
 install_mcl <- function(force=FALSE){
   if (.Platform$OS.type == "windows") {
@@ -404,7 +403,7 @@ install_mcl <- function(force=FALSE){
         print_msg(paste0("Creating a path for mcl installation: ", 
                          dir_path), 
                   msg_type = "INFO")
-        dir.create(dir_path, showWarnings = FALSE)
+        dir.create(dir_path, showWarnings = FALSE, recursive = TRUE)
         setwd(dir_path)
         utils::download.file("http://micans.org/mcl/src/mcl-latest.tar.gz",
                              destfile="mcl-latest.tar.gz")
@@ -447,5 +446,54 @@ show_methods <- function(class="ClusterSet",
   class_method <- gsub("Function: ([^ ]+) \\(.*", "\\1", class_method)
   
   return(class_method)
+}
+
+# -------------------------------------------------------------------------
+# load_example_dataset()   ------------------------------------------------
+# -------------------------------------------------------------------------
+#' @title Load/download a Visium (10X) example dataset.
+#' @description
+#' Load/download a Visium (10X) example dataset.
+#' @param dataset The name of the dataset.
+#' @returns Load the dataset.
+#' @examples
+#' # An example Seurat/Visium dataset
+#' load_example_dataset("lymph_node_tiny")
+#' lymph_node_tiny
+#' # An example clusterSet dataset
+#' load_example_dataset("lymph_node_tiny_clusters")
+#' lymph_node_tiny_clusters
+#' @export load_example_dataset
+load_example_dataset <- function(dataset=c("lymph_node_tiny", 
+                                         "lymph_node_tiny_clusters"),
+                               zenodo_id="7869307"){
+  
+  dataset <- match.arg(dataset)
+  
+  dir_path <- file.path(path.expand('~'), ".scigenex", "datasets", dataset)
+  
+  if(!dir.exists(dir_path)){
+    print_msg(paste0("Creating a path for dataset installation: ", 
+                     dir_path), 
+              msg_type = "INFO")
+    dir.create(dir_path, showWarnings = FALSE, recursive = TRUE) 
+    setwd(dir_path)
+    download.file(url=paste0("https://zenodo.org/record/", 
+                             zenodo_id, 
+                             "/files/",
+                             dataset, ".rda"), 
+                  destfile = paste0(dataset, ".rda"))
+  }
+
+  if(!dataset %in% ls(envir = globalenv())){
+    load(file.path(dir_path, paste0(dataset, ".rda")), envir = .GlobalEnv)
+    print_msg(paste0("Dataset ", dataset, " has been loaded."),
+              msg_type = "INFO")
+    
+  }else{
+    print_msg(paste0("Dataset ", dataset, " was already loaded."),
+              msg_type = "INFO")
+  }
+
 }
 
