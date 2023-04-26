@@ -23,6 +23,7 @@ plot_spatial_panel(
   pt_shape = 6,
   pt_star = TRUE,
   stroke = 0,
+  coord_flip = TRUE,
   colours = colors_for_gradient("Ju1")
 )
 }
@@ -63,6 +64,8 @@ of the number of genes divided by 2.}
 \item{pt_star}{A boolean. Whether to use ggstar shapes.}
 
 \item{stroke}{The thickness of margin of points.}
+
+\item{coord_flip}{Whether to flip coordinates.}
 
 \item{colours}{A vector of colors.}
 }

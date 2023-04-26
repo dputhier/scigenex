@@ -172,6 +172,7 @@ plot_spatial <- function(seurat_obj=NULL,
 #' @param pt_star A boolean. Whether to use ggstar shapes.
 #' @param guides  A string specifying how guides should be treated in the layout. See patchwork::plot_layout().
 #' @param stroke The thickness of margin of points.
+#' @param coord_flip Whether to flip coordinates.
 #' @param colours A vector of colors.
 #' @importFrom ggplot2 ggplot theme_void
 #' @importFrom patchwork plot_layout
@@ -209,11 +210,18 @@ plot_spatial_panel <- function(seurat_obj=NULL,
                                pt_shape=6,
                                pt_star=TRUE,
                                stroke=0,
+                               coord_flip=TRUE,
                                colours=colors_for_gradient("Ju1")
 ){
 
   intensity_slot <- match.arg(intensity_slot)
   face_title <- match.arg(face_title)
+  
+  if(coord_flip){
+    coord_flip <- ggplot2::coord_flip()
+  }else{
+    coord_flip <- NULL
+  }
   
   if(is.null(panel_names)){
     if(is.null(genes)){
@@ -267,7 +275,7 @@ plot_spatial_panel <- function(seurat_obj=NULL,
                                     pt_star=pt_star,
                                     size_title=size_title,
                                     stroke=stroke,
-                                    colours=colours)
+                                    colours=colours) + coor_flip
       
       if(is.null(plot_panels)){
         plot_panels <- plot_cur
