@@ -174,7 +174,7 @@ plot_spatial <- function(seurat_obj=NULL,
 #' @param stroke The thickness of margin of points.
 #' @param coord_flip Whether to flip coordinates.
 #' @param colours A vector of colors.
-#' @importFrom ggplot2 ggplot theme_void
+#' @importFrom ggplot2 ggplot theme_void coord_flip
 #' @importFrom patchwork plot_layout
 #'
 #' @return A ggplot2 object containing the panel of scatter plots.
