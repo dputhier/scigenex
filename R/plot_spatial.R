@@ -184,6 +184,7 @@ plot_spatial <- function(seurat_obj=NULL,
 #' @param stroke The thickness of margin of points.
 #' @param coord_flip Whether to flip coordinates.
 #' @param colours A vector of colors.
+#' @param ret.as.list Whether to return the list of plot (without patchwork wrapping).
 #' @importFrom ggplot2 ggplot theme_void
 #' @importFrom patchwork plot_layout
 #'
@@ -221,8 +222,8 @@ plot_spatial_panel <- function(seurat_obj=NULL,
                                pt_star=TRUE,
                                stroke=0,
                                coord_flip=TRUE,
-                               colours=colors_for_gradient("Ju1")
-){
+                               colours=colors_for_gradient("Ju1"),
+                               ret.as.list=F){
 
   intensity_slot <- match.arg(intensity_slot)
   face_title <- match.arg(face_title)
@@ -318,6 +319,11 @@ plot_spatial_panel <- function(seurat_obj=NULL,
   
   print_msg("Preparing diagram layout", msg_type = "DEBUG")
   
-  plot_panels + patchwork::plot_layout(ncol=ncol_layout, guides = guides)
+  if(ret.as.list){
+    return(plot_panels)
+  }else{
+    plot_panels + patchwork::plot_layout(ncol=ncol_layout, guides = guides)
+  }
+
 }
 

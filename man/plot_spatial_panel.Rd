@@ -24,7 +24,8 @@ plot_spatial_panel(
   pt_star = TRUE,
   stroke = 0,
   coord_flip = TRUE,
-  colours = colors_for_gradient("Ju1")
+  colours = colors_for_gradient("Ju1"),
+  ret.as.list = F
 )
 }
 \arguments{
@@ -68,6 +69,8 @@ of the number of genes divided by 2.}
 \item{coord_flip}{Whether to flip coordinates.}
 
 \item{colours}{A vector of colors.}
+
+\item{ret.as.list}{Whether to return the list of plot (without patchwork wrapping).}
 }
 \value{
 A ggplot2 object containing the panel of scatter plots.
