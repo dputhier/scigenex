@@ -459,11 +459,11 @@ show_methods <- function(class="ClusterSet",
 #' @returns Load the dataset.
 #' @examples
 #' # An example Seurat/Visium dataset
-#' load_example_dataset("lymph_node_tiny")
-#' lymph_node_tiny
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' lymph_node_tiny_2
 #' # An example clusterSet dataset
-#' load_example_dataset("lymph_node_tiny_clusters")
-#' lymph_node_tiny_clusters
+#' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+#' lymph_node_tiny_clusters_2
 #' @export load_example_dataset
 load_example_dataset <- function(dataset=c("7870305/files/lymph_node_tiny_2", 
                                            "7870305/files/lymph_node_tiny_clusters_2",

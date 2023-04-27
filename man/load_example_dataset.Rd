@@ -24,9 +24,9 @@ Load/download a Visium (10X) example dataset.
 }
 \examples{
 # An example Seurat/Visium dataset
-load_example_dataset("lymph_node_tiny")
-lymph_node_tiny
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+lymph_node_tiny_2
 # An example clusterSet dataset
-load_example_dataset("lymph_node_tiny_clusters")
-lymph_node_tiny_clusters
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+lymph_node_tiny_clusters_2
 }

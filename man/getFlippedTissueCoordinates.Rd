@@ -22,9 +22,9 @@ However, at least in the case of Visium, data are flipped and rotated before Spa
 This function  return the rotated/flipped tissue Coordinates from a Seurat object.
 }
 \examples{
-load_example_dataset("lymph_node_tiny")
-lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny)
-df <- getFlippedTissueCoordinates(lymph_node_tiny, as_data_frame=TRUE)
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny_2)
+df <- getFlippedTissueCoordinates(lymph_node_tiny_2, as_data_frame=TRUE)
 }
 \seealso{
 display_visium_hull

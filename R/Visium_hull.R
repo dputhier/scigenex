@@ -13,9 +13,9 @@
 #' @return a seurat object with slots/metadata $x_coord and $y_coord (or a dataframe if as_data_frame is TRUE).
 #' @seealso display_visium_hull
 #' @examples
-#' load_example_dataset("lymph_node_tiny")
-#' lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny)
-#' df <- getFlippedTissueCoordinates(lymph_node_tiny, as_data_frame=TRUE)
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny_2)
+#' df <- getFlippedTissueCoordinates(lymph_node_tiny_2, as_data_frame=TRUE)
 #' @export getFlippedTissueCoordinates
 getFlippedTissueCoordinates <- function(seurat_obj, 
                                         as_data_frame=FALSE){
@@ -144,7 +144,6 @@ get_neighbor_class <- function(data_cr,
 # name merging_neighborhood
 # title Internal function. Whether a barcode/spot is in the known
 # or new neighborhood.
-
 merging_neighborhood <- function(neighborhood=NULL, spot_1=NULL, spot_2=NULL){
   
   
@@ -413,9 +412,9 @@ visium_hull <- function(data,
 #' @return A ggplot object (with segments).
 #' @export display_hull
 #' @examples 
-#' load_example_dataset("lymph_node_tiny")
-#' load_example_dataset("lymph_node_tiny_clusters")
-#' lymph_node_tiny <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters@gene_clusters, nbin = 19)
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+#' lymph_node_tiny <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
 #' p <- SpatialDimPlot(lymph_node_tiny, pt.size.factor = 4)
 #' p
 #' hull <- display_hull(lymph_node_tiny, 

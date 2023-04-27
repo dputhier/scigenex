@@ -58,9 +58,9 @@ A ggplot object (with segments).
 Draw a hull around a region of interest of Visium data.
 }
 \examples{
-load_example_dataset("lymph_node_tiny")
-load_example_dataset("lymph_node_tiny_clusters")
-lymph_node_tiny <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters@gene_clusters, nbin = 19)
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+lymph_node_tiny <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
 p <- SpatialDimPlot(lymph_node_tiny, pt.size.factor = 4)
 p
 hull <- display_hull(lymph_node_tiny, 
