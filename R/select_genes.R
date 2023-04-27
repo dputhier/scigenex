@@ -1,32 +1,31 @@
 ################################################################################
-#' Select genes in co-expression patterns
+#' Selects informative genes based on k-nearest neighbour analysis.
 #'
-#' This function selects genes based on their correlation with other genes. 
-#' It takes as input a normalized gene expression matrix and 
-#' a set of parameters that affect the selection of genes.
+#' This function selects genes based on k-nearest neighbour analysis.
+#' The function takes a seurat object or gene expression matrix as input 
+#' and compute distance to k-nearest neighbour for each gene/feature.
+#' A threshold is set based on permutation analysis and FDR computation. 
 #'
-#' @param data a matrix, data.frame or Seurat object.
-#' @param dist_threads an integer specifying the number of threads for the kendall correlation.
-#' @param distance_method a character string indicating the method for computing distances (one of "pearson", "cosine", "euclidean" or "kendall").
+#' @param data A matrix, data.frame or Seurat object.
+#' @param dist_threads An integer specifying the number of threads (restricted to kendall correlation).
+#' @param distance_method a character string indicating the method for computing distances (one of "pearson", "cosine", 
+#' "euclidean" or "kendall").
 #' @param highest During the process, genes will be ordered by their distance to their k nearest neighbors (dknn). 
 #' This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
-#' will be used to compute simulated values. 0 would mean to use all the genes.
-#' @param k an integer specifying the k nearest neighbours to compute.
-#' @param row_sum an integer specifying the minimum number of cells expressing a gene. 
-#' Genes expresssed in less than the chosen values are filtered out from the analysis.To keep all genes, use -Inf. 
-#' @param fdr a numeric value indicating the false discovery rate threshold (range: 0 to 100).
+#' will be used to compute simulated values. 0 means to use all the genes. A value close to 1 means  to use only gene 
+#' with high dknn (i.e close to noise).
+#' @param k An integer specifying the size of the neighbourhood.
+#' @param row_sum A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes. 
+#' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 100).
 #' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts"). 
-#' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
 #' @param no_dknn_filter a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.
-#' @param seed an integer specifying the random seed to use.
+#' @param seed An integer specifying the random seed to use.
 #'
 #' @return a ClusterSet class object
 #' 
-#' @author Julie Bavais, Sebastien Nin, Aurelie Bergon, Fabrice Lopez, Julien Textoris, Samuel Granjeaud, Lionel Spinelli and Denis Puthier
+#' @author Julie Bavais, Sebastien Nin, Lionel Spinelli and Denis Puthier
 #' 
 #' @references
-#' - Van Dongen S. (2000) A cluster algorithm for graphs. National
-#' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #' - Lopez F.,Textoris J., Bergon A., Didier G., Remy E., Granjeaud
 #' S., Imbert J. , Nguyen C. and Puthier D. TranscriptomeBrowser: a powerful
 #' and flexible toolbox to explore productively the transcriptional landscape
@@ -34,23 +33,25 @@
 #'
 #' @examples
 #' 
-#' # Set verbosity to 1 to only display info messages.
+#' # Restrict vebosity to info messages only.
 #' set_verbosity(1)
 #' 
-#' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
+#' # Load a dataset
+#' load_example_dataset("7871581/files/pbmc3k_medium")
 #' 
 #' # Select informative genes
-#' res <- select_genes(m,
-#'                     distance = "kendall",
-#'                     k = 75,
-#'                     highest = 0.3,
-#'                     fdr = 1e-8,
-#'                     row_sum = -Inf)
+#' res <- select_genes(pbmc3k_medium,
+#'                     distance = "pearson",
+#'                     row_sum=5)
 #' 
-#' # Display selected genes
-#' res@gene_clusters$`1`
-#'
+#' # Result is a ClusterSet object
+#' is(res)
+#' slotNames(res)
+#' 
+#' # The selected genes
+#' nrow(res)
+#' head(row_names(res))
+#' 
 #' @export select_genes
 
 select_genes <- function(data = NULL,

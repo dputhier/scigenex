@@ -5,9 +5,9 @@
 \title{Load/download a Visium (10X) example dataset.}
 \usage{
 load_example_dataset(
-  dataset = c("7870305/files/lymph_node_tiny_2",
-    "7870305/files/lymph_node_tiny_clusters_2", "7869307/files/lymph_node_tiny",
-    "7869307/files/lymph_node_tiny_clusters"),
+  dataset = c("7871581/files/pbmc3k_medium", "7871581/files/pbmc3k_medium_clusters",
+    "7870305/files/lymph_node_tiny_2", "7870305/files/lymph_node_tiny_clusters_2",
+    "7869307/files/lymph_node_tiny", "7869307/files/lymph_node_tiny_clusters"),
   timeout = NULL
 )
 }

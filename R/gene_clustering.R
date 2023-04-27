@@ -1,57 +1,59 @@
 ################################################################################
-#' Perform gene clustering using the Markov Cluster Algorithm (MCL) method
+#' Gene clustering using the Markov Cluster Algorithm (MCL) method.
 #'
 #' This function performs gene clustering using the MCL algorithm. 
 #' The method starts by creating a graph with genes as nodes and edges connecting each gene to its nearest neighbors.
 #' Two methods are available based on keep_nn argument : 
-#' * when using 'keep_nn = FALSE', the method construct a new graph only based on the previously selected genes.
-#' * when using 'keep_nn = TRUE', the method conserve the graph constructed using select_genes with selected genes and their nearest neighbors.
-#' Then the method apply the MCL algorithm to detect clusters of co-expressed genes.
+#' * when 'keep_nn = FALSE', the method construct a graph only based on the previously selected genes.
+#' * when 'keep_nn = TRUE', the method conserve the graph constructed using select_genes with selected genes and their nearest neighbors.
+#' Then the method use the MCL algorithm to detect clusters of co-expressed genes.
 #'
 #' @param object A ClusterSet object.
 #' @param keep_nn A logical value indicating whether the nearest neighbors graph from select_genes should be kept or not.
-#' @param k If keep_nn is set to FALSE, k is an integer value indicating the number of nearest neighbors to use in the graph construction. Default is 5.
+#' @param k If keep_nn is set to FALSE, k is an integer value indicating the size of the neighbourhood to use in the graph construction. Default is 5.
 #' @param inflation A numeric value indicating the MCL inflation parameter. Default is 2.
 #' @param threads An integer value indicating the number of threads to use for MCL.
 #' @param output_path a character indicating the path where the output files will be stored.
 #' @param name a character string giving the name for the output files. If NULL, a random name is generated.
-#'
-#' 
-#'
 #' @return A ClusterSet object
-#'
+#' @references
+#' - Van Dongen S. (2000) A cluster algorithm for graphs. National
+#' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #' @examples
-#' # Set verbosity to 1 to display info messages only.
+#' # Restrict vebosity to info messages only.
 #' set_verbosity(1)
 #' 
-#' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
+#' # Load a dataset
+#' load_example_dataset("7871581/files/pbmc3k_medium")
 #' 
 #' # Select informative genes
-#' res <- select_genes(m,
+#' res <- select_genes(pbmc3k_medium,
 #'                     distance = "pearson",
-#'                     k = 75,
-#'                     highest = 0.3,
-#'                     fdr = 1e-8,
-#'                     row_sum = -Inf)
+#'                     row_sum=5)
 #'                     
 #' # Cluster informative features
 #' 
-#' ## Method 1 - Reconstruct a graph based on selected genes
-#' res <- gene_clustering(res, 
-#'                        inflation = 1.2,
-#'                        keep_nn = FALSE,
-#'                        k = 5)
-#' # Plot heatmap of gene clusters
+#' ## Method 1 - Construct a graph with a 
+#' ## novel neighbourhood size
+#' res <- gene_clustering(res, keep_nn = F, 
+#'                        inflation = 2.2, threads = 4)
+#'                        
+#' # Display the heatmap of gene clusters
+#' res <- top_genes(res)
 #' plot_heatmap(res)
+#' plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
 #' 
 #' 
-#' ## Method 2 - Conserve dknn from graph build previously
+#' ## Method 2 - Conserve the same neighborhood 
+#' ## size
 #' res <- gene_clustering(res, 
-#'                        inflation = 1.2,
+#'                        inflation = 2.2,
 #'                        keep_nn = TRUE)
-#' # Plot heatmap of gene clusters
+#'                        
+#' # Display the heatmap of gene clusters
+#' res <- top_genes(res)
 #' plot_heatmap(res)
+#' plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
 #' 
 #' @export gene_clustering
 
