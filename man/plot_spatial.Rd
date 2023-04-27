@@ -10,7 +10,7 @@ plot_spatial(
   metadata = NULL,
   intensity_slot = c("data", "counts", "sct"),
   title = "",
-  size_title = 2,
+  size_title = 10,
   face_title = c("plain", "italic", "bold", "bold.italic"),
   legend = TRUE,
   barwidth = 1,

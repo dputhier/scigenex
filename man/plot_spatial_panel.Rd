@@ -10,7 +10,7 @@ plot_spatial_panel(
   metadata = NULL,
   intensity_slot = c("data", "counts", "sct"),
   title = "",
-  size_title = 2,
+  size_title = 10,
   face_title = c("plain", "italic", "bold", "bold.italic"),
   barwidth = 1,
   barheight = 3,
@@ -92,6 +92,9 @@ plot_spatial_panel(lymph_node_tiny_2, metadata=paste0("Cluster", 1:4), ncol_layo
                    
 plot_spatial_panel(lymph_node_tiny_2, gene=c('VPREB3', 'IGHG1', 'PRDX4', 
                                              'LTB', 'CCL20', 'LYVE1', 
-                                             'IL7R', 'RGS9', 'MAPT'), ncol_layout=3,
-                   guides='collect', pt_size=3, coord_flip=T, panel_names=LETTERS[1:9])
+                                             'IL7R', 'RGS9', 'MAPT'), 
+                   ncol_layout=3,
+                   pt_size=2, coord_flip=T, 
+                   panel_names=LETTERS[1:9], 
+                   size_title = 10)
 }
