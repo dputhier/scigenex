@@ -18,28 +18,16 @@
 #'
 #' @examples
 #' # Load a Seurat object
-#' data(pbmc_small, package = "SeuratObject")
-#' 
-#' # Compute the signatures using find_gene_clusters()
-#' clust_set <- select_genes(pbmc_small,
-#'                           distance = "kendall",
-#'                           k = 75,
-#'                           highest = 0.3,
-#'                           fdr = 1e-8,
-#'                           row_sum = -Inf,
-#'                           no_dknn_filter = TRUE)
-#'                           
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 1.6,
-#'                             keep_nn = FALSE,
-#'                             k = 5)
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' # Load a ClusterSet object
+#' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 #'                             
-#' plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small))
-#' pal <- c("#4E79A7", "#A0CBE8", "#F28E2B")
-#' names(pal) <- levels(Seurat::Idents(pbmc_small))
-#' plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small), color_cell_type = pal)
-#' plot_profiles(clust_set[2:4,], ident=Seurat::Idents(pbmc_small), color_cell_type = pal)
+#' plot_profiles(lymph_node_tiny_clusters_2, ident=Seurat::Idents(lymph_node_tiny_2))
+#' lv <- levels(Seurat::Idents(lymph_node_tiny_2))
+#' pal <- discrete_palette(n=length(lv))
+#' names(pal) <- lv
+#' plot_profiles(lymph_node_tiny_clusters_2, ident=Seurat::Idents(lymph_node_tiny_2), color_cell_type = pal)
+#' plot_profiles(lymph_node_tiny_clusters_2[2:4,], ident=Seurat::Idents(lymph_node_tiny_2), color_cell_type = pal)
 #' 
 #' @importFrom ggplot2 geom_col facet_wrap theme_minimal geom_text scale_color_manual
 #' @importFrom scales hue_pal
