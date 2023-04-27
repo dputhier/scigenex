@@ -414,16 +414,16 @@ visium_hull <- function(data,
 #' @examples 
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-#' lymph_node_tiny <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
-#' p <- SpatialDimPlot(lymph_node_tiny, pt.size.factor = 4)
+#' lymph_node_tiny_2 <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
+#' p <- SpatialDimPlot(lymph_node_tiny_2, pt.size.factor = 4)
 #' p
-#' hull <- display_hull(lymph_node_tiny, 
-#'         ident=ifelse(Idents(lymph_node_tiny) %in% c(7, 8), 1, 0),
+#' hull <- display_hull(lymph_node_tiny_2, 
+#'         ident=ifelse(Idents(lymph_node_tiny_2) %in% c(7, 8), 1, 0),
 #'         delta=1, size_x=3.4, size_y=3)
 #' p + hull
-#' p <- plot_spatial(lymph_node_tiny, metadata = "Cluster3", pt_size = 5)
-#' hull <- display_hull(lymph_node_tiny, 
-#'         ident=ifelse(Idents(lymph_node_tiny) %in% c(7, 8), 1, 0),
+#' p <- plot_spatial(lymph_node_tiny_2, metadata = "Cluster3", pt_size = 5)
+#' hull <- display_hull(lymph_node_tiny_2, 
+#'         ident=ifelse(Idents(lymph_node_tiny_2) %in% c(7, 8), 1, 0),
 #'         delta=1, size_x=3.4, size_y=3, color="black")
 #' p + hull
 display_hull <- function(data=NULL,

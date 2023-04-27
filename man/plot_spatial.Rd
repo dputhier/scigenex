@@ -74,7 +74,12 @@ expression level of the gene. This function as been tested with visium
 data at the moment. Defaut shape is hexagon.
 }
 \examples{
-load_example_dataset("lymph_node_tiny")
-plot_spatial(seurat_obj = lymph_node_tiny, gene_name = "IGKC", intensity_slot="data")
-plot_spatial(seurat_obj = lymph_node_tiny, metadata = "nCount_Spatial")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+plot_spatial(seurat_obj = lymph_node_tiny_2, gene_name = "CCL22", intensity_slot="data", pt_size=6)
+plot_spatial(seurat_obj = lymph_node_tiny_2, metadata = "nCount_Spatial", pt_size=6)
+hull <- display_hull(lymph_node_tiny_2, 
+        ident=ifelse(Idents(lymph_node_tiny_2) \%in\% 7, 1, 0),
+        delta=1, size_x=3.4, size_y=3, color="black")
+p <- plot_spatial(seurat_obj = lymph_node_tiny_2, gene_name = "VPREB3", intensity_slot="data", pt_size=6)
+p + hull
 }
