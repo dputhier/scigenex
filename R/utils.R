@@ -465,7 +465,9 @@ show_methods <- function(class="ClusterSet",
 #' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 #' lymph_node_tiny_clusters_2
 #' @export load_example_dataset
-load_example_dataset <- function(dataset=c("7870305/files/lymph_node_tiny_2", 
+load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
+                                           "7871581/files/pbmc3k_medium_clusters",
+                                           "7870305/files/lymph_node_tiny_2", 
                                            "7870305/files/lymph_node_tiny_clusters_2",
                                            "7869307/files/lymph_node_tiny",
                                          "7869307/files/lymph_node_tiny_clusters"),
