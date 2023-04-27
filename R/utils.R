@@ -455,6 +455,7 @@ show_methods <- function(class="ClusterSet",
 #' @description
 #' Load/download a Visium (10X) example dataset.
 #' @param dataset The name of the dataset.
+#' @param timeout Set the timout for download (options(timeout=timeout))
 #' @returns Load the dataset.
 #' @examples
 #' # An example Seurat/Visium dataset
@@ -464,29 +465,38 @@ show_methods <- function(class="ClusterSet",
 #' load_example_dataset("lymph_node_tiny_clusters")
 #' lymph_node_tiny_clusters
 #' @export load_example_dataset
-load_example_dataset <- function(dataset=c("lymph_node_tiny", 
-                                         "lymph_node_tiny_clusters"),
-                               zenodo_id="7869307"){
+load_example_dataset <- function(dataset=c("7870305/files/lymph_node_tiny_2", 
+                                           "7870305/files/lymph_node_tiny_clusters_2",
+                                           "7869307/files/lymph_node_tiny",
+                                         "7869307/files/lymph_node_tiny_clusters"),
+                                 timeout=NULL){
   
   dataset <- match.arg(dataset)
   
-  dir_path <- file.path(path.expand('~'), ".scigenex", "datasets", dataset)
+  if(!is.null(timeout))
+    options(timeout=timeout)
+  
+  file_data <- gsub(".*\\/", "", dataset)
+  dir_path <- file.path(path.expand('~'), ".scigenex", "datasets")
   
   if(!dir.exists(dir_path)){
     print_msg(paste0("Creating a path for dataset installation: ", 
                      dir_path), 
               msg_type = "INFO")
     dir.create(dir_path, showWarnings = FALSE, recursive = TRUE) 
-    setwd(dir_path)
+
+  }
+  
+  setwd(dir_path)
+  if(!file.exists(paste0(file_data, ".rda"))){
     download.file(url=paste0("https://zenodo.org/record/", 
-                             zenodo_id, 
-                             "/files/",
                              dataset, ".rda"), 
-                  destfile = paste0(dataset, ".rda"))
+                  destfile = paste0(file_data, ".rda"))
   }
 
+
   if(!dataset %in% ls(envir = globalenv())){
-    load(file.path(dir_path, paste0(dataset, ".rda")), envir = .GlobalEnv)
+    load(file.path(dir_path, paste0(file_data, ".rda")), envir = .GlobalEnv)
     print_msg(paste0("Dataset ", dataset, " has been loaded."),
               msg_type = "INFO")
     

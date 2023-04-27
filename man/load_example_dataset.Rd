@@ -5,12 +5,16 @@
 \title{Load/download a Visium (10X) example dataset.}
 \usage{
 load_example_dataset(
-  dataset = c("lymph_node_tiny", "lymph_node_tiny_clusters"),
-  zenodo_id = "7869307"
+  dataset = c("7870305/files/lymph_node_tiny_2",
+    "7870305/files/lymph_node_tiny_clusters_2", "7869307/files/lymph_node_tiny",
+    "7869307/files/lymph_node_tiny_clusters"),
+  timeout = NULL
 )
 }
 \arguments{
 \item{dataset}{The name of the dataset.}
+
+\item{timeout}{Set the timout for download (options(timeout=timeout))}
 }
 \value{
 Load the dataset.
