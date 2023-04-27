@@ -249,7 +249,7 @@ plot_cmp_genesets <- function(set_1=NULL,
   }else{
     coord_equal <- NULL
   }
-  
+
   if(layout == "raster"){
     ggplot(res_melt, mapping=aes(x=Set_1, 
                                  y=Set_2, 
@@ -284,8 +284,12 @@ plot_cmp_genesets <- function(set_1=NULL,
                                  fill=stat,
                                  width=jaccard,
                                  height=jaccard)) + 
-      geom_vline(xintercept = seq(0.5, length(set_1), by=1), col="black", linewidth=0.3) + 
-      geom_hline(yintercept = seq(0.5, length(set_2), by=1), col="black", linewidth=0.3) + 
+      geom_vline(xintercept = seq(0.5, length(set_1), by=1), 
+                 col="black",
+                 linewidth=0.3) + 
+      geom_hline(yintercept = seq(0.5, length(set_2), by=1), 
+                 col="black",
+                 linewidth=0.3) + 
       geom_tile() +
       theme_bw() +
       theme(panel.grid = element_blank(),
@@ -300,7 +304,6 @@ plot_cmp_genesets <- function(set_1=NULL,
                          labels = res_melt$label_set_2) +
       scale_size_area("Jaccard", max_size = 1, guide = "legend") +
       scale_fill_gradientn(legend_label, colours = colors, ) +
-
       coord_equal 
   }
 
