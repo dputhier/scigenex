@@ -184,3 +184,28 @@
 #' # This dataset was produced using loupe browser (10X genomics)
 #' 
 'lymph_node_selected_spot'
+
+# -------------------------------------------------------------------------
+# The lymph_node_selected_spot dataset (#2)
+# -------------------------------------------------------------------------
+#' @title The lymph_node_selected_spot dataset (#2)
+#' @description
+#'  A vector with selected spots from 10X Visium Lymph node dataset.
+#'  See https://tinyurl.com/y9hv7vj3
+#'  and https://tinyurl.com/4bwh759j
+#' 
+#' 
+#' Dataset information:
+#'  ·        Number of spots: 443
+#'
+#'
+#' @docType data
+#' @keywords datasets
+#' @name lymph_node_selected_spot_2
+#' @usage data(lymph_node_selected_spot)
+#' @format A vector containing 601 Visium spots.
+#' 
+#' @note
+#' # This dataset was produced using loupe browser (10X genomics)
+#' 
+'lymph_node_selected_spot_2'
