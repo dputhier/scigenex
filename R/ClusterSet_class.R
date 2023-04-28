@@ -383,7 +383,7 @@ setGeneric("nclust",
 setMethod(
   "nclust", signature("ClusterSet"),
   function(x) {
-    x@gene_clusters_metadata$number
+    length(x@gene_clusters)
   }
 )
 
@@ -584,11 +584,18 @@ setMethod("rename_clust",
             
             check_format_cluster_set(object)
             
-            if(is.null(new_names))
-              new_names <- 1:nclust(object)
+            if(is.null(new_names)){
+              if(length(object@gene_clusters)){
+                new_names <- 1:nclust(object)
+              }else{
+                new_names <- NULL
+              }
+            }
+              
             
             if(length(new_names) != nclust(object))
               print_msg("The number of labels should be the same a the number of clusters.")
+            
             
             names(object@gene_clusters) <- new_names
             
