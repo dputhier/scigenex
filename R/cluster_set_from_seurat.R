@@ -1,4 +1,4 @@
-#' @title Transform a Seurat objects into a ClusterSet.
+#' @title Transform a Seurat objects / FindAllMarkers result into a ClusterSet.
 #' @description Transform a Seurat objects into a ClusterSet.
 #' @param object A Seurat object.
 #' @param markers A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).
