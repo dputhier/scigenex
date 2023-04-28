@@ -1,7 +1,7 @@
 set_verbosity(0)
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-lymph_node_tiny_2 <- AddModuleScore(seurat_obj, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 15)
+lymph_node_tiny_2 <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 15)
 
 for(i in 1:nclust(lymph_node_tiny_clusters_2)){ # Normalizing module scores
  tmp <- lymph_node_tiny_2[[paste0("Cluster", i, sep="")]] 
