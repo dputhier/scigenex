@@ -367,11 +367,11 @@ check_format_cluster_set <- function(object) {
   
   if(nrow(object) == 0)
     print_msg("The ClusterSet object does not contain any gene.", 
-              msg_type = "STOP")
+              msg_type = "WARNING")
   
   if(ncol(object) == 0)
     print_msg("The ClusterSet object does not contain any cell.", 
-              msg_type = "STOP")
+              msg_type = "WARNING")
 }
 
 # -------------------------------------------------------------------------
