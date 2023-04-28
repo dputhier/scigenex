@@ -34,7 +34,7 @@
 #' # Cluster informative features
 #' 
 #' ## Method 1 - Construct a graph with a 
-#' ## novel neighbourhood size
+#' ## novel neighborhood size
 #' res <- gene_clustering(res, keep_nn = F, 
 #'                        inflation = 2.2, threads = 4)
 #'                        
