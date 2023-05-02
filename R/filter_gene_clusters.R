@@ -45,7 +45,7 @@ filter_cluster_size <- function(object = NULL,
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
   nb_clusters_before_filtering <- names(object@gene_clusters)
   
-  cluster_to_keep <- object@gene_clusters_metadata$size > min_cluster_size
+  cluster_to_keep <- lapply(object@gene_clusters, length) >= min_cluster_size
   
   print_msg(
     paste(
@@ -122,9 +122,9 @@ filter_nb_supporting_cells <- function(object = NULL,
     msg_type = "INFO"
   )
   
-  # Return NULL if all clusters were filtered out
+
   if(length(cluster_to_keep)==0){
-    return(NULL)
+    return(object[-c(1:nclust(object)),])
   }else{
     object <- object[cluster_to_keep, ]
     object <- rename_clust(object)
@@ -136,6 +136,24 @@ filter_nb_supporting_cells <- function(object = NULL,
 
 
 ############################## filter_by_dot_prod ##############################
+
+#' median_of_max_dot_prod()
+#' Expect a binary matrix as input. Calculates the dot product for 
+#' this matrix, which produces a gene-gene matrix showing the 
+#' number of cells/spots where each pair of genes are expressed 
+#' together. The function then calculates the median value of the 
+#' maximum concordances across all genes, which can be used to 
+#' determine whether a cluster should be filtered out or not.
+median_of_max_dot_prod(){
+  cur_dot_prod <- cur_clust %*% t(cur_clust)
+  diag(cur_dot_prod) <- NA
+  cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 
+                                            1, 
+                                            max, 
+                                            na.rm = T))
+}
+
+
 #' @title Filter cluster from a ClusterSet object using dot product. 
 #' 
 #' @description
@@ -156,32 +174,11 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' 
 #' @examples
-#' # Load a Seurat object
-#' data(pbmc_small, package = "SeuratObject")
-#' 
-#' # Compute the signatures using find_gene_clusters()
-#' clust_set <- select_genes(pbmc_small,
-#'                           distance = "kendall",
-#'                           k = 75,
-#'                           highest = 0.3,
-#'                           fdr = 1e-8,
-#'                           row_sum = -Inf,
-#'                           no_dknn_filter = TRUE)
-#'                           
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 1.6,
-#'                             keep_nn = FALSE,
-#'                             k = 5)
-#'                             
-#' # Plot heatmap of gene clusters
-#' plot_heatmap(clust_set)
-#' 
-#' # Remove the cluster 5 containing less than 4 cells expressing 100% of the genes in cluster 4
-#' clust_set <- filter_by_dot_prod(clust_set,
-#'                                 av_dot_prod_min = 5)
-#' plot_heatmap(clust_set)
-#' 
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#' pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters)
+#' nclust(pbmc3k_medium_clusters)
+#' obj <- filter_by_dot_prod(pbmc3k_medium_clusters, av_dot_prod_min=5)
+#' nclust(obj) 
 #' @export filter_by_dot_prod
 filter_by_dot_prod <- function(object = NULL,
                                av_dot_prod_min = 2) {
@@ -207,13 +204,7 @@ filter_by_dot_prod <- function(object = NULL,
     cur_clust <- object@data[object@gene_clusters[[i]],]
     cur_clust[cur_clust > 1] <- 1
     cur_clust[cur_clust < 1] <- 0
-    cur_dot_prod <- cur_clust %*% t(cur_clust)
-    diag(cur_dot_prod) <- NA
-    cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 
-                                              1, 
-                                              max, 
-                                              na.rm = T))
-    all_dot_prod[i] <- cur_dot_prod_median_of_max
+    all_dot_prod[i] <- median_of_max_dot_prod(cur_clust)
     
     # Dot product filtering
     if (cur_dot_prod_median_of_max <= av_dot_prod_min) {
@@ -240,44 +231,17 @@ filter_by_dot_prod <- function(object = NULL,
   
   # Update ClusterSet object
   ## Add dot product values
-  object@gene_clusters_metadata$all_dot_prod <- all_dot_prod
-  names(object@gene_clusters_metadata$all_dot_prod) <- object@gene_clusters_metadata$cluster_id
-  
-  ## Remove clusters that did not pass the filter
-  object@gene_clusters <- object@gene_clusters[selected_cluster]
-  names(object@gene_clusters) <- seq(1, length(object@gene_clusters))
-  
-  ## Update gene_cluster_metadata slots
-  object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
-                                        "number" = max(as.numeric(names(object@gene_clusters))),
-                                        "size" = unlist(lapply(object@gene_clusters, length)))
-  
-  ## Remove filtered out genes in data slot
-  object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
-  
-  ## Compute centers
-  nb_clusters = length(names(object@gene_clusters))
-  centers <- matrix(ncol = ncol(object@data),
-                    nrow = nb_clusters)
-  colnames(centers) <- colnames(object@data)
-  rownames(centers) <- names(object@gene_clusters)
-  
-  ## calcul of the mean profils
-  for (i in 1:nb_clusters) {
-    if(is(object@data[object@gene_clusters[[i]], ])[2] == "vector") {
-      centers[i, ] <- apply(t(as.matrix(object@data[object@gene_clusters[[i]], ])),
-                            2, mean,
-                            na.rm = TRUE)
-    } else {
-      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], ],
-                            2, mean,
-                            na.rm = TRUE)
-    }
+  object@gene_clusters_metadata$all_dot_prod <- all_dot_prod[selected_cluster]
+  names(object@gene_clusters_metadata$all_dot_prod) <- object@gene_clusters_metadata$cluster_id[selected_cluster]
+
+  if(length(selected_cluster)==0){
+    return(object[-c(1:nclust(object)),])
+  }else{
+    object <- object[selected_cluster, ]
+    object <- rename_clust(object)
+    return(object)
   }
-  
-  object@dbf_output$center <- centers
-  
-  return(object)
+
 }
 
 ############################## filter_cluster_sd ##############################
@@ -314,45 +278,13 @@ filter_cluster_sd <- function(object = NULL,
     msg_type = "INFO"
   )
   
-  object <- object[cluster_to_keep, ]
-  object <- rename_clust(object)
+  if(length(cluster_to_keep)==0){
+    return(object[-c(1:nclust(object)),])
+  }else{
+    object <- object[cluster_to_keep, ]
+    object <- rename_clust(object)
+    return(object)
+  }
   
-  return(object)
 }
 
-
-############################## filter_manual ##############################
-# filter_manual <- function(object = NULL) {
-#   
-# }
-
-
-#' ############################## filters all fct ##############################
-#' #' Filter out gene clusters
-#' #'
-#' #' This function filters out gene clusters from a ClusterSet object
-#' #' 
-#' #' @param object A ClusterSet object.
-#' #' @param min_cluster_size An integer indicating the minimum size of clusters to keep.
-#' #' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
-#' #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
-#' #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
-#' #' 
-#' #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
-#' #' 
-#' #' @export filter_gene_clusters
-#' 
-#' filter_gene_clusters <- function(object = NULL,
-#'                                  min_cluster_size = 5,
-#'                                  min_nb_supporting_cell = 3,
-#'                                  min_pct_gene_expressed = 50) {
-#'   
-#'   object <- filter_cluster_size(object = object,
-#'                                 min_cluster_size = min_cluster_size)
-#'   
-#'   object <- filter_nb_supporting_cells(object = object,
-#'                                        min_nb_supporting_cell = min_nb_supporting_cell,
-#'                                        min_pct_gene_expressed = min_pct_gene_expressed)
-#'   
-#'   return(object)
-#' }

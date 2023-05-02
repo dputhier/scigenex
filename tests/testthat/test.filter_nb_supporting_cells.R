@@ -87,3 +87,14 @@ test_that("Checking filter_nb_supporting_cells(), min_nb_supporting_cell=2, min_
   testthat::expect_true(nrow(x@dbf_output$center) == 2)
   
 })
+
+test_that("Checking filter_nb_supporting_cells(), min_nb_supporting_cell=10, min_pct_gene_expressed = 100", {
+  
+  x <- filter_nb_supporting_cells(object = obj, 
+                                  min_nb_supporting_cell = 10, 
+                                  min_pct_gene_expressed = 100)
+  testthat::expect_true(length(x@gene_clusters) == 0)
+  testthat::expect_true(length(x@gene_clusters_metadata$cluster_id) == 0)
+  testthat::expect_true(nrow(x@dbf_output$center) == 0)
+  
+})
