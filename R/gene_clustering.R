@@ -116,15 +116,11 @@ gene_clustering <- function(object = NULL,
   
   ## calcul of the mean profils
   for (i in 1:nb_clusters) {
-    if(is(object@data[object@gene_clusters[[i]], ])[2] == "vector") {
-      centers[i, ] <- apply(t(as.matrix(object@data[object@gene_clusters[[i]], ])),
+
+      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], , drop=FALSE],
                             2, mean,
                             na.rm = TRUE)
-    } else {
-      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], ],
-                            2, mean,
-                            na.rm = TRUE)
-    }
+    
   }
   
   object@dbf_output$center <- centers
@@ -134,10 +130,6 @@ gene_clustering <- function(object = NULL,
   
   return(object)
 }
-
-
-
-
 
 
 
