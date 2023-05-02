@@ -2,7 +2,7 @@
 % Please edit documentation in R/ClusterSet_class.R
 \name{clust_names,ClusterSet-method}
 \alias{clust_names,ClusterSet-method}
-\title{Names of gene clusters stored in the ClusterSet object}
+\title{The names of the gene clusters stored in the ClusterSet object}
 \usage{
 \S4method{clust_names}{ClusterSet}(x)
 }
