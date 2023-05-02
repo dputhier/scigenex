@@ -144,15 +144,15 @@ filter_nb_supporting_cells <- function(object = NULL,
 #' together. The function then calculates the median value of the 
 #' maximum concordances across all genes, which can be used to 
 #' determine whether a cluster should be filtered out or not.
-median_of_max_dot_prod(){
+median_of_max_dot_prod <- function(cur_clust){
   cur_dot_prod <- cur_clust %*% t(cur_clust)
   diag(cur_dot_prod) <- NA
-  cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 
+  cur_dot_prod_median_of_max <- median(apply(cur_dot_prod, 
                                             1, 
                                             max, 
                                             na.rm = T))
+  return(cur_dot_prod_median_of_max)
 }
-
 
 #' @title Filter cluster from a ClusterSet object using dot product. 
 #' 
