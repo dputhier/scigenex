@@ -207,7 +207,7 @@ filter_by_dot_prod <- function(object = NULL,
     all_dot_prod[i] <- median_of_max_dot_prod(cur_clust)
     
     # Dot product filtering
-    if (cur_dot_prod_median_of_max <= av_dot_prod_min) {
+    if (all_dot_prod[i] <= av_dot_prod_min) {
       selected_cluster[i] <- NA
     }
   }
