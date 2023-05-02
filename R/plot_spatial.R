@@ -172,11 +172,13 @@ plot_spatial <- function(seurat_obj=NULL,
 #' of the number of genes divided by 2.
 #' @param intensity_slot The assay slot to use for the gene expression values.
 #'        Must be one of "sct", "counts", or "data". Default is "sct".
+#' @param title The title of the plot. Default is an empty string.
 #' @param legend Whether to display a legend for the color scale. Default is FALSE.
 #' @param barwidth A numeric or a grid::unit() object specifying the width of the colourbar. 
 #' Default value is legend.key.width or legend.key.size in theme() or theme.
 #' @param barheight A numeric or a grid::unit() object specifying the height of the colourbar. 
 #' Default value is legend.key.height or legend.key.size in theme() or theme.
+#' @param axis Whether to display a axis for the color scale. Default is FALSE.
 #' @param pt_size The size of the points in the plot. Default is 2.1.
 #' @param pt_shape The shape of the points in the plot. Default is 16 (a circle).
 #' @param pt_star A boolean. Whether to use ggstar shapes.
