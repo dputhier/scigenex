@@ -38,6 +38,8 @@ meta.data) slot of a seurat object.}
 \item{intensity_slot}{The assay slot to use for the gene expression values.
 Must be one of "sct", "counts", or "data". Default is "sct".}
 
+\item{title}{The title of the plot. Default is an empty string.}
+
 \item{size_title}{The size of the titles.}
 
 \item{face_title}{Font face for the title. Possible values are “plain”, “italic”, “bold” and “bold.italic”.}
@@ -47,6 +49,8 @@ Default value is legend.key.width or legend.key.size in theme() or theme.}
 
 \item{barheight}{A numeric or a grid::unit() object specifying the height of the colourbar. 
 Default value is legend.key.height or legend.key.size in theme() or theme.}
+
+\item{axis}{Whether to display a axis for the color scale. Default is FALSE.}
 
 \item{panel_names}{A vector of panel names to use for each gene plot.}
 
