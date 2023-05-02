@@ -26,30 +26,9 @@ maximum concordances across all genes, which can be used to
 determine whether a cluster should be filtered out or not.
 }
 \examples{
-# Load a Seurat object
-data(pbmc_small, package = "SeuratObject")
-
-# Compute the signatures using find_gene_clusters()
-clust_set <- select_genes(pbmc_small,
-                          distance = "kendall",
-                          k = 75,
-                          highest = 0.3,
-                          fdr = 1e-8,
-                          row_sum = -Inf,
-                          no_dknn_filter = TRUE)
-                          
-# Cluster informative features
-clust_set <- gene_clustering(clust_set, 
-                            inflation = 1.6,
-                            keep_nn = FALSE,
-                            k = 5)
-                            
-# Plot heatmap of gene clusters
-plot_heatmap(clust_set)
-
-# Remove the cluster 5 containing less than 4 cells expressing 100\% of the genes in cluster 4
-clust_set <- filter_by_dot_prod(clust_set,
-                                av_dot_prod_min = 5)
-plot_heatmap(clust_set)
-
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters)
+nclust(pbmc3k_medium_clusters)
+obj <- filter_by_dot_prod(pbmc3k_medium_clusters, av_dot_prod_min=5)
+nclust(obj) 
 }

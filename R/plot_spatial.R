@@ -36,7 +36,7 @@
 #'
 #' @importFrom ggplot2 ggplot geom_point scale_color_gradientn theme_void
 #'              ggtitle element_text margin guide_colourbar coord_flip
-#' @importFrom Seurat NoLegend
+#' @importFrom Seurat NoLegend NoAxes
 #' @importFrom ggstar geom_star
 #'
 #' @examples
@@ -143,7 +143,7 @@ plot_spatial <- function(seurat_obj=NULL,
     p <- p + NoLegend()
   
   if(!axis)
-    p <- p + NoAxes()
+    p <- p + Seurat::NoAxes()
   
   return(p)
 }

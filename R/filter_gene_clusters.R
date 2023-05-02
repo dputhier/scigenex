@@ -74,7 +74,8 @@ filter_cluster_size <- function(object = NULL,
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
 #' 
 #' @examples
-#' 
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#' new_cs < - filter_nb_supporting_cells(pbmc3k_medium_clusters, 3, 50)
 #' 
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'
@@ -137,13 +138,13 @@ filter_nb_supporting_cells <- function(object = NULL,
 
 ############################## filter_by_dot_prod ##############################
 
-#' median_of_max_dot_prod()
-#' Expect a binary matrix as input. Calculates the dot product for 
-#' this matrix, which produces a gene-gene matrix showing the 
-#' number of cells/spots where each pair of genes are expressed 
-#' together. The function then calculates the median value of the 
-#' maximum concordances across all genes, which can be used to 
-#' determine whether a cluster should be filtered out or not.
+# median_of_max_dot_prod()
+# Expect a binary matrix as input. Calculates the dot product for 
+# this matrix, which produces a gene-gene matrix showing the 
+# number of cells/spots where each pair of genes are expressed 
+# together. The function then calculates the median value of the 
+# maximum concordances across all genes, which can be used to 
+# determine whether a cluster should be filtered out or not.
 median_of_max_dot_prod <- function(cur_clust){
   cur_dot_prod <- cur_clust %*% t(cur_clust)
   diag(cur_dot_prod) <- NA

@@ -434,12 +434,13 @@ install_mcl <- function(force=FALSE){
 #' @param where The package name. Default to "scigenex".
 #' @returns A vector with the available methods.
 #' @importFrom methods showMethods
+#' @importFrom utils capture.output
 #' @examples
 #' show_methods()
 #' @export show_methods
 show_methods <- function(class="ClusterSet",
                          where="scigenex"){
-  class_method <- capture.output(methods::showMethods(class="ClusterSet", 
+  class_method <- utils::capture.output(methods::showMethods(class="ClusterSet", 
                                                       where = paste0("package:", where)))
   
   class_method <- class_method[grep("Function", class_method, perl=T)]

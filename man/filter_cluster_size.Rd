@@ -24,10 +24,6 @@ set_verbosity(1)
 
 # Create a matrix with 4 signatures
 m <- create_4_rnd_clust()
-# Add a signature of 10 genes
-m <- rbind(m, matrix(rep(c(rep(5, 10*2),
-                           rep(0, 10*17),
-                           rep(5, 10*1)), 20), nrow = 10, ncol = 20))
 
 # Select informative genes
 clust_set <- select_genes(m,
@@ -42,12 +38,11 @@ clust_set <- gene_clustering(clust_set,
                             inflation = 1.2,
                             keep_nn = FALSE,
                             k = 5)
-# Plot heatmap of gene clusters
-plot_heatmap(clust_set)
+clust_size(clust_set)
 
-# Remove the cluster 5 containing less than 10 genes
+# Remove the cluster with less than 100 genes
 clust_set <- filter_cluster_size(clust_set,
-                                 min_cluster_size = 10)
-plot_heatmap(clust_set)
+                                 min_cluster_size = 100)
+clust_size(clust_set)
 
 }
