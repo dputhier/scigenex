@@ -16,13 +16,6 @@ test_that("Checking dim()", {
   expect_equal(dim(res), c(359, 20))
 })
 
-test_that("Checking cluster_names()", {
-  expect_equal(unname(clust_names(res)), c(rep("1", 123),
-                                           rep("2", 88),
-                                           rep("3", 81),
-                                           rep("4", 67)))
-  expect_that(clust_names(res), is_a("character"))
-})
 
 test_that("Checking colnames()", {
   expect_equal(col_names(res), paste0("sample", seq(1,20)))

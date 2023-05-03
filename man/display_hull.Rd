@@ -58,19 +58,20 @@ A ggplot object (with segments).
 Draw a hull around a region of interest of Visium data.
 }
 \examples{
+library(Seurat)
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-lymph_node_tiny_2 <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
-p <- SpatialDimPlot(lymph_node_tiny_2, pt.size.factor = 4)
+lymph_node_tiny_2 <- Seurat::AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 10)
+p <- Seurat::SpatialDimPlot(lymph_node_tiny_2, pt.size.factor = 4)
 p
 hull <- display_hull(lymph_node_tiny_2, 
-        ident=ifelse(Idents(lymph_node_tiny_2) \%in\% c(7, 8), 1, 0),
+        ident=ifelse(Seurat::Idents(lymph_node_tiny_2) \%in\% c(7, 8), 1, 0),
         delta=1, size_x=3.4, size_y=3)
 p + hull
 p <- plot_spatial(lymph_node_tiny_2, metadata = "Cluster3", pt_size = 5)
 hull <- display_hull(lymph_node_tiny_2, 
-        ident=ifelse(Idents(lymph_node_tiny_2) \%in\% c(7, 8), 1, 0),
-        delta=1, size_x=3.4, size_y=3, color="black")
+                     ident=ifelse(Seurat::  Idents(lymph_node_tiny_2) \%in\% c(7, 8), 1, 0),
+                     delta=1, size_x=3.4, size_y=3, color="black")
 p + hull
 }
 \keyword{hull,}

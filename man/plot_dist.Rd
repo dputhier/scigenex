@@ -52,16 +52,8 @@ of a ClusterSet object.
 # Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
-# Create a matrix with 4 signatures
-m <- create_4_rnd_clust()
-
-# Select informative genes
-res <- select_genes(m,
-                    distance = "kendall",
-                    k = 75,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
-plot_dist(res)
+# Load datasets
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+plot_dist(pbmc3k_medium_clusters)
 
 }

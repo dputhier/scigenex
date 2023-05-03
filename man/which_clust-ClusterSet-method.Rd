@@ -16,6 +16,6 @@ Which clusters contain a set of genes.
 }
 \examples{
 # load a dataset
-data("scigenex_test_I1.2")
-hit <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+hit <- which_clust(pbmc3k_medium_clusters, genes = c("TJP2", "GLA", "UNKNOWN"))
 }

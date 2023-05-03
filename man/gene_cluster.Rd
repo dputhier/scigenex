@@ -18,7 +18,7 @@ as value.
 }
 \examples{
 # load a dataset
-data("scigenex_test_I1.2")
-g_clust <- gene_cluster(scigenex_test_I1.2)
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+g_clust <- gene_cluster(pbmc3k_medium_clusters)
 }
 \keyword{internal}

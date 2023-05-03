@@ -2,7 +2,8 @@
 set_verbosity(0)
 
 library(Seurat)
-data("pbmc_small")
+library(SeuratObject)
+data("pbmc_small", package="SeuratObject")
 markers <- FindAllMarkers(pbmc_small)
 cs <- cluster_set_from_seurat(pbmc_small, markers)
 

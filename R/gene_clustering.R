@@ -21,6 +21,7 @@
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #' @examples
 #' # Restrict vebosity to info messages only.
+#' library(Seurat)
 #' set_verbosity(1)
 #' 
 #' # Load a dataset
@@ -35,13 +36,13 @@
 #' 
 #' ## Method 1 - Construct a graph with a 
 #' ## novel neighborhood size
-#' res <- gene_clustering(res, keep_nn = F, 
+#' res <- gene_clustering(res, keep_nn = FALSE, 
 #'                        inflation = 2.2, threads = 4)
 #'                        
 #' # Display the heatmap of gene clusters
 #' res <- top_genes(res)
 #' plot_heatmap(res)
-#' plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
+#' plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 #' 
 #' 
 #' ## Method 2 - Conserve the same neighborhood 
@@ -53,7 +54,7 @@
 #' # Display the heatmap of gene clusters
 #' res <- top_genes(res)
 #' plot_heatmap(res)
-#' plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
+#' plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 #' 
 #' @export gene_clustering
 
@@ -148,23 +149,23 @@ gene_clustering <- function(object = NULL,
 #'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
-#' #set_verbosity(1)
+#' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
-#' #m <- create_4_rnd_clust()
+#' m <- create_4_rnd_clust()
 #' 
 #' # Select informative features
-#' #res <- select_genes(m,
-#' #                    distance = "kendall",
-#' #                    k = 75,
-#' #                    highest = 0.3,
-#' #                    fdr = 1e-8,
-#' #                    row_sum = -Inf)
+#' res <- select_genes(m[1:600,],
+#'                     distance = "pearson",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
 #'                     
 #' # Construct a new graph based on genes selected with select_genes()
-#' #res <- construct_new_graph(object = res, k = 5)
-#'
-
+#' res <- construct_new_graph(object = res, k = 5)
+#' @keywords internal
+#' @export construct_new_graph
 construct_new_graph <- function(object = NULL,
                                 k = 5,
                                 output_path = tempdir(),
@@ -345,23 +346,24 @@ construct_new_graph <- function(object = NULL,
 #'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
-#' #set_verbosity(1)
+#' set_verbosity(1)
 #' 
 #' # Create a matrix with 4 signatures
-#' #m <- create_4_rnd_clust()
+#' m <- create_4_rnd_clust()
 #' 
 #' # Select informative features
-#' #res <- select_genes(m,
-#' #                    distance = "kendall",
-#' #                    k = 75,
-#' #                    highest = 0.3,
-#' #                    fdr = 1e-8,
-#' #                    row_sum = -Inf)
+#' res <- select_genes(m[1:600,],
+#'                     distance = "pearson",
+#'                     k = 75,
+#'                     highest = 0.3,
+#'                     fdr = 1e-8,
+#'                     row_sum = -Inf)
 #'                     
 #' # Construct a graph based on genes selected with select_genes() and their neighbors
-#' #keep_dbf_graph(object = res)
+#' keep_dbf_graph(object = res)
 #'
-
+#' @keywords internal
+#' @export keep_dbf_graph
 keep_dbf_graph <- function(object = NULL,
                            output_path = tempdir(),
                            name = NULL) {

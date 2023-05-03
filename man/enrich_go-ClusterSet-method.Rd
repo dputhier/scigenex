@@ -42,6 +42,9 @@ clust_set <- gene_clustering(clust_set,
                             k = 5)
 
 # Do enrichment analysis using GO ontology
-clust_set <- enrich_go(clust_set)
-# Results of enrichment analysis are stored in clust_set@gene_cluster_annotations slot
+clust_set <- enrich_go(clust_set[1:2,])
+
+# Results of enrichment analysis are 'gene_cluster_annotations' slot
+print(clust_set@gene_cluster_annotations)
+
 }

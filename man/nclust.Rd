@@ -14,8 +14,7 @@ nclust(x)
 The number of clusters in a ClusterSet object.
 }
 \examples{
-# load a dataset
-data("scigenex_test_I1.2")
-n_clust <- nclust(scigenex_test_I1.2)
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+n_clust <- nclust(pbmc3k_medium_clusters)
 }
 \keyword{internal}

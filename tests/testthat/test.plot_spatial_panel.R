@@ -1,4 +1,6 @@
 set_verbosity(0)
+library(Seurat)
+library(SeuratObject)
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 lymph_node_tiny_2 <- AddModuleScore(lymph_node_tiny_2, features = lymph_node_tiny_clusters_2@gene_clusters, nbin = 15)

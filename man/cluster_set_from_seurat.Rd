@@ -23,13 +23,15 @@ Transform a Seurat objects into a ClusterSet.
 }
 \examples{
 ## From a scRNA-seq/Seurat object
-data("pbmc_small")
-cs <- cluster_set_from_seurat(pbmc_small, FindAllMarkers(pbmc_small))
+library(SeuratObject)
+library(Seurat)
+data("pbmc_small", package="SeuratObject")
+cs <- cluster_set_from_seurat(pbmc_small, Seurat::FindAllMarkers(pbmc_small))
 plot_heatmap(cs)
 plot_heatmap(cs)
 plot_heatmap(cs[1,])
-plot_heatmap(cs, cell_clusters = Idents(pbmc_small))
+plot_heatmap(cs, cell_clusters = Seurat::Idents(pbmc_small))
 plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
-cell_clusters = Idents(pbmc_small), label_size = 6)
-plot_profiles(cs, ident = Idents(pbmc_small))
+             cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
+plot_profiles(cs, ident = Seurat::Idents(pbmc_small))
 }

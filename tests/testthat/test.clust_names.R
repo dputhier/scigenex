@@ -1,8 +1,7 @@
-data("scigenex_test_I1.2")
-data("scigenex_test_I4")
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 
 test_that("Check clust_names() is working.", {
-  a <- unname(gene_cluster(scigenex_test_I1.2))
-  b <- unname(clust_names(scigenex_test_I1.2))
-  expect_true(all(a==b))
+  a <- unique(unname(gene_cluster(pbmc3k_medium_clusters)))
+  b <- clust_names(pbmc3k_medium_clusters)
+  expect_true(all(as.character(a)==b))
 })

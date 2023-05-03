@@ -26,6 +26,9 @@ check: clean
 	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \
 	cd ..; R CMD build scigenex; R CMD check scigenex_$(VERSION).tar.gz
 
+run_example:
+	@echo "devtools::run_examples(pkg = '.')" | R --slave
+
 checkfast: clean
 	@rm -rf /tmp/scigenex; mkdir -p /tmp/scigenex; cp -r ./* /tmp/scigenex; cd /tmp/scigenex; \
 	rm -f src/*.o src/*.so; rm -f scigenex.Rcheck/dbfmcl/libs/dbfmcl.so; \

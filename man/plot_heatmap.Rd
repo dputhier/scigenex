@@ -79,29 +79,32 @@ Iheatmap-class object.
 Plot the observed and simulated distance with the Kth nearest neighbors.
 }
 \examples{
+library(Seurat)
 # Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
-# Create a matrix with 4 signatures
-m <- create_4_rnd_clust()
+# Load datasets
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+load_example_dataset('7871581/files/pbmc3k_medium')
 
-# Select informative genes
-res <- select_genes(m,
-                    distance = "kendall",
-                    k = 75,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
-                    
-# Cluster informative features
-res <- gene_clustering(res,
-                       inflation = 1.2,
-                       keep_nn = FALSE,
-                       k = 5)
-# Plot heatmap of all gene clusters
-plot_heatmap(res)
+# Plot heatmap of 'top genes' of all gene clusters
+pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters)
+plot_heatmap(pbmc3k_medium_clusters, use_top_genes=TRUE)
 
 # Plot heatmap of gene cluster 1
-plot_heatmap(res[1,]) 
+plot_heatmap(pbmc3k_medium_clusters[1,]) 
 
+# Plot heatmap of gene cluster 1 and 3
+plot_heatmap(pbmc3k_medium_clusters[c(1,3),])  
+
+# Plot heatmap of 'top genes' of all gene clusters
+# with cell ordered according to Seurat results
+plot_heatmap(pbmc3k_medium_clusters, use_top_genes=TRUE, cell_clusters=Seurat::Idents(pbmc3k_medium))
+
+# Plot heatmap of 'top genes' of all gene clusters
+# with cell ordered according to Seurat results
+# (non interactive version)
+plot_heatmap(pbmc3k_medium_clusters, use_top_genes=TRUE, 
+             cell_clusters=Seurat::Idents(pbmc3k_medium),
+             interactive=FALSE, label_size = 2)
 }

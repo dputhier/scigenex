@@ -16,6 +16,6 @@ Rename the gene clusters of a ClusterSet.
 }
 \examples{
 # load a dataset
-data("scigenex_test_I1.2")
-new_obj <- rename_clust(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+new_obj <- rename_clust(pbmc3k_medium_clusters, new_names = letters[1:nclust(pbmc3k_medium_clusters)])
 }

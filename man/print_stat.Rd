@@ -31,10 +31,5 @@ set_verbosity(3)
 print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
 set_verbosity(0)
 print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
-(opt_warn <- options()$warn)
-print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
-options(warn=-1)
-print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
-options(warn=opt_warn)
 }
 \keyword{internal}

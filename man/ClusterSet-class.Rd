@@ -31,6 +31,7 @@ This class is a representation of a partitioning algorithm and is intented to st
 }}
 
 \examples{
+library(Seurat)
 load_example_dataset("7871581/files/pbmc3k_medium")
 
 # Select informative genes
@@ -47,7 +48,7 @@ plot_heatmap(res[1:2, ], row_labels = FALSE, line_size_horizontal = 2)
 plot_heatmap(res[1:2, 1:15], row_labels = FALSE, line_size_horizontal = 2)
 
 # plot the profiles
-idents <- Idents(pbmc3k_medium)
+idents <- Seurat::Idents(pbmc3k_medium)
 plot_profiles(res,
               ident = idents)
              

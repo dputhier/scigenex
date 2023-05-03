@@ -19,25 +19,14 @@
 #' @export
 #'
 #' @examples
-#' # Set verbosity to 1 to display info messages only.
-#' set_verbosity(1)
-#' 
-#' # Create a matrix with 4 signatures
-#' m <- create_3_rnd_clust()
+#' library(Seurat)
+#' load_example_dataset("7871581/files/pbmc3k_medium")
 #' 
 #' # Select informative genes
-#' res <- select_genes(m,
-#'                     distance = "kendall",
-#'                     k = 75,
-#'                     highest = 0.3,
-#'                     fdr = 1e-8,
-#'                     row_sum = -Inf)
+#' res <- select_genes(pbmc3k_medium)
 #'                     
 #' # Cluster informative features
-#' res <- gene_clustering(res, 
-#'                        inflation = 1.2,
-#'                        keep_nn = FALSE,
-#'                        k = 5)
+#' res <- gene_clustering(res, inflation=1.6)
 #' is(res)
 #' 
 #' # Plot heatmap of gene clusters
@@ -47,11 +36,9 @@
 #' plot_heatmap(res[1:2, 1:15], row_labels = FALSE, line_size_horizontal = 2)
 #' 
 #' # plot the profiles
-#' idents <- c(rep(1,10), rep(2,10))
-#' names(idents) <- colnames(res@data)
+#' idents <- Seurat::Idents(pbmc3k_medium)
 #' plot_profiles(res,
-#'               ident = idents,
-#'              color_cell_type = c("1" = "#4E79A7", "2" = "#A0CBE8"))
+#'               ident = idents)
 #'              
 #' # Some methods of the ClusterSet object
 #' x <- ncol(res)
@@ -61,15 +48,15 @@
 #' x <- row_names(res)
 #' x <- get_genes(res)
 #' x<-  clust_size(res)
-#' x <- c("gene400", "gene141") %in% res
-#' x <- which_clust(res, genes = c("gene400", "gene141"))
+#' x <- c("IL32", "CCL5") %in% res
+#' x <- which_clust(res, genes = c("IL32", "CCL5"))
 #' res <- top_genes(res, top=5)
 #' res <- res[2:3, ]
+#' res <- rename_clust(res)
 #' clust_names(res)
-#' scigenex_test_I1.2 <- rename_clust(res)
-#' clust_names(res)
-#' res <- res[,col_names(res)[1:10]]
+#' res <- res[, col_names(res)[1:10]]
 #' show(res)    
+#' show_methods(res)
 setClass("ClusterSet",
          representation = list(
            data = "matrix",
@@ -167,21 +154,15 @@ setGeneric("clust_names",
              standardGeneric("clust_names")
 )
 
-#' @title Names of gene clusters stored in the ClusterSet object
+#' @title The names of the gene clusters stored in the ClusterSet object
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
 #' @export clust_names
-setMethod("clust_names", "ClusterSet",
+setMethod("clust_names", 
+          "ClusterSet",
           function(x){
-            clust <- unlist(mapply(rep, 
-                                   names(x@gene_clusters), 
-                                   lapply(x@gene_clusters, length)))
-            names(clust) <- unlist(mapply(rep, 
-                                          names(x@gene_clusters), 
-                                          lapply(x@gene_clusters, length)))
-
-            return(clust)
+            return(names(x@gene_clusters))
           }
             
 )
@@ -360,9 +341,8 @@ setMethod("[", signature(x = "ClusterSet"),
 #' @param x The ClusterSet object
 #' @export nclust
 #' @examples 
-#' # load a dataset
-#' data("scigenex_test_I1.2")
-#' n_clust <- nclust(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' n_clust <- nclust(pbmc3k_medium_clusters)
 #' @keywords internal
 setGeneric("nclust", 
            function(x)
@@ -378,8 +358,8 @@ setGeneric("nclust",
 #' @export nclust
 #' @examples 
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' n_clust <- nclust(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' n_clust <- nclust(pbmc3k_medium_clusters)
 setMethod(
   "nclust", signature("ClusterSet"),
   function(x) {
@@ -395,8 +375,8 @@ setMethod(
 #' @export clust_size
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' x <- clust_size(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' x <- clust_size(pbmc3k_medium_clusters)
 #' @keywords internal
 setGeneric("clust_size", 
            function(x)
@@ -411,8 +391,8 @@ setGeneric("clust_size",
 #' @export
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' x <- clust_size(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' x <- clust_size(pbmc3k_medium_clusters)
 setMethod(
   "clust_size", signature("ClusterSet"),
   function(x) {
@@ -433,8 +413,8 @@ setMethod(
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' g_clust <- gene_cluster(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' g_clust <- gene_cluster(pbmc3k_medium_clusters)
 #' @export gene_cluster
 #' @keywords internal
 setGeneric("gene_cluster", 
@@ -452,8 +432,8 @@ setGeneric("gene_cluster",
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' g_clust <- gene_cluster(scigenex_test_I1.2)
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' g_clust <- gene_cluster(pbmc3k_medium_clusters)
 #' @export gene_cluster
 setMethod(
   "gene_cluster", signature("ClusterSet"),
@@ -514,6 +494,7 @@ setMethod(
 #' @param x The gene to be searched;
 #' @param table The ClusterSet object.
 #' @keywords internal
+#' @export `%in%`
 setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, table) {
   x %in% names(gene_cluster(table))
 })
@@ -526,8 +507,8 @@ setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, 
 #' @export which_clust
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' hit <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' hit <- which_clust(pbmc3k_medium_clusters, genes = c("TJP2", "GLA", "UNKNOWN"))
 #' @keywords internal
 setGeneric("which_clust", 
            function(object,
@@ -542,8 +523,8 @@ setGeneric("which_clust",
 #' @export which_clust
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' hit <- which_clust(scigenex_test_I1.2, genes = c("gene400", "gene141"))
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' hit <- which_clust(pbmc3k_medium_clusters, genes = c("TJP2", "GLA", "UNKNOWN"))
 setMethod("which_clust", 
           signature("ClusterSet"), 
           function(object, genes) {
@@ -560,8 +541,8 @@ setMethod("which_clust",
 #' @export rename_clust
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' new_obj <- rename_clust(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' new_obj <- rename_clust(pbmc3k_medium_clusters, new_names = letters[1:nclust(pbmc3k_medium_clusters)])
 #' @keywords internal
 setGeneric("rename_clust", 
            function(object, new_names=NULL)
@@ -575,8 +556,8 @@ setGeneric("rename_clust",
 #' @export rename_clust
 #' @examples
 #' # load a dataset
-#' data("scigenex_test_I1.2")
-#' new_obj <- rename_clust(scigenex_test_I1.2, new_names = letters[1:nclust(scigenex_test_I1.2)])
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' new_obj <- rename_clust(pbmc3k_medium_clusters, new_names = letters[1:nclust(pbmc3k_medium_clusters)])
 setMethod("rename_clust", 
           signature("ClusterSet"), 
           function(object, 

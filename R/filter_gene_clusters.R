@@ -11,27 +11,12 @@
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
-#' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
-#' 
-#' # Select informative genes
-#' clust_set <- select_genes(m,
-#'                          distance = "pearson",
-#'                          k = 75,
-#'                          highest = 0.3,
-#'                          fdr = 1e-8,
-#'                          row_sum = -Inf)
-#'                     
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 1.2,
-#'                             keep_nn = FALSE,
-#'                             k = 5)
-#' clust_size(clust_set)
-#' 
-#' # Remove the cluster with less than 100 genes
-#' clust_set <- filter_cluster_size(clust_set,
-#'                                  min_cluster_size = 100)
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' clust_size(pbmc3k_medium_clusters)
+#' # Remove the cluster with less than 20 genes
+#' clust_set <- filter_cluster_size(pbmc3k_medium_clusters,
+#'                                  min_cluster_size = 20)
 #' clust_size(clust_set)
 #' 
 #' @export filter_cluster_size
@@ -75,7 +60,7 @@ filter_cluster_size <- function(object = NULL,
 #' 
 #' @examples
 #' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
-#' new_cs < - filter_nb_supporting_cells(pbmc3k_medium_clusters, 3, 50)
+#' new_cs <- filter_nb_supporting_cells(pbmc3k_medium_clusters, 3, 50)
 #' 
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'

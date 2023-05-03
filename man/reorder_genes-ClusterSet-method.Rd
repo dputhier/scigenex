@@ -39,17 +39,17 @@ ordering rules.
 \examples{
 # Set verbosity to 1 to display info messages only.
 set_verbosity(1)
-# Load a dataset
-data("scigenex_test_I1.2")
+# load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
                        
 # Reorder genes using hierarchical clustering
-scigenex_test_I1.2 <- reorder_genes(scigenex_test_I1.2, order_by = "hclust")
+pbmc3k_medium_clusters <- reorder_genes(pbmc3k_medium_clusters, order_by = "hclust")
 
 # Plot heatmap of gene clusters
-plot_heatmap(scigenex_test_I1.2)
+plot_heatmap(pbmc3k_medium_clusters)
 
 # Reorder and plot
-plot_heatmap(reorder_genes(scigenex_test_I1.2[1,], 
+plot_heatmap(reorder_genes(pbmc3k_medium_clusters[1,], 
                            order_by = "gene_names"), 
              label_size = 5)
 

@@ -52,6 +52,7 @@ clust_set <- gene_clustering(clust_set,
                             k = 5)
 
 # Do enrichment analysis using GO ontology
-clust_set <- enrich_go(clust_set)
+# (here also subset the two first clusters)
+clust_set <- enrich_go(clust_set[1:2,])
 viz_enrich(clust_set, cluster = 1, nb_terms = 5)
 }

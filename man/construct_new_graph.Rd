@@ -24,20 +24,20 @@ The graph is constructed using the Density K-Nearest Neighbor (DKNN) method.
 }
 \examples{
 # Set verbosity to 1 to display info messages only.
-#set_verbosity(1)
+set_verbosity(1)
 
 # Create a matrix with 4 signatures
-#m <- create_4_rnd_clust()
+m <- create_4_rnd_clust()
 
 # Select informative features
-#res <- select_genes(m,
-#                    distance = "kendall",
-#                    k = 75,
-#                    highest = 0.3,
-#                    fdr = 1e-8,
-#                    row_sum = -Inf)
+res <- select_genes(m[1:600,],
+                    distance = "pearson",
+                    k = 75,
+                    highest = 0.3,
+                    fdr = 1e-8,
+                    row_sum = -Inf)
                     
 # Construct a new graph based on genes selected with select_genes()
-#res <- construct_new_graph(object = res, k = 5)
-
+res <- construct_new_graph(object = res, k = 5)
 }
+\keyword{internal}

@@ -14,7 +14,7 @@ Compute statistics about the clusters
 }
 \examples{
 # load a dataset
-data("scigenex_test_I1.2")
-df <- cluster_stats(scigenex_test_I1.2)
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+df <- cluster_stats(pbmc3k_medium_clusters)
 }
 \keyword{internal}

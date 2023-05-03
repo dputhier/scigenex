@@ -134,11 +134,6 @@ print_msg <-
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
 #' set_verbosity(0)
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
-#' (opt_warn <- options()$warn)
-#' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
-#' options(warn=-1)
-#' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="WARNING")
-#' options(warn=opt_warn)
 #' @keywords internal
 print_stat <-
   function(msg,
@@ -355,8 +350,9 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
 #' @param object the clusterSet object to be tested 
 #' @returns None.
 #' @examples 
-#' data("scigenex_test_I1.2")
-#' check_format_cluster_set(scigenex_test_I1.2)
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' check_format_cluster_set(pbmc3k_medium_clusters)
 #' @export check_format_cluster_set
 #' @keywords internal
 check_format_cluster_set <- function(object) {

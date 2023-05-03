@@ -14,35 +14,16 @@
 #' @export get_genes
 #'
 #' @examples
-#' # Set verbosity to 1 to display info messages only.
-#' set_verbosity(1)
-#' 
-#' # Create a matrix with 4 signatures
-#' m <- create_4_rnd_clust()
-#' 
-#' # Select informative genes
-#' clust_set <- select_genes(m,
-#'                           distance = "kendall",
-#'                           k = 75,
-#'                           highest = 0.3,
-#'                          fdr = 1e-8,
-#'                          row_sum = -Inf)
-#'                     
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 1.2,
-#'                             keep_nn = FALSE,
-#'                             k = 5)
-#' 
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' # Get all selected genes
-#' get_genes(clust_set)
+#' x <- get_genes(pbmc3k_medium_clusters)
 #' 
 #' # Get genes from gene cluster 1
-#' get_genes(clust_set, cluster = 1)
+#' x<- get_genes(pbmc3k_medium_clusters, cluster = 1)
 #' 
 #' # Get top 5 genes from cluster 1
-#' clust_set <- top_genes(clust_set, top = 5)
-#' get_genes(clust_set, cluster = 1, top = TRUE)
+#' pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters, top = 5)
+#' x <- get_genes(pbmc3k_medium_clusters, cluster = 1, top = TRUE)
 #' 
 get_genes <- function(object,
                       cluster = "all",

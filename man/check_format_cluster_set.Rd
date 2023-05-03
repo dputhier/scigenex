@@ -16,7 +16,8 @@ None.
 Check the format of a Clusterset object (ncol, nrow, inherits...)
 }
 \examples{
-data("scigenex_test_I1.2")
-check_format_cluster_set(scigenex_test_I1.2)
+# load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+check_format_cluster_set(pbmc3k_medium_clusters)
 }
 \keyword{internal}

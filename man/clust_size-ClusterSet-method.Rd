@@ -15,6 +15,6 @@ The sizes of the clusters stored in a ClusterSet object.
 }
 \examples{
 # load a dataset
-data("scigenex_test_I1.2")
-x <- clust_size(scigenex_test_I1.2)
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+x <- clust_size(pbmc3k_medium_clusters)
 }

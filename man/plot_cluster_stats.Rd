@@ -21,30 +21,16 @@ Plot the result of cluster_stats()
 # Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
-# Create a matrix with 4 signatures
-m <- create_4_rnd_clust()
+# Load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 
-# Select informative genes
-res <- select_genes(m,
-                    distance = "pearson",
-                    k = 75,
-                    highest = 0.3,
-                    fdr = 1e-8,
-                    row_sum = -Inf)
-                    
-# Cluster informative features
-
-res <- gene_clustering(res, 
-                       inflation = 1.2,
-                       keep_nn = FALSE,
-                       k = 5)
                        
 # Compute some statistics about the clusters
-df <- cluster_stats(res)  
+df <- cluster_stats(pbmc3k_medium_clusters)  
 plot_cluster_stats(df)
-plot_cluster_stats(df, highlight=df$sd_total > 1.5) 
+plot_cluster_stats(df, highlight=df$size > 8) 
 
 # Select the cluster of interest
-res <- res[df$sd_total > 1.5, ] 
-nclust(res)          
+pbmc3k_medium_clusters_filtered <- pbmc3k_medium_clusters[df$size > 8, ] 
+nclust(pbmc3k_medium_clusters_filtered)          
 }

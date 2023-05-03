@@ -27,6 +27,6 @@ certain percentage of genes present in this gene cluster.
 }
 \examples{
 load_example_dataset("7871581/files/pbmc3k_medium_clusters")
-new_cs < - filter_nb_supporting_cells(pbmc3k_medium_clusters, 3, 50)
+new_cs <- filter_nb_supporting_cells(pbmc3k_medium_clusters, 3, 50)
 
 }

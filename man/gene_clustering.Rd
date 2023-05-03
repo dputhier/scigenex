@@ -42,6 +42,7 @@ Then the method use the MCL algorithm to detect clusters of co-expressed genes.
 }
 \examples{
 # Restrict vebosity to info messages only.
+library(Seurat)
 set_verbosity(1)
 
 # Load a dataset
@@ -56,13 +57,13 @@ res <- select_genes(pbmc3k_medium,
 
 ## Method 1 - Construct a graph with a 
 ## novel neighborhood size
-res <- gene_clustering(res, keep_nn = F, 
+res <- gene_clustering(res, keep_nn = FALSE, 
                        inflation = 2.2, threads = 4)
                        
 # Display the heatmap of gene clusters
 res <- top_genes(res)
 plot_heatmap(res)
-plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
+plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 
 
 ## Method 2 - Conserve the same neighborhood 
@@ -74,7 +75,7 @@ res <- gene_clustering(res,
 # Display the heatmap of gene clusters
 res <- top_genes(res)
 plot_heatmap(res)
-plot_heatmap(res, cell_clusters = Idents(pbmc3k_medium))
+plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 
 }
 \references{
