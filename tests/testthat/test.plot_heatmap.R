@@ -1,9 +1,9 @@
 # Set verbosity to 0
 set_verbosity(0)
+load_example_dataset("7871581/files/pbmc3k_medium")
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 
-data("scigenex_test_I1.2")
-
-res <- scigenex_test_I1.2
+res <- pbmc3k_medium_clusters
 
 test_that("Checking plot_heatmap()", {
   set.seed(123)
@@ -28,14 +28,16 @@ test_that("Checking plot_heatmap()", {
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 20)
-  expect_equal(nrow(htmp_matrix), 365)
-  expect_equal(dim(htmp_matrix), c(365, 20))
+  expect_equal(ncol(htmp_matrix), 361)
+  expect_equal(nrow(htmp_matrix), 319)
+  expect_equal(dim(htmp_matrix), c(319, 361))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
-  expect_equal(length(na_rows), 6)
-  expect_equal(as.vector(na_rows), c(68, 69, 151, 152, 241, 242))
+  expect_equal(length(na_rows), 28)
+  expect_equal(as.vector(na_rows), c(6L, 7L, 13L, 14L, 21L, 22L, 30L, 31L, 39L, 40L, 53L, 54L, 69L, 
+                                     70L, 85L, 86L, 101L, 102L, 121L, 122L, 143L, 144L, 169L, 170L, 
+                                     216L, 217L, 267L, 268L))
   
   # Check NA rows added by line_size_vertical
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
@@ -43,88 +45,72 @@ test_that("Checking plot_heatmap()", {
   expect_equal(as.vector(na_cols), as.integer())
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), 188.56)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0.03)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.1)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.86)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -3631.17)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.03)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.07)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.49)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.25)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.07)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), -0.02)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c(
-    "sample14", "sample11", "sample12", "sample13", "sample17", "sample18",
-    "sample16", "sample19", "sample15", "sample20", "sample1", "sample5",
-    "sample10", "sample4", "sample2", "sample3", "sample7", "sample6",
-    "sample8", "sample9"
-  ))
+  expect_equal(head(colnames(htmp_matrix),10), c("TAACTCACGTATCG-1", "CTAATGCTTGTGGT-1", "TTCGAGGATAGAAG-1", 
+                                                 "TTCTTACTCTGGAT-1", "ATAAGTTGGTACGT-1", "TTACCATGAATCGC-1", "GGCGCATGCCTAAG-1", 
+                                                 "ATACGGACCTACTT-1", "GGAACACTCACTTT-1", "AAGGTCACGGTTAC-1"))
+  
+  # Checking order of columns
+  expect_equal(tail(colnames(htmp_matrix),10), c("TTCGTATGAAAAGC-1", "CCAAGAACTACTGG-1", "TCGAATCTCTGGTA-1", 
+                                                 "GTCATACTGCGATT-1", "GGCAATACGGCATT-1", "GCTATACTAGCGTT-1", "CAGCTCTGCAAGCT-1", 
+                                                 "TCAATCACACTCTT-1", "ATCCTAACGCTACA-1", "ACGATTCTACGGGA-1"))
   
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene98", "gene52", "gene99", "gene43", "gene3", "gene95",
-    "gene54", "gene85", "gene35", "gene93", "gene82", "gene20",
-    "gene11", "gene63", "gene46", "gene56", "gene13", "gene14",
-    "gene4", "gene71", "gene1", "gene42", "gene80", "gene10",
-    "gene32", "gene96", "gene66", "gene9", "gene94", "gene70",
-    "gene45", "gene78", "gene34", "gene29", "gene28", "gene25",
-    "gene36", "gene83", "gene17", "gene79", "gene51", "gene7",
-    "gene12", "gene59", "gene57", "gene67", "gene2", "gene73",
-    "gene88", "gene16", "gene39", "gene64", "gene21", "gene55",
-    "gene90", "gene74", "gene61", "gene76", "gene86", "gene6",
-    "gene37", "gene31", "gene58", "gene87", "gene27", "gene84",
-    "gene19", " ", " ", "gene2490", "gene1423", "gene760",
-    "gene396", "gene375", "gene325", "gene342", "gene310", "gene302",
-    "gene2911", "gene370", "gene360", "gene376", "gene328", "gene344",
-    "gene345", "gene317", "gene392", "gene3609", "gene400", "gene372",
-    "gene335", "gene355", "gene353", "gene351", "gene341", "gene367",
-    "gene394", "gene301", "gene365", "gene327", "gene350", "gene371",
-    "gene389", "gene331", "gene330", "gene359", "gene336", "gene313",
-    "gene340", "gene378", "gene306", "gene339", "gene373", "gene337",
-    "gene303", "gene349", "gene352", "gene304", "gene329", "gene382",
-    "gene387", "gene316", "gene358", "gene397", "gene311", "gene369",
-    "gene393", "gene332", "gene379", "gene366", "gene398", "gene390",
-    "gene319", "gene386", "gene322", "gene362", "gene385", "gene364",
-    "gene320", "gene324", "gene391", "gene314", "gene363", "gene368",
-    "gene318", "gene323", "gene326", "gene312", "gene334", "gene315",
-    " ", " ", "gene1931", "gene292", "gene268", "gene252",
-    "gene234", "gene280", "gene213", "gene299", "gene287", "gene254",
-    "gene276", "gene228", "gene246", "gene297", "gene293", "gene255",
-    "gene275", "gene201", "gene247", "gene296", "gene259", "gene266",
-    "gene294", "gene241", "gene281", "gene283", "gene240", "gene238",
-    "gene261", "gene212", "gene220", "gene203", "gene224", "gene3991",
-    "gene227", "gene249", "gene289", "gene257", "gene207", "gene288",
-    "gene300", "gene236", "gene223", "gene263", "gene267", "gene282",
-    "gene248", "gene277", "gene258", "gene269", "gene290", "gene262",
-    "gene217", "gene285", "gene273", "gene245", "gene253", "gene298",
-    "gene208", "gene242", "gene237", "gene256", "gene225", "gene235",
-    "gene291", "gene233", "gene286", "gene232", "gene272", "gene229",
-    "gene206", "gene251", "gene244", "gene214", "gene230", "gene219",
-    "gene226", "gene278", "gene250", "gene239", "gene2930", "gene202",
-    "gene284", "gene279", "gene215", "gene222", "gene211", "gene270",
-    " ", " ", "gene3924", "gene3779", "gene3610", "gene2902",
-    "gene2553", "gene2421", "gene2662", "gene2223", "gene2112", "gene1915",
-    "gene1651", "gene3488", "gene3485", "gene3442", "gene2725", "gene2573",
-    "gene2184", "gene3528", "gene1503", "gene1856", "gene1616", "gene838",
-    "gene1922", "gene156", "gene187", "gene174", "gene170", "gene200",
-    "gene181", "gene172", "gene169", "gene185", "gene134", "gene123",
-    "gene110", "gene130", "gene102", "gene128", "gene179", "gene177",
-    "gene152", "gene125", "gene149", "gene140", "gene196", "gene131",
-    "gene157", "gene129", "gene113", "gene175", "gene147", "gene182",
-    "gene167", "gene104", "gene184", "gene195", "gene199", "gene109",
-    "gene193", "gene183", "gene115", "gene163", "gene158", "gene154",
-    "gene151", "gene138", "gene139", "gene161", "gene132", "gene164",
-    "gene136", "gene168", "gene162", "gene165", "gene118", "gene124",
-    "gene178", "gene114", "gene171", "gene191", "gene121", "gene190",
-    "gene137", "gene120", "gene127", "gene197", "gene166", "gene148",
-    "gene116", "gene160", "gene153", "gene194", "gene112", "gene133",
-    "gene145", "gene111", "gene122", "gene108", "gene159", "gene135",
-    "gene107", "gene106", "gene180", "gene173", "gene186", "gene103",
-    "gene119", "gene101", "gene188", "gene142", "gene105", "gene198",
-    "gene117", "gene143", "gene146", "gene144", "gene150", "gene141",
-    "gene176", "gene192", "gene189", "gene155", "gene126"
+  expect_equal(rownames(htmp_matrix), c("PKIG", "ISG20", "CD79B", "LINC00926", "MS4A1", " ", " ", "CAPZA2", 
+                                        "MTURN", "ZHX1-C8ORF76", "MEST", "RP11-879F14.2", " ", " ", "CLIC1", 
+                                        "ABI3", "IFITM2", "RHOC", "FCGR3A", "HES4", " ", " ", "CD27", 
+                                        "AES", "IL7R", "LDHB", "CD3E", "IL32", "CD3D", " ", " ", "PTPN18", 
+                                        "SMIM5", "PRUNE", "ANKRD9", "GFI1B", "LCN2", "ENKUR", " ", " ", 
+                                        "AC092295.7", "TJP2", "PRKAR2B", "XPNPEP1", "TMEM91", "TUBA1C", 
+                                        "SLC40A1", "SPHK1", "FAM63A", "HIST1H2BJ", "CLDN5", "C2orf88", 
+                                        " ", " ", "RNASET2", "CD37", "SLC25A6", "HLA-DMB", "LY86", "FAM26F", 
+                                        "HLA-DQB1", "HLA-DQA1", "CD74", "HLA-DPB1", "HLA-DRB5", "HLA-DRA", 
+                                        "HLA-DRB1", "HLA-DPA1", " ", " ", "MOB3B", "MGLL", "NFE2", "FN3K", 
+                                        "TRIM58", "TMCC2", "ZNF778", "SERPINE2", "FAM212B", "C19orf33", 
+                                        "AC147651.3", "SSX2IP", "SMOX", "LGALSL", " ", " ", "GLUL", "H1F0", 
+                                        "C1orf198", "HIST2H2BE", "SCGB1C1", "MLH3", "SEPT4", "SENCR", 
+                                        "FNTB", "HIST1H2BD", "RP11-367G6.3", "GP1BA", "CMTM5", "CLEC1B", 
+                                        " ", " ", "PPP1R14A", "WIPI1", "GLA", "ARG2", "ABHD16A", "NEXN", 
+                                        "ENDOD1", "CTNNAL1", "TGFB1I1", "RP11-359I18.5", "ABCC3", "FAM212A", 
+                                        "ATP9A", "SCFD2", "ALOX12", "ITGB3", "ARHGAP21", "SPOCD1", " ", 
+                                        " ", "BTK", "KIFC3", "DAB2", "RILP", "FAM110A", "LYL1", "CLIC4", 
+                                        "RAB27B", "DPY19L1", "PYGL", "PCP2", "KIAA0513", "SH3BGRL2", 
+                                        "GATA2", "HEXIM2", "SEC14L5", "hsa-mir-1199", "AC137932.6", "EGFL7", 
+                                        "HEMGN", " ", " ", "PLEK", "EFHD2", "XCL1", "CD7", "CD99", "KLRF1", 
+                                        "IGFBP7", "AKR1C3", "CD247", "HOPX", "IL2RB", "CLIC3", "PTPRCAP", 
+                                        "CCL4", "SPON2", "PRF1", "GNLY", "GZMB", "FGFBP2", "HLA-C", "CTSW", 
+                                        "CST7", "GZMA", "CCL5", " ", " ", "POU2F2", "GCA", "CNPY3", "CYBB", 
+                                        "CAMK1", "ATG3", "CD302", "NUP214", "GRINA", "EIF4EBP1", "ALDH2", 
+                                        "GAPDH", "S100A10", "CD300LF", "FCGR2A", "NAAA", "CTSZ", "BID", 
+                                        "CAPG", "BLVRA", "TGFBI", "SOD2", "IFNGR2", "SLC7A7", "C1orf162", 
+                                        "LILRB4", "LILRB2", "IFI6", "WARS", "AP2S1", "MAFB", "CSTB", 
+                                        "IGSF6", "CD14", "MNDA", "CPVL", "TNFSF13B", "APOBEC3A", "GABARAP", 
+                                        "LGALS2", "S100A11", "CFD", "CTSS", "COTL1", "TYMP", " ", " ", 
+                                        "PVALB", "CD151", "MYL12A", "PARVB", "TPTEP1", "H2AFJ", "MARCH2", 
+                                        "GSN", "MFSD1", "RAP1B", "ASAH1", "YWHAH", "APP", "SNN", "HIST1H2BK", 
+                                        "PLA2G12A", "FERMT3", "ACTN1", "PDLIM1", "ILK", "CTSA", "TPM4", 
+                                        "SNCA", "ODC1", "GRAP2", "GAS2L1", "PTGS1", "NGFRAP1", "TREML1", 
+                                        "MYL9", "TPM1", "F13A1", "CA2", "MPP1", "RGS18", "CLU", "AP001189.4", 
+                                        "MMD", "GP9", "PPBP", "SPARC", "TUBB1", "TMEM40", "HIST1H2AC", 
+                                        "PF4", "GNG11", "SDPR", "ACRBP", "PTCRA", " ", " ", "RPL6", "RPSAP58", 
+                                        "RPLP1", "RPS9", "RPL26", "RPL27", "NACA", "RPL17", "RPL7A", 
+                                        "EEF1B2", "RPL5", "RPL36", "RPS28", "RPS20", "RPL18", "RPL15", 
+                                        "BTG1", "TPT1", "RPL35A", "RPS26", "RPS11", "RPS13", "RPS10", 
+                                        "RPS29", "RPL28", "RPS8", "RPS4X", "RPL31", "EEF1A1", "RPL12", 
+                                        "RPS16", "RPL27A", "RPS23", "RPS15A", "RPS3A", "RPL14", "RPL29", 
+                                        "RPL3", "RPS18", "RPLP2", "RPL32", "RPL11", "RPL18A", "RPS12", 
+                                        "RPS3", "RPS19", "RPS25", "RPL21", "RPL23A", "RPL9", "MALAT1"
   ))
   
   # Checking title of the heatmap
@@ -152,11 +138,6 @@ test_that("Checking plot_heatmap()", {
   expect_equal(htmp_show_dendro, "col_dendro")
 })
 
-
-# ==============================================================================
-# ==============================================================================
-
-
 test_that("Checking plot_heatmap() using top genes", {
   set.seed(123)
   
@@ -181,14 +162,16 @@ test_that("Checking plot_heatmap() using top genes", {
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 20)
-  expect_equal(nrow(htmp_matrix), 86)
-  expect_equal(dim(htmp_matrix), c(86, 20))
+  expect_equal(ncol(htmp_matrix), 361)
+  expect_equal(nrow(htmp_matrix), 230)
+  expect_equal(dim(htmp_matrix), c(230, 361))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
-  expect_equal(length(na_rows), 6)
-  expect_equal(as.vector(na_rows), c(21, 22, 43, 44, 65, 66))
+  expect_equal(length(na_rows), 28)
+  expect_equal(as.vector(na_rows), c(6L, 7L, 13L, 14L, 21L, 22L, 30L, 31L, 39L, 40L, 53L, 54L, 69L, 
+                                     70L, 85L, 86L, 101L, 102L, 121L, 122L, 143L, 144L, 165L, 166L, 
+                                     187L, 188L, 209L, 210L))
   
   # Check NA rows added by line_size_horizontal
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
@@ -196,42 +179,58 @@ test_that("Checking plot_heatmap() using top genes", {
   expect_equal(as.vector(na_cols), as.integer())
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), 52.05)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0.03)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.15)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.88)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -3394.67)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.05)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.05)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.48)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.15)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.22)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.05)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), -0.02)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c(
-    "sample14", "sample11", "sample12", "sample13", "sample17", "sample18",
-    "sample16", "sample19", "sample15", "sample20", "sample1", "sample5",
-    "sample10", "sample4", "sample2", "sample3", "sample7", "sample6",
-    "sample8", "sample9"
-  ))
+  expect_equal(head(colnames(htmp_matrix),10), c("TAACTCACGTATCG-1", "CTAATGCTTGTGGT-1", "TTCGAGGATAGAAG-1", 
+                                                 "TTCTTACTCTGGAT-1", "ATAAGTTGGTACGT-1", "TTACCATGAATCGC-1", "GGCGCATGCCTAAG-1", 
+                                                 "ATACGGACCTACTT-1", "GGAACACTCACTTT-1", "AAGGTCACGGTTAC-1"))
   
+  expect_equal(tail(colnames(htmp_matrix),10), c("TTCGTATGAAAAGC-1", "CCAAGAACTACTGG-1", "TCGAATCTCTGGTA-1", 
+                                                 "GTCATACTGCGATT-1", "GGCAATACGGCATT-1", "GCTATACTAGCGTT-1", "CAGCTCTGCAAGCT-1", 
+                                                 "TCAATCACACTCTT-1", "ATCCTAACGCTACA-1", "ACGATTCTACGGGA-1"))  
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene2", "gene70", "gene12", "gene29", "gene31", "gene80",
-    "gene61", "gene55", "gene27", "gene57", "gene78", "gene7",
-    "gene88", "gene76", "gene32", "gene64", "gene51", "gene19",
-    "gene84", "gene37", " ", " ", "gene326", "gene363",
-    "gene349", "gene369", "gene339", "gene397", "gene382", "gene387",
-    "gene350", "gene316", "gene368", "gene393", "gene398", "gene334",
-    "gene314", "gene320", "gene390", "gene312", "gene364", "gene315",
-    " ", " ", "gene288", "gene232", "gene202", "gene212",
-    "gene229", "gene269", "gene248", "gene219", "gene277", "gene285",
-    "gene283", "gene282", "gene281", "gene256", "gene273", "gene207",
-    "gene206", "gene223", "gene245", "gene286", " ", " ",
-    "gene115", "gene119", "gene155", "gene163", "gene158", "gene198",
-    "gene109", "gene122", "gene120", "gene126", "gene121", "gene176",
-    "gene141", "gene143", "gene171", "gene116", "gene137", "gene108",
-    "gene191", "gene160"
+  expect_equal(rownames(htmp_matrix), c("PKIG", "ISG20", "MS4A1", "CD79B", "LINC00926", " ", " ", "CAPZA2", 
+                                        "MEST", "MTURN", "ZHX1-C8ORF76", "RP11-879F14.2", " ", " ", "CLIC1", 
+                                        "HES4", "ABI3", "IFITM2", "RHOC", "FCGR3A", " ", " ", "AES", 
+                                        "CD27", "IL7R", "CD3E", "LDHB", "IL32", "CD3D", " ", " ", "PTPN18", 
+                                        "SMIM5", "PRUNE", "ANKRD9", "GFI1B", "LCN2", "ENKUR", " ", " ", 
+                                        "XPNPEP1", "AC092295.7", "TJP2", "PRKAR2B", "TMEM91", "SPHK1", 
+                                        "SLC40A1", "TUBA1C", "FAM63A", "C2orf88", "CLDN5", "HIST1H2BJ", 
+                                        " ", " ", "SLC25A6", "RNASET2", "CD37", "FAM26F", "HLA-DMB", 
+                                        "LY86", "HLA-DQB1", "HLA-DQA1", "CD74", "HLA-DPB1", "HLA-DRB5", 
+                                        "HLA-DPA1", "HLA-DRA", "HLA-DRB1", " ", " ", "FN3K", "MGLL", 
+                                        "C19orf33", "NFE2", "MOB3B", "TRIM58", "SERPINE2", "ZNF778", 
+                                        "TMCC2", "AC147651.3", "FAM212B", "SSX2IP", "SMOX", "LGALSL", 
+                                        " ", " ", "H1F0", "GLUL", "HIST2H2BE", "MLH3", "C1orf198", "SENCR", 
+                                        "SEPT4", "FNTB", "RP11-367G6.3", "HIST1H2BD", "SCGB1C1", "CMTM5", 
+                                        "GP1BA", "CLEC1B", " ", " ", "PPP1R14A", "WIPI1", "GLA", "ABHD16A", 
+                                        "TGFB1I1", "RP11-359I18.5", "NEXN", "ENDOD1", "ALOX12", "ITGB3", 
+                                        "ARG2", "SCFD2", "ABCC3", "CTNNAL1", "FAM212A", "ATP9A", "SPOCD1", 
+                                        "ARHGAP21", " ", " ", "LYL1", "BTK", "FAM110A", "PYGL", "CLIC4", 
+                                        "RILP", "DAB2", "KIAA0513", "SH3BGRL2", "RAB27B", "KIFC3", "PCP2", 
+                                        "HEXIM2", "DPY19L1", "GATA2", "SEC14L5", "EGFL7", "hsa-mir-1199", 
+                                        "HEMGN", "AC137932.6", " ", " ", "CCL5", "IGFBP7", "XCL1", "KLRF1", 
+                                        "AKR1C3", "CD7", "HLA-C", "HOPX", "IL2RB", "CD247", "CLIC3", 
+                                        "CTSW", "SPON2", "CCL4", "CST7", "GZMA", "FGFBP2", "GNLY", "PRF1", 
+                                        "GZMB", " ", " ", "BLVRA", "CAPG", "C1orf162", "TGFBI", "SLC7A7", 
+                                        "IFI6", "MAFB", "CPVL", "CSTB", "IGSF6", "AP2S1", "APOBEC3A", 
+                                        "TNFSF13B", "GABARAP", "LGALS2", "CFD", "S100A11", "CTSS", "COTL1", 
+                                        "TYMP", " ", " ", "MPP1", "PTGS1", "MYL9", "MMD", "TMEM40", "CA2", 
+                                        "F13A1", "TREML1", "PTCRA", "RGS18", "AP001189.4", "CLU", "GP9", 
+                                        "HIST1H2AC", "TUBB1", "PPBP", "SPARC", "PF4", "GNG11", "SDPR", 
+                                        " ", " ", "RPL29", "RPS4X", "RPS8", "EEF1A1", "RPS25", "RPS19", 
+                                        "RPL28", "RPLP2", "RPS15A", "RPL12", "RPS3", "RPL23A", "RPL9", 
+                                        "RPS16", "RPS23", "RPS18", "RPL18A", "RPS12", "RPL32", "RPL11"
   ))
   
   # Checking title of the heatmap
@@ -257,14 +256,10 @@ test_that("Checking plot_heatmap() using top genes", {
   expect_equal(htmp_show_dendro, NULL)
 })
 
-
-# ==============================================================================
-# ==============================================================================
-
-
 test_that("Checking plot_heatmap() using cell clusters", {
-  cell_clusters <- c(rep(1, 10), rep(2, 10))
-  names(cell_clusters) <- colnames(res@data)
+  
+  set.seed(123)
+  cell_clusters <- Idents(pbmc3k_medium)
   htmp <- plot_heatmap(
     object = res,
     cell_clusters = cell_clusters,
@@ -281,107 +276,94 @@ test_that("Checking plot_heatmap() using cell clusters", {
   htmp_matrix <- htmp@plots@listData$`Exp. level`@data
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
-  # Check heatmpa format
+  # Check heatmap format
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 22)
-  expect_equal(nrow(htmp_matrix), 365)
-  expect_equal(dim(htmp_matrix), c(365, 22))
+  expect_equal(ncol(htmp_matrix), 377)
+  expect_equal(nrow(htmp_matrix), 319)
+  expect_equal(dim(htmp_matrix), c(319, 377))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
-  expect_equal(length(na_rows), 6)
-  expect_equal(as.vector(na_rows), c(68, 69, 151, 152, 241, 242))
+  expect_equal(length(na_rows), 28)
+  expect_equal(as.vector(na_rows), c(6L, 7L, 13L, 14L, 21L, 22L, 30L, 31L, 39L, 40L, 53L, 54L, 69L, 
+                                     70L, 85L, 86L, 101L, 102L, 121L, 122L, 143L, 144L, 169L, 170L, 
+                                     216L, 217L, 267L, 268L))
   
-  # Check NA rows added by line_size_horizontal
+  # Check NA rows added by line_size_vertical
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
-  expect_equal(length(na_cols), 2)
-  expect_equal(as.vector(na_cols), c(11, 12))
+  expect_equal(length(na_cols), 16)
+  expect_equal(as.vector(na_cols), c(48L, 49L, 97L, 98L, 147L, 148L, 198L, 199L, 246L, 247L, 295L, 
+                                     296L, 334L, 335L, 362L, 363L))
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), 188.56)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0.03)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.1)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.86)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -3631.17)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.03)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.07)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.49)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.25)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.07)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), -0.02)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c(
-    "sample1", "sample2", "sample3", "sample4", "sample5", "sample6",
-    "sample7", "sample8", "sample9", "sample10", " ", "  ",
-    "sample11", "sample12", "sample13", "sample14", "sample15", "sample16",
-    "sample17", "sample18", "sample19", "sample20"
-  ))
+  expect_equal(head(colnames(htmp_matrix),10), c("GATCTACTGGTGAG-1", "ACAGTGACTCACCC-1", "AGACGTACAGAGGC-1", 
+                                                 "GACGTAACCTGTGA-1", "TATACAGATCCAGA-1", "CGGATAACAGCTCA-1", "TTACCATGGTTGAC-1", 
+                                                 "TCCCACGATCATTC-1", "ATAGCGTGCAGATC-1", "TGTAGGTGTGCTGA-1"))
+  
+  # Checking order of columns
+  expect_equal(tail(colnames(htmp_matrix),10), c("ACCTGAGATATCGG-1", "GACGCTCTCTCTCG-1", "GCGCATCTGGTTAC-1", 
+                                                 "AGTCTTACTTCGGA-1", "GGCATATGGGGAGT-1", "TTACGTACGTTCAG-1", "GGAACACTTCAGAC-1", 
+                                                 "ATCATCTGACACCA-1", "ACGAACTGGCTATG-1", "TAACACCTTGTTTC-1"))
   
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene98", "gene52", "gene99", "gene43", "gene3", "gene95",
-    "gene54", "gene85", "gene35", "gene93", "gene82", "gene20",
-    "gene11", "gene63", "gene46", "gene56", "gene13", "gene14",
-    "gene4", "gene71", "gene1", "gene42", "gene80", "gene10",
-    "gene32", "gene96", "gene66", "gene9", "gene94", "gene70",
-    "gene45", "gene78", "gene34", "gene29", "gene28", "gene25",
-    "gene36", "gene83", "gene17", "gene79", "gene51", "gene7",
-    "gene12", "gene59", "gene57", "gene67", "gene2", "gene73",
-    "gene88", "gene16", "gene39", "gene64", "gene21", "gene55",
-    "gene90", "gene74", "gene61", "gene76", "gene86", "gene6",
-    "gene37", "gene31", "gene58", "gene87", "gene27", "gene84",
-    "gene19", " ", " ", "gene2490", "gene1423", "gene760",
-    "gene396", "gene375", "gene325", "gene342", "gene310", "gene302",
-    "gene2911", "gene370", "gene360", "gene376", "gene328", "gene344",
-    "gene345", "gene317", "gene392", "gene3609", "gene400", "gene372",
-    "gene335", "gene355", "gene353", "gene351", "gene341", "gene367",
-    "gene394", "gene301", "gene365", "gene327", "gene350", "gene371",
-    "gene389", "gene331", "gene330", "gene359", "gene336", "gene313",
-    "gene340", "gene378", "gene306", "gene339", "gene373", "gene337",
-    "gene303", "gene349", "gene352", "gene304", "gene329", "gene382",
-    "gene387", "gene316", "gene358", "gene397", "gene311", "gene369",
-    "gene393", "gene332", "gene379", "gene366", "gene398", "gene390",
-    "gene319", "gene386", "gene322", "gene362", "gene385", "gene364",
-    "gene320", "gene324", "gene391", "gene314", "gene363", "gene368",
-    "gene318", "gene323", "gene326", "gene312", "gene334", "gene315",
-    " ", " ", "gene1931", "gene292", "gene268", "gene252",
-    "gene234", "gene280", "gene213", "gene299", "gene287", "gene254",
-    "gene276", "gene228", "gene246", "gene297", "gene293", "gene255",
-    "gene275", "gene201", "gene247", "gene296", "gene259", "gene266",
-    "gene294", "gene241", "gene281", "gene283", "gene240", "gene238",
-    "gene261", "gene212", "gene220", "gene203", "gene224", "gene3991",
-    "gene227", "gene249", "gene289", "gene257", "gene207", "gene288",
-    "gene300", "gene236", "gene223", "gene263", "gene267", "gene282",
-    "gene248", "gene277", "gene258", "gene269", "gene290", "gene262",
-    "gene217", "gene285", "gene273", "gene245", "gene253", "gene298",
-    "gene208", "gene242", "gene237", "gene256", "gene225", "gene235",
-    "gene291", "gene233", "gene286", "gene232", "gene272", "gene229",
-    "gene206", "gene251", "gene244", "gene214", "gene230", "gene219",
-    "gene226", "gene278", "gene250", "gene239", "gene2930", "gene202",
-    "gene284", "gene279", "gene215", "gene222", "gene211", "gene270",
-    " ", " ", "gene3924", "gene3779", "gene3610", "gene2902",
-    "gene2553", "gene2421", "gene2662", "gene2223", "gene2112", "gene1915",
-    "gene1651", "gene3488", "gene3485", "gene3442", "gene2725", "gene2573",
-    "gene2184", "gene3528", "gene1503", "gene1856", "gene1616", "gene838",
-    "gene1922", "gene156", "gene187", "gene174", "gene170", "gene200",
-    "gene181", "gene172", "gene169", "gene185", "gene134", "gene123",
-    "gene110", "gene130", "gene102", "gene128", "gene179", "gene177",
-    "gene152", "gene125", "gene149", "gene140", "gene196", "gene131",
-    "gene157", "gene129", "gene113", "gene175", "gene147", "gene182",
-    "gene167", "gene104", "gene184", "gene195", "gene199", "gene109",
-    "gene193", "gene183", "gene115", "gene163", "gene158", "gene154",
-    "gene151", "gene138", "gene139", "gene161", "gene132", "gene164",
-    "gene136", "gene168", "gene162", "gene165", "gene118", "gene124",
-    "gene178", "gene114", "gene171", "gene191", "gene121", "gene190",
-    "gene137", "gene120", "gene127", "gene197", "gene166", "gene148",
-    "gene116", "gene160", "gene153", "gene194", "gene112", "gene133",
-    "gene145", "gene111", "gene122", "gene108", "gene159", "gene135",
-    "gene107", "gene106", "gene180", "gene173", "gene186", "gene103",
-    "gene119", "gene101", "gene188", "gene142", "gene105", "gene198",
-    "gene117", "gene143", "gene146", "gene144", "gene150", "gene141",
-    "gene176", "gene192", "gene189", "gene155", "gene126"
+  expect_equal(rownames(htmp_matrix), c("PKIG", "ISG20", "CD79B", "LINC00926", "MS4A1", " ", " ", "CAPZA2", 
+                                        "MTURN", "ZHX1-C8ORF76", "MEST", "RP11-879F14.2", " ", " ", "CLIC1", 
+                                        "ABI3", "IFITM2", "RHOC", "FCGR3A", "HES4", " ", " ", "CD27", 
+                                        "AES", "IL7R", "LDHB", "CD3E", "IL32", "CD3D", " ", " ", "PTPN18", 
+                                        "SMIM5", "PRUNE", "ANKRD9", "GFI1B", "LCN2", "ENKUR", " ", " ", 
+                                        "AC092295.7", "TJP2", "PRKAR2B", "XPNPEP1", "TMEM91", "TUBA1C", 
+                                        "SLC40A1", "SPHK1", "FAM63A", "HIST1H2BJ", "CLDN5", "C2orf88", 
+                                        " ", " ", "RNASET2", "CD37", "SLC25A6", "HLA-DMB", "LY86", "FAM26F", 
+                                        "HLA-DQB1", "HLA-DQA1", "CD74", "HLA-DPB1", "HLA-DRB5", "HLA-DRA", 
+                                        "HLA-DRB1", "HLA-DPA1", " ", " ", "MOB3B", "MGLL", "NFE2", "FN3K", 
+                                        "TRIM58", "TMCC2", "ZNF778", "SERPINE2", "FAM212B", "C19orf33", 
+                                        "AC147651.3", "SSX2IP", "SMOX", "LGALSL", " ", " ", "GLUL", "H1F0", 
+                                        "C1orf198", "HIST2H2BE", "SCGB1C1", "MLH3", "SEPT4", "SENCR", 
+                                        "FNTB", "HIST1H2BD", "RP11-367G6.3", "GP1BA", "CMTM5", "CLEC1B", 
+                                        " ", " ", "PPP1R14A", "WIPI1", "GLA", "ARG2", "ABHD16A", "NEXN", 
+                                        "ENDOD1", "CTNNAL1", "TGFB1I1", "RP11-359I18.5", "ABCC3", "FAM212A", 
+                                        "ATP9A", "SCFD2", "ALOX12", "ITGB3", "ARHGAP21", "SPOCD1", " ", 
+                                        " ", "BTK", "KIFC3", "DAB2", "RILP", "FAM110A", "LYL1", "CLIC4", 
+                                        "RAB27B", "DPY19L1", "PYGL", "PCP2", "KIAA0513", "SH3BGRL2", 
+                                        "GATA2", "HEXIM2", "SEC14L5", "hsa-mir-1199", "AC137932.6", "EGFL7", 
+                                        "HEMGN", " ", " ", "PLEK", "EFHD2", "XCL1", "CD7", "CD99", "KLRF1", 
+                                        "IGFBP7", "AKR1C3", "CD247", "HOPX", "IL2RB", "CLIC3", "PTPRCAP", 
+                                        "CCL4", "SPON2", "PRF1", "GNLY", "GZMB", "FGFBP2", "HLA-C", "CTSW", 
+                                        "CST7", "GZMA", "CCL5", " ", " ", "POU2F2", "GCA", "CNPY3", "CYBB", 
+                                        "CAMK1", "ATG3", "CD302", "NUP214", "GRINA", "EIF4EBP1", "ALDH2", 
+                                        "GAPDH", "S100A10", "CD300LF", "FCGR2A", "NAAA", "CTSZ", "BID", 
+                                        "CAPG", "BLVRA", "TGFBI", "SOD2", "IFNGR2", "SLC7A7", "C1orf162", 
+                                        "LILRB4", "LILRB2", "IFI6", "WARS", "AP2S1", "MAFB", "CSTB", 
+                                        "IGSF6", "CD14", "MNDA", "CPVL", "TNFSF13B", "APOBEC3A", "GABARAP", 
+                                        "LGALS2", "S100A11", "CFD", "CTSS", "COTL1", "TYMP", " ", " ", 
+                                        "PVALB", "CD151", "MYL12A", "PARVB", "TPTEP1", "H2AFJ", "MARCH2", 
+                                        "GSN", "MFSD1", "RAP1B", "ASAH1", "YWHAH", "APP", "SNN", "HIST1H2BK", 
+                                        "PLA2G12A", "FERMT3", "ACTN1", "PDLIM1", "ILK", "CTSA", "TPM4", 
+                                        "SNCA", "ODC1", "GRAP2", "GAS2L1", "PTGS1", "NGFRAP1", "TREML1", 
+                                        "MYL9", "TPM1", "F13A1", "CA2", "MPP1", "RGS18", "CLU", "AP001189.4", 
+                                        "MMD", "GP9", "PPBP", "SPARC", "TUBB1", "TMEM40", "HIST1H2AC", 
+                                        "PF4", "GNG11", "SDPR", "ACRBP", "PTCRA", " ", " ", "RPL6", "RPSAP58", 
+                                        "RPLP1", "RPS9", "RPL26", "RPL27", "NACA", "RPL17", "RPL7A", 
+                                        "EEF1B2", "RPL5", "RPL36", "RPS28", "RPS20", "RPL18", "RPL15", 
+                                        "BTG1", "TPT1", "RPL35A", "RPS26", "RPS11", "RPS13", "RPS10", 
+                                        "RPS29", "RPL28", "RPS8", "RPS4X", "RPL31", "EEF1A1", "RPL12", 
+                                        "RPS16", "RPL27A", "RPS23", "RPS15A", "RPS3A", "RPL14", "RPL29", 
+                                        "RPL3", "RPS18", "RPLP2", "RPL32", "RPL11", "RPL18A", "RPS12", 
+                                        "RPS3", "RPS19", "RPS25", "RPL21", "RPL23A", "RPL9", "MALAT1"
   ))
   
   # Checking title of the heatmap
@@ -410,18 +392,15 @@ test_that("Checking plot_heatmap() using cell clusters", {
 })
 
 
-# ==============================================================================
-# ==============================================================================
-
 
 test_that("Checking plot_heatmap() using top genes and cell clusters", {
-  cell_clusters <- c(rep(1, 10), rep(2, 10))
-  names(cell_clusters) <- colnames(res@data)
   
-  res_scigenex_top <- top_genes(res, top = 20)
+  set.seed(123)
+  cell_clusters <- Idents(pbmc3k_medium)
+  res <- top_genes(res, top = 20)
   
   htmp <- plot_heatmap(
-    object = res_scigenex_top,
+    object = res,
     cell_clusters = cell_clusters,
     use_top_genes = TRUE,
     show_dendro = TRUE,
@@ -436,175 +415,82 @@ test_that("Checking plot_heatmap() using top genes and cell clusters", {
   htmp_matrix <- htmp@plots@listData$`Exp. level`@data
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
-  # Check heatmpa format
+  # Check heatmap format
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 22)
-  expect_equal(nrow(htmp_matrix), 86)
-  expect_equal(dim(htmp_matrix), c(86, 22))
+  expect_equal(ncol(htmp_matrix), 377)
+  expect_equal(nrow(htmp_matrix), 230)
+  expect_equal(dim(htmp_matrix), c(230, 377))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
-  expect_equal(length(na_rows), 6)
-  expect_equal(as.vector(na_rows), c(21, 22, 43, 44, 65, 66))
+  expect_equal(length(na_rows), 28)
+  expect_equal(as.vector(na_rows), c(6L, 7L, 13L, 14L, 21L, 22L, 30L, 31L, 39L, 40L, 53L, 54L, 69L, 
+                                     70L, 85L, 86L, 101L, 102L, 121L, 122L, 143L, 144L, 165L, 166L, 
+                                     187L, 188L, 209L, 210L))
   
-  # Check NA rows added by line_size_horizontal
+  # Check NA rows added by line_size_vertical
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
-  expect_equal(length(na_cols), 2)
-  expect_equal(as.vector(na_cols), c(11, 12))
+  expect_equal(length(na_cols), 16)
+  expect_equal(as.vector(na_cols), c(48L, 49L, 97L, 98L, 147L, 148L, 198L, 199L, 246L, 247L, 295L, 
+                                     296L, 334L, 335L, 362L, 363L))
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), 52.05)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0.03)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.15)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.88)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -3394.67)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.05)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.05)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.48)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.15)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.22)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.05)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), -0.02)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "sample11", 
-                                        "sample12", "sample13", "sample14", "sample15", "sample16", "sample17", 
-                                        "sample18", "sample19", "sample20"))
-  
-  # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene2", "gene70", "gene12", "gene29", "gene31", "gene80",
-    "gene61", "gene55", "gene27", "gene57", "gene78", "gene7",
-    "gene88", "gene76", "gene32", "gene64", "gene51", "gene19",
-    "gene84", "gene37", " ", " ", "gene326", "gene363",
-    "gene349", "gene369", "gene339", "gene397", "gene382", "gene387",
-    "gene350", "gene316", "gene368", "gene393", "gene398", "gene334",
-    "gene314", "gene320", "gene390", "gene312", "gene364", "gene315",
-    " ", " ", "gene288", "gene232", "gene202", "gene212",
-    "gene229", "gene269", "gene248", "gene219", "gene277", "gene285",
-    "gene283", "gene282", "gene281", "gene256", "gene273", "gene207",
-    "gene206", "gene223", "gene245", "gene286", " ", " ",
-    "gene115", "gene119", "gene155", "gene163", "gene158", "gene198",
-    "gene109", "gene122", "gene120", "gene126", "gene121", "gene176",
-    "gene141", "gene143", "gene171", "gene116", "gene137", "gene108",
-    "gene191", "gene160"
-  ))
-  
-  # Checking title of the heatmap
-  htmp_title <- htmp@annotations@listData$col_title2@data
-  expect_equal(htmp_title, "Expression heatmap")
-  
-  # Checking x lab of the heatmap
-  htmp_xlab <- htmp@annotations@listData$col_title@data
-  expect_equal(htmp_xlab, "Samples")
-  
-  # Checking y lab of the heatmap
-  htmp_ylab <- htmp@annotations@listData$row_title@data
-  expect_equal(htmp_ylab, "Genes")
-  
-  # Checking colorbar name of the heatmap
-  htmp_colors_name <- htmp@colorbars@listData$`Exp. level`@title
-  expect_equal(htmp_colors_name, "Exp. level")
-  
-  # Checking if colorbar is shown of the heatmap
-  htmp_show_colorbar <- htmp@plots@listData$`Exp. level`@show_colorbar
-  expect_true(htmp_show_colorbar)
-  
-  # Checking if dendrogram is showed
-  htmp_show_dendro <- names(htmp@shapes@listData)
-  expect_equal(htmp_show_dendro, NULL)
-})
-
-
-# ==============================================================================
-# ==============================================================================
-
-
-test_that("Checking plot_heatmap() increasing size of the blank lines", {
-  cell_clusters <- c(rep(1, 10), rep(2, 10))
-  names(cell_clusters) <- colnames(res@data)
-  
-  res_scigenex_top <- top_genes(res, top = 20)
-  
-  htmp <- plot_heatmap(
-    object = res_scigenex_top,
-    cell_clusters = cell_clusters,
-    use_top_genes = TRUE,
-    show_dendro = TRUE,
-    line_size_vertical = 10,
-    line_size_horizontal = 10,
-    name = "Expression heatmap",
-    show_legend = TRUE,
-    xlab = "Samples",
-    ylab = "Genes"
-  )
-  
-  htmp_matrix <- htmp@plots@listData$`Exp. level`@data
-  htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
-  
-  # Check heatmpa format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
-  # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 30)
-  expect_equal(nrow(htmp_matrix), 110)
-  expect_equal(dim(htmp_matrix), c(110, 30))
-  
-  # Check NA rows added by line_size_horizontal
-  na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
-  expect_equal(length(na_rows), 30)
-  expect_equal(as.vector(na_rows), c(
-    seq(21, 30),
-    seq(51, 60),
-    seq(81, 90)
-  ))
-  
-  # Check NA rows added by line_size_horizontal
-  na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
-  expect_equal(length(na_cols), 10)
-  expect_equal(as.vector(na_cols), c(seq(11, 20)))
-  
-  # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), 52.05)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0.03)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.15)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.88)
-  
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.15)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
+  expect_equal(head(colnames(htmp_matrix),10), c("GATCTACTGGTGAG-1", "ACAGTGACTCACCC-1", "AGACGTACAGAGGC-1", 
+                                                 "GACGTAACCTGTGA-1", "TATACAGATCCAGA-1", "CGGATAACAGCTCA-1", "TTACCATGGTTGAC-1", 
+                                                 "TCCCACGATCATTC-1", "ATAGCGTGCAGATC-1", "TGTAGGTGTGCTGA-1"))
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "   ", 
-                                        "    ", "     ", "      ", "       ", "        ", "         ", 
-                                        "          ", "sample11", "sample12", "sample13", "sample14", 
-                                        "sample15", "sample16", "sample17", "sample18", "sample19", "sample20"))
+  expect_equal(tail(colnames(htmp_matrix),10), c("ACCTGAGATATCGG-1", "GACGCTCTCTCTCG-1", "GCGCATCTGGTTAC-1", 
+                                                 "AGTCTTACTTCGGA-1", "GGCATATGGGGAGT-1", "TTACGTACGTTCAG-1", "GGAACACTTCAGAC-1", 
+                                                 "ATCATCTGACACCA-1", "ACGAACTGGCTATG-1", "TAACACCTTGTTTC-1"))
   
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene2", "gene70", "gene12", "gene29", "gene31", "gene80",
-    "gene61", "gene55", "gene27", "gene57", "gene78", "gene7",
-    "gene88", "gene76", "gene32", "gene64", "gene51", "gene19",
-    "gene84", "gene37", " ", " ", " ", " ",
-    " ", " ", " ", " ", " ", " ",
-    "gene326", "gene363", "gene349", "gene369", "gene339", "gene397",
-    "gene382", "gene387", "gene350", "gene316", "gene368", "gene393",
-    "gene398", "gene334", "gene314", "gene320", "gene390", "gene312",
-    "gene364", "gene315", " ", " ", " ", " ",
-    " ", " ", " ", " ", " ", " ",
-    "gene288", "gene232", "gene202", "gene212", "gene229", "gene269",
-    "gene248", "gene219", "gene277", "gene285", "gene283", "gene282",
-    "gene281", "gene256", "gene273", "gene207", "gene206", "gene223",
-    "gene245", "gene286", " ", " ", " ", " ",
-    " ", " ", " ", " ", " ", " ",
-    "gene115", "gene119", "gene155", "gene163", "gene158", "gene198",
-    "gene109", "gene122", "gene120", "gene126", "gene121", "gene176",
-    "gene141", "gene143", "gene171", "gene116", "gene137", "gene108",
-    "gene191", "gene160"
+  expect_equal(rownames(htmp_matrix), c("PKIG", "ISG20", "MS4A1", "CD79B", "LINC00926", " ", " ", "CAPZA2", 
+                                        "MEST", "MTURN", "ZHX1-C8ORF76", "RP11-879F14.2", " ", " ", "CLIC1", 
+                                        "HES4", "ABI3", "IFITM2", "RHOC", "FCGR3A", " ", " ", "AES", 
+                                        "CD27", "IL7R", "CD3E", "LDHB", "IL32", "CD3D", " ", " ", "PTPN18", 
+                                        "SMIM5", "PRUNE", "ANKRD9", "GFI1B", "LCN2", "ENKUR", " ", " ", 
+                                        "XPNPEP1", "AC092295.7", "TJP2", "PRKAR2B", "TMEM91", "SPHK1", 
+                                        "SLC40A1", "TUBA1C", "FAM63A", "C2orf88", "CLDN5", "HIST1H2BJ", 
+                                        " ", " ", "SLC25A6", "RNASET2", "CD37", "FAM26F", "HLA-DMB", 
+                                        "LY86", "HLA-DQB1", "HLA-DQA1", "CD74", "HLA-DPB1", "HLA-DRB5", 
+                                        "HLA-DPA1", "HLA-DRA", "HLA-DRB1", " ", " ", "FN3K", "MGLL", 
+                                        "C19orf33", "NFE2", "MOB3B", "TRIM58", "SERPINE2", "ZNF778", 
+                                        "TMCC2", "AC147651.3", "FAM212B", "SSX2IP", "SMOX", "LGALSL", 
+                                        " ", " ", "H1F0", "GLUL", "HIST2H2BE", "MLH3", "C1orf198", "SENCR", 
+                                        "SEPT4", "FNTB", "RP11-367G6.3", "HIST1H2BD", "SCGB1C1", "CMTM5", 
+                                        "GP1BA", "CLEC1B", " ", " ", "PPP1R14A", "WIPI1", "GLA", "ABHD16A", 
+                                        "TGFB1I1", "RP11-359I18.5", "NEXN", "ENDOD1", "ALOX12", "ITGB3", 
+                                        "ARG2", "SCFD2", "ABCC3", "CTNNAL1", "FAM212A", "ATP9A", "SPOCD1", 
+                                        "ARHGAP21", " ", " ", "LYL1", "BTK", "FAM110A", "PYGL", "CLIC4", 
+                                        "RILP", "DAB2", "KIAA0513", "SH3BGRL2", "RAB27B", "KIFC3", "PCP2", 
+                                        "HEXIM2", "DPY19L1", "GATA2", "SEC14L5", "EGFL7", "hsa-mir-1199", 
+                                        "HEMGN", "AC137932.6", " ", " ", "CCL5", "IGFBP7", "XCL1", "KLRF1", 
+                                        "AKR1C3", "CD7", "HLA-C", "HOPX", "IL2RB", "CD247", "CLIC3", 
+                                        "CTSW", "SPON2", "CCL4", "CST7", "GZMA", "FGFBP2", "GNLY", "PRF1", 
+                                        "GZMB", " ", " ", "BLVRA", "CAPG", "C1orf162", "TGFBI", "SLC7A7", 
+                                        "IFI6", "MAFB", "CPVL", "CSTB", "IGSF6", "AP2S1", "APOBEC3A", 
+                                        "TNFSF13B", "GABARAP", "LGALS2", "CFD", "S100A11", "CTSS", "COTL1", 
+                                        "TYMP", " ", " ", "MPP1", "PTGS1", "MYL9", "MMD", "TMEM40", "CA2", 
+                                        "F13A1", "TREML1", "PTCRA", "RGS18", "AP001189.4", "CLU", "GP9", 
+                                        "HIST1H2AC", "TUBB1", "PPBP", "SPARC", "PF4", "GNG11", "SDPR", 
+                                        " ", " ", "RPL29", "RPS4X", "RPS8", "EEF1A1", "RPS25", "RPS19", 
+                                        "RPL28", "RPLP2", "RPS15A", "RPL12", "RPS3", "RPL23A", "RPL9", 
+                                        "RPS16", "RPS23", "RPS18", "RPL18A", "RPS12", "RPL32", "RPL11"
   ))
   
   # Checking title of the heatmap
@@ -638,13 +524,12 @@ test_that("Checking plot_heatmap() increasing size of the blank lines", {
 
 
 test_that("Checking plot_heatmap() displaying gene clusters 1 and 4", {
-  cell_clusters <- c(rep(1, 10), rep(2, 10))
-  names(cell_clusters) <- colnames(res@data)
-  
-  res_scigenex_top <- top_genes(res, top = 20)
+  set.seed(123)
+  cell_clusters <- Idents(pbmc3k_medium)
+  res <- top_genes(res, top = 20)
   
   htmp <- plot_heatmap(
-    object = res_scigenex_top[c(1, 4), ],
+    object = res[c(1,4), ],
     cell_clusters = cell_clusters,
     use_top_genes = TRUE,
     show_dendro = TRUE,
@@ -659,52 +544,54 @@ test_that("Checking plot_heatmap() displaying gene clusters 1 and 4", {
   htmp_matrix <- htmp@plots@listData$`Exp. level`@data
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
-  # Check heatmpa format
+  # Check heatmap format
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 22)
+  expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 42)
-  expect_equal(dim(htmp_matrix), c(42, 22))
+  expect_equal(dim(htmp_matrix), c(42, 377))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
   expect_equal(length(na_rows), 2)
   expect_equal(as.vector(na_rows), c(21, 22))
   
-  # Check NA rows added by line_size_horizontal
+  # Check NA rows added by line_size_vertical
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
-  expect_equal(length(na_cols), 2)
-  expect_equal(as.vector(na_cols), c(11, 12))
+  expect_equal(length(na_cols), 16)
+  expect_equal(as.vector(na_cols), c(48L, 49L, 97L, 98L, 147L, 148L, 198L, 199L, 246L, 247L, 295L, 
+                                     296L, 334L, 335L, 362L, 363L))
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), -1.26)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), 0)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), 0.06)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.91)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -509.92)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.04)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.11)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.57)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), 0.06)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.49)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.11)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 0.4)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c("sample1", "sample2", "sample3", "sample4", "sample5", "sample6", 
-                                        "sample7", "sample8", "sample9", "sample10", " ", "  ", "sample11", 
-                                        "sample12", "sample13", "sample14", "sample15", "sample16", "sample17", 
-                                        "sample18", "sample19", "sample20"))
+  expect_equal(head(colnames(htmp_matrix),10), c("GATCTACTGGTGAG-1", "ACAGTGACTCACCC-1", "AGACGTACAGAGGC-1", 
+                                                 "GACGTAACCTGTGA-1", "TATACAGATCCAGA-1", "CGGATAACAGCTCA-1", "TTACCATGGTTGAC-1", 
+                                                 "TCCCACGATCATTC-1", "ATAGCGTGCAGATC-1", "TGTAGGTGTGCTGA-1"))
+  
+  # Checking order of columns
+  expect_equal(tail(colnames(htmp_matrix),10), c("ACCTGAGATATCGG-1", "GACGCTCTCTCTCG-1", "GCGCATCTGGTTAC-1", 
+                                                 "AGTCTTACTTCGGA-1", "GGCATATGGGGAGT-1", "TTACGTACGTTCAG-1", "GGAACACTTCAGAC-1", 
+                                                 "ATCATCTGACACCA-1", "ACGAACTGGCTATG-1", "TAACACCTTGTTTC-1"))
   
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene2", "gene70", "gene12", "gene29", "gene31", "gene80",
-    "gene61", "gene55", "gene27", "gene57", "gene78", "gene7",
-    "gene88", "gene76", "gene32", "gene64", "gene51", "gene19",
-    "gene84", "gene37", " ", " ", "gene115", "gene119",
-    "gene155", "gene163", "gene158", "gene198", "gene109", "gene122",
-    "gene120", "gene126", "gene121", "gene176", "gene141", "gene143",
-    "gene171", "gene116", "gene137", "gene108", "gene191", "gene160"
-  ))
+  expect_equal(rownames(htmp_matrix), c("CCL5", "IGFBP7", "XCL1", "KLRF1", "AKR1C3", "CD7", "HLA-C", 
+                                        "HOPX", "IL2RB", "CD247", "CLIC3", "CTSW", "SPON2", "CCL4", "CST7", 
+                                        "GZMA", "FGFBP2", "GNLY", "PRF1", "GZMB", " ", " ", "RPL29", 
+                                        "RPS4X", "RPS8", "EEF1A1", "RPS25", "RPS19", "RPL28", "RPLP2", 
+                                        "RPS15A", "RPL12", "RPS3", "RPL23A", "RPL9", "RPS16", "RPS23", 
+                                        "RPS18", "RPL18A", "RPS12", "RPL32", "RPL11"))
   
   # Checking title of the heatmap
   htmp_title <- htmp@annotations@listData$col_title2@data
@@ -738,12 +625,12 @@ test_that("Checking plot_heatmap() displaying gene clusters 1 and 4", {
 
 test_that("Checking plot_heatmap() displaying only gene cluster 3", {
   
-  cell_clusters <- c(rep(1, 10), rep(2, 10))
-  names(cell_clusters) <- colnames(res@data)
-  res_scigenex_top <- top_genes(res, top = 20)
+  set.seed(123)
+  cell_clusters <- Idents(pbmc3k_medium)
+  res <- top_genes(res, top = 20)
   
   htmp <- plot_heatmap(
-    object = res_scigenex_top[3,],
+    object = res[3, ],
     cell_clusters = cell_clusters,
     use_top_genes = TRUE,
     show_dendro = TRUE,
@@ -758,51 +645,51 @@ test_that("Checking plot_heatmap() displaying only gene cluster 3", {
   htmp_matrix <- htmp@plots@listData$`Exp. level`@data
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
-  # Check heatmpa format
+  # Check heatmap format
   expect_that(htmp, is_a("IheatmapHorizontal"))
   
   # Check dim of heatmap matrix
-  expect_equal(ncol(htmp_matrix), 22)
+  expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 20)
-  expect_equal(dim(htmp_matrix), c(20, 22))
+  expect_equal(dim(htmp_matrix), c(20, 377))
   
   # Check NA rows added by line_size_horizontal
   na_rows <- which(apply(htmp_matrix, 1, function(x) all(is.na(x))))
   expect_equal(length(na_rows), 0)
   expect_equal(as.vector(na_rows), integer(0))
   
-  # Check NA rows added by line_size_horizontal
+  # Check NA rows added by line_size_vertical
   na_cols <- which(apply(htmp_matrix, 2, function(x) all(is.na(x))))
-  expect_equal(length(na_cols), 2)
-  expect_equal(as.vector(na_cols), c(11, 12))
+  expect_equal(length(na_cols), 16)
+  expect_equal(as.vector(na_cols), c(48L, 49L, 97L, 98L, 147L, 148L, 198L, 199L, 246L, 247L, 295L, 
+                                     296L, 334L, 335L, 362L, 363L))
   
   # Check some measurements of heatmap matrix
-  expect_equal(round(sum(htmp_matrix_wo_na), 2), -3.42)
-  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.01)
-  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.06)
-  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.86)
+  expect_equal(round(sum(htmp_matrix_wo_na), 2), -663.16)
+  expect_equal(round(mean(htmp_matrix_wo_na), 2), -0.09)
+  expect_equal(round(median(htmp_matrix_wo_na), 2), -0.27)
+  expect_equal(round(sd(htmp_matrix_wo_na), 2), 0.72)
   
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["0%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -1)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.06)
-  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 1)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["25%"]), 2), -0.59)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["50%"]), 2), -0.27)
+  expect_equal(round(sum(quantile(htmp_matrix_wo_na)["75%"]), 2), 0.78)
   expect_equal(round(sum(quantile(htmp_matrix_wo_na)["100%"]), 2), 1)
   
   # Checking order of columns
-  expect_equal(colnames(htmp_matrix), c(
-    "sample1", "sample2", "sample3", "sample4", "sample5",
-    "sample6", "sample7", "sample8", "sample9", "sample10", " ",
-    "  ", "sample11", "sample12", "sample13", "sample14", "sample15",
-    "sample16", "sample17", "sample18", "sample19", "sample20"
-  ))
+  expect_equal(head(colnames(htmp_matrix),10), c("GATCTACTGGTGAG-1", "ACAGTGACTCACCC-1", "AGACGTACAGAGGC-1", 
+                                                 "GACGTAACCTGTGA-1", "TATACAGATCCAGA-1", "CGGATAACAGCTCA-1", "TTACCATGGTTGAC-1", 
+                                                 "TCCCACGATCATTC-1", "ATAGCGTGCAGATC-1", "TGTAGGTGTGCTGA-1"))
+  
+  # Checking order of columns
+  expect_equal(tail(colnames(htmp_matrix),10), c("ACCTGAGATATCGG-1", "GACGCTCTCTCTCG-1", "GCGCATCTGGTTAC-1", 
+                                                 "AGTCTTACTTCGGA-1", "GGCATATGGGGAGT-1", "TTACGTACGTTCAG-1", "GGAACACTTCAGAC-1", 
+                                                 "ATCATCTGACACCA-1", "ACGAACTGGCTATG-1", "TAACACCTTGTTTC-1"))
   
   # Checking order of rows
-  expect_equal(rownames(htmp_matrix), c(
-    "gene326", "gene363", "gene349", "gene369", "gene339", "gene397",
-    "gene382", "gene387", "gene350", "gene316", "gene368", "gene393",
-    "gene398", "gene334", "gene314", "gene320", "gene390", "gene312",
-    "gene364", "gene315"
-  ))
+  expect_equal(rownames(htmp_matrix), c("BLVRA", "CAPG", "C1orf162", "TGFBI", "SLC7A7", "IFI6", "MAFB", 
+                                        "CPVL", "CSTB", "IGSF6", "AP2S1", "APOBEC3A", "TNFSF13B", "GABARAP", 
+                                        "LGALS2", "CFD", "S100A11", "CTSS", "COTL1", "TYMP"))
   
   # Checking title of the heatmap
   htmp_title <- htmp@annotations@listData$col_title2@data
@@ -863,10 +750,6 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
   expect_equal(unique(p@colorbars@listData$Ident.@colors), "red")
   
   # Check if seurat identities is considered
-  expect_error(plot_heatmap(clust_set[, names(ident[ident==3])], cell_clusters=Seurat::Idents(pbmc_small)))
-  p <- plot_heatmap(clust_set, cell_clusters=Seurat::Idents(pbmc_small))
-  testthat::expect_error(print(p), NA)
-  expect_equal(p@colorbars@listData$Ident.@ticktext, c("1", "2", "3"))
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:80]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
@@ -915,7 +798,7 @@ testthat::test_that("Test non interactive heatmaps.", {
                                keep_nn = FALSE,
                                k = 5,
                                threads = 1)
-                               
+  
   ident <- Seurat::Idents(pbmc_small)
   
   n_gene_clusters <- length(clust_set@gene_clusters) 
@@ -951,5 +834,7 @@ testthat::test_that("Test non interactive heatmaps.", {
   p_noi_rown <- p_noi[["gtable"]][["grobs"]][[2]][["label"]]
   expect_true(length(grep(" ", p_noi_colnames)) == (n_cell_clusters-1) * 3)
   expect_true(length(grep(" ", p_noi_rown)) == (n_gene_clusters-1) * 3)
-  
 })
+
+
+
