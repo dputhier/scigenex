@@ -204,13 +204,13 @@ plot_spatial <- function(seurat_obj=NULL,
 #'     lymph_node_tiny_2[[paste0("Cluster", i, sep="")]]  <- (tmp[,1] - min(tmp))/(max_tmp - min_tmp)
 #' }
 #' plot_spatial_panel(lymph_node_tiny_2, metadata=paste0("Cluster", 1:4), ncol_layout=2,
-#'                    guides='collect', pt_size=2.2, coord_flip=T)
+#'                    guides='collect', pt_size=2.2, coord_flip=TRUE)
 #'                    
 #' plot_spatial_panel(lymph_node_tiny_2, gene=c('VPREB3', 'IGHG1', 'PRDX4', 
 #'                                              'LTB', 'CCL20', 'LYVE1', 
 #'                                              'IL7R', 'RGS9', 'MAPT'), 
 #'                    ncol_layout=3,
-#'                    pt_size=2, coord_flip=T, 
+#'                    pt_size=2, coord_flip=TRUE, 
 #'                    panel_names=LETTERS[1:9], 
 #'                    size_title = 10)
 #' @export
