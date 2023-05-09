@@ -6,3 +6,4 @@ test_that("Check clust_names() is working.", {
   b <- clust_names(pbmc3k_medium_clusters)
   expect_true(all(as.character(a)==b))
 })
+
