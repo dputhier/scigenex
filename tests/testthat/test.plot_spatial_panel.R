@@ -14,7 +14,7 @@ for(i in 1:nclust(lymph_node_tiny_clusters_2)){ # Normalizing module scores
 
 test_that("Check plot_spatial is working.", {
   p <- plot_spatial_panel(lymph_node_tiny_2, metadata=paste0("Cluster", 1:4), ncol_layout=2,
-                          guides='collect', pt_size=2.2, coord_flip=T)
+                          guides='collect', pt_size=2.2, coord_flip=TRUE)
   expect_true(ggplot2::is.ggplot(p))
   
   p <- plot_spatial_panel(lymph_node_tiny_2, gene=c('VPREB3', 'IGHG1', 'PRDX4', 
