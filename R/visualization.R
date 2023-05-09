@@ -14,9 +14,9 @@
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param interactive A logical to indicate if the heatmap should be interactive.
-#' @param name A title for the heatmap.
-#' @param xlab A title for the x axis.
-#' @param ylab A title for the y axis.
+#' @param name A title for the heatmap (if interactive is TRUE).
+#' @param xlab A title for the x axis (if interactive is TRUE).
+#' @param ylab A title for the y axis (if interactive is TRUE).
 #' @param colorbar_name A title for the colorbar.
 #' @param show_legend A logical to indicate whether to show colorbar.
 #' @param colors A vector of colors.
@@ -354,7 +354,19 @@ plot_heatmap <- function(object,
                      annotation_colors=list("Ident."=setNames(colors_cell_clusters, 
                                                                     unique(as.character(sort(cell_clusters))))),
                      na_col = "white")
+    
+    if(!is.null(ylab)){
+      htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))
+    }
+    if(!is.null(xlab)){
+      htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))
+    }
+    if(!is.null(name)){
+      htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))
+    }
+    
   }
+  
 
   return(htmp)
 }

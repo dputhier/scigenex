@@ -45,11 +45,11 @@ plot_heatmap(
 
 \item{interactive}{A logical to indicate if the heatmap should be interactive.}
 
-\item{name}{A title for the heatmap.}
+\item{name}{A title for the heatmap (if interactive is TRUE).}
 
-\item{xlab}{A title for the x axis.}
+\item{xlab}{A title for the x axis (if interactive is TRUE).}
 
-\item{ylab}{A title for the y axis.}
+\item{ylab}{A title for the y axis (if interactive is TRUE).}
 
 \item{colorbar_name}{A title for the colorbar.}
 
