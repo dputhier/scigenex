@@ -13,7 +13,7 @@ plot_heatmap(
   show_dendro = TRUE,
   use_top_genes = FALSE,
   interactive = TRUE,
-  title = NA,
+  name = NULL,
   xlab = NULL,
   ylab = NULL,
   colorbar_name = "Exp. level",
@@ -45,7 +45,7 @@ plot_heatmap(
 
 \item{interactive}{A logical to indicate if the heatmap should be interactive.}
 
-\item{title}{A title for the heatmap.}
+\item{name}{A title for the heatmap.}
 
 \item{xlab}{A title for the x axis.}
 

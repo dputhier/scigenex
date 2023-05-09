@@ -14,7 +14,7 @@
 #' @param show_dendro A logical to indicate whether to show column dendrogram.
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param interactive A logical to indicate if the heatmap should be interactive.
-#' @param title A title for the heatmap.
+#' @param name A title for the heatmap.
 #' @param xlab A title for the x axis.
 #' @param ylab A title for the y axis.
 #' @param colorbar_name A title for the colorbar.
@@ -29,8 +29,9 @@
 #' @param link The aggloremative criterion for hierarchical clustering. One of "average", "complete" or "single". 
 #' Default to average.
 #' @return Iheatmap-class object.
-#' @export
-#'
+#' @export plot_heatmap
+#' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_col_annotation add_col_dendro add_row_title add_col_title
+#' @importFrom pheatmap pheatmap
 #' @examples
 #' library(Seurat)
 #' # Set verbosity to 1 to display info messages only.
@@ -69,7 +70,7 @@ plot_heatmap <- function(object,
                          show_dendro = TRUE,
                          use_top_genes = FALSE,
                          interactive = TRUE,
-                         title = NA,
+                         name = NULL,
                          xlab = NULL,
                          ylab = NULL,
                          colorbar_name = "Exp. level",
@@ -314,11 +315,14 @@ plot_heatmap <- function(object,
     print_msg("Adding Titles.", msg_type="DEBUG")
     
     if(!is.null(ylab)){
-      htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))}
+      htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))
+      }
     if(!is.null(xlab)){
-      htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))}
+      htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))
+      }
     if(!is.null(name)){
-      htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))}
+      htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))
+      }
   }else{
     # Reorder rows to get the same order as the interactive heatmap
     #m <- m[order(nrow(m):1),]
@@ -336,7 +340,7 @@ plot_heatmap <- function(object,
       annotation_col <- cell_clusters_anno
     }
 
-    htmp <- pheatmap(mat = m, 
+    htmp <- pheatmap::pheatmap(mat = m, 
                      annotation_legend = show_legend, legend = show_legend,
                      color = colorRampPalette(colors)(100),
                      cluster_rows = F, 
@@ -347,7 +351,6 @@ plot_heatmap <- function(object,
                      annotation_col = annotation_col,
                      border_color = NA, 
                      scale = "none", 
-                     main=title,
                      annotation_colors=list("Ident."=setNames(colors_cell_clusters, 
                                                                     unique(as.character(sort(cell_clusters))))),
                      na_col = "white")
