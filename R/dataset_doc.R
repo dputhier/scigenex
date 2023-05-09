@@ -35,7 +35,6 @@
 # The complex9Noisy dataset
 #---------------------------------------
 
-
 #' The complex9Noisy dataset
 #' A noisy version of the complex9 dataset. A set of 2D points corresponding 
 #' to 9 shapes embedded in a noisy environment. A uniform noise was added to
@@ -66,97 +65,6 @@
 #' @format A data frame with 3637 rows and 3 variables
 #' 
 'complex9Noisy'
-
-
-
-
-#---------------------------------------
-# The scigenex_test_I1.2 dataset
-#---------------------------------------
-
-#' The scigenex_test dataset
-#' A ClusterSet object to be used for unitary tests of scigenex (internal)
-#' 
-#' 
-#' Dataset information:
-#'  ·        Number of clusters: 4
-#'
-#'
-#' @docType data
-#' @keywords datasets
-#' @name scigenex_test_I1.2
-#' @usage data(scigenex_test_I1.2)
-#' @format A ClusterSet object (4 clusters).
-#' 
-#' @note
-#' # This dataset was created using the following code:
-#' 
-#' 
-#' #Create matrix containing 3 signatures
-#' m <- create_4_rnd_clust()
-#' 
-#' ## Select informative genes
-#' scigenex_test <- select_genes(data=m,
-#'                              distance_method="kendall",
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              dist_threads = 6,
-#'                              highest=0.3,
-#'                              fdr = 1e-8)
-#' 
-# # Cluster informative genes
-#' scigenex_test_I1.2 <- gene_clustering(object = scigenex_test,
-#'                                  inflation = 1.2,
-#'                                  keep_nn = FALSE,
-#'                                  threads = 6,
-#'                                  k = 5)
-#' 
-'scigenex_test_I1.2'
-
-
-
-#---------------------------------------
-# The scigenex_test_I4 dataset
-#---------------------------------------
-
-#' The scigenex_test dataset
-#' A ClusterSet object to be used for unitary tests of scigenex (internal)
-#' 
-#' 
-#' Dataset information:
-#'  ·        Number of clusters: 244
-#'
-#'
-#' @docType data
-#' @keywords datasets
-#' @name scigenex_test_I4
-#' @usage data(scigenex_test_I4)
-#' @format A ClusterSet object (244 clusters).
-#' 
-#' @note
-#' # This dataset was created using the following code:
-#' 
-#' 
-#' #Create matrix containing 3 signatures
-#' m <- create_4_rnd_clust()
-#' 
-#' ## Select informative genes
-#' scigenex_test <- select_genes(data=m,
-#'                              distance_method="kendall",
-#'                              k=75,
-#'                              row_sum=-Inf,
-#'                              dist_threads = 6,
-#'                              highest=0.3,
-#'                              fdr = 1e-8)
-#' 
-# # Cluster informative genes
-#' scigenex_test_I4 <- gene_clustering(object = scigenex_test,
-#'                                  inflation = 4,
-#'                                  keep_nn = FALSE,
-#'                                  threads = 6,
-#'                                  k = 5)
-#' 
-'scigenex_test_I4'
 
 
 #---------------------------------------
