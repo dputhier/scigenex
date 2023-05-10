@@ -1,3 +1,5 @@
+set_verbosity(0)
+
 obj <- new("ClusterSet")
 
 n_smp <- 20
