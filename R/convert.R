@@ -67,7 +67,7 @@ cluster_set_from_seurat <- function(object=NULL,
                                                                  as.character(unique(clusters))),
                                           "number" = length(table(clusters)),
                                           "size" = table(clusters))
-  obj_out@parameters    <- list("distance_method" = "FindAllMarkers",
+  obj_out@parameters    <- list("distance_method" = "pearson",
                                 "k" = vector(),
                                 "highest" = vector(),
                                 "fdr" = vector(),
