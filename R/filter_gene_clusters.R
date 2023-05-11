@@ -237,10 +237,9 @@ filter_by_dot_prod <- function(object = NULL,
 #' @param min_sd An integer indicating the minimum standard deviation for a clusters to be kept.
 #'
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
-#' 
 #' @examples 
-#' # Set verbosity to 1 to display info messages only.
-#' set_verbosity(1)
+#' 
+#' @export filter_cluster_sd
 filter_cluster_sd <- function(object = NULL,
                               min_sd = 0.1) {
   
