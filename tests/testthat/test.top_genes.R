@@ -1,59 +1,68 @@
 # Set verbosity to 0
 set_verbosity(0)
+library(Seurat)
 
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 
-test_that("Cheking get_genes is providing the right list of genes - kendall", {
-  ## Select informative genes
-  
-  data("scigenex_test_I1.2")
-  res <- scigenex_test_I1.2
-  
+res <- pbmc3k_medium_clusters
+
+test_that("Cheking top_gene()", {
+
   # ========================================
   # Top 20
-  res_20 <- suppressWarnings(top_genes(res, cluster = "all", top = 20))
+  res_20 <- top_genes(res, cluster = "all", top = 20)
   
   # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene126", "gene120",
-    "gene122", "gene109", "gene198", "gene158", "gene163", "gene155",
-    "gene119", "gene115", "gene286", "gene245", "gene223", "gene206",
-    "gene207", "gene273", "gene256", "gene281", "gene282", "gene283",
-    "gene285", "gene277", "gene219", "gene248", "gene269", "gene229",
-    "gene212", "gene202", "gene232", "gene288", "gene315", "gene364",
-    "gene312", "gene390", "gene320", "gene314", "gene334", "gene398",
-    "gene393", "gene368", "gene316", "gene350", "gene387", "gene382",
-    "gene397", "gene339", "gene369", "gene349", "gene363", "gene326",
-    "gene37", "gene84", "gene19", "gene51", "gene64", "gene32",
-    "gene76", "gene88", "gene7", "gene78", "gene57", "gene27",
-    "gene55", "gene61", "gene80", "gene31", "gene29", "gene12",
-    "gene70", "gene2"
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3", "RPL12", "RPS15A", "RPLP2", "RPL28", 
+                          "RPS19", "RPS25", "EEF1A1", "RPS8", "RPS4X", "RPL29", "SDPR", 
+                          "GNG11", "PF4", "SPARC", "PPBP", "TUBB1", "HIST1H2AC", "GP9", 
+                          "CLU", "AP001189.4", "RGS18", "PTCRA", "TREML1", "F13A1", "CA2", 
+                          "TMEM40", "MMD", "MYL9", "PTGS1", "MPP1", "TYMP", "COTL1", "CTSS", 
+                          "S100A11", "CFD", "LGALS2", "GABARAP", "TNFSF13B", "APOBEC3A", 
+                          "AP2S1", "IGSF6", "CSTB", "CPVL", "MAFB", "IFI6", "SLC7A7", "TGFBI", 
+                          "C1orf162", "CAPG", "BLVRA", "GZMB", "PRF1", "GNLY", "FGFBP2", 
+                          "GZMA", "CST7", "CCL4", "SPON2", "CTSW", "CLIC3", "CD247", "IL2RB", 
+                          "HOPX", "HLA-C", "CD7", "AKR1C3", "KLRF1", "XCL1", "IGFBP7", 
+                          "CCL5", "AC137932.6", "HEMGN", "hsa-mir-1199", "EGFL7", "SEC14L5", 
+                          "GATA2", "DPY19L1", "HEXIM2", "PCP2", "KIFC3", "RAB27B", "SH3BGRL2", 
+                          "KIAA0513", "DAB2", "RILP", "CLIC4", "PYGL", "FAM110A", "BTK", 
+                          "LYL1", "ARHGAP21", "SPOCD1", "ATP9A", "FAM212A", "CTNNAL1", 
+                          "ABCC3", "SCFD2", "ARG2", "ITGB3", "ALOX12", "ENDOD1", "NEXN", 
+                          "RP11-359I18.5", "TGFB1I1", "ABHD16A", "GLA", "WIPI1", "PPP1R14A", 
+                          "CLEC1B", "GP1BA", "CMTM5", "SCGB1C1", "HIST1H2BD", "RP11-367G6.3", 
+                          "FNTB", "SEPT4", "SENCR", "C1orf198", "MLH3", "HIST2H2BE", "GLUL", 
+                          "H1F0", "LGALSL", "SMOX", "SSX2IP", "FAM212B", "AC147651.3", 
+                          "TMCC2", "ZNF778", "SERPINE2", "TRIM58", "MOB3B", "NFE2", "C19orf33", 
+                          "MGLL", "FN3K", "HLA-DRB1", "HLA-DRA", "HLA-DPA1", "HLA-DRB5", 
+                          "HLA-DPB1", "CD74", "HLA-DQA1", "HLA-DQB1", "LY86", "HLA-DMB", 
+                          "FAM26F", "CD37", "RNASET2", "SLC25A6", "HIST1H2BJ", "CLDN5", 
+                          "C2orf88", "FAM63A", "TUBA1C", "SLC40A1", "SPHK1", "TMEM91", 
+                          "PRKAR2B", "TJP2", "AC092295.7", "XPNPEP1", "ENKUR", "LCN2", 
+                          "GFI1B", "ANKRD9", "PRUNE", "SMIM5", "PTPN18", "CD3D", "IL32", 
+                          "LDHB", "CD3E", "IL7R", "CD27", "AES", "FCGR3A", "RHOC", "IFITM2", 
+                          "ABI3", "HES4", "CLIC1", "RP11-879F14.2", "ZHX1-C8ORF76", "MTURN", 
+                          "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", "PKIG"
   )
   expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
   expect_that(res@top_genes, is_a("list"))
   
   
   # Test top genes list in cluster 1
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene126", "gene120",
-    "gene122", "gene109", "gene198", "gene158", "gene163", "gene155",
-    "gene119", "gene115"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3", "RPL12", "RPS15A", "RPLP2", "RPL28", 
+                          "RPS19", "RPS25", "EEF1A1", "RPS8", "RPS4X", "RPL29")
   expect_equal(res_20@top_genes$`1`, gene_name_to_check)
   expect_equal(length(res_20@top_genes$`1`), 20)
   
   
   # Test top genes list in cluster 2 and 3
-  gene_name_to_check <- c(
-    "gene286", "gene245", "gene223", "gene206", "gene207", "gene273",
-    "gene256", "gene281", "gene282", "gene283", "gene285", "gene277",
-    "gene219", "gene248", "gene269", "gene229", "gene212", "gene202",
-    "gene232", "gene288", "gene315", "gene364", "gene312", "gene390",
-    "gene320", "gene314", "gene334", "gene398", "gene393", "gene368",
-    "gene316", "gene350", "gene387", "gene382", "gene397", "gene339",
-    "gene369", "gene349", "gene363", "gene326"
-  )
+  gene_name_to_check <- c("SDPR", "GNG11", "PF4", "SPARC", "PPBP", "TUBB1", "HIST1H2AC", 
+                          "GP9", "CLU", "AP001189.4", "RGS18", "PTCRA", "TREML1", "F13A1", 
+                          "CA2", "TMEM40", "MMD", "MYL9", "PTGS1", "MPP1", "TYMP", "COTL1", 
+                          "CTSS", "S100A11", "CFD", "LGALS2", "GABARAP", "TNFSF13B", "APOBEC3A", 
+                          "AP2S1", "IGSF6", "CSTB", "CPVL", "MAFB", "IFI6", "SLC7A7", "TGFBI", 
+                          "C1orf162", "CAPG", "BLVRA")
   expect_equal(c(res_20@top_genes$`2`, res_20@top_genes$`3`),
                gene_name_to_check)
   expect_equal(length(c(res_20@top_genes$`2`, res_20@top_genes$`3`)), 40)
@@ -64,72 +73,78 @@ test_that("Cheking get_genes is providing the right list of genes - kendall", {
   res_10 <- top_genes(res, cluster = "all", top = 10)
   
   # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene286", "gene245",
-    "gene223", "gene206", "gene207", "gene273", "gene256", "gene281",
-    "gene282", "gene283", "gene315", "gene364", "gene312", "gene390",
-    "gene320", "gene314", "gene334", "gene398", "gene393", "gene368",
-    "gene37", "gene84", "gene19", "gene51", "gene64", "gene32",
-    "gene76", "gene88", "gene7", "gene78"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3", "SDPR", "GNG11", "PF4", "SPARC", "PPBP", 
+                          "TUBB1", "HIST1H2AC", "GP9", "CLU", "AP001189.4", "TYMP", "COTL1", 
+                          "CTSS", "S100A11", "CFD", "LGALS2", "GABARAP", "TNFSF13B", "APOBEC3A", 
+                          "AP2S1", "GZMB", "PRF1", "GNLY", "FGFBP2", "GZMA", "CST7", "CCL4", 
+                          "SPON2", "CTSW", "CLIC3", "AC137932.6", "HEMGN", "hsa-mir-1199", 
+                          "EGFL7", "SEC14L5", "GATA2", "DPY19L1", "HEXIM2", "PCP2", "KIFC3", 
+                          "ARHGAP21", "SPOCD1", "ATP9A", "FAM212A", "CTNNAL1", "ABCC3", 
+                          "SCFD2", "ARG2", "ITGB3", "ALOX12", "CLEC1B", "GP1BA", "CMTM5", 
+                          "SCGB1C1", "HIST1H2BD", "RP11-367G6.3", "FNTB", "SEPT4", "SENCR", 
+                          "C1orf198", "LGALSL", "SMOX", "SSX2IP", "FAM212B", "AC147651.3", 
+                          "TMCC2", "ZNF778", "SERPINE2", "TRIM58", "MOB3B", "HLA-DRB1", 
+                          "HLA-DRA", "HLA-DPA1", "HLA-DRB5", "HLA-DPB1", "CD74", "HLA-DQA1", 
+                          "HLA-DQB1", "LY86", "HLA-DMB", "HIST1H2BJ", "CLDN5", "C2orf88", 
+                          "FAM63A", "TUBA1C", "SLC40A1", "SPHK1", "TMEM91", "PRKAR2B", 
+                          "TJP2", "ENKUR", "LCN2", "GFI1B", "ANKRD9", "PRUNE", "SMIM5", 
+                          "PTPN18", "CD3D", "IL32", "LDHB", "CD3E", "IL7R", "CD27", "AES", 
+                          "FCGR3A", "RHOC", "IFITM2", "ABI3", "HES4", "CLIC1", "RP11-879F14.2", 
+                          "ZHX1-C8ORF76", "MTURN", "MEST", "CAPZA2", "LINC00926", "CD79B", 
+                          "MS4A1", "ISG20", "PKIG")
   expect_equal(unlist(res_10@top_genes, use.names = FALSE), gene_name_to_check)
   expect_that(res@top_genes, is_a("list"))
-  expect_equal(length(unlist(res_10@top_genes, use.names = FALSE)), 40)
+  expect_equal(length(unlist(res_10@top_genes, use.names = FALSE)), 130)
   
   
   # Test top genes list in cluster 1
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3")
   expect_equal(res_10@top_genes$`1`, gene_name_to_check)
   expect_equal(length(res_10@top_genes$`1`), 10)
   
   
   # Test top genes list in cluster 2 and 3
-  gene_name_to_check <- c(
-    "gene286", "gene245", "gene223", "gene206", "gene207", "gene273",
-    "gene256", "gene281", "gene282", "gene283", "gene315", "gene364",
-    "gene312", "gene390", "gene320", "gene314", "gene334", "gene398",
-    "gene393", "gene368"
-  )
+  gene_name_to_check <- c("SDPR", "GNG11", "PF4", "SPARC", "PPBP", "TUBB1", "HIST1H2AC", 
+                          "GP9", "CLU", "AP001189.4", "TYMP", "COTL1", "CTSS", "S100A11", 
+                          "CFD", "LGALS2", "GABARAP", "TNFSF13B", "APOBEC3A", "AP2S1")
   expect_equal(
     c(res_10@top_genes$`2`, res_10@top_genes$`3`),
     gene_name_to_check
   )
   expect_equal(length(c(res_10@top_genes$`2`, res_10@top_genes$`3`)), 20)
   
-  
-  
   # ========================================
   # Top 5
   res_5 <- top_genes(res, cluster = "all", top = 5)
   
   # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene286",
-    "gene245", "gene223", "gene206", "gene207", "gene315", "gene364",
-    "gene312", "gene390", "gene320", "gene37", "gene84", "gene19",
-    "gene51", "gene64"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "SDPR", "GNG11", 
+                          "PF4", "SPARC", "PPBP", "TYMP", "COTL1", "CTSS", "S100A11", "CFD", 
+                          "GZMB", "PRF1", "GNLY", "FGFBP2", "GZMA", "AC137932.6", "HEMGN", 
+                          "hsa-mir-1199", "EGFL7", "SEC14L5", "ARHGAP21", "SPOCD1", "ATP9A", 
+                          "FAM212A", "CTNNAL1", "CLEC1B", "GP1BA", "CMTM5", "SCGB1C1", 
+                          "HIST1H2BD", "LGALSL", "SMOX", "SSX2IP", "FAM212B", "AC147651.3", 
+                          "HLA-DRB1", "HLA-DRA", "HLA-DPA1", "HLA-DRB5", "HLA-DPB1", "HIST1H2BJ", 
+                          "CLDN5", "C2orf88", "FAM63A", "TUBA1C", "ENKUR", "LCN2", "GFI1B", 
+                          "ANKRD9", "PRUNE", "CD3D", "IL32", "LDHB", "CD3E", "IL7R", "FCGR3A", 
+                          "RHOC", "IFITM2", "ABI3", "HES4", "RP11-879F14.2", "ZHX1-C8ORF76", 
+                          "MTURN", "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", 
+                          "PKIG")
   expect_equal(unlist(res_5@top_genes, use.names = FALSE), gene_name_to_check)
   expect_that(res@top_genes, is_a("list"))
-  expect_equal(length(unlist(res_5@top_genes, use.names = FALSE)), 20)
+  expect_equal(length(unlist(res_5@top_genes, use.names = FALSE)), 75)
   
   
   # Test top genes list in cluster 1
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18")
   expect_equal(res_5@top_genes$`1`, gene_name_to_check)
   
   
   # Test top genes list in cluster 2 and 3
-  gene_name_to_check <- c(
-    "gene286", "gene245", "gene223", "gene206", "gene207", "gene315",
-    "gene364", "gene312", "gene390", "gene320"
-  )
+  gene_name_to_check <- c("SDPR", "GNG11", "PF4", "SPARC", "PPBP", "TYMP", "COTL1", "CTSS", 
+                          "S100A11", "CFD")
   expect_equal(c(res_5@top_genes$`2`, res_5@top_genes$`3`), gene_name_to_check)
   
   
@@ -139,212 +154,84 @@ test_that("Cheking get_genes is providing the right list of genes - kendall", {
   res_100 <- suppressWarnings(top_genes(res, cluster = "all", top = 100))
   
   # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene126", "gene120",
-    "gene122", "gene109", "gene198", "gene158", "gene163", "gene155",
-    "gene119", "gene115", "gene148", "gene154", "gene197", "gene124",
-    "gene188", "gene159", "gene161", "gene112", "gene150", "gene144",
-    "gene192", "gene118", "gene184", "gene146", "gene175", "gene147",
-    "gene199", "gene173", "gene114", "gene103", "gene127", "gene183",
-    "gene194", "gene113", "gene101", "gene181", "gene180", "gene153",
-    "gene165", "gene135", "gene111", "gene166", "gene142", "gene186",
-    "gene131", "gene104", "gene136", "gene168", "gene134", "gene152",
-    "gene149", "gene179", "gene151", "gene178", "gene139", "gene133",
-    "gene162", "gene138", "gene107", "gene189", "gene200", "gene140",
-    "gene132", "gene105", "gene193", "gene195", "gene145", "gene123",
-    "gene185", "gene164", "gene177", "gene157", "gene106", "gene190",
-    "gene110", "gene174", "gene102", "gene169", "gene117", "gene167",
-    "gene125", "gene172", "gene129", "gene130", "gene196", "gene182",
-    "gene128", "gene187", "gene170", "gene156", "gene286", "gene245",
-    "gene223", "gene206", "gene207", "gene273", "gene256", "gene281",
-    "gene282", "gene283", "gene285", "gene277", "gene219", "gene248",
-    "gene269", "gene229", "gene212", "gene202", "gene232", "gene288",
-    "gene275", "gene236", "gene289", "gene230", "gene292", "gene203",
-    "gene244", "gene276", "gene299", "gene272", "gene241", "gene261",
-    "gene222", "gene259", "gene253", "gene258", "gene217", "gene279",
-    "gene290", "gene270", "gene284", "gene278", "gene296", "gene233",
-    "gene225", "gene267", "gene235", "gene238", "gene255", "gene287",
-    "gene300", "gene266", "gene234", "gene239", "gene293", "gene215",
-    "gene251", "gene291", "gene262", "gene257", "gene226", "gene242",
-    "gene254", "gene214", "gene240", "gene250", "gene298", "gene249",
-    "gene247", "gene263", "gene227", "gene220", "gene208", "gene3991",
-    "gene294", "gene201", "gene237", "gene213", "gene211", "gene224",
-    "gene228", "gene2930", "gene297", "gene268", "gene1931", "gene252",
-    "gene280", "gene246", "gene315", "gene364", "gene312", "gene390",
-    "gene320", "gene314", "gene334", "gene398", "gene393", "gene368",
-    "gene316", "gene350", "gene387", "gene382", "gene397", "gene339",
-    "gene369", "gene349", "gene363", "gene326", "gene318", "gene386",
-    "gene341", "gene366", "gene324", "gene306", "gene378", "gene362",
-    "gene329", "gene331", "gene303", "gene365", "gene340", "gene322",
-    "gene353", "gene379", "gene330", "gene313", "gene335", "gene327",
-    "gene345", "gene394", "gene311", "gene389", "gene360", "gene337",
-    "gene301", "gene351", "gene372", "gene385", "gene336", "gene358",
-    "gene400", "gene332", "gene323", "gene355", "gene2911", "gene342",
-    "gene367", "gene319", "gene373", "gene396", "gene371", "gene310",
-    "gene352", "gene359", "gene376", "gene392", "gene317", "gene370",
-    "gene391", "gene328", "gene3609", "gene375", "gene760", "gene344",
-    "gene304", "gene325", "gene1423", "gene302", "gene2490", "gene37",
-    "gene84", "gene19", "gene51", "gene64", "gene32", "gene76",
-    "gene88", "gene7", "gene78", "gene57", "gene27", "gene55",
-    "gene61", "gene80", "gene31", "gene29", "gene12", "gene70",
-    "gene2", "gene59", "gene56", "gene36", "gene67", "gene79",
-    "gene16", "gene34", "gene13", "gene45", "gene1", "gene73",
-    "gene93", "gene28", "gene39", "gene4", "gene87", "gene86",
-    "gene94", "gene9", "gene6", "gene11", "gene25", "gene82",
-    "gene10", "gene83", "gene71", "gene74", "gene96", "gene58",
-    "gene46", "gene42", "gene63", "gene85", "gene95", "gene43",
-    "gene20", "gene66", "gene52", "gene90", "gene14", "gene17",
-    "gene35", "gene54", "gene21", "gene98", "gene99", "gene3"
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3", "RPL12", "RPS15A", "RPLP2", "RPL28", 
+                          "RPS19", "RPS25", "EEF1A1", "RPS8", "RPS4X", "RPL29", "RPL27A", 
+                          "RPL18", "RPL14", "RPL3", "RPL35A", "RPL21", "RPLP1", "RPS28", 
+                          "RPL6", "RPS10", "RPL26", "RPL7A", "RPL5", "RPL27", "RPL15", 
+                          "RPS13", "RPL17", "RPL31", "RPS3A", "RPS29", "RPL36", "MALAT1", 
+                          "RPS20", "TPT1", "RPS26", "RPS9", "EEF1B2", "RPS11", "NACA", 
+                          "RPSAP58", "BTG1", "SDPR", "GNG11", "PF4", "SPARC", "PPBP", "TUBB1", 
+                          "HIST1H2AC", "GP9", "CLU", "AP001189.4", "RGS18", "PTCRA", "TREML1", 
+                          "F13A1", "CA2", "TMEM40", "MMD", "MYL9", "PTGS1", "MPP1", "ACTN1", 
+                          "ACRBP", "TPM4", "TPM1", "SNCA", "NGFRAP1", "GAS2L1", "GRAP2", 
+                          "CTSA", "ILK", "ODC1", "SNN", "PDLIM1", "FERMT3", "HIST1H2BK", 
+                          "MARCH2", "PARVB", "PLA2G12A", "MFSD1", "PVALB", "CD151", "TPTEP1", 
+                          "GSN", "YWHAH", "RAP1B", "ASAH1", "APP", "MYL12A", "H2AFJ", "TYMP", 
+                          "COTL1", "CTSS", "S100A11", "CFD", "LGALS2", "GABARAP", "TNFSF13B", 
+                          "APOBEC3A", "AP2S1", "IGSF6", "CSTB", "CPVL", "MAFB", "IFI6", 
+                          "SLC7A7", "TGFBI", "C1orf162", "CAPG", "BLVRA", "BID", "MNDA", 
+                          "LILRB2", "S100A10", "CD14", "WARS", "NAAA", "NUP214", "ATG3", 
+                          "CNPY3", "CYBB", "GAPDH", "IFNGR2", "ALDH2", "EIF4EBP1", "CD300LF", 
+                          "GCA", "GRINA", "LILRB4", "SOD2", "CTSZ", "CD302", "CAMK1", "POU2F2", 
+                          "FCGR2A", "GZMB", "PRF1", "GNLY", "FGFBP2", "GZMA", "CST7", "CCL4", 
+                          "SPON2", "CTSW", "CLIC3", "CD247", "IL2RB", "HOPX", "HLA-C", 
+                          "CD7", "AKR1C3", "KLRF1", "XCL1", "IGFBP7", "CCL5", "CD99", "PTPRCAP", 
+                          "PLEK", "EFHD2", "AC137932.6", "HEMGN", "hsa-mir-1199", "EGFL7", 
+                          "SEC14L5", "GATA2", "DPY19L1", "HEXIM2", "PCP2", "KIFC3", "RAB27B", 
+                          "SH3BGRL2", "KIAA0513", "DAB2", "RILP", "CLIC4", "PYGL", "FAM110A", 
+                          "BTK", "LYL1", "ARHGAP21", "SPOCD1", "ATP9A", "FAM212A", "CTNNAL1", 
+                          "ABCC3", "SCFD2", "ARG2", "ITGB3", "ALOX12", "ENDOD1", "NEXN", 
+                          "RP11-359I18.5", "TGFB1I1", "ABHD16A", "GLA", "WIPI1", "PPP1R14A", 
+                          "CLEC1B", "GP1BA", "CMTM5", "SCGB1C1", "HIST1H2BD", "RP11-367G6.3", 
+                          "FNTB", "SEPT4", "SENCR", "C1orf198", "MLH3", "HIST2H2BE", "GLUL", 
+                          "H1F0", "LGALSL", "SMOX", "SSX2IP", "FAM212B", "AC147651.3", 
+                          "TMCC2", "ZNF778", "SERPINE2", "TRIM58", "MOB3B", "NFE2", "C19orf33", 
+                          "MGLL", "FN3K", "HLA-DRB1", "HLA-DRA", "HLA-DPA1", "HLA-DRB5", 
+                          "HLA-DPB1", "CD74", "HLA-DQA1", "HLA-DQB1", "LY86", "HLA-DMB", 
+                          "FAM26F", "CD37", "RNASET2", "SLC25A6", "HIST1H2BJ", "CLDN5", 
+                          "C2orf88", "FAM63A", "TUBA1C", "SLC40A1", "SPHK1", "TMEM91", 
+                          "PRKAR2B", "TJP2", "AC092295.7", "XPNPEP1", "ENKUR", "LCN2", 
+                          "GFI1B", "ANKRD9", "PRUNE", "SMIM5", "PTPN18", "CD3D", "IL32", 
+                          "LDHB", "CD3E", "IL7R", "CD27", "AES", "FCGR3A", "RHOC", "IFITM2", 
+                          "ABI3", "HES4", "CLIC1", "RP11-879F14.2", "ZHX1-C8ORF76", "MTURN", 
+                          "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", "PKIG"
   )
   expect_equal(unlist(res_100@top_genes, use.names = FALSE), gene_name_to_check)
   expect_that(res@top_genes, is_a("list"))
   
   
   # Test top genes list in cluster 1
-  gene_name_to_check <- c(
-    "gene160", "gene191", "gene108", "gene137", "gene116", "gene171",
-    "gene143", "gene141", "gene176", "gene121", "gene126", "gene120",
-    "gene122", "gene109", "gene198", "gene158", "gene163", "gene155",
-    "gene119", "gene115", "gene148", "gene154", "gene197", "gene124",
-    "gene188", "gene159", "gene161", "gene112", "gene150", "gene144",
-    "gene192", "gene118", "gene184", "gene146", "gene175", "gene147",
-    "gene199", "gene173", "gene114", "gene103", "gene127", "gene183",
-    "gene194", "gene113", "gene101", "gene181", "gene180", "gene153",
-    "gene165", "gene135", "gene111", "gene166", "gene142", "gene186",
-    "gene131", "gene104", "gene136", "gene168", "gene134", "gene152",
-    "gene149", "gene179", "gene151", "gene178", "gene139", "gene133",
-    "gene162", "gene138", "gene107", "gene189", "gene200", "gene140",
-    "gene132", "gene105", "gene193", "gene195", "gene145", "gene123",
-    "gene185", "gene164", "gene177", "gene157", "gene106", "gene190",
-    "gene110", "gene174", "gene102", "gene169", "gene117", "gene167",
-    "gene125", "gene172", "gene129", "gene130", "gene196", "gene182",
-    "gene128", "gene187", "gene170", "gene156"
-  )
+  gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
+                          "RPL9", "RPL23A", "RPS3", "RPL12", "RPS15A", "RPLP2", "RPL28", 
+                          "RPS19", "RPS25", "EEF1A1", "RPS8", "RPS4X", "RPL29", "RPL27A", 
+                          "RPL18", "RPL14", "RPL3", "RPL35A", "RPL21", "RPLP1", "RPS28", 
+                          "RPL6", "RPS10", "RPL26", "RPL7A", "RPL5", "RPL27", "RPL15", 
+                          "RPS13", "RPL17", "RPL31", "RPS3A", "RPS29", "RPL36", "MALAT1", 
+                          "RPS20", "TPT1", "RPS26", "RPS9", "EEF1B2", "RPS11", "NACA", 
+                          "RPSAP58", "BTG1")
   expect_equal(res_100@top_genes$`1`, gene_name_to_check)
   
   
   # Test top genes list in cluster 2 and 3
-  gene_name_to_check <- c(
-    "gene286", "gene245", "gene223", "gene206", "gene207", "gene273",
-    "gene256", "gene281", "gene282", "gene283", "gene285", "gene277",
-    "gene219", "gene248", "gene269", "gene229", "gene212", "gene202",
-    "gene232", "gene288", "gene275", "gene236", "gene289", "gene230",
-    "gene292", "gene203", "gene244", "gene276", "gene299", "gene272",
-    "gene241", "gene261", "gene222", "gene259", "gene253", "gene258",
-    "gene217", "gene279", "gene290", "gene270", "gene284", "gene278",
-    "gene296", "gene233", "gene225", "gene267", "gene235", "gene238",
-    "gene255", "gene287", "gene300", "gene266", "gene234", "gene239",
-    "gene293", "gene215", "gene251", "gene291", "gene262", "gene257",
-    "gene226", "gene242", "gene254", "gene214", "gene240", "gene250",
-    "gene298", "gene249", "gene247", "gene263", "gene227", "gene220",
-    "gene208", "gene3991", "gene294", "gene201", "gene237", "gene213",
-    "gene211", "gene224", "gene228", "gene2930", "gene297", "gene268",
-    "gene1931", "gene252", "gene280", "gene246", "gene315", "gene364",
-    "gene312", "gene390", "gene320", "gene314", "gene334", "gene398",
-    "gene393", "gene368", "gene316", "gene350", "gene387", "gene382",
-    "gene397", "gene339", "gene369", "gene349", "gene363", "gene326",
-    "gene318", "gene386", "gene341", "gene366", "gene324", "gene306",
-    "gene378", "gene362", "gene329", "gene331", "gene303", "gene365",
-    "gene340", "gene322", "gene353", "gene379", "gene330", "gene313",
-    "gene335", "gene327", "gene345", "gene394", "gene311", "gene389",
-    "gene360", "gene337", "gene301", "gene351", "gene372", "gene385",
-    "gene336", "gene358", "gene400", "gene332", "gene323", "gene355",
-    "gene2911", "gene342", "gene367", "gene319", "gene373", "gene396",
-    "gene371", "gene310", "gene352", "gene359", "gene376", "gene392",
-    "gene317", "gene370", "gene391", "gene328", "gene3609", "gene375",
-    "gene760", "gene344", "gene304", "gene325", "gene1423", "gene302",
-    "gene2490"
-  )
+  gene_name_to_check <- c("SDPR", "GNG11", "PF4", "SPARC", "PPBP", "TUBB1", "HIST1H2AC", 
+                         "GP9", "CLU", "AP001189.4", "RGS18", "PTCRA", "TREML1", "F13A1", 
+                         "CA2", "TMEM40", "MMD", "MYL9", "PTGS1", "MPP1", "ACTN1", "ACRBP", 
+                         "TPM4", "TPM1", "SNCA", "NGFRAP1", "GAS2L1", "GRAP2", "CTSA", 
+                         "ILK", "ODC1", "SNN", "PDLIM1", "FERMT3", "HIST1H2BK", "MARCH2", 
+                         "PARVB", "PLA2G12A", "MFSD1", "PVALB", "CD151", "TPTEP1", "GSN", 
+                         "YWHAH", "RAP1B", "ASAH1", "APP", "MYL12A", "H2AFJ", "TYMP", 
+                         "COTL1", "CTSS", "S100A11", "CFD", "LGALS2", "GABARAP", "TNFSF13B", 
+                         "APOBEC3A", "AP2S1", "IGSF6", "CSTB", "CPVL", "MAFB", "IFI6", 
+                         "SLC7A7", "TGFBI", "C1orf162", "CAPG", "BLVRA", "BID", "MNDA", 
+                         "LILRB2", "S100A10", "CD14", "WARS", "NAAA", "NUP214", "ATG3", 
+                         "CNPY3", "CYBB", "GAPDH", "IFNGR2", "ALDH2", "EIF4EBP1", "CD300LF", 
+                         "GCA", "GRINA", "LILRB4", "SOD2", "CTSZ", "CD302", "CAMK1", "POU2F2", 
+                         "FCGR2A")
   expect_equal(
     c(res_100@top_genes$`2`, res_100@top_genes$`3`),
     gene_name_to_check
   )
 })
 
-
-
-
-
-test_that("Cheking get_genes is providing the right list of genes - cosine", {
-  
-  #Create matrix containing 3 signatures
-  m <- create_4_rnd_clust()
-  
-  ## Select informative genes
-  res <- select_genes(data=m,
-                      distance_method="cosine",
-                      k=75,
-                      row_sum=-Inf,
-                      highest=0.3,
-                      fdr = 1e-8)
-  
-  ## Cluster genes
-  res <- gene_clustering(object = res,
-                         inflation = 1.2,
-                         keep_nn = FALSE,
-                         k = 5,
-                         threads = 1)
-  
-  # ========================================
-  # Top 20
-  res_20 <- suppressWarnings(top_genes(res, cluster = "all", top = 20))
-  
-  # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene189", "gene155", "gene192", "gene165", "gene190", "gene150",
-    "gene146", "gene180", "gene186", "gene166", "gene132", "gene159",
-    "gene112", "gene153", "gene143", "gene122", "gene176", "gene161",
-    "gene184", "gene117", "gene316", "gene393", "gene386", "gene379",
-    "gene330", "gene398", "gene368", "gene382", "gene315", "gene390",
-    "gene334", "gene364", "gene312", "gene329", "gene349", "gene389",
-    "gene397", "gene318", "gene365", "gene314", "gene230", "gene286",
-    "gene285", "gene249", "gene256", "gene272", "gene245", "gene282",
-    "gene223", "gene214", "gene222", "gene289", "gene298", "gene267",
-    "gene293", "gene241", "gene206", "gene259", "gene225", "gene251",
-    "gene76", "gene67", "gene16", "gene59", "gene88", "gene12",
-    "gene32", "gene55", "gene80", "gene73", "gene9", "gene39",
-    "gene19", "gene2", "gene56", "gene36", "gene74", "gene84",
-    "gene6", "gene29"
-  )
-  expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
-})
-
-
-
-test_that("Cheking get_genes is providing the right list of genes - euclidean", {
-  
-  #Create matrix containing 3 signatures
-  m <- create_4_rnd_clust()
-  
-  ## Select informative genes
-  res <- select_genes(data=m,
-                      distance_method="euclidean",
-                      k=75,
-                      row_sum=-Inf,
-                      highest=0.3,
-                      fdr = 1e-8)
-  
-  ## Cluster genes
-  res <- gene_clustering(object = res,
-                         inflation = 1.2,
-                         keep_nn = FALSE,
-                         k = 5,
-                         threads = 1)
-  
-  # ========================================
-  # Top 20
-  res_20 <- suppressWarnings(top_genes(res, cluster = "all", top = 20))
-  
-  # Test top genes list in all cluster
-  gene_name_to_check <- c(
-    "gene568", "gene1938", "gene717", "gene2616", "gene2037", "gene3169",
-    "gene1430", "gene464", "gene864", "gene3478", "gene3224", "gene1015",
-    "gene1873", "gene793", "gene2041", "gene3122", "gene490", "gene824",
-    "gene1225", "gene796"
-  )
-  expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
-})
 
