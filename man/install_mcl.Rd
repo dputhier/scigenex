@@ -4,11 +4,7 @@
 \alias{install_mcl}
 \title{Install MCL}
 \usage{
-install_mcl(force = FALSE)
-}
-\arguments{
-\item{force}{logical indicating whether to force installation even if MCL is
-already installed. Default is \code{FALSE}.}
+install_mcl()
 }
 \description{
 This function installs the MCL (Markov Cluster) program, which is required for

@@ -58,7 +58,7 @@ res <- select_genes(pbmc3k_medium,
 ## Method 1 - Construct a graph with a 
 ## novel neighborhood size
 res <- gene_clustering(res, keep_nn = FALSE, 
-                       inflation = 2.2, threads = 4)
+                       inflation = 1.5, threads = 4)
                        
 # Display the heatmap of gene clusters
 res <- top_genes(res)
