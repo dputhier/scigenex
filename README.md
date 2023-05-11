@@ -32,23 +32,31 @@ Or using the R interpreter:
 
 ## Example
 
-### Quick example on artificial data
 
-      library(scigenex)
-      set.seed(123)
-      m <- matrix(rnorm(40000), nc=20)
-      m[1:100,1:10] <- m[1:100,1:10] + 4
-      m[101:200,11:20] <- m[101:200,11:20] + 3
-      m[201:300,5:15] <- m[201:300,5:15] + -2
-      res <- find_gene_clusters(data=m,
-             distance_method="pearson",
-             av_dot_prod_min = 0,
-             inflation = 2,
-             k=25,
-             fdr = 10)
-      plot_heatmap(res, ceil = 3, floor = -3)
-      saveRDS(object = res, file = "ClusterSet_obj.RDS")
-      
+		library(Seurat)
+		library(scigenex)
+		set_verbosity(1)
+
+		# Load a dataset
+		load_example_dataset("7871581/files/pbmc3k_medium")
+
+		# Select informative genes
+		res <- select_genes(pbmc3k_medium,
+		                     distance = "pearson",
+		                     row_sum=5)
+		                     
+		# Cluster informative features
+		 
+		## Construct and partition the graph
+		res <- gene_clustering(res, 
+		                       inflation = 1.5, 
+		                       threads = 4)
+		                        
+		# Display the heatmap of gene clusters
+		res <- top_genes(res)
+		plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
+
+
 ### Documentation
 
 Documentation (in progress) is available at [https://dputhier.github.io/scigenex/](https://dputhier.github.io/scigenex/).
