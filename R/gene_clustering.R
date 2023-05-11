@@ -524,7 +524,7 @@ mcl_system_cmd <- function(object = NULL,
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
-  cmd <- paste0(mcl_path" ",
+  cmd <- paste0(mcl_dir, "mcl ",
                 input_path,
                 "/",
                 name,
