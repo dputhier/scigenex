@@ -37,7 +37,7 @@
 #' ## Method 1 - Construct a graph with a 
 #' ## novel neighborhood size
 #' res <- gene_clustering(res, keep_nn = FALSE, 
-#'                        inflation = 2.2, threads = 4)
+#'                        inflation = 1.5, threads = 4)
 #'                        
 #' # Display the heatmap of gene clusters
 #' res <- top_genes(res)
@@ -496,13 +496,20 @@ mcl_system_cmd <- function(object = NULL,
   ## Testing mcl installation
   if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
     print_msg("Found MCL program in the path...", msg_type = "DEBUG")
+    mcl_dir <- ""
   } else {
-    stop(
-      "\t--> Please install mcl on your computer...\n",
-      "\t--> You can download it from : 'http://www.micans.org/mcl/'\n\n"
-    )
+    mcl_dir <- Sys.glob(file.path(path.expand('~'), 
+                                  ".scigenex", "mcl*",
+                                  "src", "shmcl"))
+    if(mcl_dir == character(0)){
+      print_msg("MCL was not found in the PATH nor in  ~/.scigenex. Installing in ~/.scigenex")  
+      install_mcl()
+    }else{
+      print_msg("MCL was found in the ~/.scigenex directory.")
+    }
+    
   }
-  
+
   name <- object@parameters$name
   input_path <- object@parameters$output_path
   
@@ -517,7 +524,7 @@ mcl_system_cmd <- function(object = NULL,
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
-  cmd <- paste0("mcl ",
+  cmd <- paste0(mcl_path" ",
                 input_path,
                 "/",
                 name,
