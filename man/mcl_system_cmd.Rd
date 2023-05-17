@@ -2,7 +2,7 @@
 % Please edit documentation in R/gene_clustering.R
 \name{mcl_system_cmd}
 \alias{mcl_system_cmd}
-\title{Run the MCL program for graph partitioning.}
+\title{Call MCL program for graph partitioning (internal).}
 \usage{
 mcl_system_cmd(object = NULL, inflation = inflation, threads = 1)
 }
@@ -17,10 +17,10 @@ mcl_system_cmd(object = NULL, inflation = inflation, threads = 1)
 a ClusterSet object with the updated parameters.
 }
 \description{
-Run the MCL program for graph partitioning.
+Call MCL program for graph partitioning (internal).
 }
 \details{
-This function launches the MCL program for graph partitioning. 
+This function call the MCL program for graph partitioning. 
 MCL is a graph clustering algorithm that detects clusters of nodes in a graph 
 based on the flow of information through the edges. 
 It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
@@ -36,4 +36,3 @@ MCL should be installed. Run the \code{install_mcl} command to install it.
 - Van Dongen S. (2000) A cluster algorithm for graphs. National
 Research Institute for Mathematics and Computer Science in the 1386-3681.
 }
-\keyword{internal}

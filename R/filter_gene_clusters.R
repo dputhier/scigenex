@@ -166,9 +166,8 @@ median_of_max_dot_prod <- function(cur_clust){
 #' obj <- filter_by_dot_prod(pbmc3k_medium_clusters, av_dot_prod_min=5)
 #' nclust(obj) 
 #' @export filter_by_dot_prod
-filter_by_dot_prod <- function(object = NULL,
-                               av_dot_prod_min = 2) {
-  
+filter_by_dot_prod <- function(object = NULL, av_dot_prod_min = 2) {
+
   ## Check format object arg
   check_format_cluster_set(object)
   
@@ -220,10 +219,14 @@ filter_by_dot_prod <- function(object = NULL,
   object@gene_clusters_metadata$all_dot_prod <- all_dot_prod[selected_cluster]
   names(object@gene_clusters_metadata$all_dot_prod) <- object@gene_clusters_metadata$cluster_id[selected_cluster]
 
+   
   if(length(selected_cluster)==0){
     return(object[-c(1:nclust(object)),])
   }else{
+    print_msg(paste0("Selected clusters : ", selected_cluster), msg_type = "DEBUG")
     object <- object[selected_cluster, ]
+    
+    print_msg("Renaming.", msg_type = "DEBUG")
     object <- rename_clust(object)
     return(object)
   }
@@ -238,10 +241,15 @@ filter_by_dot_prod <- function(object = NULL,
 #'
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
 #' @examples 
-#' 
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#' df <- cluster_stats(pbmc3k_medium_clusters)  
+#' plot_cluster_stats(df)
+#' plot_cluster_stats(df, highlight=df$sd_total > 0.3) 
+#' pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3)
+#' plot_cluster_stats(cluster_stats(pbmc3k_medium_clusters_sub))
 #' @export filter_cluster_sd
 filter_cluster_sd <- function(object = NULL,
-                              min_sd = 0.1) {
+                              min_sd = 0.2) {
   
   ## Check format object arg
   check_format_cluster_set(object)
@@ -253,7 +261,7 @@ filter_cluster_sd <- function(object = NULL,
   df_split <- split(object@data, gene_clust)
   sd_total <- unlist(lapply(df_split, sd))
 
-  cluster_to_keep <- sd_total < min_sd
+  cluster_to_keep <- sd_total >= min_sd
   
   print_msg(
     paste(

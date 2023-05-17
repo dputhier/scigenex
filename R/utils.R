@@ -379,22 +379,18 @@ check_format_cluster_set <- function(object) {
 #' the main functions of the scigenex package. MCL is a cluster
 #' algorithm that uses stochastic flow simulation to cluster graphs.
 #'
-#' @param force logical indicating whether to force installation even if MCL is
-#'   already installed. Default is \code{FALSE}.
-#'
 #' @importFrom utils download.file
 #' @examples
 #' # Install MCL
 #' install_mcl()
 #' @export install_mcl
-install_mcl <- function(force=FALSE){
+install_mcl <- function(){
+  
   if (.Platform$OS.type == "windows") {
     print_msg("A unix-like OS is required to launch the MCL program.",
               msg_type = "STOP")
   }else{
-    if(nchar(Sys.which("mcl")) == 0 | force ){
-      
-      if(is.null(unlist(options()["scigenex_mcl_path"])) | force){
+    
         dir_path <- file.path(path.expand('~'), ".scigenex")
         print_msg(paste0("Creating a path for mcl installation: ", 
                          dir_path), 
@@ -405,18 +401,14 @@ install_mcl <- function(force=FALSE){
                              destfile="mcl-latest.tar.gz")
         system("tar xvfz mcl-latest.tar.gz")
         system("rm -f mcl-latest.tar.gz")
-        mcl_version <- dir()
+        mcl_version <- dir(pattern = "mcl*")
         setwd(mcl_version)
-        print_msg("Installing MCL.", 
-                  msg_type = "INFO")
-        system("./configure")
-        system("make")
-        mcl_install_path <- file.path(getwd(), "src/shmcl/mcl")
+        print_msg("Installing MCL.", msg_type = "INFO")
+        system("sh configure; make")
+        
         print_msg("MCL program installed.", 
                   msg_type = "INFO")
-        options(scigenex_mcl_path = mcl_install_path)
-      }
-    }
+      
   }
 }
 
