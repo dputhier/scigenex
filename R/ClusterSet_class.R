@@ -596,3 +596,71 @@ setMethod("rename_clust",
             
 })
 
+
+################################################################################
+##      Method for writing gene list into an excel sheet.
+################################################################################
+
+#' @title Write Cluster-Set gene lists into an excel sheet.
+#' @description  Write gene lists from a Cluster-Set object into an excel sheet.
+#' @param object The ClusterSet object.
+#' @param file_path The file path.
+#' @param colname_xls The name of the gene column. Default 'official_gene_symbol'.
+#' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
+#' @export cluster_set_to_xls
+setGeneric("cluster_set_to_xls", 
+           function(object,
+                    file_path = NULL,
+                    colname_xls="official_gene_symbol",
+                    single_tab=FALSE)
+             standardGeneric("cluster_set_to_xls")
+) 
+
+#' @title Write Cluster-Set gene lists into an excel sheet.
+#' @description  Write gene lists from a Cluster-Set object into an excel sheet.
+#' @param object The ClusterSet object.
+#' @param file_path The file path.
+#' @param colname_xls The name of the gene column. Default 'official_gene_symbol'.
+#' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
+#' @importFrom xlsx write.xlsx
+#' @examples 
+#' #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' tp_dir <- tempdir()
+#' dir.create(tp_dir, showWarnings = F)
+#' cluster_set_to_xls(pbmc3k_medium_clusters, file.path(tp_dir, "test.xls"))
+#' @export cluster_set_to_xls
+setMethod("cluster_set_to_xls",            
+          signature("ClusterSet"), 
+          function(object,
+                   file_path = NULL,
+                   colname_xls="official_gene_symbol",
+                   single_tab=FALSE) {
+            
+            check_format_cluster_set(object)
+            object <- reorder_genes(object)
+            dir_n <- dirname(file_path)
+            
+            if(!dir.exists(dir_n))
+              print_msg("Directory does not exist. Exiting.", msg_type = "STOP")
+            
+            
+            if(file.exists(file_path))
+              print_msg("File  already exist. Exiting.", msg_type = "STOP")
+            
+            if(single_tab){
+              gnc <- gene_cluster(object)
+              xlsx::write.xlsx(data.frame(cluster=unname(gnc), colname_xls=names(gnc)), 
+                               file=file_path, 
+                               sheetName="Modules")
+              
+            }else{
+              for(i in 1:nclust(object)){
+                xlsx::write.xlsx(data.frame(colname_xls=object@gene_clusters[[i]]), 
+                                 file=file_path, 
+                                 sheetName=paste0("Module ", i),
+                                 append =TRUE)
+              }
+            }
+})
+
+
