@@ -115,7 +115,7 @@ gene_clustering <- function(object = NULL,
   colnames(centers) <- colnames(object@data)
   rownames(centers) <- names(object@gene_clusters)
   
-  ## calcul of the mean profils
+  ## calcul of the average profiles
   for (i in 1:nb_clusters) {
 
       centers[i, ] <- apply(object@data[object@gene_clusters[[i]], , drop=FALSE],
@@ -125,6 +125,7 @@ gene_clustering <- function(object = NULL,
   }
   
   object@dbf_output$center <- centers
+  rownames(object@dbf_output$center) <- names(object@gene_clusters)
   
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
                                       row.names = colnames(object@data))
@@ -460,9 +461,9 @@ keep_dbf_graph <- function(object = NULL,
 
 
 ################################################################################
-#' Run the MCL program for graph partitioning.
+#' Call MCL program for graph partitioning (internal).
 #'
-#' @details This function launches the MCL program for graph partitioning. 
+#' @details This function call the MCL program for graph partitioning. 
 #' MCL is a graph clustering algorithm that detects clusters of nodes in a graph 
 #' based on the flow of information through the edges. 
 #' It is a fast and efficient algorithm that can be used for clustering large-scale graphs.
@@ -481,8 +482,7 @@ keep_dbf_graph <- function(object = NULL,
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
 #'
 #' @return a ClusterSet object with the updated parameters.
-#'
-#' @keywords internal
+#' 
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,
                            threads = 1) {
@@ -494,14 +494,14 @@ mcl_system_cmd <- function(object = NULL,
   }
   
   ## Testing mcl installation
-  if (system("mcl --version | grep 'Stijn van Dongen'", intern = TRUE) > 0) {
+  if (Sys.which("mcl") != "") {
     print_msg("Found MCL program in the path...", msg_type = "DEBUG")
     mcl_dir <- ""
   } else {
     mcl_dir <- Sys.glob(file.path(path.expand('~'), 
                                   ".scigenex", "mcl*",
                                   "src", "shmcl"))
-    if(mcl_dir == character(0)){
+    if(length(mcl_dir) == 0){
       print_msg("MCL was not found in the PATH nor in  ~/.scigenex. Installing in ~/.scigenex")  
       install_mcl()
     }else{
@@ -524,7 +524,8 @@ mcl_system_cmd <- function(object = NULL,
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
-  cmd <- paste0(mcl_dir, "mcl ",
+  cmd <- paste0(file.path(mcl_dir, "mcl"), 
+                " ",
                 input_path,
                 "/",
                 name,
