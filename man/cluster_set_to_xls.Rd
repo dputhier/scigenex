@@ -23,3 +23,4 @@ cluster_set_to_xls(
 \description{
 Write gene lists from a Cluster-Set object into an excel sheet.
 }
+\keyword{internal}
