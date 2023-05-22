@@ -33,4 +33,31 @@ The clusterSet object contains a top_genes slot that can be used to display
 genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
 top_genes based on GO terms.
 }
+\examples{
+# Set verbosity to 1 to display info messages only.
+set_verbosity(1)
+
+# Load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+
+# DNA Binding: "GO:0003677"
+pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
+pbmc3k_medium_clusters@top_genes
+
+# Cell surface receptor signaling pathway: "GO:0007166"
+pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id =c("GO:0007166"))
+                                                                    
+# Signaling receptor binding: GO:0005102 
+pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id="GO:0005102")
+
+# ECM genes
+# GO:0031012 - extracellular matrix; 
+# GO:0005578 - proteinacious extracellular matrix; 
+# GO:0005201 - extracellular matrix structural constituent; 
+# GO:1990430 - extracellular matrix protein binding; and 
+# GO:0035426 - extracellular matrix cell signalling).
+pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id=c("GO:0031012", "GO:0005578",
+                                                                   "GO:0005201", "GO:1990430",
+                                                                   "GO:0035426"))
+}
 \keyword{internal}

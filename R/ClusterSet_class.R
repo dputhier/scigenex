@@ -611,14 +611,12 @@ setMethod("rename_clust",
 #' @description  Write gene lists from a Cluster-Set object into an excel sheet.
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
-#' @param colname_xls The name of the gene column. Default 'official_gene_symbol'.
 #' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
 #' @keywords internal
 #' @export cluster_set_to_xls
 setGeneric("cluster_set_to_xls", 
            function(object,
                     file_path = NULL,
-                    colname_xls="official_gene_symbol",
                     single_tab=FALSE)
              standardGeneric("cluster_set_to_xls")
 ) 
@@ -627,7 +625,6 @@ setGeneric("cluster_set_to_xls",
 #' @description  Write gene lists from a Cluster-Set object into an excel sheet.
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
-#' @param colname_xls The name of the gene column. Default 'official_gene_symbol'.
 #' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
 #' @importFrom xlsx write.xlsx
 #' @examples 
@@ -640,7 +637,6 @@ setMethod("cluster_set_to_xls",
           signature("ClusterSet"), 
           function(object,
                    file_path = NULL,
-                   colname_xls="official_gene_symbol",
                    single_tab=FALSE) {
             
             check_format_cluster_set(object)
@@ -656,7 +652,7 @@ setMethod("cluster_set_to_xls",
             
             if(single_tab){
               gnc <- gene_cluster(object)
-              xlsx::write.xlsx(data.frame(cluster=unname(gnc), colname_xls=names(gnc)), 
+              xlsx::write.xlsx(data.frame(cluster=unname(gnc), "official_gene_symbol"=names(gnc)), 
                                file=file_path, 
                                sheetName="Modules")
               
@@ -740,3 +736,50 @@ setMethod("reorder_clust",
             
           })
 
+################################################################################
+##      Method for searching genes using REGEXP
+################################################################################
+
+#' @title Search genes within ClusterSet using a REGEXP.
+#' @description Search genes within ClusterSet using a REGEXP.
+#' @param object a ClusterSet object.
+#' @param regexp The regular expression
+#' @param val if FALSE, a vector containing the (integer) indices of the matches determined 
+#' by grep is returned, and if TRUE, a vector containing the matching elements themselves 
+#' is returned.
+#' @export grep_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")
+#' @keywords internal
+setGeneric("grep_clust", 
+           function(object, regexp=NULL, val=TRUE)
+             standardGeneric("grep_clust")
+)
+
+#' @title Search genes within ClusterSet using a REGEXP.
+#' @description Search genes within ClusterSet using a REGEXP.
+#' @param object a ClusterSet object.
+#' @param regexp The regular expression
+#' @param val if FALSE, a vector containing the (integer) indices of the matches determined 
+#' by grep is returned, and if TRUE, a vector containing the matching elements themselves 
+#' is returned.
+#' @export grep_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")
+setMethod("grep_clust", 
+          signature("ClusterSet"), 
+          function(object, 
+                   regexp=NULL, val=TRUE) {
+            
+            check_format_cluster_set(object)
+            
+            if(is.null(regexp)){
+              print_msg('Please provide regexp argument.')
+            }
+            fgrep <- function(x, regexp, val){grep(regexp, x, value=val)}
+            lapply(object@gene_clusters, fgrep, regexp, val)
+          })

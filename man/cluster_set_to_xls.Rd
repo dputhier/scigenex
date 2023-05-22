@@ -4,19 +4,12 @@
 \alias{cluster_set_to_xls}
 \title{Write Cluster-Set gene lists into an excel sheet.}
 \usage{
-cluster_set_to_xls(
-  object,
-  file_path = NULL,
-  colname_xls = "official_gene_symbol",
-  single_tab = FALSE
-)
+cluster_set_to_xls(object, file_path = NULL, single_tab = FALSE)
 }
 \arguments{
 \item{object}{The ClusterSet object.}
 
 \item{file_path}{The file path.}
-
-\item{colname_xls}{The name of the gene column. Default 'official_gene_symbol'.}
 
 \item{single_tab}{Whether all gene lists should be in a single tab. Default to FALSE}
 }
