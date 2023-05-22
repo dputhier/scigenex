@@ -534,6 +534,12 @@ setMethod("which_clust",
             tmp[genes]
 })
 
+
+################################################################################
+##      Method for renaming clusters from a clusterSet 
+################################################################################
+
+
 #' @title Rename the gene clusters of a ClusterSet
 #' @description Rename the gene clusters of a ClusterSet.
 #' @param object a ClusterSet object.
@@ -664,4 +670,73 @@ setMethod("cluster_set_to_xls",
             }
 })
 
+
+
+################################################################################
+##      Method for reordering clusters from a clusterSet 
+################################################################################
+
+#' @title Reorder the clusters from a ClusterSet
+#' @description Reorder the clusters from a ClusterSet based on their names
+#' @param object a ClusterSet object.
+#' @param new_order The names from the clusterSet in an alternative order.
+#' @export reorder_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' clust_size(pbmc3k_medium_clusters)
+#' new_obj <- reorder_clust(pbmc3k_medium_clusters, new_order = 15:1)
+#' clust_size(pbmc3k_medium_clusters)
+#' @keywords internal
+setGeneric("reorder_clust", 
+           function(object, new_order=NULL)
+             standardGeneric("reorder_clust")
+)
+
+#' @title Reorder the clusters from a ClusterSet
+#' @description Reorder the clusters from a ClusterSet based on their names
+#' @param object a ClusterSet object.
+#' @param new_order The names from the clusterSet in an alternative order.
+#' @export reorder_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' clust_size(pbmc3k_medium_clusters)
+#' new_obj <- reorder_clust(pbmc3k_medium_clusters, new_order = 15:1)
+#' clust_size(new_obj)
+setMethod("reorder_clust", 
+          signature("ClusterSet"), 
+          function(object, 
+                   new_order=NULL) {
+            
+            check_format_cluster_set(object)
+            
+            if(is.null(new_order)){
+              print_msg('Please provide new_order argument.')
+            }
+            
+            if(length(new_order) != nclust(object))
+              print_msg("The number of labels should be the same a the number of clusters.")
+            
+            if(!all(sort(new_order) == sort(clust_names(object))))
+              print_msg("The labels should be the same in an alternative order.")
+            
+            new_pos <- match(new_order, clust_names(object))
+            object@gene_clusters <- object@gene_clusters[new_pos]
+            
+            if(length(object@top_genes) > 0)
+              object@top_genes <- object@top_genes[new_pos]
+            
+            object@gene_clusters_metadata$cluster_id <- object@gene_clusters_metadata$cluster_id[new_pos]
+            
+            object@gene_clusters_metadata$size <- object@gene_clusters_metadata$size[new_pos]
+            
+            if(length(object@gene_cluster_annotations) > 0)
+              object@gene_cluster_annotations <- object@gene_cluster_annotations[new_pos]
+            
+            object@dbf_output$center <- object@dbf_output$center[new_pos,]
+            
+            return(object)
+            
+          })
 
