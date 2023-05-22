@@ -607,6 +607,7 @@ setMethod("rename_clust",
 #' @param file_path The file path.
 #' @param colname_xls The name of the gene column. Default 'official_gene_symbol'.
 #' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
+#' @keywords internal
 #' @export cluster_set_to_xls
 setGeneric("cluster_set_to_xls", 
            function(object,
