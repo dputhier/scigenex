@@ -658,7 +658,7 @@ setMethod("cluster_set_to_xls",
               
             }else{
               for(i in 1:nclust(object)){
-                xlsx::write.xlsx(data.frame(colname_xls=object@gene_clusters[[i]]), 
+                xlsx::write.xlsx(data.frame("official_gene_symbol"=object@gene_clusters[[i]]), 
                                  file=file_path, 
                                  sheetName=paste0("Module ", i),
                                  append =TRUE)
