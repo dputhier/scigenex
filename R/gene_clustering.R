@@ -483,6 +483,7 @@ keep_dbf_graph <- function(object = NULL,
 #'
 #' @return a ClusterSet object with the updated parameters.
 #' 
+#' @export mcl_system_cmd
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,
                            threads = 1) {
@@ -524,7 +525,13 @@ mcl_system_cmd <- function(object = NULL,
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
-  cmd <- paste0(file.path(mcl_dir, "mcl"), 
+  if(mcl_dir == "" | mcl_dir == " "){
+    mcl_path <- "mcl"
+  }else{
+    mcl_path <- file.path(mcl_dir, "mcl")
+  }
+  
+  cmd <- paste0(mcl_path, 
                 " ",
                 input_path,
                 "/",
@@ -538,11 +545,11 @@ mcl_system_cmd <- function(object = NULL,
                 ".mcl_out.txt ",
                 verb,
                 threads)
-  
+
   cmd <- gsub(pattern = "//",
               replacement = "/",
               x = cmd)
-  
+
   print_msg(paste0("Running mcl command: ", cmd), msg_type = "DEBUG")
   
   system(cmd)
