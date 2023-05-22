@@ -284,7 +284,7 @@ select_genes <- function(data = NULL,
   # ======================
     #### Create the ClusterSet object ####
   # ======================
-  print_msg(paste0("Create the ClusterSet object."), msg_type = "INFO")
+  print_msg(paste0("Creating the ClusterSet object."), msg_type = "INFO")
   
   obj <- new("ClusterSet")
   
