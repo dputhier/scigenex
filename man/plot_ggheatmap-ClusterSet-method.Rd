@@ -7,12 +7,16 @@
 \S4method{plot_ggheatmap}{ClusterSet}(
   object,
   to_log2 = FALSE,
-  use_top_gene = TRUE,
+  use_top_genes = TRUE,
+  ident = NULL,
+  panel_spacing = 0.05,
+  colors = colors_for_gradient("Ju1"),
   standardizing = FALSE,
-  biotype = "cells",
   ceil = 1,
   floor = -1,
-  centering = TRUE
+  centering = TRUE,
+  xlab = "Spots",
+  ylab = "Genes"
 )
 }
 \arguments{
@@ -20,9 +24,16 @@
 
 \item{to_log2}{Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).}
 
-\item{standardizing}{Whether rows should be divided by standard deviation.}
+\item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
-\item{biotype}{The names of the columns (e.g cells or spots...).}
+\item{ident}{A named vector containing the cell type identities for each cell.
+Typically the result from the Idents() function on a Seurat object (see Seurat library).}
+
+\item{panel_spacing}{Spacing between facets/panels ("line" units).}
+
+\item{colors}{A vector of colors for the gradient.}
+
+\item{standardizing}{Whether rows should be divided by standard deviation.}
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
 
@@ -30,7 +41,9 @@
 
 \item{centering}{Whether rows should be centered.}
 
-\item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
+\item{xlab}{A name for the x axis.}
+
+\item{ylab}{A name for the y axis.}
 }
 \value{
 A ggplot diagram.
@@ -39,5 +52,15 @@ A ggplot diagram.
 Plot the results (heatmap) contained in a ClusterSet object.
 }
 \examples{
-# Todo
+# Load datasets
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+load_example_dataset('7871581/files/pbmc3k_medium')
+
+# rename clusters
+new_obj <- rename_clust(pbmc3k_medium_clusters, new_name=sprintf("M\%02d", as.integer(clust_names(pbmc3k_medium_clusters))))
+
+# Use plot_ggheatmap
+ident_pbmc3k <- sort(Idents(pbmc3k_medium))
+new_obj <- top_genes(new_obj)
+plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
 }

@@ -479,28 +479,37 @@ plot_dist <- function(object,
 #' @param object A ClusterSet object.
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
+#' @param ident A named vector containing the cell type identities for each cell.
+#' Typically the result from the Idents() function on a Seurat object (see Seurat library).
+#' @param panel_spacing Spacing between facets/panels ("line" units).
+#' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
-#' @param biotype The names of the columns (e.g cells or spots...).
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
-#'
+#' @param xlab A name for the x axis.
+#' @param ylab A name for the y axis.
+#' 
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #'
 #' @examples
 #' # Todo
-#' @keyword internal
+#' @keywords internal
 setGeneric("plot_ggheatmap",
            
            function(object,
                     to_log2 = FALSE,
-                    use_top_gene=TRUE,
+                    use_top_genes=TRUE,
+                    ident=NULL,
+                    panel_spacing=0.05,
+                    colors = colors_for_gradient("Ju1"),
                     standardizing = FALSE,
-                    biotype="cells",
                     ceil=1,
                     floor=-1,
-                    centering = TRUE) {
+                    centering = TRUE,
+                    xlab="Genes",
+                    ylab="Spots") {
              
              standardGeneric("plot_ggheatmap")
            })
@@ -512,28 +521,49 @@ setGeneric("plot_ggheatmap",
 #' @param object A ClusterSet object.
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
+#' @param ident A named vector containing the cell type identities for each cell.
+#' Typically the result from the Idents() function on a Seurat object (see Seurat library).
+#' @param panel_spacing Spacing between facets/panels ("line" units).
+#' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
-#' @param biotype The names of the columns (e.g cells or spots...).
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
+#' @param xlab A name for the x axis.
+#' @param ylab A name for the y axis.
 #'
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #' @importFrom reshape2 melt
+#' @importFrom ggh4x facet_grid2 strip_themed elem_list_rect
+#' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid
 #' @examples
-#' # Todo
+#' # Load datasets
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' load_example_dataset('7871581/files/pbmc3k_medium')
+#' 
+#' # rename clusters
+#' new_obj <- rename_clust(pbmc3k_medium_clusters, new_name=sprintf("M%02d", as.integer(clust_names(pbmc3k_medium_clusters))))
+#' 
+#' # Use plot_ggheatmap
+#' ident_pbmc3k <- sort(Idents(pbmc3k_medium))
+#' new_obj <- top_genes(new_obj)
+#' plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
 setMethod(
   "plot_ggheatmap",
   signature(object = "ClusterSet"),
   function(object,
            to_log2 = FALSE,
-           use_top_gene=TRUE,
+           use_top_genes=TRUE,
+           ident=NULL,
+           panel_spacing=0.05,
+           colors = colors_for_gradient("Ju1"),
            standardizing = FALSE,
-           biotype="cells",
            ceil=1,
            floor=-1,
-           centering = TRUE) {
+           centering = TRUE,
+           xlab="Spots",
+           ylab="Genes") {
     
     check_format_cluster_set(object)
     print_msg("getting matrix", msg_type="DEBUG")
@@ -541,6 +571,8 @@ setMethod(
     nb <- nclust(object)
     
     if(use_top_genes){
+      if(length(object@top_genes) == 0)
+        print_msg("Please use top_gene() methods onto ClusterSet object.", msg_type = "STOP")
       m <- object@data[unlist(object@top_genes), ]
     }
     
@@ -577,105 +609,82 @@ setMethod(
     ## melting
     print_msg("Melting matrix.", msg_type="DEBUG")
     m_melt <- reshape2::melt(as.matrix(m))
-    colnames(m_melt) <- c("gene", bio_object, "value")
-    
-    
-    print_msg("Storing cell types.", msg_type="DEBUG")
-    ## Storing cell types:
-    
-    if(!is.null(object@cell_types)){
-      m_melt$cell_types <- as.character(object@cell_types[as.character(m_melt$samples)])
-    }else{
-      print_msg("Warning: cell type is undefined.", msg_type="WARNING")
-      m_melt$cell_types <- "unknown_cell_type"
+    colnames(m_melt) <- c("genes", "samples", "values")
+    gclust <- gene_cluster(object, as_string = T)
+    match_gclust <- match(m_melt$genes, names(gclust))
+    m_melt$gene_clusters <- factor(gclust[match_gclust], ordered = TRUE)
+
+    if(!is.null(ident)){
+      if(!all(m_melt$cell %in% names(ident))){
+        print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
+      }
+      m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
     }
+    
     
     ## plotting
     # Note that samples, value, gene, cluster
     # may appear as undefined variable to "R check" command.
     # A workaround is to define them as NULL first...
-    samples <- value <- gene <- cluster <- cluster_mean <- NULL
-    if (type == "line") {
-      print_msg("Preparing diagram.", msg_type="DEBUG")
-      p <- ggplot(data = m_melt, aes(
+    samples <- values <- genes <- cell_clusters <- gene_clusters <- NULL
+
+    print_msg("Preparing diagram (tile).", msg_type="DEBUG")
+    print_msg(paste0("Matrix columns :", colnames(m_melt)), msg_type="DEBUG")
+
+    p <- ggplot2::ggplot(
+      data = m_melt,
+      aes(
         x = samples,
-        y = value
-      ))
-      
-      ## displaying cell types:
-      if(length(object@cell_types) > 0 & length(object@cell_colors) > 0){
-        print_msg("Adding cell populations to the diagram.", msg_type="DEBUG")
-        cell_types <- NULL # Avoid "no visible binding for global variable" inn R check.
-        p <- p + geom_vline(aes(xintercept= samples, color=cell_types))
-        p <- p + scale_color_manual(values=object@cell_colors,  guide = guide_legend(override.aes = list(size = 5)))
-      }
-      
-      if(! average_only){
-        print_msg("Adding gene profile.", msg_type="DEBUG")
-        p <- p + geom_line(color = "azure3", aes(group = gene), size=0.1)
-      }
-      
-      print_msg("Adding average profile.", msg_type="DEBUG")
-      
-      p <- p + geom_line(
-        data = m_melt %>%
-          group_by(cluster, samples) %>%
-          summarise(cluster_mean = mean(value)),
-        aes(
-          x = samples,
-          y = cluster_mean,
-          group = cluster
-        ),
-        color = average_line_color,
-        size=0.2
+        y = genes,
+        fill = values
       )
-      
-      print_msg("Faceting.", msg_type="DEBUG")
-      p <- p + facet_grid(cluster ~ .)
-      
-      print_msg("Theming.", msg_type="DEBUG")
-      p <- p + theme_bw()
-      p <- p + theme(
-        strip.text.y = element_text(angle = 0),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
-      )
-      
-      
-    } else if (type == "tile") {
-      print_msg("Preparing diagram (tile).", msg_type="DEBUG")
-      p <- ggplot(
-        data = m_melt,
-        aes(
-          x = samples,
-          y = gene,
-          fill = value
-        )
-      )
-      
-      print_msg("Preparing color palette.", msg_type="DEBUG")
-      col <- unlist(strsplit("#67001f,#b2182b,#d6604d,#f4a582,#fddbc7,#f7f7f7,#d1e5f0,#92c5de,#4393c3,#2166ac,#053061", ","))
-      color.ramp <- colorRampPalette(col)(10)
-      p <- p + geom_tile()
-      p <- p + theme_bw()
-      p <- p + scale_fill_gradientn(
-        colours = color.ramp,
-        name = "Signal"
-      )
-      
-      print_msg("Theming.", msg_type="DEBUG")
-      p <- p + theme(
-        strip.text.y = element_text(angle = 0),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.ticks.x = element_blank()
-      )
-    }
+    )
+
+    print_msg("Preparing color palette.", msg_type="DEBUG")
+    color.ramp <- grDevices::colorRampPalette(colors)(10)
+    
+    p <- p + ggplot2::geom_raster()
+    p <- p + ggplot2::theme_bw()
+    p <- p + ggplot2::scale_fill_gradientn(
+      colours = color.ramp,
+      name = "Signal"
+    )
+    
+    p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
+    
+    print_msg("Theming.", msg_type="DEBUG")
+    p <- p + ggplot2::theme(
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.spacing = unit(0.05, "lines"),
+      panel.border = element_blank(),
+      strip.background.x = element_rect(colour = "white"),
+      strip.background.y = element_rect(fill = "#444444", colour = "white"),
+      strip.text.y = element_text(colour = "white", angle = 0),
+    )
     
     print_msg("Adding facets.", msg_type="DEBUG")
-    p <- p + facet_grid(cluster ~ ., scales = "free_y")
+    
+    gg_color_hue <- function(n) {
+      hues = seq(15, 375, length = n + 1)
+      hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    
+    nb_cell_classes <- length(table(m_melt$cell_clusters))
+    
+    if(!is.null(ident)){
+      
+      colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = gg_color_hue(nb_cell_classes)))
+      p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
+                                  scales = "free", space = "free",
+                                  strip=colored_strip)  
+                                  
+    }else{
+      p <- p + ggplot2::facet_grid(gene_clusters ~ ., scales = "free", space = "free")
+    }
     
     return(p)
-  }
-)
+})
+

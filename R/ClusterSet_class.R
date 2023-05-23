@@ -411,6 +411,7 @@ setMethod(
 #' as value.
 #' @param object a ClusterSet object.
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
+#' @param as_string Return cluster names as strings.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -419,7 +420,8 @@ setMethod(
 #' @keywords internal
 setGeneric("gene_cluster", 
            function(object,
-                    cluster = 0)
+                    cluster = 0,
+                    as_string=FALSE)
              standardGeneric("gene_cluster")
 )
 
@@ -430,6 +432,7 @@ setGeneric("gene_cluster",
 #' as value.
 #' @param object a ClusterSet object.
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
+#' @param as_string Return cluster names as strings.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -438,7 +441,8 @@ setGeneric("gene_cluster",
 setMethod(
   "gene_cluster", signature("ClusterSet"),
       function(object,
-      cluster = 0) {
+      cluster = 0,
+      as_string=FALSE) {
   
   if(!is.null(object@gene_clusters)){
     nb_clust <- length(object@gene_clusters)
@@ -458,8 +462,9 @@ setMethod(
               msg_type = 'STOP')
   
   if(length(cluster) == 1){
-    if (cluster == 0)
-      cluster <- 1:length(object@gene_clusters)
+    if (cluster == 0){
+        cluster <- 1:length(object@gene_clusters)
+    }
   }
   
   if(length(cluster) > 1){
@@ -469,16 +474,27 @@ setMethod(
   }
   
   
-  if (nb_clust) {
-    cluster_as_int <- unlist(mapply(rep,
-                                    cluster,
-                                    lapply(object@gene_clusters[cluster], length),
-                                    SIMPLIFY = TRUE))
-    cluster_as_int <- as.vector(as.matrix(cluster_as_int))
-    names(cluster_as_int) <-
-      unlist(object@gene_clusters[cluster])
-    return(cluster_as_int)
-    
+  if(nb_clust) {
+    if(!as_string){
+      cluster_as_int <- unlist(mapply(rep,
+                                      cluster,
+                                      lapply(object@gene_clusters[cluster], length),
+                                      SIMPLIFY = TRUE))
+      cluster_as_int <- as.vector(as.matrix(cluster_as_int))
+      names(cluster_as_int) <-
+        unlist(object@gene_clusters[cluster])
+      return(cluster_as_int)
+    }else{
+      cluster_as_str <- unlist(mapply(rep,
+                                      clust_names(object)[cluster],
+                                      lapply(object@gene_clusters[cluster], length),
+                                      SIMPLIFY = TRUE))
+      cluster_as_str <- as.vector(as.matrix(cluster_as_str))
+      names(cluster_as_str) <-
+        unlist(object@gene_clusters[cluster])
+      return(cluster_as_str)
+    }
+
   } else{
     return(NULL)
   }
@@ -769,7 +785,7 @@ setGeneric("grep_clust",
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-#' grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")
+#' grep_clust(pbmc3k_medium_clusters, "^CD")
 setMethod("grep_clust", 
           signature("ClusterSet"), 
           function(object, 

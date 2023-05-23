@@ -21,5 +21,5 @@ Search genes within ClusterSet using a REGEXP.
 \examples{
 # load a dataset
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")
+grep_clust(pbmc3k_medium_clusters, "^CD")
 }
