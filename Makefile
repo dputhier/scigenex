@@ -55,4 +55,8 @@ coverage:
 	@echo "Checking coverage"
 	@echo "usethis::use_github_action('test-coverage'); cov <- covr::package_coverage(); print(as.data.frame(cov))" | R --slave
 
+codecov:
+	@echo "Uploading coverage (https://app.codecov.io/github/dputhier/scigenex)"
+	@echo "library(covr); codecov(token ='8f08768a-0629-4ed0-91b9-bdd9f7019916')" | R --slave
+
 all: doc install check test

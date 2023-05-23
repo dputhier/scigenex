@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![Codecov test coverage](https://codecov.io/gh/dputhier/scigenex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dputhier/scigenex?branch=main)
+  <!-- badges: end -->
+
 # scigenex
 
 WARNING: scigenex library is still in beta version. 
