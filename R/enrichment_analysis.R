@@ -40,6 +40,7 @@ setGeneric("enrich_go",
 #' @export enrich_go
 #'
 #' @examples
+#' library(Seurat)
 #' # Load a Seurat object
 #' data(pbmc_small, package = "SeuratObject")
 #' 
@@ -53,7 +54,7 @@ setGeneric("enrich_go",
 #'                             inflation = 2)
 #' # Plot 
 #' clust_set <- top_genes(clust_set)
-#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Idents(pbmc_small))
+#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Seurat::Idents(pbmc_small))
 #' 
 #' # Do enrichment analysis using GO ontology
 #' # Only for cluster 1
@@ -173,6 +174,7 @@ setGeneric("viz_enrich",
 #' @export viz_enrich
 #'
 #' @examples
+#' library(Seurat)
 #' # Load a Seurat object
 #' data(pbmc_small, package = "SeuratObject")
 #' 
@@ -186,7 +188,7 @@ setGeneric("viz_enrich",
 #'                             inflation = 2)
 #' # Plot 
 #' clust_set <- top_genes(clust_set)
-#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Idents(pbmc_small))
+#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Seurat::Idents(pbmc_small))
 #' 
 #' # Do enrichment analysis using GO ontology
 #' # Only for cluster 1

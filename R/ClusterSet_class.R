@@ -644,7 +644,10 @@ setGeneric("cluster_set_to_xls",
 #' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
 #' @importFrom xlsx write.xlsx
 #' @examples 
-#' #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' #' Load an example dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' # Write gene lists to file
 #' tp_dir <- tempdir()
 #' dir.create(tp_dir, showWarnings = FALSE)
 #' cluster_set_to_xls(pbmc3k_medium_clusters, file.path(tp_dir, "test.xls"))

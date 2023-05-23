@@ -52,6 +52,17 @@ A ggplot diagram.
 Plot the results (heatmap) contained in a ClusterSet object.
 }
 \examples{
-# Todo
+library(Seurat)
+# Load datasets
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+load_example_dataset('7871581/files/pbmc3k_medium')
+
+# rename clusters
+new_obj <- rename_clust(pbmc3k_medium_clusters, new_name=sprintf("M\%02d", as.integer(clust_names(pbmc3k_medium_clusters))))
+
+# Use plot_ggheatmap
+ident_pbmc3k <- sort(Seurat::Idents(pbmc3k_medium))
+new_obj <- top_genes(new_obj)
+plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
 }
 \keyword{internal}

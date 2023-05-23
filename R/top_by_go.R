@@ -27,21 +27,6 @@
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
 #' 
-#' # Cell surface receptor signaling pathway: "GO:0007166"
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id =c("GO:0007166"))
-#'                                                                     
-#' # Signaling receptor binding: GO:0005102 
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id="GO:0005102")
-#' 
-#' # ECM genes
-#' # GO:0031012 - extracellular matrix; 
-#' # GO:0005578 - proteinacious extracellular matrix; 
-#' # GO:0005201 - extracellular matrix structural constituent; 
-#' # GO:1990430 - extracellular matrix protein binding; and 
-#' # GO:0035426 - extracellular matrix cell signalling).
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id=c("GO:0031012", "GO:0005578",
-#'                                                                    "GO:0005201", "GO:1990430",
-#'                                                                    "GO:0035426"))
 setGeneric("top_by_go", 
            function(object,
                     go_id = "GO:0003677",
@@ -77,21 +62,6 @@ setGeneric("top_by_go",
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
 #' 
-#' # Cell surface receptor signaling pathway: "GO:0007166"
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id =c("GO:0007166"))
-#'                                                                     
-#' # Signaling receptor binding: GO:0005102 
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id="GO:0005102")
-#' 
-#' # ECM genes
-#' # GO:0031012 - extracellular matrix; 
-#' # GO:0005578 - proteinacious extracellular matrix; 
-#' # GO:0005201 - extracellular matrix structural constituent; 
-#' # GO:1990430 - extracellular matrix protein binding; and 
-#' # GO:0035426 - extracellular matrix cell signalling).
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id=c("GO:0031012", "GO:0005578",
-#'                                                                    "GO:0005201", "GO:1990430",
-#'                                                                    "GO:0035426"))
 #' @importFrom biomaRt listDatasets useMart getBM
 setMethod("top_by_go", 
           signature("ClusterSet"), 

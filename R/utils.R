@@ -78,8 +78,6 @@ get_verbosity <- function() {
 #' set_verbosity(0)
 #' print_msg("Hello world!", "INFO")
 #' print_msg("Debugging message", "DEBUG")
-#' options(warn=0)
-#' print_msg("Warning message", "WARNING")
 #' options(warn=-1)
 #' print_msg("A warning message not displayed", "WARNING")
 #' options(warn=opt_warn)
@@ -387,11 +385,12 @@ check_format_cluster_set <- function(object) {
 #' @export install_mcl
 install_mcl <- function(){
   
+  
   if (.Platform$OS.type == "windows") {
     print_msg("A unix-like OS is required to launch the MCL program.",
               msg_type = "STOP")
   }else{
-    
+        old_path <- getwd()
         dir_path <- file.path(path.expand('~'), ".scigenex")
         print_msg(paste0("Creating a path for mcl installation: ", 
                          dir_path), 
@@ -410,7 +409,9 @@ install_mcl <- function(){
         print_msg("MCL program installed.", 
                   msg_type = "INFO")
       
+        setwd(old_path)
   }
+  
 }
 
 # -------------------------------------------------------------------------
@@ -479,7 +480,9 @@ load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
 
   }
   
+  old_path <- getwd()
   setwd(dir_path)
+  
   if(!file.exists(paste0(file_data, ".rda"))){
     download.file(url=paste0("https://zenodo.org/record/", 
                              dataset, ".rda"), 
@@ -496,6 +499,8 @@ load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
     print_msg(paste0("Dataset ", dataset, " was already loaded."),
               msg_type = "INFO")
   }
+  
+  setwd(old_path)
 
 }
 
