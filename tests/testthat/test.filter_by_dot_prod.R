@@ -44,15 +44,24 @@ obj@dbf_output$center <- rbind(colMeans(m1),
                                colMeans(m2),
                                colMeans(m3),
                                colMeans(m4))
+rownames(obj@dbf_output$center) <- names(obj@gene_clusters)
 
 
 res <- obj
 
 test_that("Checking filter_by_dot_prod() when av_dot_prod_min argument is set to 2", {
     
-  res <- filter_by_dot_prod(res, av_dot_prod_min = 1)  
+  new_obj <- filter_by_dot_prod(res, av_dot_prod_min = 1)  
+  expect_true(nclust(new_obj) == 3)
+
+  new_obj <- filter_by_dot_prod(res, av_dot_prod_min = 2)  
+  expect_true(nclust(new_obj) == 2) 
   
-    
+  new_obj <- filter_by_dot_prod(res, av_dot_prod_min = 3)  
+  expect_true(nclust(new_obj) == 1)    
+  
+  new_obj <- filter_by_dot_prod(res, av_dot_prod_min = 4)  
+  expect_true(nclust(new_obj) == 0)
 })
 
 # n_dbf_output$center -----------------------------------------------------
