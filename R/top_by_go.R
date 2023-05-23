@@ -92,6 +92,7 @@ setGeneric("top_by_go",
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id=c("GO:0031012", "GO:0005578",
 #'                                                                    "GO:0005201", "GO:1990430",
 #'                                                                    "GO:0035426"))
+#' @importFrom biomaRt listDatasets useMart getBM
 setMethod("top_by_go", 
           signature("ClusterSet"), 
           function(object,
@@ -102,7 +103,7 @@ setMethod("top_by_go",
             
             ensembl <- biomaRt::useEnsembl(biomart = "ensembl")
             
-            if(!species  %in% gsub("_gene_ensembl", "", listDatasets(mart = ensembl)$dataset))
+            if(!species  %in% gsub("_gene_ensembl", "", biomaRt::listDatasets(mart = ensembl)$dataset))
               print_msg("Unknow species in biomaRt", msg_type = "STOP")
             
             print_msg("Connecting to Biomart...", msg_type = "INFO")

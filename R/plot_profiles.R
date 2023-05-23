@@ -133,7 +133,7 @@ plot_profiles <- function(data = NULL,
                              y =.data[["y"]], 
                              label = .data[["Cluster"]]),
       size = size_label,
-      inherit.aes = F
+      inherit.aes = FALSE
     ) +
     ggplot2::theme(
       axis.text.x = ggplot2::element_blank(),

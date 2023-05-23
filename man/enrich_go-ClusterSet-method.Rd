@@ -28,21 +28,19 @@ data(pbmc_small, package = "SeuratObject")
 
 # Compute the signatures using find_gene_clusters()
 clust_set <- select_genes(pbmc_small,
-                          distance = "kendall",
-                          k = 75,
-                          noise_level = 0.3,
-                          fdr = 1e-8,
-                          row_sum = -Inf,
+                          distance = "pearson",
                           no_dknn_filter = TRUE)
                           
 # Cluster informative features
 clust_set <- gene_clustering(clust_set, 
-                            inflation = 1.6,
-                            keep_nn = FALSE,
-                            k = 5)
+                            inflation = 2)
+# Plot 
+clust_set <- top_genes(clust_set)
+plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Idents(pbmc_small))
 
 # Do enrichment analysis using GO ontology
-clust_set <- enrich_go(clust_set[1:2,])
+# Only for cluster 1
+clust_set <- enrich_go(clust_set[1,])
 
 # Results of enrichment analysis are 'gene_cluster_annotations' slot
 print(clust_set@gene_cluster_annotations)

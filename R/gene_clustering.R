@@ -105,7 +105,7 @@ gene_clustering <- function(object = NULL,
                                         "size" = unlist(lapply(object@gene_clusters, length)))
   
   ## Update data slot
-  object@data <- object@data[unlist(object@gene_clusters, use.names = F), ]
+  object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE), ]
   
   ## Compute centers
   print_msg(paste0("Compute centers."), msg_type = "DEBUG")
@@ -311,7 +311,7 @@ construct_new_graph <- function(object = NULL,
     file = path_input_mcl,
     sep = "\t",
     eol = "\n",
-    row.names = F,
+    row.names = FALSE,
     col.names = FALSE
   )
   
@@ -446,7 +446,7 @@ keep_dbf_graph <- function(object = NULL,
     file = path_input_mcl,
     sep = "\t",
     eol = "\n",
-    row.names = F,
+    row.names = FALSE,
     col.names = FALSE
   )
   print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")

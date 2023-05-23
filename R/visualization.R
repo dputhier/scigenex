@@ -343,7 +343,7 @@ plot_heatmap <- function(object,
     htmp <- pheatmap::pheatmap(mat = m, 
                      annotation_legend = show_legend, legend = show_legend,
                      color = colorRampPalette(colors)(100),
-                     cluster_rows = F, 
+                     cluster_rows = FALSE, 
                      cluster_cols = cluster_cols, 
                      fontsize_row= label_size,
                      show_rownames = row_labels, 
@@ -536,7 +536,7 @@ setGeneric("plot_ggheatmap",
 #' @export plot_ggheatmap
 #' @importFrom reshape2 melt
 #' @importFrom ggh4x facet_grid2 strip_themed elem_list_rect
-#' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid
+#' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid element_blank element_rect element_text
 #' @examples
 #' # Load datasets
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -654,15 +654,15 @@ setMethod(
     
     print_msg("Theming.", msg_type="DEBUG")
     p <- p + ggplot2::theme(
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks.y = element_blank(),
-      axis.ticks.x = element_blank(),
-      panel.spacing = unit(0.05, "lines"),
-      panel.border = element_blank(),
-      strip.background.x = element_rect(colour = "white"),
-      strip.background.y = element_rect(fill = "#444444", colour = "white"),
-      strip.text.y = element_text(colour = "white", angle = 0),
+      axis.text.x = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      panel.spacing = grid::unit(0.05, "lines"),
+      panel.border = ggplot2::element_blank(),
+      strip.background.x = ggplot2::element_rect(colour = "white"),
+      strip.background.y = ggplot2::element_rect(fill = "#444444", colour = "white"),
+      strip.text.y = ggplot2::element_text(colour = "white", angle = 0),
     )
     
     print_msg("Adding facets.", msg_type="DEBUG")

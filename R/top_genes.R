@@ -59,7 +59,7 @@ setMethod("top_genes",
     if (top > size) {
       print_msg(paste0("Number of top genes is greater than the number of genes in cluster ", 
                        loop, 
-                       ". All genes will be used and ordered by similarity rank."),
+                       ". All genes will be used."),
                 msg_type = "INFO")
     }
   }

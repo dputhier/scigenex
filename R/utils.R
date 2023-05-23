@@ -310,6 +310,7 @@ colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1",
 #' @param palette A character vector specifying the palette to use. 
 #' @return A character vector of color codes.
 #' @export discrete_palette
+#' @importFrom grDevices hcl
 #' @examples
 #' discrete_palette()
 #' discrete_palette(n=20, palette = "ggplot")

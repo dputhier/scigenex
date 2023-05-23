@@ -646,7 +646,7 @@ setGeneric("cluster_set_to_xls",
 #' @examples 
 #' #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' tp_dir <- tempdir()
-#' dir.create(tp_dir, showWarnings = F)
+#' dir.create(tp_dir, showWarnings = FALSE)
 #' cluster_set_to_xls(pbmc3k_medium_clusters, file.path(tp_dir, "test.xls"))
 #' @export cluster_set_to_xls
 setMethod("cluster_set_to_xls",            
