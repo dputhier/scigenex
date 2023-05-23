@@ -8,7 +8,7 @@ res <- select_genes(data = m,
                     distance_method = "pearson",
                     k = 75,
                     row_sum = -Inf,
-                    highest = 0.3,
+                    noise_level = 0.3,
                     fdr = 1e-8)
 
 test_that("Checking results obtained with plot_dist()", {

@@ -731,7 +731,7 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
                             distance_method="pearson",
                             k=10,
                             row_sum=-Inf,
-                            highest=0.95,
+                            noise_level=0.95,
                             fdr = 1e-6)
   
   ## Cluster genes
@@ -789,7 +789,7 @@ testthat::test_that("Test non interactive heatmaps.", {
                             distance_method="pearson",
                             k=10,
                             row_sum=-Inf,
-                            highest=0.95,
+                            noise_level=0.95,
                             fdr = 1e-6)
   
   ## Cluster genes

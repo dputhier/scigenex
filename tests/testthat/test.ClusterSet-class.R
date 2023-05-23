@@ -39,7 +39,7 @@ testthat::test_that("Test the indexing operator of the ClusterSet", {
                                           row.names = colnames(m)),
               dbf_output = dbf_output,
               parameters = list(filename="oP0H7t6Sc0", distance_method="pearson", 
-                                k=50, inflation=2, highest=0.3, fdr=0.05, 
+                                k=50, inflation=2, noise_level=0.3, fdr=0.05, 
                                 min_nb_supporting_cell=0, min_pct_gene_expressed=40, 
                                 min_cluster_size=10, row_sum=-Inf, seed=123)
             )

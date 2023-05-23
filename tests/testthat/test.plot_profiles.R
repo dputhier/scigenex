@@ -11,7 +11,7 @@ testthat::test_that("Check if plot_profile is working properly", {
                             distance_method="pearson",
                             k=10,
                             row_sum=-Inf,
-                            highest=0.95,
+                            noise_level=0.95,
                             fdr = 1e-6)
   
   ## Cluster genes
