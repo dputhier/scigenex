@@ -203,13 +203,6 @@ filter_by_dot_prod <- function(object = NULL, av_dot_prod_min = 2) {
   # Extract selected clusters
   selected_cluster <- selected_cluster[!is.na(selected_cluster)]
   
-  # Stop if all the clusters are filtered out
-  if(length(selected_cluster) == 0){
-    print_msg("No clusters conserved.", msg_type = "STOP")
-  }
-  
-  print_msg(paste0(nb_cluster_out, " clusters are filtered out based on their dot product."),
-            msg_type = "INFO")
   print_msg(paste0("Number of selected clusters: ", length(selected_cluster)), 
             msg_type = "DEBUG")
   

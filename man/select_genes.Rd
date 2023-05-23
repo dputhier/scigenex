@@ -6,9 +6,8 @@
 \usage{
 select_genes(
   data = NULL,
-  dist_threads = 1,
-  distance_method = c("pearson", "cosine", "euclidean", "kendall"),
-  highest = 5e-05,
+  distance_method = c("pearson", "cosine", "euclidean", "spearman", "kendall"),
+  noise_level = 5e-05,
   k = 80,
   row_sum = 1,
   fdr = 0.005,
@@ -20,17 +19,14 @@ select_genes(
 \arguments{
 \item{data}{A matrix, data.frame or Seurat object.}
 
-\item{dist_threads}{An integer specifying the number of threads (restricted to kendall correlation).}
-
 \item{distance_method}{a character string indicating the method for computing distances (one of "pearson", "cosine", 
 "euclidean" or "kendall").}
 
-\item{highest}{During the process, genes will be ordered by their distance to their k nearest neighbors (dknn). 
-This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
-will be used to compute simulated values. 0 means to use all the genes. A value close to 1 means  to use only gene 
+\item{noise_level}{This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
+will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
 with high dknn (i.e close to noise).}
 
-\item{k}{An integer specifying the size of the neighbourhood.}
+\item{k}{An integer specifying the size of the neighborhood.}
 
 \item{row_sum}{A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes.}
 

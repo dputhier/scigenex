@@ -7,14 +7,12 @@
 #' A threshold is set based on permutation analysis and FDR computation. 
 #'
 #' @param data A matrix, data.frame or Seurat object.
-#' @param dist_threads An integer specifying the number of threads (restricted to kendall correlation).
 #' @param distance_method a character string indicating the method for computing distances (one of "pearson", "cosine", 
 #' "euclidean" or "kendall").
-#' @param highest During the process, genes will be ordered by their distance to their k nearest neighbors (dknn). 
-#' This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
-#' will be used to compute simulated values. 0 means to use all the genes. A value close to 1 means  to use only gene 
+#' @param noise_level This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
+#' will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
 #' with high dknn (i.e close to noise).
-#' @param k An integer specifying the size of the neighbourhood.
+#' @param k An integer specifying the size of the neighborhood.
 #' @param row_sum A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes. 
 #' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 100).
 #' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts"). 
@@ -55,12 +53,12 @@
 #' @export select_genes
 
 select_genes <- function(data = NULL,
-                         dist_threads = 1,
                          distance_method = c("pearson",
                                              "cosine",
                                              "euclidean",
+                                             "spearman",
                                              "kendall"),
-                         highest = 0.00005,
+                         noise_level = 0.00005,
                          k = 80,
                          row_sum = 1,
                          fdr = 0.005,
@@ -88,11 +86,12 @@ select_genes <- function(data = NULL,
   distance_method <- match.arg(distance_method, c("pearson",
                                                   "cosine",
                                                   "euclidean",
+                                                  "spearman",
                                                   "kendall"))
   
-  # Check if highest is between 0 and 1
-  if (highest < 0 || highest > 1) {
-    print_msg("highest argument should be >= 0 and <= 1.",
+  # Check if noise_level is between 0 and 1
+  if (noise_level < 0 || noise_level > 1) {
+    print_msg("noise_level argument should be >= 0 and <= 1.",
               msg_type = "STOP")              
   }
   
@@ -132,7 +131,11 @@ select_genes <- function(data = NULL,
     dist_matrix <- qlcMatrix::corSparse(t(select_for_correlation))
     dist_matrix <- 1 - dist_matrix
   }else  if (distance_method == "kendall") {
-    dist_matrix <- as.matrix(amap::Dist(select_for_correlation, method="kendall", nbproc=dist_threads))
+    dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "kendall"))
+    dist_matrix <- 1 - dist_matrix  
+  }else  if (distance_method == "spearman") {
+      dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "spearman"))
+      dist_matrix <- 1 - dist_matrix                      
   } else if (distance_method == "cosine") {
     dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(select_for_correlation)))
     dist_matrix <- 1 - dist_matrix
@@ -211,12 +214,12 @@ select_genes <- function(data = NULL,
     
     nb_selected_genes <- nrow(select_for_correlation)
     
-    if (highest == 0) {
+    if (noise_level == 0) {
       tresh_dknn <- min(df_dknn$dknn_values)
-    } else if (highest == 1) {
+    } else if (noise_level == 1) {
       tresh_dknn <- max(df_dknn$dknn_values)
     } else {
-      tresh_dknn <- stats::quantile(df_dknn$dknn_values, highest)
+      tresh_dknn <- stats::quantile(df_dknn$dknn_values, noise_level)
     }
     
     gene_with_low_dknn <- df_dknn$gene_id[df_dknn$dknn_values > tresh_dknn]
@@ -332,7 +335,7 @@ select_genes <- function(data = NULL,
   
   obj@parameters <- list("distance_method" = distance_method,
                          "k" = k,
-                         "highest" = highest,
+                         "noise_level" = noise_level,
                          "fdr" = fdr,
                          "row_sum" = row_sum,
                          "no_dknn_filter" = no_dknn_filter,

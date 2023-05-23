@@ -33,7 +33,7 @@ m <- create_4_rnd_clust()
 res <- select_genes(m[1:600,],
                     distance = "pearson",
                     k = 75,
-                    highest = 0.3,
+                    noise_level = 0.3,
                     fdr = 1e-8,
                     row_sum = -Inf)
                     

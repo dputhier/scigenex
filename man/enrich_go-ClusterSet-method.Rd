@@ -30,7 +30,7 @@ data(pbmc_small, package = "SeuratObject")
 clust_set <- select_genes(pbmc_small,
                           distance = "kendall",
                           k = 75,
-                          highest = 0.3,
+                          noise_level = 0.3,
                           fdr = 1e-8,
                           row_sum = -Inf,
                           no_dknn_filter = TRUE)

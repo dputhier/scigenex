@@ -77,8 +77,8 @@ setMethod("top_genes",
     # Use the same distance used by SciGeneX
     dist_method <- object@parameters$distance_method
     
-    if (dist_method == "pearson") {
-      dist <- cor(t(object@data[genes, ]), method = "pearson")
+    if (dist_method %in% c("kendall", "pearson", "spearman")) {
+      dist <- cor(t(object@data[genes, ]), method = dist_method)
       dist <- 1 - dist
     }
     
@@ -96,13 +96,7 @@ setMethod("top_genes",
       diag(dist) <- NA
     }
     
-    if (dist_method == "kendall") {
-      dist <- as.matrix(amap::Dist(object@data[genes, ],
-                                   method = "kendall"
-      ))
-    }
-    
-    
+
     # Compute mean correlation for each gene in cluster i
     dist_means <- colMeans(dist, na.rm = TRUE)
     dist_means <- dist_means[order(dist_means, decreasing = FALSE)]
