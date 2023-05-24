@@ -13,6 +13,7 @@ select_genes(
   fdr = 0.005,
   which_slot = c("data", "sct", "counts"),
   no_dknn_filter = FALSE,
+  no_anti_cor = FALSE,
   seed = 123
 )
 }
@@ -20,7 +21,7 @@ select_genes(
 \item{data}{A matrix, data.frame or Seurat object.}
 
 \item{distance_method}{a character string indicating the method for computing distances (one of "pearson", "cosine", 
-"euclidean" or "kendall").}
+"euclidean", spearman or "kendall").}
 
 \item{noise_level}{This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
 will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
@@ -35,6 +36,9 @@ with high dknn (i.e close to noise).}
 \item{which_slot}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts").}
 
 \item{no_dknn_filter}{a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.}
+
+\item{no_anti_cor}{If TRUE, correlation below 0 are set to zero ("pearson", "cosine", "spearman" "kendall"). This may increase the 
+relative weight of positive correlation (as true anti-correlation may be rare).}
 
 \item{seed}{An integer specifying the random seed to use.}
 }

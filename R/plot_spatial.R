@@ -96,7 +96,8 @@ plot_spatial <- function(seurat_obj=NULL,
     
     if(!metadata %in% colnames(seurat_obj@meta.data))
       print_msg("The metadata was not found in the object", msg_type = "STOP")
-    intensities <- as.vector(seurat_obj@meta.data[,metadata])
+    intensities <- seurat_obj@meta.data[,metadata]
+    
   }else{
     if(intensity_slot=="sct"){
       slot_intensity <- seurat_obj@assays$SC
@@ -113,23 +114,54 @@ plot_spatial <- function(seurat_obj=NULL,
       print_msg("The gene_name was not found in the object", msg_type = "STOP")
     intensities <- as.vector(slot_intensity[gene_name, ])
   }
+  
+  
   print_msg("Creating a ggplot diagram.", msg_type = "DEBUG")
+  
+
+  if(!is.factor(intensities)){
+    
+    print_msg("Feature is not a factor.", msg_type = "INFO")
+    
+    if(pt_star){
+      the_scale <- scale_fill_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+    }else{
+      the_scale <- scale_color_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+    }
+    
+  }else{
+    
+    print_msg("Feature is a factor.", msg_type = "INFO")
+    
+    if(length(colours) < length(levels(intensities))){
+      print_msg("Not enough colors supplied. Creating a ggplot-like palette")
+      colours <- discrete_palette(n=length(colours), palette="ggplot")
+    }
+      
+    if(pt_star){
+      the_scale <- scale_fill_manual(values = setNames(colours[1:length(levels(intensities))],
+                                                       as.character(levels(intensities))))
+    }else{
+      the_scale <- scale_color_manual(values = setNames(colours[1:length(levels(intensities))],
+                                                        as.character(levels(intensities))))
+    }
+    
+  }
   
   df <- cbind(xy_coord, intensities)
   colnames(df) <- c("x", "y", "intensity")
   
-   
   
   if(pt_star){
     p <- ggplot(df, aes(x=x, y=y, fill=intensity)) + 
       ggstar::geom_star(starshape=pt_shape, 
                                starstroke=stroke,
                                size=pt_size) +
-      scale_fill_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+      the_scale
   } else{
     p <- ggplot(df, aes(x=x, y=y, color=intensity))+ 
       geom_point(size=pt_size, shape = pt_shape) +
-      scale_color_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+      the_scale
   }
   
     p <- p + theme_void() +
