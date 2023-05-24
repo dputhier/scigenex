@@ -627,13 +627,11 @@ setMethod("rename_clust",
 #' @description  Write gene lists from a Cluster-Set object into an excel sheet.
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
-#' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
 #' @keywords internal
 #' @export cluster_set_to_xls
 setGeneric("cluster_set_to_xls", 
            function(object,
-                    file_path = NULL,
-                    single_tab=FALSE)
+                    file_path = NULL)
              standardGeneric("cluster_set_to_xls")
 ) 
 
@@ -654,8 +652,7 @@ setGeneric("cluster_set_to_xls",
 setMethod("cluster_set_to_xls",            
           signature("ClusterSet"), 
           function(object,
-                   file_path = NULL,
-                   single_tab=FALSE) {
+                   file_path = NULL) {
             
             check_format_cluster_set(object)
             object <- reorder_genes(object)
