@@ -135,7 +135,7 @@ plot_spatial <- function(seurat_obj=NULL,
     
     if(length(colours) < length(levels(intensities))){
       print_msg("Not enough colors supplied. Creating a ggplot-like palette")
-      colours <- discrete_palette(n=length(colours), palette="ggplot")
+      colours <- discrete_palette(n=length(levels(intensities)), palette="ggplot")
     }
       
     if(pt_star){
