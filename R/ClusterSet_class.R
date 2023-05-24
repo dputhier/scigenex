@@ -641,7 +641,6 @@ setGeneric("cluster_set_to_xls",
 #' @description  Write gene lists from a Cluster-Set object into an excel sheet.
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
-#' @param single_tab Whether all gene lists should be in a single tab. Default to FALSE
 #' @importFrom xlsx write.xlsx
 #' @examples 
 #' #' Load an example dataset
@@ -669,19 +668,19 @@ setMethod("cluster_set_to_xls",
             if(file.exists(file_path))
               print_msg("File  already exist. Exiting.", msg_type = "STOP")
             
-            if(single_tab){
+
               gnc <- gene_cluster(object)
               xlsx::write.xlsx(data.frame(cluster=unname(gnc), "official_gene_symbol"=names(gnc)), 
                                file=file_path, 
-                               sheetName="Modules")
+                               sheetName="All_modules")
               
-            }else{
+
               for(i in 1:nclust(object)){
                 xlsx::write.xlsx(data.frame("official_gene_symbol"=object@gene_clusters[[i]]), 
                                  file=file_path, 
                                  sheetName=paste0("Module ", i),
                                  append =TRUE)
-              }
+              
             }
 })
 

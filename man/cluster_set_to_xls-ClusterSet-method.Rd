@@ -10,8 +10,6 @@
 \item{object}{The ClusterSet object.}
 
 \item{file_path}{The file path.}
-
-\item{single_tab}{Whether all gene lists should be in a single tab. Default to FALSE}
 }
 \description{
 Write gene lists from a Cluster-Set object into an excel sheet.
