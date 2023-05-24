@@ -8,7 +8,7 @@
 #'
 #' @param data A matrix, data.frame or Seurat object.
 #' @param distance_method a character string indicating the method for computing distances (one of "pearson", "cosine", 
-#' "euclidean" or "kendall").
+#' "euclidean", spearman or "kendall").
 #' @param noise_level This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
 #' will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
 #' with high dknn (i.e close to noise).
@@ -17,6 +17,8 @@
 #' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 100).
 #' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts"). 
 #' @param no_dknn_filter a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.
+#' @param no_anti_cor If TRUE, correlation below 0 are set to zero ("pearson", "cosine", "spearman" "kendall"). This may increase the 
+#' relative weight of positive correlation (as true anti-correlation may be rare).
 #' @param seed An integer specifying the random seed to use.
 #'
 #' @return a ClusterSet class object
@@ -64,6 +66,7 @@ select_genes <- function(data = NULL,
                          fdr = 0.005,
                          which_slot = c("data", "sct", "counts"),
                          no_dknn_filter = FALSE,
+                         no_anti_cor=FALSE,
                          seed = 123) {
   
   # ======================
@@ -129,15 +132,23 @@ select_genes <- function(data = NULL,
   # and cosine, 0 < distance < 2.
   if (distance_method == "pearson") {
     dist_matrix <- qlcMatrix::corSparse(t(select_for_correlation))
+    if(no_anti_cor)
+      dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   }else  if (distance_method == "kendall") {
     dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "kendall"))
+    if(no_anti_cor)
+      dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix  
   }else  if (distance_method == "spearman") {
       dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "spearman"))
+      if(no_anti_cor)
+        dist_matrix[dist_matrix < 0] <- 0
       dist_matrix <- 1 - dist_matrix                      
   } else if (distance_method == "cosine") {
     dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(select_for_correlation)))
+    if(no_anti_cor)
+      dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
     dist_matrix <- as.matrix(dist(select_for_correlation))
