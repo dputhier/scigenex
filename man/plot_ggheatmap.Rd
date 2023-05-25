@@ -16,7 +16,9 @@ plot_ggheatmap(
   floor = -1,
   centering = TRUE,
   xlab = "Genes",
-  ylab = "Spots"
+  ylab = "Spots",
+  hide_gene_name = TRUE,
+  hide_col_name = TRUE
 )
 }
 \arguments{
@@ -27,7 +29,8 @@ plot_ggheatmap(
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
 \item{ident}{A named vector containing the cell type identities for each cell.
-Typically the result from the Idents() function on a Seurat object (see Seurat library).}
+Typically the result from the Idents() function on a Seurat object (see Seurat library). Lists are
+also accepted which will results in multi-level facets.}
 
 \item{panel_spacing}{Spacing between facets/panels ("line" units).}
 
@@ -44,6 +47,10 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 \item{xlab}{A name for the x axis.}
 
 \item{ylab}{A name for the y axis.}
+
+\item{hide_gene_name}{Whether to hide gene names.}
+
+\item{hide_col_name}{Whether to hide column names.}
 }
 \value{
 A ggplot diagram.

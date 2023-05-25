@@ -16,7 +16,9 @@
   floor = -1,
   centering = TRUE,
   xlab = "Spots",
-  ylab = "Genes"
+  ylab = "Genes",
+  hide_gene_name = TRUE,
+  hide_col_name = TRUE
 )
 }
 \arguments{
@@ -44,6 +46,10 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 \item{xlab}{A name for the x axis.}
 
 \item{ylab}{A name for the y axis.}
+
+\item{hide_gene_name}{Whether to hide gene names.}
+
+\item{hide_col_name}{Whether to hide column names.}
 }
 \value{
 A ggplot diagram.

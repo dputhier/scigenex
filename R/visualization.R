@@ -480,7 +480,8 @@ plot_dist <- function(object,
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param ident A named vector containing the cell type identities for each cell.
-#' Typically the result from the Idents() function on a Seurat object (see Seurat library).
+#' Typically the result from the Idents() function on a Seurat object (see Seurat library). Lists are
+#' also accepted which will results in multi-level facets.
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
@@ -489,6 +490,8 @@ plot_dist <- function(object,
 #' @param centering Whether rows should be centered. 
 #' @param xlab A name for the x axis.
 #' @param ylab A name for the y axis.
+#' @param hide_gene_name Whether to hide gene names.
+#' @param hide_col_name Whether to hide column names.
 #' 
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
@@ -520,7 +523,9 @@ setGeneric("plot_ggheatmap",
                     floor=-1,
                     centering = TRUE,
                     xlab="Genes",
-                    ylab="Spots") {
+                    ylab="Spots",
+                    hide_gene_name=TRUE,
+                    hide_col_name=TRUE) {
              
              standardGeneric("plot_ggheatmap")
            })
@@ -542,7 +547,8 @@ setGeneric("plot_ggheatmap",
 #' @param centering Whether rows should be centered. 
 #' @param xlab A name for the x axis.
 #' @param ylab A name for the y axis.
-#'
+#' @param hide_gene_name Whether to hide gene names.
+#' @param hide_col_name Whether to hide column names.
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #' @importFrom reshape2 melt
@@ -575,10 +581,26 @@ setMethod(
            floor=-1,
            centering = TRUE,
            xlab="Spots",
-           ylab="Genes") {
+           ylab="Genes",
+           hide_gene_name=TRUE,
+           hide_col_name=TRUE) {
     
     check_format_cluster_set(object)
     print_msg("getting matrix", msg_type="DEBUG")
+    
+    if(!is.list(ident)){
+      
+      name_idents <- names(ident)
+      
+      if(is.null(name_idents)){
+        print_msg("The 'ident' argument needs a named vector or a named list of named vector.")
+      }
+      
+      if(length(which(names(ident) == "")) != 0){
+        print_msg("The 'ident' argument needs a named vector or a named list of named vector.")
+      }
+      
+    }
     
     nb <- nclust(object)
     
@@ -627,10 +649,26 @@ setMethod(
     m_melt$gene_clusters <- factor(gclust[match_gclust], ordered = TRUE)
 
     if(!is.null(ident)){
-      if(!all(m_melt$cell %in% names(ident))){
-        print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
-      }
-      m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
+      
+      if(!is.list(ident)){
+        
+        if(!all(m_melt$cell %in% names(ident))){
+          print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
+        }
+        m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
+      
+      }else{
+        
+        for(i in 1:length(names(ident))){
+          if(!all(m_melt$cell %in% names(ident[[i]]))){
+            print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
+          }
+          m_melt[, names(ident[i])] <- factor(ident[[i]][m_melt$samples], ordered = TRUE)
+        }
+        
+    }
+      
+      
     }
     
     
@@ -666,8 +704,6 @@ setMethod(
     
     print_msg("Theming.", msg_type="DEBUG")
     p <- p + ggplot2::theme(
-      axis.text.x = ggplot2::element_blank(),
-      axis.text.y = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(),
       panel.spacing = grid::unit(0.05, "lines"),
@@ -677,6 +713,13 @@ setMethod(
       strip.text.y = ggplot2::element_text(colour = "white", angle = 0),
     )
     
+    if(hide_gene_name){
+      p <- p + ggplot2::theme(axis.text.y = ggplot2::element_blank())
+    }
+    
+    if(hide_col_name){
+      p <- p + ggplot2::theme(axis.text.x = ggplot2::element_blank())
+    }
     print_msg("Adding facets.", msg_type="DEBUG")
     
     gg_color_hue <- function(n) {
@@ -687,11 +730,16 @@ setMethod(
     nb_cell_classes <- length(table(m_melt$cell_clusters))
     
     if(!is.null(ident)){
-      
-      colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = gg_color_hue(nb_cell_classes)))
-      p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
-                                  scales = "free", space = "free",
-                                  strip=colored_strip)  
+      if(!is.list(ident)){
+        colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = gg_color_hue(nb_cell_classes)))
+        p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
+                                    scales = "free", space = "free",
+                                    strip=colored_strip)
+      }else{
+        p <- p + ggplot2::facet_grid(as.formula(paste0("gene_clusters ~ ",  paste0(names(ident), collapse = " + "))), 
+                                    scales = "free", space = "free")
+      }
+
                                   
     }else{
       p <- p + ggplot2::facet_grid(gene_clusters ~ ., scales = "free", space = "free")
