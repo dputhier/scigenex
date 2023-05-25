@@ -4,7 +4,7 @@
 \alias{cluster_set_to_xls,ClusterSet-method}
 \title{Write Cluster-Set gene lists into an excel sheet.}
 \usage{
-\S4method{cluster_set_to_xls}{ClusterSet}(object, file_path = NULL, single_tab = FALSE)
+\S4method{cluster_set_to_xls}{ClusterSet}(object, file_path = NULL)
 }
 \arguments{
 \item{object}{The ClusterSet object.}
