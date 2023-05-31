@@ -6,12 +6,13 @@
 \usage{
 colors_for_gradient(
   palette = c("Je1", "Seurat_Like", "Ju1", "De1", "De2", "De3", "De4", "De5", "De6",
-    "De7", "De8", "De9")
+    "De7", "De8", "De9", "Magma")
 )
 }
 \arguments{
 \item{palette}{A character vector specifying the palette to use. One of: "Je1", 
-"Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9.}
+"Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9", 
+"Magma".}
 }
 \value{
 A character vector of color codes.

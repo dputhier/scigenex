@@ -279,3 +279,194 @@ setMethod("viz_enrich",
             return(invisible(lapply(list_plot, print)))
           }
 )
+
+
+############################################################################
+##    plot_clust_enrichments()
+############################################################################
+
+
+#' @title Plot Cluster Enrichments
+#'
+#' @title Display cluster enrichments for gene GO terms.
+#'
+#' @param object An object of class "ClusterSet".
+#' @param stat_shown A character string specifying the statistic to be shown. Must be one of "qvalue", "p.adjust", or "pvalue". Defaults to "qvalue".
+#' @param nb_go_term An integer specifying the number of top GO terms to select per cluster. Defaults to 6. Note that some terms may be shared between clusters.
+#' @param gradient_palette A vector of colors specifying the gradient palette for the color scale. Defaults to colors_for_gradient("Magma").
+#' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
+#' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
+#'
+#' @return A ggplot object displaying the cluster enrichments for the GO terms.
+#' 
+#' @seealso
+#' \code{\link{enrich_go}}
+#' \code{\link{colors_for_gradient}}
+#'  
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 scale_color_gradientn
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 guide_colourbar
+#' @importFrom ggplot2 facet_grid
+#' @importFrom reshape2 melt
+#' @importFrom grid unit
+#' @export plot_clust_enrichments
+#' @keywords internal
+#' 
+setGeneric("plot_clust_enrichments",
+           function(object,
+                    stat_shown=c("qvalue", "p.adjust", 
+                                 "pvalue"),
+                    as_list=TRUE,
+                    nb_go_term=3,
+                    gradient_palette=colors_for_gradient("Ju1"),
+                    label_fun=NULL,
+                    term_order=NULL) {
+             standardGeneric("plot_clust_enrichments")
+           })
+
+
+#' @title Plot Cluster Enrichments
+#'
+#' @title Display cluster enrichments for gene GO terms.
+#'
+#' @param object An object of class "ClusterSet".
+#' @param stat_shown A character string specifying the statistic to be shown. Must be one of "qvalue", "p.adjust", or "pvalue". Defaults to "qvalue".
+#' @param nb_go_term An integer specifying the number of top GO terms to select per cluster. Defaults to 6. Note that some terms may be shared between clusters.
+#' @param gradient_palette A vector of colors specifying the gradient palette for the color scale. Defaults to colors_for_gradient("Magma").
+#' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
+#' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
+#'
+#' @return A ggplot object displaying the cluster enrichments for the GO terms.
+#' 
+#' @seealso
+#' \code{\link{enrich_go}}
+#' \code{\link{colors_for_gradient}}
+#'  
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 scale_color_gradientn
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 guide_colourbar
+#' @importFrom ggplot2 facet_grid
+#' @importFrom reshape2 melt
+#' @importFrom grid unit
+#' @export plot_clust_enrichments
+#' @examples
+#' # todo
+#' 
+#' 
+setMethod("plot_clust_enrichments",
+          signature(object = "ClusterSet"),
+          function(object,
+                   stat_shown=c("qvalue", "p.adjust", 
+                                "pvalue"),
+                   nb_go_term=6,
+                   gradient_palette=colors_for_gradient("Magma"),
+                   label_fun=NULL,
+                   term_order=NULL) {
+            
+            stat_shown <- match.arg(stat_shown)
+            print_msg(paste0("Using ", stat_shown, " as ordering statistic"), msg_type = "DEBUG")
+            
+            print_msg("Checking object format", msg_type = "DEBUG")
+            check_format_cluster_set(object)
+            
+           
+            if(is.null(object@gene_cluster_annotations) | length(object@gene_cluster_annotations)==0){
+                print_msg("Please run enrich_go() first.", msg_type = "STOP")
+            }
+            
+            print_msg("Extracting and formating data", msg_type = "DEBUG")
+            print_msg(paste0("Argument nb_go_term = ", nb_go_term),  msg_type = "DEBUG")
+            
+            result_go <- lapply(object@gene_cluster_annotations, "slot", "result")
+            
+            order_mat <- function(x, column){x[order(x[,column]), ]}
+            result_go <- lapply(result_go, order_mat, stat_shown)
+            add_rank <- function(x, nb_go_term){x$rank <- 1:nrow(x); 
+                                                x$rank[(nb_go_term + 1):nrow(x)] <- NA; return(x)}
+
+            result_go <- lapply(result_go, add_rank, nb_go_term)
+            
+            for(i in 1:length(result_go)){
+              result_go[[i]]$cluster <- names(result_go)[i]
+            }
+            
+            print_msg("Merging results", msg_type = "DEBUG")
+            
+            m <- do.call('rbind', result_go)
+          
+            go_retained <- unique(m$Description[!is.na(m$rank)])
+            m <- m[m$Description %in% go_retained, ]
+
+            if(!is.null(term_order)){
+              term_order_selected <- intersect(term_order, m$Description)
+              m <- m[m$Description %in% term_order_selected, ]
+            }
+            
+            m$stat <- -log10(m[, stat_shown])
+            m <- m[order(m$cluster, m$rank), ]
+            
+            m$is_top <- m$stat
+            m$is_top[is.na(m$rank)] <- "No"
+            m$is_top[!is.na(m$rank)] <- "Yes"
+            m$is_top <- as.factor(m$is_top)
+            
+            if(!is.null(label_fun)){
+              m$Description <- sapply(m$Description, label_fun)
+            }
+            
+            if(!is.null(term_order)){
+              desc_levels <- sapply(term_order_selected, label_fun)
+            }else{
+              desc_levels <- rev(unique(m$Description))
+            }
+
+            m$Description <- factor(m$Description, levels=desc_levels, ordered = TRUE)
+            
+            cluster <- go_term <- stat <- size <- rank <- NULL
+            
+            print_msg("Melting...", msg_type = "DEBUG")
+            
+            m_melt <- reshape2::melt(m, id.vars = c("Description", "Count", "stat", "cluster", "rank", "is_top"))
+            colnames(m_melt) <- c("go_term", "Counts", "stat", "cluster", "rank", "is_top", "ID", "value")
+            
+            m_gg <- m_melt[order(m_melt[,"cluster"]), ]
+            
+            print_msg("Running ggplot...", msg_type = "DEBUG")
+            ggplot(data=m_gg, mapping=aes(x=cluster, y = go_term, color=stat, size=Counts)) +
+              ggplot2::theme_bw() + 
+              geom_point(shape=16) +
+              ggplot2::scale_color_gradientn(colours = gradient_palette,
+                                             guide = guide_colourbar(title=paste0("-log10(", stat_shown, ")"), barwidth = 0.75, barheight = 5)) + 
+              ggplot2::theme(
+                axis.ticks.y = ggplot2::element_blank(),
+                axis.ticks.x = ggplot2::element_blank(),
+                panel.spacing = grid::unit(0.0, "lines"),
+                panel.border = ggplot2::element_blank(),
+                strip.background.x = ggplot2::element_rect(fill = "#444444", colour = "white"),
+                strip.text.x = ggplot2::element_text(colour = "white", angle = 0),
+                axis.text.x = ggplot2::element_blank()
+              ) + 
+              ggplot2::xlab('Clusters') +
+              ggplot2::ylab('Go terms')  +
+              ggplot2::facet_grid(~cluster, scale="free_x") 
+          
+})
+
+
+

@@ -256,7 +256,8 @@ create_4_rnd_clust <- function(){
 #' a specified palette name.
 #'
 #' @param palette A character vector specifying the palette to use. One of: "Je1", 
-#' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9.
+#' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9", 
+#' "Magma".
 #' @return A character vector of color codes.
 #' @export colors_for_gradient
 #' @examples
@@ -265,7 +266,7 @@ create_4_rnd_clust <- function(){
 #' 
 colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1", 
                                           "De2", "De3", "De4", "De5",
-                                          "De6", "De7", "De8", "De9")){
+                                          "De6", "De7", "De8", "De9", "Magma")){
   palette <- match.arg(palette)
   
   if(palette == "Seurat_Like"){
@@ -293,6 +294,10 @@ colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1",
   }else if(palette == "Je1"){
     return(c("#27408B", "#3A5FCD", "#3288BD", "#66C2A5","#ABDDA4", "#E6F598","#FEE08B", "#FDAE61","#F46D43","#D53E4F","#8B2323"))
   }
+  else if(palette == "Magma"){
+    return(c("#ffdb00", "#ffa904", "#ee7b06", "#a12424", "#400b0b"))
+  }
+  
 }
 
 # -------------------------------------------------------------------------
