@@ -36,7 +36,7 @@ A plot showing the relationship between markers and clusters.
 Use jaccard index and hypergeometric to map a list of cell markers to gene clusters.
 }
 \examples{
-load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 library(clustermole)
 m <- clustermole_markers(species = "hs")
 markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
