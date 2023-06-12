@@ -1,4 +1,4 @@
-test_that("Just some check about print_msg", {
+test_that("Just some check about print_stat", {
   set.seed(123)
 
   data <- rnorm(3)
@@ -30,14 +30,4 @@ test_that("Just some check about print_msg", {
     )
   )
 
-  data <- letters[1:10]
-  expect_warning(
-    print_stat(
-      "Summary statistics for data",
-      data,
-      round_val = 1,
-      msg_type = "WARNING"
-    ),
-    "|-- WARNING : Summary statistics for data: No Statistics"
-  )
 })

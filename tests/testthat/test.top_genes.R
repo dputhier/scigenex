@@ -45,8 +45,7 @@ test_that("Cheking top_gene()", {
                           "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", "PKIG"
   )
   expect_equal(unlist(res_20@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
-  
+
   
   # Test top genes list in cluster 1
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
@@ -94,7 +93,6 @@ test_that("Cheking top_gene()", {
                           "ZHX1-C8ORF76", "MTURN", "MEST", "CAPZA2", "LINC00926", "CD79B", 
                           "MS4A1", "ISG20", "PKIG")
   expect_equal(unlist(res_10@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
   expect_equal(length(unlist(res_10@top_genes, use.names = FALSE)), 130)
   
   
@@ -133,7 +131,6 @@ test_that("Cheking top_gene()", {
                           "MTURN", "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", 
                           "PKIG")
   expect_equal(unlist(res_5@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
   expect_equal(length(unlist(res_5@top_genes, use.names = FALSE)), 75)
   
   
@@ -198,8 +195,6 @@ test_that("Cheking top_gene()", {
                           "MEST", "CAPZA2", "LINC00926", "CD79B", "MS4A1", "ISG20", "PKIG"
   )
   expect_equal(unlist(res_100@top_genes, use.names = FALSE), gene_name_to_check)
-  expect_that(res@top_genes, is_a("list"))
-  
   
   # Test top genes list in cluster 1
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 

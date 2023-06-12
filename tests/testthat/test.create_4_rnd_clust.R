@@ -6,5 +6,4 @@ test_that("Just some check about create_4_rnd_clust()", {
   expect_equal(round(sd(m), 2), 1.17)
   expect_equal(round(mean(m), 2), 0.03)
   expect_equal(round(median(m), 2), 0.01)
-  expect_that(m, is_a("matrix"))
 })

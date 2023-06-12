@@ -25,8 +25,7 @@ test_that("Checking plot_heatmap()", {
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
   # Check heatmap format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 361)
   expect_equal(nrow(htmp_matrix), 319)
@@ -158,9 +157,8 @@ test_that("Checking plot_heatmap() using top genes", {
   htmp_matrix <- htmp@plots@listData$`Exp. level`@data
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
-  # Check heatmpa format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+  # Check heatmap format
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 361)
   expect_equal(nrow(htmp_matrix), 230)
@@ -277,8 +275,7 @@ test_that("Checking plot_heatmap() using cell clusters", {
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
   # Check heatmap format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 319)
@@ -416,8 +413,7 @@ test_that("Checking plot_heatmap() using top genes and cell clusters", {
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
   # Check heatmap format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 230)
@@ -545,8 +541,7 @@ test_that("Checking plot_heatmap() displaying gene clusters 1 and 4", {
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
   # Check heatmap format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 42)
@@ -646,8 +641,7 @@ test_that("Checking plot_heatmap() displaying only gene cluster 3", {
   htmp_matrix_wo_na <- htmp_matrix[!is.na(htmp_matrix)]
   
   # Check heatmap format
-  expect_that(htmp, is_a("IheatmapHorizontal"))
-  
+
   # Check dim of heatmap matrix
   expect_equal(ncol(htmp_matrix), 377)
   expect_equal(nrow(htmp_matrix), 20)

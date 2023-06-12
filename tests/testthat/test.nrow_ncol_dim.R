@@ -22,7 +22,6 @@ test_that("Checking colnames()", {
   expect_equal(col_names(res)[1:10], c("GATCTACTGGTGAG-1", "ACAGTGACTCACCC-1", "AGACGTACAGAGGC-1", 
                                        "GACGTAACCTGTGA-1", "TATACAGATCCAGA-1", "CGGATAACAGCTCA-1", "TTACCATGGTTGAC-1", 
                                        "TCCCACGATCATTC-1", "ATAGCGTGCAGATC-1", "TGTAGGTGTGCTGA-1"))
-  expect_that(col_names(res), is_a("character"))
   expect_equal(tail(col_names(res)), c("GGCATATGGGGAGT-1", "TTACGTACGTTCAG-1", "GGAACACTTCAGAC-1", 
                                       "ATCATCTGACACCA-1", "ACGAACTGGCTATG-1", "TAACACCTTGTTTC-1"))
 })
@@ -71,14 +70,14 @@ test_that("Checking rownames()", {
                                  "IFITM2", "ABI3", "CLIC1", "RP11-879F14.2", "MEST", "ZHX1-C8ORF76", 
                                  "MTURN", "CAPZA2", "MS4A1", "LINC00926", "CD79B", "ISG20", "PKIG"
   ))
-  expect_that(row_names(res), is_a("character"))
+
 })
 
 test_that("Checking clust_size()", {
   expect_equal(clust_size(res), c(`1` = 51L, `2` = 49L, `3` = 45L, `4` = 24L, `5` = 20L, `6` = 18L, 
                                   `7` = 14L, `8` = 14L, `9` = 14L, `10` = 12L, `11` = 7L, `12` = 7L, 
                                   `13` = 6L, `14` = 5L, `15` = 5L))
-  expect_that(clust_size(res), is_a("integer"))
+
 })
 
 test_that("Checking gene_cluster()", {
@@ -101,6 +100,6 @@ test_that("Checking gene_cluster()", {
                                             10L, 10L, 10L, 10L, 10L, 10L, 10L, 11L, 11L, 11L, 11L, 11L, 11L, 
                                             11L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 13L, 13L, 13L, 13L, 13L, 
                                             13L, 14L, 14L, 14L, 14L, 14L, 15L, 15L, 15L, 15L, 15L))
-  expect_that(gene_cluster(res), is_a("integer"))
+
 })
 

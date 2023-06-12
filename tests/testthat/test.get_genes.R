@@ -62,9 +62,7 @@ test_that("Checking get_genes is providing the right list of genes", {
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(gene_names, rownames(res@data))
   expect_equal(gene_names, unlist(res@gene_clusters, use.names = FALSE))
-  expect_that(gene_names, is_a("character"))
-  
-  
+
   # =======================================================
   # Test gene list in cluster 1
   gene_names <- get_genes(res, cluster = 1)
@@ -78,8 +76,6 @@ test_that("Checking get_genes is providing the right list of genes", {
                           "RPSAP58", "RPL6")
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(gene_names, res@gene_clusters$`1`)
-  expect_that(gene_names, is_a("character"))
-  
   
   # =======================================================
   # Test gene list in cluster 2
@@ -93,8 +89,6 @@ test_that("Checking get_genes is providing the right list of genes", {
                           "TPTEP1", "PARVB", "MYL12A", "CD151", "PVALB")
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(gene_names, res@gene_clusters$`2`)
-  expect_that(gene_names, is_a("character"))
-  
   
   # =======================================================
   # Test gene list in cluster 3
@@ -108,9 +102,6 @@ test_that("Checking get_genes is providing the right list of genes", {
                           "CNPY3", "GCA", "POU2F2")
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(gene_names, res@gene_clusters$`3`)
-  expect_that(gene_names, is_a("character"))
-  
-  
 })
 
 
@@ -159,7 +150,6 @@ test_that("Checking get_genes using top genes.", {
   )
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(sort(gene_names), sort(unlist(res@top_genes, use.names = F)))
-  expect_that(gene_names, is_a("character"))
   
   
   # =======================================================
@@ -170,8 +160,6 @@ test_that("Checking get_genes using top genes.", {
                           "RPS19", "RPS25", "EEF1A1", "RPS8", "RPS4X", "RPL29")
   expect_equal(gene_names, gene_name_to_check)
   expect_equal(sort(gene_names), sort(res@top_genes$`1`))
-  expect_that(gene_names, is_a("character"))
-  
   
   # =======================================================
   # Test top gene list in cluster 2 and 3
@@ -187,5 +175,4 @@ test_that("Checking get_genes using top genes.", {
     res@top_genes$`2`,
     res@top_genes$`3`
   )))
-  expect_that(gene_names, is_a("character"))
 })

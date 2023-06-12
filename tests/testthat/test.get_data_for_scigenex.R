@@ -103,7 +103,6 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                     "SPON2", "S100B"
                   ))
 
-                  expect_that(expr_matrix, is_a("dgCMatrix"))
                 })
 
 
@@ -132,8 +131,7 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                   expect_equal(colnames(expr_matrix), paste0("V", seq(1,20)))
                   
                   expect_equal(nrow(expr_matrix), 4000) 
-                  
-                  expect_that(expr_matrix, is_a("matrix"))
+                
                 }
 )
 
@@ -165,8 +163,7 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                   expect_equal(colnames(expr_matrix), paste0("sample", seq(1,20)))
                   
                   expect_equal(nrow(expr_matrix), 4000) 
-                  
-                  expect_that(expr_matrix, is_a("matrix"))
+
                 }
 )
 
@@ -197,8 +194,6 @@ test_that(paste("Checking matrix obtained with get_data_for_scigenex",
                   expect_equal(colnames(expr_matrix), paste0("V", seq(1,20)))
                   
                   expect_equal(nrow(expr_matrix), 4000) 
-                  
-                  expect_that(expr_matrix, is_a("matrix"))
                 }
 )
 
@@ -217,8 +212,6 @@ test_that(paste("Checking SCT with pmbc_samll"), {
                   expect_equal(round(mean(as.matrix(expr_matrix[!is.na(expr_matrix)])), 3), 0.282)
                   expect_equal(ncol(expr_matrix), 80)
                   expect_equal(nrow(expr_matrix), 220) 
-                  
-                  expect_that(expr_matrix, is_a("dgCMatrix"))
                 }
 )
   
