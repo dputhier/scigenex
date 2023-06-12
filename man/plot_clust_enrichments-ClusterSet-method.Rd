@@ -10,7 +10,8 @@
   nb_go_term = 6,
   gradient_palette = colors_for_gradient("Magma"),
   label_fun = NULL,
-  term_order = NULL
+  term_order = NULL,
+  return_mat = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@
 \item{label_fun}{A function to customize the labels of the GO terms. Defaults to NULL.}
 
 \item{term_order}{A vector specifying the desired order of the GO terms. Defaults to NULL.}
+
+\item{return_mat}{Logical. Do not return a ggplot object but the prepared matrix.}
 }
 \value{
 A ggplot object displaying the cluster enrichments for the GO terms.
@@ -35,9 +38,8 @@ Plot Cluster Enrichments
 Display cluster enrichments for gene GO terms.
 }
 \examples{
-# todo
-
-
+load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
+plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
 }
 \seealso{
 \code{\link{enrich_go}}

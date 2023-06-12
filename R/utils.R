@@ -458,6 +458,7 @@ show_methods <- function(class="ClusterSet",
 #' Load/download a Visium (10X) example dataset.
 #' @param dataset The name of the dataset.
 #' @param timeout Set the timout for download (options(timeout=timeout))
+#' @param force Reload the dataset even if already in globalEnv. 
 #' @returns Load the dataset.
 #' @examples
 #' # An example Seurat/Visium dataset
@@ -469,11 +470,14 @@ show_methods <- function(class="ClusterSet",
 #' @export load_example_dataset
 load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
                                            "7871581/files/pbmc3k_medium_clusters",
+                                           "8028126/files/pbmc3k_medium_clusters_enr",
+                                           "8028226/files/pbmc3k_medium_clusters_enr_sub",
                                            "7870305/files/lymph_node_tiny_2", 
                                            "7870305/files/lymph_node_tiny_clusters_2",
                                            "7869307/files/lymph_node_tiny",
                                          "7869307/files/lymph_node_tiny_clusters"),
-                                 timeout=NULL){
+                                 timeout=NULL,
+                                 force=FALSE){
   
   dataset <- match.arg(dataset)
   
@@ -500,8 +504,9 @@ load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
                   destfile = paste0(file_data, ".rda"))
   }
 
-
-  if(!dataset %in% ls(envir = globalenv())){
+  dataset_short <- gsub(".*/", "", dataset)
+  
+  if(!dataset_short %in% ls(envir = globalenv()) | force){
     load(file.path(dir_path, paste0(file_data, ".rda")), envir = .GlobalEnv)
     print_msg(paste0("Dataset ", dataset, " has been loaded."),
               msg_type = "INFO")

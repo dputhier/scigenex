@@ -6,15 +6,20 @@
 \usage{
 load_example_dataset(
   dataset = c("7871581/files/pbmc3k_medium", "7871581/files/pbmc3k_medium_clusters",
-    "7870305/files/lymph_node_tiny_2", "7870305/files/lymph_node_tiny_clusters_2",
-    "7869307/files/lymph_node_tiny", "7869307/files/lymph_node_tiny_clusters"),
-  timeout = NULL
+    "8028126/files/pbmc3k_medium_clusters_enr",
+    "8028226/files/pbmc3k_medium_clusters_enr_sub", "7870305/files/lymph_node_tiny_2",
+    "7870305/files/lymph_node_tiny_clusters_2", "7869307/files/lymph_node_tiny",
+    "7869307/files/lymph_node_tiny_clusters"),
+  timeout = NULL,
+  force = FALSE
 )
 }
 \arguments{
 \item{dataset}{The name of the dataset.}
 
 \item{timeout}{Set the timout for download (options(timeout=timeout))}
+
+\item{force}{Reload the dataset even if already in globalEnv.}
 }
 \value{
 Load the dataset.

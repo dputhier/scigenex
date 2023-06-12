@@ -40,29 +40,11 @@ setGeneric("enrich_go",
 #' @export enrich_go
 #'
 #' @examples
-#' library(Seurat)
-#' # Load a Seurat object
-#' data(pbmc_small, package = "SeuratObject")
-#' 
-#' # Compute the signatures using find_gene_clusters()
-#' clust_set <- select_genes(pbmc_small,
-#'                           distance = "pearson",
-#'                           no_dknn_filter = TRUE)
-#'                           
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 2)
-#' # Plot 
-#' clust_set <- top_genes(clust_set)
-#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Seurat::Idents(pbmc_small))
-#' 
-#' # Do enrichment analysis using GO ontology
-#' # Only for cluster 1
-#' clust_set <- enrich_go(clust_set[1,])
-#' 
-#' # Results of enrichment analysis are 'gene_cluster_annotations' slot
-#' print(clust_set@gene_cluster_annotations)
-#' 
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#' load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
+#' # pbmc3k_medium_clusters_enr <- enrich_go(pbmc3k_medium_clusters)
+#' pbmc3k_medium_clusters_enr
+#' is(pbmc3k_medium_clusters_enr@gene_cluster_annotations)
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
@@ -174,27 +156,8 @@ setGeneric("viz_enrich",
 #' @export viz_enrich
 #'
 #' @examples
-#' library(Seurat)
-#' # Load a Seurat object
-#' data(pbmc_small, package = "SeuratObject")
-#' 
-#' # Compute the signatures using find_gene_clusters()
-#' clust_set <- select_genes(pbmc_small,
-#'                           distance = "pearson",
-#'                           no_dknn_filter = TRUE)
-#'                           
-#' # Cluster informative features
-#' clust_set <- gene_clustering(clust_set, 
-#'                             inflation = 2)
-#' # Plot 
-#' clust_set <- top_genes(clust_set)
-#' plot_ggheatmap(clust_set[, names(Idents(pbmc_small))], ident = Seurat::Idents(pbmc_small))
-#' 
-#' # Do enrichment analysis using GO ontology
-#' # Only for cluster 1
-#' clust_set <- enrich_go(clust_set[1:2,])
-#' 
-#' viz_enrich(clust_set, cluster = 1, nb_terms = 5)
+#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
+#' viz_enrich(pbmc3k_medium_clusters_enr_sub, cluster = 1, nb_terms = 5)
 setMethod("viz_enrich",
           signature(object = "ClusterSet"),
           function(object,
@@ -285,7 +248,6 @@ setMethod("viz_enrich",
 ##    plot_clust_enrichments()
 ############################################################################
 
-
 #' @title Plot Cluster Enrichments
 #'
 #' @title Display cluster enrichments for gene GO terms.
@@ -296,54 +258,8 @@ setMethod("viz_enrich",
 #' @param gradient_palette A vector of colors specifying the gradient palette for the color scale. Defaults to colors_for_gradient("Magma").
 #' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
 #' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
-#'
-#' @return A ggplot object displaying the cluster enrichments for the GO terms.
+#' @param return_mat Logical. Do not return a ggplot object but the prepared matrix.
 #' 
-#' @seealso
-#' \code{\link{enrich_go}}
-#' \code{\link{colors_for_gradient}}
-#'  
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 theme_bw
-#' @importFrom ggplot2 geom_point
-#' @importFrom ggplot2 scale_color_gradientn
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_blank
-#' @importFrom ggplot2 element_rect
-#' @importFrom ggplot2 element_text
-#' @importFrom ggplot2 xlab
-#' @importFrom ggplot2 ylab
-#' @importFrom ggplot2 guide_colourbar
-#' @importFrom ggplot2 facet_grid
-#' @importFrom reshape2 melt
-#' @importFrom grid unit
-#' @export plot_clust_enrichments
-#' @keywords internal
-#' 
-setGeneric("plot_clust_enrichments",
-           function(object,
-                    stat_shown=c("qvalue", "p.adjust", 
-                                 "pvalue"),
-                    as_list=TRUE,
-                    nb_go_term=3,
-                    gradient_palette=colors_for_gradient("Ju1"),
-                    label_fun=NULL,
-                    term_order=NULL) {
-             standardGeneric("plot_clust_enrichments")
-           })
-
-
-#' @title Plot Cluster Enrichments
-#'
-#' @title Display cluster enrichments for gene GO terms.
-#'
-#' @param object An object of class "ClusterSet".
-#' @param stat_shown A character string specifying the statistic to be shown. Must be one of "qvalue", "p.adjust", or "pvalue". Defaults to "qvalue".
-#' @param nb_go_term An integer specifying the number of top GO terms to select per cluster. Defaults to 6. Note that some terms may be shared between clusters.
-#' @param gradient_palette A vector of colors specifying the gradient palette for the color scale. Defaults to colors_for_gradient("Magma").
-#' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
-#' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
-#'
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
 #' @seealso
@@ -366,9 +282,59 @@ setGeneric("plot_clust_enrichments",
 #' @importFrom grid unit
 #' @export plot_clust_enrichments
 #' @examples
-#' # todo
+#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
+#' plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
 #' 
+setGeneric("plot_clust_enrichments",
+           function(object,
+                    stat_shown=c("qvalue", "p.adjust", 
+                                 "pvalue"),
+                    as_list=TRUE,
+                    nb_go_term=3,
+                    gradient_palette=colors_for_gradient("Ju1"),
+                    label_fun=NULL,
+                    term_order=NULL,
+                    return_mat=FALSE) {
+             standardGeneric("plot_clust_enrichments")
+           })
+
+
+#' @title Plot Cluster Enrichments
+#'
+#' @title Display cluster enrichments for gene GO terms.
+#'
+#' @param object An object of class "ClusterSet".
+#' @param stat_shown A character string specifying the statistic to be shown. Must be one of "qvalue", "p.adjust", or "pvalue". Defaults to "qvalue".
+#' @param nb_go_term An integer specifying the number of top GO terms to select per cluster. Defaults to 6. Note that some terms may be shared between clusters.
+#' @param gradient_palette A vector of colors specifying the gradient palette for the color scale. Defaults to colors_for_gradient("Magma").
+#' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
+#' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
+#' @param return_mat Logical. Do not return a ggplot object but the prepared matrix.
 #' 
+#' @return A ggplot object displaying the cluster enrichments for the GO terms.
+#' 
+#' @seealso
+#' \code{\link{enrich_go}}
+#' \code{\link{colors_for_gradient}}
+#'  
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 scale_color_gradientn
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 guide_colourbar
+#' @importFrom ggplot2 facet_grid
+#' @importFrom reshape2 melt
+#' @importFrom grid unit
+#' @export plot_clust_enrichments
+#' @examples
+#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
+#' plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
 setMethod("plot_clust_enrichments",
           signature(object = "ClusterSet"),
           function(object,
@@ -377,7 +343,8 @@ setMethod("plot_clust_enrichments",
                    nb_go_term=6,
                    gradient_palette=colors_for_gradient("Magma"),
                    label_fun=NULL,
-                   term_order=NULL) {
+                   term_order=NULL,
+                   return_mat=FALSE) {
             
             stat_shown <- match.arg(stat_shown)
             print_msg(paste0("Using ", stat_shown, " as ordering statistic"), msg_type = "DEBUG")
@@ -426,6 +393,10 @@ setMethod("plot_clust_enrichments",
             m$is_top[!is.na(m$rank)] <- "Yes"
             m$is_top <- as.factor(m$is_top)
             
+            if(return_mat){
+              return(m)
+            }
+            
             if(!is.null(label_fun)){
               m$Description <- sapply(m$Description, label_fun)
             }
@@ -468,5 +439,182 @@ setMethod("plot_clust_enrichments",
           
 })
 
+############################################################################
+##    plot_markers_to_clusters
+############################################################################
 
+#' @title Map cell markers to clusters (hypergeometric/jaccard)
+#'
+#' @description
+#' Use jaccard index and hypergeometric to map a list of cell markers to gene clusters.
+#'
+#' @param object A ClusterSet object.
+#' @param markers A list of cell markers.
+#' @param gradient_palette A vector of colors for the gradient palette.
+#' @param background The background for hypergeometric test. Typically the list of genes annotated in the considered gene ontology  (e.g. BP).
+#' @param cell_type_order The order of cell types. Can be "None" or "hclust". Not supported at the moment.
+#' @param only_specific Logical value indicating whether to show only specific markers.
+#' @param jaccard_scale The scale factor for Jaccard coefficient.
+#'
+#' @return A plot showing the relationship between markers and clusters.
+#'
+#' @export
+#' @import ggplot2
+#' @importFrom reshape2 melt
+#' @importFrom grid unit
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 scale_color_gradientn
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 facet_grid
+#' @importFrom ggplot2 guide_colourbar
+#' @importFrom ggplot2 geom_point
+#'
+#' @examples
+#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
+#' plot_markers_to_clusters(pbmc3k_medium_clusters_enr_sub)
+#'
+setGeneric("plot_markers_to_clusters",
+           function(object, 
+                    markers=NULL,
+                    gradient_palette=colors_for_gradient("Magma"),
+                    background=NULL,
+                    cell_type_order=c("None", "hclust"),
+                    only_specific=FALSE,
+                    jaccard_scale=10) {
+             standardGeneric("plot_markers_to_clusters")
+           })
 
+#' @title Map cell markers to clusters (hypergeometric/jaccard)
+#'
+#' @description
+#' Use jaccard index and hypergeometric to map a list of cell markers to gene clusters.
+#'
+#' @param object A ClusterSet object.
+#' @param markers A list of cell markers.
+#' @param gradient_palette A vector of colors for the gradient palette.
+#' @param background The background for hypergeometric test. Typically the list of genes annotated in the considered gene ontology  (e.g. BP).
+#' @param cell_type_order The order of cell types. Can be "None" or "hclust". Not supported at the moment.
+#' @param only_specific Logical value indicating whether to show only specific markers.
+#' @param jaccard_scale The scale factor for Jaccard coefficient.
+#'
+#' @return A plot showing the relationship between markers and clusters.
+#'
+#' @export
+#' @import ggplot2
+#' @importFrom reshape2 melt
+#' @importFrom grid unit
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 scale_color_gradientn
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 facet_grid
+#' @importFrom ggplot2 guide_colourbar
+#' @importFrom ggplot2 geom_point
+#'
+#' @examples
+#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
+#' library(clustermole)
+#' m <- clustermole_markers(species = "hs")
+#' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], m$celltype[m$organ == "Blood" & m$species == "Human"])
+#' plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
+setMethod("plot_markers_to_clusters",
+          signature(object = "ClusterSet"),
+          function(object, 
+                   markers=NULL,
+                   gradient_palette=c("white", colors_for_gradient("De2")),
+                   background=NULL,
+                   cell_type_order=c("None", "hclust"),
+                   only_specific=FALSE,
+                   jaccard_scale=10) {
+
+            cell_type_order <- match.arg(cell_type_order)
+            
+            if(is.null(background)){
+              print_msg("WARNING: Running without a background but you should probably provide one.", msg_type = "INFO")
+            }
+            
+            print_msg("Checking object format", msg_type = "DEBUG")
+            check_format_cluster_set(object)
+            
+            if(length(object@gene_clusters) == 0){
+              print_msg("No cluster found in the object.", msg_type = "STOP")
+            }
+            
+            if(!is.list(markers))
+              print_msg("The markers argument should be a list.", msg_type = "STOP")
+            
+            if(is.null(markers) | length(markers)==0){
+              print_msg("No marker found.", msg_type = "STOP")
+            }
+            
+            if(only_specific){
+              for(i in 1:length(markers)){
+                cell_marker_curr <- markers[[i]] 
+                all_other_marker <- unique(unlist(cell_marker_curr[(1:length(markers))[-i]]))
+                cell_marker_curr <- cell_marker_curr[!cell_marker_curr %in% all_other_marker]
+                markers[[i]] <- cell_marker_curr
+              }
+              
+              nb_cell_markers <- lapply(markers, length)
+              markers <- markers[nb_cell_markers > 0]
+            }
+            
+            comparison_jaccard <- compare_genesets(object@gene_clusters, 
+                                                markers, 
+                                                background, 
+                                                stat = "jaccard")
+            comparison_jaccard_m <- reshape2::melt(comparison_jaccard)
+            
+            comparison_hyper <- compare_genesets(object@gene_clusters, 
+                                                   markers, 
+                                                   background, 
+                                                   stat = "hypergeom")
+            
+            comparison_hyper_m <- reshape2::melt(comparison_hyper)
+            
+            comparisons_m <- comparison_jaccard_m
+            colnames(comparisons_m) <- c("cluster", "marker", "jaccard")
+
+            comparisons_m$pvalue <- comparison_hyper_m$value
+            comparisons_m$pvalue[comparisons_m$pvalue < 1e-320] <-  1e-320
+
+            comparisons_m$pvalue <- -log10(comparisons_m$pvalue)
+            
+            comparisons_m$cluster <- factor(comparisons_m$cluster)
+            comparisons_m$marker <- factor(comparisons_m$marker)
+            
+            m_gg <- comparisons_m[order(comparisons_m[,"cluster"], 
+                                        comparisons_m[,"marker"], 
+                                        comparisons_m[,"pvalue"]), ]
+            
+            
+
+            print_msg("Running ggplot...", msg_type = "DEBUG")
+            ggplot(data=m_gg, mapping=aes(x=cluster, y = marker, color=pvalue, size=jaccard*jaccard_scale)) +
+              ggplot2::theme_bw() + 
+              geom_point(shape=15) +
+              ggplot2::scale_color_gradientn(colours = gradient_palette,
+                                             guide = guide_colourbar(title=paste0("-log10(pvalue)"), barwidth = 0.75, barheight = 5)) + 
+              ggplot2::theme(
+                axis.ticks.x = ggplot2::element_blank(),
+                axis.ticks.y = ggplot2::element_line(color="gray"),
+                panel.spacing = grid::unit(0.0, "lines"),
+                panel.border = element_rect(linewidth=0.1, color="gray"), 
+                panel.grid = element_blank(),
+                strip.background.x = ggplot2::element_rect(fill = "#444444", colour = "white"),
+                strip.text.x = ggplot2::element_text(colour = "white", angle = 0),
+                axis.text.x = ggplot2::element_blank()
+              ) + 
+              ggplot2::xlab('Clusters') +
+              ggplot2::ylab('Markers')  +
+              ggplot2::facet_grid(~cluster, scale="free_x") 
+})
