@@ -7,7 +7,6 @@
 plot_clust_enrichments(
   object,
   stat_shown = c("qvalue", "p.adjust", "pvalue"),
-  as_list = TRUE,
   nb_go_term = 3,
   gradient_palette = colors_for_gradient("Ju1"),
   label_fun = NULL,

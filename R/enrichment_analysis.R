@@ -289,7 +289,6 @@ setGeneric("plot_clust_enrichments",
            function(object,
                     stat_shown=c("qvalue", "p.adjust", 
                                  "pvalue"),
-                    as_list=TRUE,
                     nb_go_term=3,
                     gradient_palette=colors_for_gradient("Ju1"),
                     label_fun=NULL,
@@ -519,12 +518,14 @@ setGeneric("plot_markers_to_clusters",
 #' @importFrom ggplot2 facet_grid
 #' @importFrom ggplot2 guide_colourbar
 #' @importFrom ggplot2 geom_point
+#' @importFrom stats as.formula
 #'
 #' @examples
 #' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
 #' library(clustermole)
 #' m <- clustermole_markers(species = "hs")
-#' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], m$celltype[m$organ == "Blood" & m$species == "Human"])
+#' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
+#'                  m$celltype[m$organ == "Blood" & m$species == "Human"])
 #' plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
 setMethod("plot_markers_to_clusters",
           signature(object = "ClusterSet"),
@@ -597,7 +598,7 @@ setMethod("plot_markers_to_clusters",
                                         comparisons_m[,"pvalue"]), ]
             
             
-
+            cluster <- marker <- pvalue <- jaccard <- NULL
             print_msg("Running ggplot...", msg_type = "DEBUG")
             ggplot(data=m_gg, mapping=aes(x=cluster, y = marker, color=pvalue, size=jaccard*jaccard_scale)) +
               ggplot2::theme_bw() + 
