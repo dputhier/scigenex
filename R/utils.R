@@ -324,7 +324,7 @@ colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1",
 #' discrete_palette()
 #' discrete_palette(n=20, palette = "ggplot")
 #' 
-discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
+discrete_palette <- function(n=10, palette=c("Ju1", "De1", "ggplot")){
   
   palette <- match.arg(palette)
   
@@ -336,6 +336,10 @@ discrete_palette <- function(n=10, palette=c("Ju1", "ggplot")){
                                     "#F0AE00", "#6D9D1E", "#1882C0", "#71529A", 
                                     "#D02494", "#EF9292", "#F2B57D", "#FFDA77", 
                                     "#B6E36A", "#7BC4EE", "#AD98C9", "#EA8AC9"))(n)
+  }else if(palette == "De1"){
+    
+    palette <- colorRampPalette(c("grey","#EA8AC9", "#9F1717"))(n)
+    
   }else if(palette == "ggplot"){
     gg_color_hue <- function(n) {
       hues = seq(15, 375, length = n + 1)
