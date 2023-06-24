@@ -124,9 +124,9 @@ plot_spatial <- function(seurat_obj=NULL,
     print_msg("Feature is not a factor.", msg_type = "INFO")
     
     if(pt_star){
-      the_scale <- scale_fill_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+      the_scale <- ggplot2::scale_fill_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
     }else{
-      the_scale <- scale_color_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
+      the_scale <- ggplot2::scale_color_gradientn(colours=colours, guide = guide_colourbar(barwidth=barwidth, barheight=barheight))
     }
     
   }else{
@@ -139,10 +139,10 @@ plot_spatial <- function(seurat_obj=NULL,
     }
       
     if(pt_star){
-      the_scale <- scale_fill_manual(values = setNames(colours[1:length(levels(intensities))],
+      the_scale <- ggplot2::scale_fill_manual(values = setNames(colours[1:length(levels(intensities))],
                                                        as.character(levels(intensities))))
     }else{
-      the_scale <- scale_color_manual(values = setNames(colours[1:length(levels(intensities))],
+      the_scale <- ggplot2::scale_color_manual(values = setNames(colours[1:length(levels(intensities))],
                                                         as.character(levels(intensities))))
     }
     
@@ -153,27 +153,27 @@ plot_spatial <- function(seurat_obj=NULL,
   
   
   if(pt_star){
-    p <- ggplot(df, aes(x=x, y=y, fill=intensity)) + 
+    p <- ggplot2::ggplot(df, aes(x=x, y=y, fill=intensity)) + 
       ggstar::geom_star(starshape=pt_shape, 
                                starstroke=stroke,
                                size=pt_size) +
       the_scale
   } else{
-    p <- ggplot(df, aes(x=x, y=y, color=intensity))+ 
-      geom_point(size=pt_size, shape = pt_shape) +
-      the_scale
+    p <- ggplot2::ggplot(df, aes(x=x, y=y, color=intensity))+ 
+            ggplot2::geom_point(size=pt_size, shape = pt_shape) +
+            the_scale
   }
   
-    p <- p + theme_void() +
-              ggtitle(title) +
-              theme(legend.title = element_text(size=6),
+    p <- p + ggplot2::theme_void() +
+             ggplot2::ggtitle(title) +
+             ggplot2::theme(legend.title = element_text(size=6),
                     legend.text = element_text(size=6),
                     legend.margin = margin(0,0,0,0),
                     plot.title = element_text(face = face_title, 
                                               size=size_title,
                                               ))
   if(!legend)
-    p <- p + NoLegend()
+    p <- p + Seurat::NoLegend()
   
   if(!axis)
     p <- p + Seurat::NoAxes()
