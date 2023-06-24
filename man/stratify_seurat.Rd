@@ -23,9 +23,9 @@ stratify_seurat(
 
 \item{colours}{Colors for the spot classes.}
 
-\item{diagnostic_plot}{Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.}
+\item{colours_stratum}{A set of colors for the stratum.}
 
-\item{giving}{the class of the spot.}
+\item{diagnostic_plot}{Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.}
 }
 \description{
 Given two spot groups, compute for each spot: (i) the distance of the

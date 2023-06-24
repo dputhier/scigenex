@@ -2,30 +2,36 @@
 % Please edit documentation in R/dist2border.R
 \name{plot_stratum}
 \alias{plot_stratum}
-\title{library(Seurat)
-load_example_dataset("7870305/files/lymph_node_tiny_2")
-Seurat::SpatialDimPlot(lymph_node_tiny_2)
-identity <- Idents(lymph_node_tiny_2)
-classes <- ifelse(Idents(lymph_node_tiny_2) == 7, 1, 0)
-names(classes) <- names(identity)
-h <- display_hull(lymph_node_tiny_2, ident=classes, color="black", delta=1, size_x=3.4, size_y=3)
-plot_spatial(lymph_node_tiny_2, metadata = "seurat_clusters", pt_size = 6) + h
-strats <- stratify_seurat(lymph_node_tiny_2, ident=classes,
-                          colours_stratum = rev(discrete_palette(5, "De1")))
- p <- plot_stratum(strats[[1]], gene_name="CCL19", polar = TRUE, 
-                   colours_stratum = rev(discrete_palette(5, "De1")))
-p + strats[[3]] + coord_equal()  + NoLegend()}
+\title{Display the results of stratify_seurat}
 \usage{
 plot_stratum(
   seurat_obj = NULL,
   gene_name = NULL,
   metadata = NULL,
+  intensity_slot = c("data", "counts", "sct"),
   colours_stratum = NULL,
-  polar = FALSE,
-  intensity_slot = c("data", "counts", "sct")
+  polar = FALSE
 )
 }
+\arguments{
+\item{seurat_obj}{A Seurat object.}
+
+\item{gene_name}{The name of the gene to plot.}
+
+\item{metadata}{Provide the name of a metadata that will be used instead of genes (i.e. from 
+meta.data) slot of a seurat object.}
+
+\item{intensity_slot}{The assay slot to use for the gene expression values.
+Must be one of "sct", "counts", or "data". Default is "sct".}
+
+\item{colours_stratum}{A set of colors for the stratum.}
+
+\item{polar}{Whter to use polar coordinates.}
+}
 \description{
+Display the results of stratify_seurat
+}
+\examples{
 library(Seurat)
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 Seurat::SpatialDimPlot(lymph_node_tiny_2)
