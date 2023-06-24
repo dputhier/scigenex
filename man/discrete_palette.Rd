@@ -4,7 +4,7 @@
 \alias{discrete_palette}
 \title{Generate a discrete color palette}
 \usage{
-discrete_palette(n = 10, palette = c("Ju1", "ggplot"))
+discrete_palette(n = 10, palette = c("Ju1", "De1", "ggplot"))
 }
 \arguments{
 \item{n}{An integer specifying the number of colors to generate.}
