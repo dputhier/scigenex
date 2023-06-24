@@ -408,7 +408,7 @@ setMethod("plot_clust_enrichments",
 
             m$Description <- factor(m$Description, levels=desc_levels, ordered = TRUE)
             
-            cluster <- go_term <- stat <- size <- rank <- NULL
+            cluster <- go_term <- stat <- size <- rank <- Counts <- NULL
             
             print_msg("Melting...", msg_type = "DEBUG")
             
@@ -474,8 +474,12 @@ setMethod("plot_clust_enrichments",
 #' @importFrom ggplot2 geom_point
 #'
 #' @examples
-#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
-#' plot_markers_to_clusters(pbmc3k_medium_clusters_enr_sub)
+#' load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
+#' library(clustermole)
+#' m <- clustermole::clustermole_markers(species = "hs")
+#' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
+#'                  m$celltype[m$organ == "Blood" & m$species == "Human"])
+#' plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
 #'
 setGeneric("plot_markers_to_clusters",
            function(object, 
@@ -521,7 +525,7 @@ setGeneric("plot_markers_to_clusters",
 #' @importFrom stats as.formula
 #'
 #' @examples
-#' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr")
+#' load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
 #' library(clustermole)
 #' m <- clustermole_markers(species = "hs")
 #' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
