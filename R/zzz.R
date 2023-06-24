@@ -17,6 +17,9 @@ utils::globalVariables(c("x",
                          "jaccard",
                          "cluster",
                          "intensity",
+                         "closest_x",
+                         "closest_y",
+                         "stratum",
                          "value"))
 
   
