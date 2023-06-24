@@ -20,6 +20,7 @@ utils::globalVariables(c("x",
                          "closest_x",
                          "closest_y",
                          "stratum",
+                         "classes",
                          "value"))
 
   
