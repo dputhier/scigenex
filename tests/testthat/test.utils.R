@@ -1,3 +1,83 @@
+set_verbosity(0)
+test_that("Just some check for create_3_rnd_clust()", {
+  m <- create_3_rnd_clust()
+  expect_equal(ncol(m), 20)
+  expect_equal(nrow(m), 4000)
+  expect_equal(round(sum(m), 2), 4904.76)
+  expect_equal(round(sd(m), 2), 1.17)
+  expect_equal(round(mean(m), 2), 0.06)
+  expect_equal(round(median(m), 2), 0.02)
+  expect_true(is.matrix(m))
+})
+test_that("Just some check about create_4_rnd_clust()", {
+  m <- create_4_rnd_clust()
+  expect_equal(ncol(m), 20)
+  expect_equal(nrow(m), 4000)
+  expect_equal(round(sum(m), 2), 2390.88)
+  expect_equal(round(sd(m), 2), 1.17)
+  expect_equal(round(mean(m), 2), 0.03)
+  expect_equal(round(median(m), 2), 0.01)
+})
+test_that("create_rand_str returns a string of length 10", {
+  rand_str <- create_rand_str()
+  expect_equal(nchar(rand_str), 10)
+})
+
+test_that("create_rand_str only contains letters and digits", {
+  rand_str <- create_rand_str()
+  expect_match(rand_str, "^[[:alnum:]]+$")
+})
+
+test_that("Check the result using seed", {
+  set.seed(123)
+  rand_str <- create_rand_str()
+  expect_match(rand_str, "1eSN95tOk2")
+})
+test_that("Just some check about print_msg", {
+  set_verbosity(2)
+  
+  expect_output(print_msg("Hello world!", "INFO"), 
+                          "|-- INFO :  Hello world! ")
+
+  expect_output(print_msg("Hello world!", "DEBUG"),
+                          "|-- DEBUG :  Hello world! ")
+
+  expect_warning(print_msg("Hello world!", "WARNING"), "|-- WARNING : Hello world!")
+  expect_output(print_msg("Hello world!"), "|-- INFO :  Hello world! ")
+})
+test_that("Just some check about print_stat", {
+  set.seed(123)
+
+  data <- rnorm(3)
+  expect_warning(
+    print_stat(
+      "Summary statistics for data",
+      data,
+      round_val = 2,
+      msg_type = "WARNING"
+    ),
+    paste(
+      "|-- WARNING : Summary statistics for data:",
+      "Min:-0.56 Q1:-0.4 Med:-0.23",
+      "Mean:0.26 Q3:0.66 Max:1.56"
+    )
+  )
+
+  data <- rnorm(100)
+  expect_warning(
+    print_stat(
+      "Summary statistics for data",
+      data,
+      round_val = 1,
+      msg_type = "WARNING"
+    ),
+    paste(
+      "|-- WARNING : Summary statistics for data:",
+      "Min:-2.3 Q1:-0.5 Med:0.1 Mean:0.1 Q3:0.7 Max:2.2"
+    )
+  )
+
+})
 test_that("Check colors_for_gradient()", {
   expect_equal(colors_for_gradient(palette = "Seurat_Like"),
                c("#5D50A3", "#9FD7A4", "#FBFDBA", "#FEB163", "#A80B44"))
@@ -85,4 +165,50 @@ test_that("Check discrete_palette()", {
     "#F4DB75", "#CCE06D", "#A7DB8A", "#87CAD3", "#8CB4E1", "#A79CCC",
     "#C891C9", "#EA8AC9"
   ))
+})
+test_that("Checking set_verbosity() and get_verbosity()", {
+  #==============================
+  # Verbosity = 0
+  set_verbosity(0)
+  expect_equal(get_verbosity(), 0)
+  
+  msg_info <- capture.output(print_msg("Hello world!", "INFO"))
+  expect_equal(msg_info, as.character())
+  
+  msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
+  expect_equal(msg_debug, as.character())
+  
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
+  
+  
+  #==============================
+  # Verbosity = 1
+  set_verbosity(1)
+  expect_equal(get_verbosity(), 1)
+  
+  msg_info <- capture.output(print_msg("Hello world!", "INFO"))
+  expect_equal(msg_info, "|-- INFO :  Hello world! ")
+  
+  msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
+  expect_equal(msg_debug, as.character())
+  
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
+  
+  
+  #==============================
+  # Verbosity = 2
+  set_verbosity(2)
+  expect_equal(get_verbosity(), 2)
+  
+  msg_info <- capture.output(print_msg("Hello world!", "INFO"))
+  expect_equal(msg_info, "|-- INFO :  Hello world! ")
+  
+  msg_debug <- capture.output(print_msg("Hello world!", "DEBUG"))
+  expect_equal(msg_debug, "|-- DEBUG :  Hello world! ")
+  
+  expect_warning(print_msg("Hello world!", "WARNING"),
+                 "|-- WARNING : Hello world!")
+  
 })
