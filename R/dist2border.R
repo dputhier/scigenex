@@ -4,6 +4,9 @@
 #' @param ident The classes of the spots (0/1). A named vector (name = spot name; value = classes). 
 #' @param colours Colors for the spot classes.
 #' @param colours_stratum A set of colors for the stratum.
+#' @param pt_size The size of the points.
+#' @param breaks Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of stratums in which spot are to be cut.
+#' @param labels Labels for the levels of the stratum. By default, labels are constructed using "(a,b]" interval notation. If labels = FALSE, simple integer codes are returned instead of a factor.
 #' @param diagnostic_plot Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.
 #' @export stratify_seurat
 #' @importFrom ggplot2 aes element_blank element_rect facet_wrap geom_col geom_text scale_color_manual theme theme_minimal
