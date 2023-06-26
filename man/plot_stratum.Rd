@@ -33,7 +33,7 @@ Display the results of stratify_seurat
 }
 \examples{
 library(Seurat)
-library(ggplot2)
+library(ggplot2 )
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 Seurat::SpatialDimPlot(lymph_node_tiny_2)
 identity <- Idents(lymph_node_tiny_2)

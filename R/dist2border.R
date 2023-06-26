@@ -14,6 +14,7 @@
 #' @importFrom scales hue_pal
 #' @examples 
 #' library(Seurat)
+#' library(ggplot2)
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)
@@ -23,9 +24,9 @@
 #' plot_spatial(lymph_node_tiny_2, metadata = "seurat_clusters", pt_size = 6) + h
 #' strat <- stratify_seurat(lymph_node_tiny_2, ident=classes)
 #' strat[[1]]
-#' strat[[2]] + coord_equal()
-#' strat[[3]] + coord_equal()
-#' strat[[4]] + coord_equal() 
+#' strat[[2]] + ggplot2::coord_equal()
+#' strat[[3]] + ggplot2::coord_equal()
+#' strat[[4]] + ggplot2::coord_equal() 
 stratify_seurat <- function(seurat_obj, 
                         ident=NULL,
                         colours=NULL,
@@ -200,7 +201,7 @@ stratify_seurat <- function(seurat_obj,
 #' @importFrom reshape2 melt
 #' @examples
 #' library(Seurat)
-#' library(ggplot2)
+#' library(ggplot2 )
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)
