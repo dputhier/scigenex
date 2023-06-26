@@ -1,3 +1,8 @@
+library(testthat)
+library(iheatmapr)
+library(ggplot2)
+library(Seurat)
+
 # Set verbosity to 0
 set_verbosity(0)
 load_example_dataset("7871581/files/pbmc3k_medium")
@@ -387,8 +392,6 @@ test_that("Checking plot_heatmap() using cell clusters", {
   htmp_show_dendro <- names(htmp@shapes@listData)
   expect_equal(htmp_show_dendro, NULL)
 })
-
-
 
 test_that("Checking plot_heatmap() using top genes and cell clusters", {
   

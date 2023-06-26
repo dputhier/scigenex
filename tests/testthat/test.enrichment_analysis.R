@@ -1,3 +1,6 @@
+library(testthat)
+library(org.Hs.eg.db)
+
 # Set verbosit  y to 0
 set_verbosity(0)
 

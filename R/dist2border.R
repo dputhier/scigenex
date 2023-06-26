@@ -200,6 +200,7 @@ stratify_seurat <- function(seurat_obj,
 #' @importFrom reshape2 melt
 #' @examples
 #' library(Seurat)
+#' library(ggplot2)
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)
@@ -211,7 +212,7 @@ stratify_seurat <- function(seurat_obj,
 #'                           colours_stratum = rev(discrete_palette(5, "De1")))
 #'  p <- plot_stratum(strats[[1]], gene_name="CCL19", polar = TRUE, 
 #'                    colours_stratum = rev(discrete_palette(5, "De1")))
-#' p + strats[[3]] + coord_equal()  + NoLegend()
+#' p + strats[[3]] + ggplot2::coord_equal()  + Seurat::NoLegend()
 plot_stratum <- function(seurat_obj=NULL,
                          gene_name=NULL,
                          metadata=NULL,

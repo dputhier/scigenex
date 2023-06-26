@@ -1,3 +1,5 @@
+library(testthat)
+
 # Set verbosity to 0
 set_verbosity(0)
 

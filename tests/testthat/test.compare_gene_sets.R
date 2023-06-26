@@ -1,3 +1,6 @@
+library(testthat)
+library(ggplot2)
+
 set_verbosity(0)
 set.seed(123)
 set_1 <- list(letters[1:10], letters[11:20], letters[21:26], LETTERS[1:26])

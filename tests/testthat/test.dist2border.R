@@ -16,7 +16,7 @@ test_that("Check stratify_seurat() is working.", {
 
 
 
-p <- plot_stratum(strats[[1]], gene_name="CCL19", polar = TRUE, 
+p <- plot_stratum(strat[[1]], gene_name="CCL19", polar = TRUE, 
                   colours_stratum = rev(discrete_palette(5, "De1")))
 
 test_that("Check plot_stratum() is working.", {
