@@ -284,7 +284,7 @@ setMethod("viz_enrich",
 #' @examples
 #' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
 #' plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
-#' 
+#' @keywords internal
 setGeneric("plot_clust_enrichments",
            function(object,
                     stat_shown=c("qvalue", "p.adjust", 
@@ -480,7 +480,7 @@ setMethod("plot_clust_enrichments",
 #' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
 #'                  m$celltype[m$organ == "Blood" & m$species == "Human"])
 #' plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
-#'
+#' @keywords internal
 setGeneric("plot_markers_to_clusters",
            function(object, 
                     markers=NULL,
