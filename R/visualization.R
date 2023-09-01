@@ -658,7 +658,13 @@ setMethod(
     colnames(m_melt) <- c("genes", "samples", "values")
     gclust <- gene_cluster(object, as_string = T)
     match_gclust <- match(m_melt$genes, names(gclust))
-    m_melt$gene_clusters <- factor(gclust[match_gclust], ordered = TRUE)
+    
+    lev_clust <- suppressWarnings(sort(unique(as.numeric(gclust))))
+    if(length(lev_clust) == 0){
+      lev_clust <- unique(as.numeric(gclust)) 
+    }
+    
+    m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
 
     if(!is.null(ident)){
       
