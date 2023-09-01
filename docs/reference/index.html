@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -62,33 +62,113 @@
       </tr></tbody><tbody><tr><td>
           <p><code><a href="ClusterSet-class.html">ClusterSet-class</a></code> </p>
         </td>
-        <td><p>ClusterSet</p></td>
+        <td><p>ClusterSet-class</p></td>
       </tr><tr><td>
-          <p><code><a href="DBF.html">DBF()</a></code> </p>
+          <p><code><a href="clust_names-ClusterSet-method.html">clust_names(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>DBF</p></td>
+        <td><p>The names of the gene clusters stored in the ClusterSet object</p></td>
       </tr><tr><td>
-          <p><code><a href="DBFMCL.html">DBFMCL()</a></code> </p>
+          <p><code><a href="clust_size-ClusterSet-method.html">clust_size(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>The "Density Based Filtering and Markov CLustering" algorithm (DBF-MCL).</p></td>
+        <td><p>Sizes of the clusters stored in a ClusterSet object
+clust_size</p></td>
       </tr><tr><td>
-          <p><code><a href="cell_clust.html">cell_clust()</a></code> </p>
+          <p><code><a href="cluster_set_from_matrix.html">cluster_set_from_matrix()</a></code> </p>
         </td>
-        <td><p>Cell clustering</p></td>
+        <td><p>Transform any matrix and list into a ClusterSet object.</p></td>
       </tr><tr><td>
-          <p><code><a href="dim-ClusterSet-method.html">dim(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+          <p><code><a href="cluster_set_from_seurat.html">cluster_set_from_seurat()</a></code> </p>
         </td>
-        <td><p>dim</p></td>
+        <td><p>Transform a Seurat objects / FindAllMarkers result into a ClusterSet.</p></td>
       </tr><tr><td>
-          <p><code><a href="enrich_go.html">enrich_go()</a></code> </p>
+          <p><code><a href="cluster_set_to_xls-ClusterSet-method.html">cluster_set_to_xls(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Perform gene enrichment analysis.</p></td>
+        <td><p>Write Cluster-Set gene lists into an excel sheet.</p></td>
       </tr><tr><td>
-          <p><code><a href="get_cells.html">get_cells()</a></code> </p>
+          <p><code><a href="cluster_stats-ClusterSet-method.html">cluster_stats(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract cell identities from each cell clusters.</p></td>
+        <td><p>Compute statistics about the clusters</p></td>
       </tr><tr><td>
-          <p><code><a href="get_data_4_DBFMCL.html">get_data_4_DBFMCL()</a></code> </p>
+          <p><code><a href="col_names-ClusterSet-method.html">col_names(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Column names of a ClusterSet object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="colors_for_gradient.html">colors_for_gradient()</a></code> </p>
+        </td>
+        <td><p>Generate a vector of colors for a gradient</p></td>
+      </tr><tr><td>
+          <p><code><a href="compare_genesets.html">compare_genesets()</a></code> </p>
+        </td>
+        <td><p>Compare two lists of gene sets</p></td>
+      </tr><tr><td>
+          <p><code><a href="complex9.html">complex9</a></code> </p>
+        </td>
+        <td><p>The Complex9 dataset
+A set of 2D points corresponding to 9 shapes.</p></td>
+      </tr><tr><td>
+          <p><code><a href="complex9Noisy.html">complex9Noisy</a></code> </p>
+        </td>
+        <td><p>The complex9Noisy dataset
+A noisy version of the complex9 dataset. A set of 2D points corresponding 
+to 9 shapes embedded in a noisy environment. A uniform noise was added to
+the dataset.</p></td>
+      </tr><tr><td>
+          <p><code><a href="create_3_rnd_clust.html">create_3_rnd_clust()</a></code> </p>
+        </td>
+        <td><p>Generate an example dataset with three clusters of profiles</p></td>
+      </tr><tr><td>
+          <p><code><a href="create_4_rnd_clust.html">create_4_rnd_clust()</a></code> </p>
+        </td>
+        <td><p>Generate an example dataset with four clusters of profiles</p></td>
+      </tr><tr><td>
+          <p><code><a href="create_rand_str.html">create_rand_str()</a></code> </p>
+        </td>
+        <td><p>Generate a random string of letters and numbers</p></td>
+      </tr><tr><td>
+          <p><code><a href="discrete_palette.html">discrete_palette()</a></code> </p>
+        </td>
+        <td><p>Generate a discrete color palette</p></td>
+      </tr><tr><td>
+          <p><code><a href="display_hull.html">display_hull()</a></code> </p>
+        </td>
+        <td><p>Draw a hull around a region of interest of Visium data.</p></td>
+      </tr><tr><td>
+          <p><code><a href="enrich_go-ClusterSet-method.html">enrich_go(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Enrichment analysis using GO database of gene clusters from a ClusterSet object</p></td>
+      </tr><tr><td>
+          <p><code><a href="filter_by_dot_prod.html">filter_by_dot_prod()</a></code> </p>
+        </td>
+        <td><p>Filter cluster from a ClusterSet object using dot product.</p></td>
+      </tr><tr><td>
+          <p><code><a href="filter_cluster_sd.html">filter_cluster_sd()</a></code> </p>
+        </td>
+        <td><p>Filter out gene clusters with small standard deviation.</p></td>
+      </tr><tr><td>
+          <p><code><a href="filter_cluster_size.html">filter_cluster_size()</a></code> </p>
+        </td>
+        <td><p>Filter out gene clusters containing few genes</p></td>
+      </tr><tr><td>
+          <p><code><a href="filter_nb_supporting_cells.html">filter_nb_supporting_cells()</a></code> </p>
+        </td>
+        <td><p>Filter out cluster supported by few cells.</p></td>
+      </tr><tr><td>
+          <p><code><a href="gene_cluster-ClusterSet-method.html">gene_cluster(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>The gene clusters stored in a ClusterSet.
+gene_cluster</p></td>
+      </tr><tr><td>
+          <p><code><a href="gene_clustering.html">gene_clustering()</a></code> </p>
+        </td>
+        <td><p>Gene clustering using the Markov Cluster Algorithm (MCL) method.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getFlippedTissueCoordinates.html">getFlippedTissueCoordinates()</a></code> </p>
+        </td>
+        <td><p>Seurat object internally store spot coordinates (see Seurat::GetTissueCoordinates()). 
+However, at least in the case of Visium, data are flipped and rotated before SpatialDimPlot. 
+This function  return the rotated/flipped tissue Coordinates from a Seurat object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_data_for_scigenex.html">get_data_for_scigenex()</a></code> </p>
         </td>
         <td><p>Fetch an expression matrix from a file, dataframe or Seurat object.</p></td>
       </tr><tr><td>
@@ -96,45 +176,140 @@
         </td>
         <td><p>Extract genes list from each gene clusters.</p></td>
       </tr><tr><td>
-          <p><code><a href="load_seurat.html">load_seurat()</a></code> </p>
+          <p><code><a href="get_verbosity.html">get_verbosity()</a></code> </p>
         </td>
-        <td><p>load_seurat</p></td>
+        <td><p>Get the current verbosity level.</p></td>
+      </tr><tr><td>
+          <p><code><a href="grep_clust-ClusterSet-method.html">grep_clust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Search genes within ClusterSet using a REGEXP.</p></td>
+      </tr><tr><td>
+          <p><code><a href="install_mcl.html">install_mcl()</a></code> </p>
+        </td>
+        <td><p>Install MCL</p></td>
+      </tr><tr><td>
+          <p><code><a href="load_example_dataset.html">load_example_dataset()</a></code> </p>
+        </td>
+        <td><p>Load/download a Visium (10X) example dataset.</p></td>
+      </tr><tr><td>
+          <p><code><a href="lymph_node_selected_spot.html">lymph_node_selected_spot</a></code> </p>
+        </td>
+        <td><p>The lymph_node_selected_spot dataset</p></td>
+      </tr><tr><td>
+          <p><code><a href="lymph_node_selected_spot_2.html">lymph_node_selected_spot</a></code> </p>
+        </td>
+        <td><p>The lymph_node_selected_spot dataset (#2)</p></td>
       </tr><tr><td>
           <p><code><a href="mcl_system_cmd.html">mcl_system_cmd()</a></code> </p>
         </td>
-        <td><p>Invokes the command line version of Markov CLustering algorithm (MCL).</p></td>
+        <td><p>Call MCL program for graph partitioning (internal).</p></td>
       </tr><tr><td>
-          <p><code><a href="ncol-ClusterSet-method.html">ncol(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+          <p><code><a href="nclust-ClusterSet-method.html">nclust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>ncol</p></td>
+        <td><p>Number of clusters in a ClusterSet object.
+nclust</p></td>
       </tr><tr><td>
-          <p><code><a href="nrow-ClusterSet-method.html">nrow(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+          <p><code><a href="plot_clust_enrichments-ClusterSet-method.html">plot_clust_enrichments(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>nrow</p></td>
+        <td><p>Plot Cluster Enrichments</p></td>
       </tr><tr><td>
-          <p><code><a href="plot_clust.html">plot_clust()</a></code> </p>
+          <p><code><a href="plot_clust_enrichments.html">plot_clust_enrichments()</a></code> </p>
         </td>
-        <td><p>plot_clust</p></td>
+        <td><p>Plot Cluster Enrichments</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_cluster_stats.html">plot_cluster_stats()</a></code> </p>
+        </td>
+        <td><p>Plot the result of cluster_stats()</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_cmp_genesets.html">plot_cmp_genesets()</a></code> </p>
+        </td>
+        <td><p>Plot the result of compare_genesets</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_dist.html">plot_dist()</a></code> </p>
+        </td>
+        <td><p>Plot Distribution of distances</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_ggheatmap-ClusterSet-method.html">plot_ggheatmap(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Heatmap of data contained in a ClusterSet object.</p></td>
       </tr><tr><td>
           <p><code><a href="plot_heatmap.html">plot_heatmap()</a></code> </p>
         </td>
         <td><p>plot_heatmap</p></td>
       </tr><tr><td>
-          <p><code><a href="top_genes.html">top_genes()</a></code> </p>
+          <p><code><a href="plot_markers_to_clusters-ClusterSet-method.html">plot_markers_to_clusters(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Best co-expressed genes from each gene cluster</p></td>
+        <td><p>Map cell markers to clusters (hypergeometric/jaccard)</p></td>
       </tr><tr><td>
-          <p><code><a href="viz_dist.html">viz_dist()</a></code> </p>
+          <p><code><a href="plot_markers_to_clusters.html">plot_markers_to_clusters()</a></code> </p>
         </td>
-        <td><p>viz_dist</p></td>
+        <td><p>Map cell markers to clusters (hypergeometric/jaccard)</p></td>
       </tr><tr><td>
-          <p><code><a href="viz_enrich.html">viz_enrich()</a></code> </p>
+          <p><code><a href="plot_profiles.html">plot_profiles()</a></code> </p>
         </td>
-        <td><p>Manhattan-like-plot of enrichment analysis results</p></td>
+        <td><p>Plot mean expression profiles of each cluster from a ClusterSet object.</p></td>
       </tr><tr><td>
-          <p><code><a href="write_clust.html">write_clust()</a></code> </p>
+          <p><code><a href="plot_spatial.html">plot_spatial()</a></code> </p>
         </td>
-        <td><p>write_clust</p></td>
+        <td><p>XY scatter plot of Visium data with hexagonal spots.</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_spatial_panel.html">plot_spatial_panel()</a></code> </p>
+        </td>
+        <td><p>A planel of XY scatter plots of Visium data with hexagonal spots.</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_stratum.html">plot_stratum()</a></code> </p>
+        </td>
+        <td><p>Display the results of stratify_seurat</p></td>
+      </tr><tr><td>
+          <p><code><a href="rename_clust-ClusterSet-method.html">rename_clust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Rename the gene clusters of a ClusterSet</p></td>
+      </tr><tr><td>
+          <p><code><a href="reorder_clust-ClusterSet-method.html">reorder_clust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Reorder the clusters from a ClusterSet</p></td>
+      </tr><tr><td>
+          <p><code><a href="reorder_genes-ClusterSet-method.html">reorder_genes(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Reorder genes in a ClusterSet object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="row_names-ClusterSet-method.html">row_names(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Row names of a ClusterSet object.
+row_names</p></td>
+      </tr><tr><td>
+          <p><code><a href="select_genes.html">select_genes()</a></code> </p>
+        </td>
+        <td><p>Selects informative genes based on k-nearest neighbour analysis.</p></td>
+      </tr><tr><td>
+          <p><code><a href="set_verbosity.html">set_verbosity()</a></code> </p>
+        </td>
+        <td><p>Set the verbosity level for the SciGeneX package</p></td>
+      </tr><tr><td>
+          <p><code><a href="show_methods.html">show_methods()</a></code> </p>
+        </td>
+        <td><p>List the method for the ClusterSet object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="stratify_seurat.html">stratify_seurat()</a></code> </p>
+        </td>
+        <td><p>Given two spot groups, compute for each spot: (i) the distance of the
+closest spot in the other class.</p></td>
+      </tr><tr><td>
+          <p><code><a href="top_by_go-ClusterSet-method.html">top_by_go(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Select top_genes based on go terms</p></td>
+      </tr><tr><td>
+          <p><code><a href="top_genes-ClusterSet-method.html">top_genes(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Most co-expressed genes from each gene cluster</p></td>
+      </tr><tr><td>
+          <p><code><a href="viz_enrich-ClusterSet-method.html">viz_enrich(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Visualization of enrichment analyses results from a ClusterSet object</p></td>
+      </tr><tr><td>
+          <p><code><a href="which_clust-ClusterSet-method.html">which_clust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Which clusters contain a set of genes.</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -148,7 +323,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

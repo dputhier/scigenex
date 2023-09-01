@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -67,21 +67,23 @@
 <span>  center <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ceil <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>  cell_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cell_clusters <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_dendro <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_top_genes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  use_core_cells <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  interactive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  colorbar_name <span class="op">=</span> <span class="st">"Expression level"</span>,</span>
+<span>  colorbar_name <span class="op">=</span> <span class="st">"Exp. level"</span>,</span>
 <span>  show_legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#A9D6E5"</span>, <span class="st">"#2166AC"</span>, <span class="st">"#000000"</span>, <span class="st">"#B2182B"</span>, <span class="st">"#FFCA3A"</span><span class="op">)</span>,</span>
+<span>  colors <span class="op">=</span> <span class="fu"><a href="colors_for_gradient.html">colors_for_gradient</a></span><span class="op">(</span><span class="st">"Ju1"</span><span class="op">)</span>,</span>
+<span>  colors_cell_clusters <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  col_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  label_size <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  line_size <span class="op">=</span> <span class="fl">15</span></span>
+<span>  label_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  line_size_vertical <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  line_size_horizontal <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  link <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"average"</span>, <span class="st">"complete"</span>, <span class="st">"single"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,36 +105,32 @@
 <dd><p>A value for flooring (NULL for no flooring). Flooring is performed after centering.</p></dd>
 
 
-<dt>cell_order</dt>
-<dd><p>A vector of cell names already ordered.</p></dd>
+<dt>cell_clusters</dt>
+<dd><p>A vector of cell clusters with cell barcodes as names.</p></dd>
 
 
 <dt>show_dendro</dt>
 <dd><p>A logical to indicate whether to show column dendrogram.</p></dd>
 
 
-<dt>cluster</dt>
-<dd><p>A cluster id to plot. Default is NULL for plotting all cluster.</p></dd>
-
-
 <dt>use_top_genes</dt>
 <dd><p>A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.</p></dd>
 
 
-<dt>use_core_cells</dt>
-<dd><p>A logical to indicate whether to use core cells obtained by cell_clust function.</p></dd>
+<dt>interactive</dt>
+<dd><p>A logical to indicate if the heatmap should be interactive.</p></dd>
 
 
 <dt>name</dt>
-<dd><p>A title for the heatmap.</p></dd>
+<dd><p>A title for the heatmap (if interactive is TRUE).</p></dd>
 
 
 <dt>xlab</dt>
-<dd><p>A title for the x axis.</p></dd>
+<dd><p>A title for the x axis (if interactive is TRUE).</p></dd>
 
 
 <dt>ylab</dt>
-<dd><p>A title for the y axis.</p></dd>
+<dd><p>A title for the y axis (if interactive is TRUE).</p></dd>
 
 
 <dt>colorbar_name</dt>
@@ -147,6 +145,10 @@
 <dd><p>A vector of colors.</p></dd>
 
 
+<dt>colors_cell_clusters</dt>
+<dd><p>A named vector of colors for cell identity annotations.</p></dd>
+
+
 <dt>row_labels</dt>
 <dd><p>A logical to indicate whether to show row labels.</p></dd>
 
@@ -159,67 +161,105 @@
 <dd><p>A value for label font size.</p></dd>
 
 
-<dt>line_size</dt>
-<dd><p>An integer for the horizontal white line size.</p></dd>
+<dt>line_size_vertical</dt>
+<dd><p>An integer for the size of horizontal white line which separate gene clusters.</p></dd>
 
 
-<dt>cell_ordering_method</dt>
-<dd><p>The clustering method to be used. This must be "hclust", ADD OTHER CLUSTERING METHOD.</p></dd>
+<dt>line_size_horizontal</dt>
+<dd><p>An integer for the size of vertical white line  which separate cell clusters.</p></dd>
+
+
+<dt>link</dt>
+<dd><p>The aggloremative criterion for hierarchical clustering. One of "average", "complete" or "single". 
+Default to average.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Iheatmap-class object</p>
+<p>Iheatmap-class object.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40000</span><span class="op">)</span>, nc<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span></span>
-<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">101</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span></span>
-<span class="r-in"><span><span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">m</span><span class="op">[</span><span class="fl">201</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span> <span class="op">+</span> <span class="op">-</span><span class="fl">2</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Set verbosity to 1 to display info messages only.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="set_verbosity.html">set_verbosity</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="DBFMCL.html">DBFMCL</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">m</span>,</span></span>
-<span class="r-in"><span>distance_method<span class="op">=</span><span class="st">"pearson"</span>,</span></span>
-<span class="r-in"><span>av_dot_prod_min <span class="op">=</span> <span class="fl">0</span>,</span></span>
-<span class="r-in"><span>inflation <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>k<span class="op">=</span><span class="fl">25</span>,</span></span>
-<span class="r-in"><span>fdr <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Row names not provided. Adding. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Colum names not provided. Adding. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The following parameters will be used : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Working directory:  /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Ouput directory:  /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Name:  009TwfOE8x </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Distance method:  pearson </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Minimum average dot product for clusters:  0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Minimum cluster size:  10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Number of neighbors:  25 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	FDR:  10 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Inflation: 2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Visualize standard outputs from both mcl and cluster commands:  FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  DBF completed. Starting MCL step. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Running mcl (graph partitioning)... </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Done </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  creating file : /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/009TwfOE8x.mcl_out.txt </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Reading and filtering MCL output: /mnt/NAS7/Workspace/bavaisj/dbfmcl/scigenex/docs/reference/009TwfOE8x.mcl_out.txt </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  3  clusters conserved after MCL partitioning. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  0  clusters filtered out from MCL partitioning (size and mean dot product). </span>
+<span class="r-in"><span><span class="co"># Load datasets</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
+<span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium was already loaded. </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span>object <span class="op">=</span> <span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Centering matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Ceiling matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Flooring matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Plotting heatmap. </span>
-<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span>object <span class="op">=</span> <span class="va">res</span>, cluster <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Centering matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Ceiling matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Flooring matrix. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |--  Plotting heatmap. </span>
+<span class="r-in"><span><span class="co"># Plot heatmap of 'top genes' of all gene clusters</span></span></span>
+<span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 6. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 7. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 8. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 9. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 10. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 11. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 12. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 13. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 14. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 15. All genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in top_genes slot of ClusterSet object. </span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Flooring matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ordering cells/columns using hierarchical clustering. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Only top genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plotting heatmap. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot is interactive... </span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot heatmap of gene cluster 1</span></span></span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Flooring matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ordering cells/columns using hierarchical clustering. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plotting heatmap. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot is interactive... </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot heatmap of gene cluster 1 and 3</span></span></span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span>  </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Flooring matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ordering cells/columns using hierarchical clustering. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plotting heatmap. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot is interactive... </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot heatmap of 'top genes' of all gene clusters</span></span></span>
+<span class="r-in"><span><span class="co"># with cell ordered according to Seurat results</span></span></span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span>, cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Extracting cell identity. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Flooring matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Only top genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plotting heatmap. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot is interactive... </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot heatmap of 'top genes' of all gene clusters</span></span></span>
+<span class="r-in"><span><span class="co"># with cell ordered according to Seurat results</span></span></span>
+<span class="r-in"><span><span class="co"># (non interactive version)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span>, </span></span>
+<span class="r-in"><span>             cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             interactive<span class="op">=</span><span class="cn">FALSE</span>, label_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Extracting cell identity. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Flooring matrix. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Only top genes will be used. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plotting heatmap. </span>
+<span class="r-plt img"><img src="plot_heatmap-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>
@@ -234,7 +274,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
