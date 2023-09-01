@@ -479,7 +479,7 @@ display_hull <- function(data=NULL,
                                   yend=y2),
                       inherit.aes = FALSE,
                       color=color,
-                      size=size)
+                      linewidth=size)
 
   }else{
 

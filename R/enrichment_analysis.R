@@ -59,14 +59,14 @@ setMethod("enrich_go",
                         msg_type = "STOP")}
             
             if (species == "Hsapiens") {
-              org_db <- org.Hs.eg.db
+              org_db <- org.Hs.eg.db::org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
               print_msg(msg_type = "INFO",
                         msg = "Species used : Homo sapiens")
             }
             
             if (species == "Mmusculus") {
-              org_db <- org.Mm.eg.db
+              org_db <- org.Mm.eg.db::org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
               print_msg(msg_type = "INFO",
                         msg = "Species used : Mus musculus")
