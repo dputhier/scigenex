@@ -1,336 +1,437 @@
 # Guided tutorial
-The simplest way to use scigenex is to run the following steps of Seurat R package:
-<br>
-<ul>
-  <li>Create Seurat object</li>
-  <li>Quality Control</li>
-  <li>Normalization</li>
-</ul>
-and then use the seurat object as input of SciGeneX. 
-<br/>
-<br>
-SciGeneX assumes that the normalized count matrix is saved in the "data" slot of seurat object and can be loaded with GetAssayData(object, slot="data).
-If not or if you didn't use seurat, you can also provide a normalized matrix as input.
-<br/>
 
-## Loading normalized count matrix
-For this tutorial, we will use scRNA-seq dataset of Peripheral Blood Mononuclear Cells (PBMC) freely available on 10x Genomics. 
-This dataset contains 2700 single cells sequenced on the Illumina NextSeq 50. 
-You can download it [**here**](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz).
-<br>
+The simplest way to use scigenex is to run the following steps using the Seurat R package:
 
-### Common Seurat pipeline
-In this step, we will run the pre-processing steps from [common seurat pipeline](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html). 
-If you already have your pre-processed seurat object or your normalized count matrix, you can skip this step.
+* Load data into a Seurat object
+* Perform quality Control
+* Perform normalization
 
 
-```{r , eval=F}
-library(Seurat)
-# ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-# Setup the Seurat object
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-# Read 10x data
-pbmc <- Read10X(data.dir = "../pbmc3k/filtered_gene_bc_matrices/hg19")
+The subsequent object can be used as input to SciGeneX. Alternatively, you can provide a normalized matrix as input.
 
-# Create Seurat object
-pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
-                                  min.cells = 3, 
-                                  min.features = 200)
+
+## The dataset
+
+For this tutorial, we will use scRNA-seq dataset of Peripheral Blood Mononuclear Cells (PBMC) freely available on 10x Genomics web site. This dataset contains 2700 single cells sequenced on the Illumina NextSeq 500.  This dataset can be downloaded [**from 10X Genomics**](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz) or through the `SeuratData`library
+
+### Preparing the pbmc3k dataset
+
+In this step, we will run the classical pre-processing steps from the. Please refer to [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html) for more informations. 
+If you have already your pre-processed your data with Seurat or use a normalized count matrix as input, you can skip this step.
+
+
+```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide'}
+suppressMessages(suppressWarnings(library(ggplot2, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(patchwork, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(SeuratData, quietly = TRUE)))
+suppressMessages(suppressWarnings(InstallData("pbmc3k")))
+suppressMessages(suppressWarnings(data("pbmc3k")))
+
 ```
 
-```{r , eval=T, echo = F}
-# Load 
-suppressWarnings(suppressMessages(library(Seurat, quietly = TRUE)))
-pbmc <- Read10X(data.dir = "/mnt/NAS7/Workspace/bavaisj/dbfmcl/dataset_pbmc/filtered_gene_bc_matrices/hg19/")
-suppressWarnings(pbmc_seurat <- CreateSeuratObject(counts = pbmc, project = "pbmc3k",
-                                                   min.cells = 3, 
-                                                   min.features = 200))
-pbmc_seurat
+```{r loading2, echo=TRUE, eval=FALSE}
+library(ggplot2)
+library(patchwork)
+library(Seurat, quietly = TRUE)
+library(SeuratData)
+
+InstallData("pbmc3k")
+data("pbmc3k")
+
 ```
 
+We next run here the classical steps of the seurat pipeline. For more information, you can check Seurat website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
 
-<br>
-<br>
-We run here the classical steps of the seurat pipeline. For more information, you can check their website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
-```{r , eval=F}
-# ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-# Run the classical pipeline of Seurat
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-
+```{r classicalsteps, echo=TRUE, eval=TRUE, warning=FALSE}
 # Quality control
-pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat,
-                                                    pattern = "^MT-")
-pbmc_seurat <- subset(pbmc_seurat,
-                      subset = percent.mt < 5 & nFeature_RNA > 200)
-
-# Normalizing data
-pbmc_seurat <- NormalizeData(pbmc_seurat)
-
-# Identification of highly variable genes
-pbmc_seurat <- FindVariableFeatures(pbmc_seurat,
-                                    selection.method = "vst",
-                                    nfeatures = 2000)
-
-# Scaling data
-pbmc_seurat <- ScaleData(pbmc_seurat,
-                         features = rownames(pbmc_seurat))
-
-# Perform principal component analysis
-pbmc_seurat <- RunPCA(pbmc_seurat,
-                      features = VariableFeatures(object = pbmc_seurat))
-
-# Cell clustering 
-pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10)
-pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5)
-
-# Dimension reduction
-pbmc_seurat <- RunUMAP(pbmc_seurat, dims = 1:10)
-DimPlot(pbmc_seurat, reduction = "umap")
-```
-
-
-```{r , eval=T, echo=F}
-# Quality control
-pbmc_seurat[["percent.mt"]] <- PercentageFeatureSet(pbmc_seurat, pattern = "^MT-")
-pbmc_seurat <- subset(pbmc_seurat, subset = percent.mt < 5 & nFeature_RNA > 200)
+pbmc3k[["percent.mt"]] <- PercentageFeatureSet(pbmc3k, pattern = "^MT-")
+pbmc3k <- subset(pbmc3k, subset = percent.mt < 5 & nFeature_RNA > 200)
 
 # Normalizing
-pbmc_seurat <- NormalizeData(pbmc_seurat)
+pbmc3k <- NormalizeData(pbmc3k)
 
 # Identification of highly variable genes
-pbmc_seurat <- FindVariableFeatures(pbmc_seurat, selection.method = "vst", nfeatures = 2000)
+pbmc3k <- FindVariableFeatures(pbmc3k, selection.method = "vst", nfeatures = 2000)
 
 # Scaling data
-pbmc_seurat <- ScaleData(pbmc_seurat, features = rownames(pbmc_seurat), verbose = FALSE)
+pbmc3k <- ScaleData(pbmc3k, features = rownames(pbmc3k), verbose = FALSE)
 
 # Perform principal component analysis
-pbmc_seurat <- RunPCA(pbmc_seurat, features = VariableFeatures(object = pbmc_seurat), verbose = FALSE)
+pbmc3k <- RunPCA(pbmc3k, features = VariableFeatures(object = pbmc3k), verbose = FALSE)
 
 # Cell clustering 
-pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10, verbose = FALSE)
-pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5, verbose = FALSE)
+pbmc3k <- FindNeighbors(pbmc3k, dims = 1:10, verbose = FALSE)
+pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
 
 # Dimension reduction
-pbmc_seurat <-suppressWarnings(RunUMAP(pbmc_seurat, dims = 1:10, verbose = FALSE))
-DimPlot(pbmc_seurat, reduction = "umap")
+pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
+DimPlot(pbmc3k, reduction = "umap")
 ```
-<br>
-<br>
 
 
+## Extracting gene modules using SciGeneX
+
+In this section, we use the previously generated Seurat object as an input example to run SciGeneX main commands. This command run the main algorithm that will:
+ 
+* Identify and extracts co-expressed genes
+* Partition selected genes into clusters
+* Store the result in a ClusterSet object
+
+First we will load the Scigenex library. To limit the verbosity of Scigenex function we will set the verbosity level to zero (which will switch off information messages and debugging messages).
 
 
+```{r loadlib1, warning=FALSE, results='hide', echo = FALSE, eval=TRUE}
+suppressMessages(suppressWarnings(library(scigenex)))
+scigenex::set_verbosity(0)
+```
 
-## Extract patterns of co-expressed genes using SciGeneX
-In this section, we use the previously generated Seurat object as an input example to run SciGeneX main command. This command run the DBFMCL algorithm (Density-based Filtering and Markov CLuster algorithm) that :
-<br>
-<ul>
-  <li>Identify and extract co-expressed genes</li>
-  <li>Define gene cluster related to their respective patterns of co-expression</li>
-  <li>Store the result in a ClusterSet object</li>
-</ul>
-
-```{r , eval=F}
+```{r loadlib2, echo = TRUE, eval=FALSE, warning=FALSE, results='hide'}
 library(scigenex)
-
-# Run DBFMCL
-pbmc_scigenex <- DBFMCL(data = pbmc_seurat,
-                        k = 80,
-                        inflation = 2,
-                        min_cluster_size = 5,
-                        av_dot_prod_min = 2)
+scigenex::set_verbosity(0)
 ```
 
-```{r , eval=T, echo=F}
-suppressWarnings(suppressMessages(library(scigenex, quietly = TRUE)))
+Then we call successively the `select_genes()` function which will select informative genes (*i.e* co-regulated), then the `gene_clustering()` function which will call MCL and partition the dataset into gene modules.
 
-# Run DBFMCL
-pbmc_scigenex <- DBFMCL(data = pbmc_seurat,
-                        k = 80,
-                        inflation = 2,
-                        min_cluster_size = 5,
-                        av_dot_prod_min = 2)
+```{r scigenex, echo=TRUE, eval=TRUE, results='hide', warning=FALSE }
+
+# Select informative genes
+pbmc_scigenex <- select_genes(pbmc3k,
+                              k = 80,
+                              distance_method = "pearson",
+                              which_slot = "data",
+                              row_sum=2)
+
+# Run MCL
+pbmc_scigenex <- gene_clustering(pbmc_scigenex,
+                                 k = 5,
+                                 threads = 2,
+                                 inflation = 2)
 ```
 
-<br>
-Clusters of genes are stored in the slot gene_patterns. You can access the gene names from a cluster using the command get_genes().
-```{r , eval=T, echo=T}
-# Extract gene names from all cluster
-genes <- get_genes(pbmc_scigenex, cluster = "all")
-head(genes)
+The object produced is a `ClusterSet` objet that is a S4 object that is intented to store gene modules. 
 
-# Extract gene names from gene cluster 5
-genes_5 <- get_genes(pbmc_scigenex, cluster = 5)
-genes_5
-```
-<br>
-
-## Extract top 10 genes from each patterns of co-expression
-You can also used the function top_genes to extract the top genes of each cluster of genes. Genes are ranked regarding their mean correlation values with genes in a same cluster and the top genes of each cluster are stored in the slot top_genes of the ClusterSet object.
-```{r , eval=F}
-# Find top 10 genes for all gene clusters
-pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
-pbmc_scigenex@top_genes
+```{r}
+isS4(pbmc_scigenex)
+pbmc_scigenex
 ```
 
-```{r , eval=T, echo=F}
-# Find top 10 genes for all gene clusters
-pbmc_scigenex <- top_genes(pbmc_scigenex, top = 10)
-pbmc_scigenex@top_genes
+There are various methods associated with the `ClusterSet` objects.
+
+
+```{r}
+show_methods()
 ```
-<br>
-<br>
-You can acess the top genes of a specific cluster of genes using the get_genes function.
-```{r , eval=F}
-# Extract gene names from the top 10 genes of cluster 5
+
+As an example, the current object contains `r nrow(pbmc_scigenex)` informative genes, `r ncol(pbmc_scigenex)` samples and `r nclust(pbmc_scigenex)` gene modules.
+
+```{r}
+nrow(pbmc_scigenex)
+ncol(pbmc_scigenex)
+nclust(pbmc_scigenex)
+```
+
+At this step, several modules need to be filtered out as lots of them may be singletons. Interestingly, the `ClusterSet` class implements the indexing operator/function ("["). The first argument/dimension of the indexing function corresponds to the cluster stored in the object. The second dimension correspond to cell names. As an example, one can simply keep gene modules with size (*i.e* number of genes) greater than 7 using the following code. This leads to an object containing `r nclust(pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ])` gene modules.
+
+```{r}
+pbmc_scigenex <- pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ]
+nclust(pbmc_scigenex)
+```
+
+It may also be important to filter out gene based on dispersion. Several parameters can be computed for each cluster using the `cluster_stats()`function.
+
+```{r}
+plot_cluster_stats(cluster_stats(pbmc_scigenex)) + 
+ ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                axis.text.x = element_text(angle=45, vjust = 0.5),
+                panel.grid = element_blank()) 
+
+```
+
+Here we will select gene modules based on standard deviation (> 0.1) and rename the cluster (from 1 to the number of clusters):
+
+```{r}
+pbmc_scigenex <- pbmc_scigenex[cluster_stats(pbmc_scigenex)$sd_total > 0.1, ] 
+pbmc_scigenex <- rename_clust(pbmc_scigenex)
+nclust(pbmc_scigenex)
+```
+
+The we check the statistics again.
+
+```{r}
+plot_cluster_stats(cluster_stats(pbmc_scigenex)) + 
+ ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                axis.text.x = element_text(angle=45, vjust = 0.5),
+                panel.grid = element_blank()) 
+```
+
+Clusters of genes are stored in the `gene_clusters` slot. One can access the gene names from a cluster using the `get_genes()` command. By default, all genes are returned.
+
+```{r }
+# Extract gene names from the 5th gene cluster
+genes_module_5 <- get_genes(pbmc_scigenex, cluster = 5)
+head(genes_module_5)
+```
+One can also access the gene to cluster mapping using `get_genes()`.
+
+```{r}
+head(gene_cluster(pbmc_scigenex))
+tail(gene_cluster(pbmc_scigenex))
+```
+
+
+## Visualisation using heatmap
+
+### Visualization of specific gene modules
+
+The visualization of a heatmap containing all cells and modules may be time consuming and may require important memory ressources. A first alternative is to look at gene cluster individually or a subset of clusters. The gene modules can be visualized using the `plot_heatmap()` or the `plot_ggheatmap()` functions. The first is mainly intented to propose interactive vizualisation based on the `iheatmapr` library. The second should be mostly used for non interactive vizualisation. This second solution leads to a plot that is more easilly customable as it is based on the ggplot framework. Here we use `plot_ggheatmap()` to have a look at the 4 first clusters. Note that here, we choose to order columns/cells on `Seurat::FindClusters` results.
+
+
+```{r}
+plot_ggheatmap(pbmc_scigenex[1:4, ], 
+               use_top_genes = FALSE,
+               ident=Idents(pbmc3k)) + ggtitle("Cluster 1") 
+```
+
+### Heatmap of representative genes
+
+However one alternative is to extract the most representative genes of each cluster. This can be achieved using the `top_genes()` function. This function will store the identifiers of these representative genes inside the `top_genes` slot of the `ClusterSet` object. The `top_genes`slot can be accessed the `get_genes()` function. 
+
+```{r}
+pbmc_scigenex <- top_genes(pbmc_scigenex)
 genes_cl5_top <- get_genes(pbmc_scigenex, cluster = 5, top = TRUE)
 genes_cl5_top
 ```
 
-```{r , eval=T, echo=F}
-# Extract gene names from the top 10 genes of cluster 5
-genes_cl5_top <- get_genes(pbmc_scigenex, cluster = 5, top = TRUE)
-genes_cl5_top
+Both `plot_heatmap()` and `plot_ggheatmap()` support the `use_top_genes`argument:
+
+```{r, warning=FALSE }
+
+plot_ggheatmap(pbmc_scigenex, 
+               use_top_genes = TRUE,
+               ident=Idents(pbmc3k)) + ggtitle("All clusters (top genes)") +
+               theme(strip.text.y = element_text(size=4))
 ```
-<br>
-<br>
-<br>
-<br>
 
-## Use SciGeneX as feature selection method
-At the end of this step, you can use the genes found by SciGeneX as feature selection results. In the followed example, those genes are stored in the Seurat object and we re-run the Seurat pipeline using those genes.
+### Interactive heatmap
 
+A very interesting feature of Scigenex is its ability to display gene expression levels across cells through interactive heatmaps. Using this feature, user can interactively assess the expression levels in selected cells or cluster or on the whole dataset. However, it is generally advisable, when using all the clusters to restrict analysis using `top_genes=TRUE`. Here we will display the expression levels across cells of cluster 3 to 5.
 
-```{r , eval=F}
-# ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
-# Run the classical pipeline of Seurat
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-
-# Use genes found by SciGeneX as feature selection results
-pbmc_seurat@assays$RNA@var.features <- get_genes(pbmc_scigenex)
-
-# Scaling data
-pbmc_seurat <- ScaleData(pbmc_seurat,
-                         features = rownames(pbmc_seurat))
-
-# Perform principal component analysis
-pbmc_seurat <- RunPCA(pbmc_seurat,
-                      features = VariableFeatures(object = pbmc_seurat))
-
-# Cell clustering 
-pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10)
-pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5)
-
-# Dimension reduction
-pbmc_seurat <- RunUMAP(pbmc_seurat, dims = 1:10)
-DimPlot(pbmc_seurat, reduction = "umap")
+```{r}
+plot_heatmap(pbmc_scigenex[3:5, ], 
+               use_top_genes = TRUE,
+               cell_clusters =Seurat::Idents(pbmc3k))
 ```
 
 
-```{r , eval=T, echo=F}
-# Identification of highly variable genes
-pbmc_seurat@assays$RNA@var.features <- get_genes(pbmc_scigenex)
+## Exporting modules
 
-# Scaling data
-pbmc_seurat <- ScaleData(pbmc_seurat, features = rownames(pbmc_seurat), verbose = FALSE)
+Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from gene to modules.
 
-# Perform principal component analysis
-pbmc_seurat <- RunPCA(pbmc_seurat, features = VariableFeatures(object = pbmc_seurat), verbose = FALSE)
-
-# Cell clustering 
-pbmc_seurat <- FindNeighbors(pbmc_seurat, dims = 1:10, verbose = FALSE)
-pbmc_seurat <- FindClusters(pbmc_seurat, resolution = 0.5, verbose = FALSE)
-
-# Dimension reduction
-pbmc_seurat <-suppressWarnings(RunUMAP(pbmc_seurat, dims = 1:10, verbose = FALSE))
-DimPlot(pbmc_seurat, reduction = "umap")
+```{r echo=FALSE}
+tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
+out <- suppressWarnings(file.remove(tmp_file))
 ```
-<br>
-<br>
 
-## Heatmap visualization
-```{r , eval=T, echo=T}
-cell_cluster <- pbmc_seurat[["seurat_clusters"]]
-cell_cluster <- rownames(cell_cluster)[order(cell_cluster[,"seurat_clusters"])]
+```{r}
+tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
+cluster_set_to_xls(object=pbmc_scigenex, file_path=tmp_file)
 
-plot_heatmap(pbmc_scigenex,
-             cell_order = cell_cluster,
-             use_top_genes = TRUE,
-             line_size = 2) %>%
-  add_col_annotation(pbmc_seurat[["seurat_clusters"]][cell_cluster,"seurat_clusters"]) %>%
-  add_col_barplot(colMeans(GetAssayData(pbmc_seurat, slot = "data")[,cell_cluster]))
 ```
-<br>
-<br>
 
-## Investigate genes in co-expression patterns
-### Cell proliferation
-```{r , eval=F}
+## Functionnal enrichment analysis
+
+Functionnal enrichment analysis can be performed for each gene module using the `enrich_go()` function. Enrichments can be displayed using the `plot_clust_enrichments()` function.
+
+```{r , eval=TRUE, echo=TRUE}
 # Functional enrichment analysis
 pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens", ontology = "BP")
-pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "barplot", nb_terms = 5)
-pbmc_scigenex@cluster_annotations$plot_cl5$barplot
+plot_clust_enrichments(pbmc_scigenex, gradient_palette=colors_for_gradient("Je1"), 
+                       floor=50,
+                       nb_go_term = 2) + 
+  theme(axis.text.y = element_text(size=4))
 ```
 
-```{r , eval=T, echo=F}
-# Functional enrichment analysis
-pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens", ontology = "BP")
-pbmc_scigenex <- viz_enrich(pbmc_scigenex, type = "barplot", nb_terms = 5)
-pbmc_scigenex@cluster_annotations$plot_cl5$barplot
-```
+## Identification of cell populations
 
-```{r , eval=T, echo=T}
-# Visualization of the top gene expression in UMAP
-col_greyMagma = c("2"="grey", "4"="#FB8861FF", "5"="#B63679FF", "3"="#51127CFF", "1"="#000004FF")
-FeaturePlot(pbmc_seurat,
-            features = get_genes(pbmc_scigenex,cluster = 5, top = TRUE)[1:4],
-            cols = col_greyMagma,
-            order = TRUE)
+Given a set of markers, the `plot_markers_to_clusters()` function can b used to map cell type to gene modules. This function will display jaccard and hypergeometric statistics. Here we will use the markers from the [sctype.app](https://sctype.app/) database.
 
+```{r}
+library(dplyr)
+library(tidyr)
+sctype <- "https://zenodo.org/record/8269433/files/sctype.app.tsv"
+marker_table <- read.table(sctype, head=TRUE, sep="\t")
+marker_table <- marker_table %>% 
+                filter(Tissue == "Immune system") %>% 
+                filter(!grepl('Pro-|Pre-|HSC|precursor|Progenitor', Cell.type)) %>%
+                separate_rows(Marker_genes, convert = TRUE)
 
-# Compute module score using the gene list of a specific patterns of co-expression
-pbmc_seurat <- AddModuleScore(pbmc_seurat,
-                             features = list(get_genes(pbmc_scigenex, cluster = 5)),
-                             name = "Cells_in_proliferation")
-
-FeaturePlot(pbmc_seurat,
-            features = "Cells_in_proliferation1",
-            order = TRUE,
-            cols = col_greyMagma)
-
+markers <- split(marker_table$Marker_genes, 
+                 marker_table$Cell.type)
+plot_markers_to_clusters(pbmc_scigenex, 
+                         markers=markers, background = rownames(pbmc3k))
 ```
 
 
+## Working with spatial transcriptomics datasets
 
-### B cells
-```{r , eval=T, echo=T}
-# Functional enrichment analysis
-pbmc_scigenex@cluster_annotations$plot_cl6$barplot
+The scigenex package offers a certain number of function dedicated to spatial transcriptomic data analysis. At the moment these functions have been mainly developed to analyse VISIUM technology (10X Genomics).
 
+### Searching for gene modules
 
-# Visualization of the top gene expression in UMAP
-FeaturePlot(pbmc_seurat,
-            features = get_genes(pbmc_scigenex,cluster = 6, top = TRUE)[1:4],
-            cols = col_greyMagma,
-            order = TRUE)
+### Pre-process spatial transcriptomics data
 
+Here we will use the GSE207205 dataset as example. In order to elucidate the spatial organisation of thymic cell populations,  Heimli *et al* have performed spatial transcriptomic of paediatric human thymic tissue section using  **Visium spatial transcriptomic** technology. Here we will first pre-process the dataset using Seurat.
 
-# Compute module score using the gene list 
-# of a specific patterns of co-expression
-pbmc_seurat <- AddModuleScore(pbmc_seurat,
-                             features = list(get_genes(pbmc_scigenex, cluster = 6)),
-                             name = "B_cells")
+```{r}
+#download.file("https://zenodo.org/record/8278514/files/brain1_gn.Rdata", 
+#              destfile = "brain1_gn.Rdata", 
+#              quiet = TRUE)
+#load("brain1_gn.Rdata")
+brain1 <- LoadData("stxBrain", type = "anterior1")
+brain1 <- NormalizeData(brain1, 
+                        normalization.method = "LogNormalize",
+                        verbose = FALSE)
+brain1 <- ScaleData(brain1, verbose = FALSE)
+brain1 <- FindVariableFeatures(brain1, verbose = FALSE)
+brain1 <- RunPCA(brain1, assay = "Spatial", verbose = FALSE)
+brain1 <- FindNeighbors(brain1, reduction = "pca", dims = 1:20, verbose = FALSE)
+brain1 <- FindClusters(brain1, verbose = FALSE)
+brain1 <- RunUMAP(brain1, reduction = "pca", dims = 1:20, verbose = FALSE)
 
-FeaturePlot(pbmc_seurat,
-            features = "B_cells1",
-            order = TRUE,
-            cols = col_greyMagma)
+DimPlot(brain1, reduction = "umap", label = TRUE)
+SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
+```
+
+### Calling scigenex
+
+We will call scigenex and apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.12). 
+
+```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
+res_brain <- select_genes(data=brain1,
+                    distance_method="pearson",
+                    row_sum = 5)
+
+gc_brain <- gene_clustering(res_brain, keep_nn = F, inflation = 2.2, threads = 4)
+gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
+df <- cluster_stats(gcs_brain) 
+gcss_brain <- gcs_brain[df$sd_total > 0.1, ]
+gcss_brain <- rename_clust(gcss_brain)
+length(row_names(gcss_brain))
+nclust(gcss_brain)
+```
+
+Interestingly, Scigenex algorithm is able to retrieve `nclust(gcss_brain)` gene modules. This is most probably reminiscent of cell complexity but also of numerous molecular pathways that are differentially activated across the organ and unanticipated complexity.  
+
+### Visualizing corresponding heatmap
+
+We then may display the corresponding heatmap using `plot_ggheatmap()`.
+
+```{r heatspatial, warning=FALSE }
+gcss_brain <- top_genes(gcss_brain)
+plot_ggheatmap(gcss_brain, 
+               use_top_genes = TRUE,
+               ident=Idents(brain1)) + ggtitle("All clusters (top genes)") +
+               theme(strip.text.y = element_text(size=4))
+```
+
+### Interactive heatmap
+
+Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. 
+
+```{r}
+plot_heatmap(gcss_brain[8:10, ], 
+             use_top_genes = TRUE, 
+             cell_clusters = Seurat::Idents(brain1))
+```
+
+### Visualizing topological clusters
+
+The scigenex library implements the `plot_spatial()` function to display topological information. In addition to the signal, specific regions can be highlighted using a hull that can be created using `display_hull()`. Here will also add a hull around cluster 0 and 2. We will first display signal for "seurat_clusters" metadata.
+
+```{r hull_white, fig.width=6, fig.height=4}
+hull_white <- display_hull(getFlippedTissueCoordinates(brain1),
+                           ident = ifelse(Idents(brain1) %in% c(0, 2), 
+                                          1, 0),
+                           color = "white", 
+                           size_x=4, size_y=3, 
+                           hull_type = "wall", 
+                           size = 0.5, 
+                           step_x = 2.6, 
+                           step_y=2.4, 
+                           delta = 1.5)
+
+plot_spatial(seurat_obj = brain1, 
+             metadata = "seurat_clusters", 
+             pt_size=2, coord_flip = T) + hull_white
 
 ```
-<br>
-<br>
+
+We may also want to visualize a specific gene. Here we will look at the pattern of "Cox5a" which is part of the cluster `r setNames(which_clust( gcss_brain, "Cox5a"), NULL)` detected by Scigenex.
+
+```{r}
+"Cox5a" %in% gcss_brain
+mt_Cox5a_clust <- which_clust( gcss_brain, "Cox5a")
+mt_Cox5a_clust
+```
+```{r plot_spatial, fig.width=6, fig.height=4}
+plot_spatial(seurat_obj = brain1, 
+             gene_name = "Cox5a", 
+             pt_size=2, coord_flip = T) + hull_white
+```
+
+Note that cluster `r setNames(which_clust( gcss_brain, "Cox5a"), NULL)` also contains several genes related to the respiration chain. This can be checked with a regular expression using the `grep_clust()` function:
+
+```{r}
+grep_clust(gcss_brain[mt_Cox5a_clust, ], "(Cox)|(Ndu)",)
+```
 
 
 
+To visualize the topological distribution of signals in each cluster we will extract the `gene_clusters` slot from the `gcss` object, compute module score using the Seurat `AddModuleScore()`function and store the results in the seurat object. Note that signal will is scaled from 0 to 1. This will allow to have a single legend for all plots
 
+```{r AddModuleScore, echo=TRUE, eval=TRUE, warning=FALSE}
+brain1 <- AddModuleScore(brain1, features = gcss_brain@gene_clusters)
+
+for(i in 1:nclust(gcss_brain)){ # Normalizing module scores
+  tmp <- brain1[[paste0("Cluster", i, sep="")]] 
+  max_tmp <- max(tmp)
+  min_tmp <- min(tmp)
+  brain1[[paste0("Cluster", i, sep="")]]  <- (tmp[,1] - min(tmp))/(max_tmp - min_tmp)
+}
+```
+
+The topological profile of cluster `r mt_Cox5a_clust` (that contains mt-Cox5a  and additional gene involved in the respiratory chain) is the following:
+
+
+```{r plot_spatialmt_Cox5a_clust, fig.width=6, fig.height=4}
+plot_spatial(seurat_obj = brain1, 
+             metadata = paste("Cluster", setNames(mt_Cox5a_clust, NULL), 
+                                         sep=""), 
+             pt_size=2, coord_flip = T) + hull_white
+```
+
+
+We will then display the topological signal of all clusters using the `plot_spatial_panel()` function. 
+
+```{r topoclusters, echo=TRUE, eval=TRUE, warning=FALSE, fig.width=6, fig.height=10}
+p <- plot_spatial_panel(brain1, 
+                        metadata = paste("Cluster", 1:nclust(gcss_brain), 
+                                         sep=""), 
+                   ncol_layout = 3, 
+                   pt_size=0.4, 
+                   guide='collect',
+                   stroke = 0, size_title = 3.5, 
+                   face_title = 'plain', 
+                   barwidth = 0.25, barheight = 1.5, 
+                   coord_flip=T) + 
+  hull_white
+print(p + guide_area())
+```
+
+## Session info
+
+```{r}
+sessionInfo()
+```
 
