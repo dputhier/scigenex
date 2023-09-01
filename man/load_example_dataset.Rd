@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{load_example_dataset}
 \alias{load_example_dataset}
-\title{Load/download a Visium (10X) example dataset.}
+\title{Load/download a Seurat or ClusterSet example dataset.}
 \usage{
 load_example_dataset(
   dataset = c("7871581/files/pbmc3k_medium", "7871581/files/pbmc3k_medium_clusters",
@@ -25,7 +25,7 @@ load_example_dataset(
 Load the dataset.
 }
 \description{
-Load/download a Visium (10X) example dataset.
+Load/download a Seurat or ClusterSet example dataset.
 }
 \examples{
 # An example Seurat/Visium dataset
