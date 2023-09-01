@@ -11,7 +11,8 @@ plot_clust_enrichments(
   gradient_palette = colors_for_gradient("Ju1"),
   label_fun = NULL,
   term_order = NULL,
-  return_mat = FALSE
+  return_mat = FALSE,
+  floor = NULL
 )
 }
 \arguments{
