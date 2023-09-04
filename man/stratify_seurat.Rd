@@ -25,6 +25,10 @@ stratify_seurat(
 
 \item{colours_stratum}{A set of colors for the stratum.}
 
+\item{pt_size}{The size of the points.}
+
+\item{breaks}{The number of breaks.}
+
 \item{diagnostic_plot}{Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.}
 }
 \description{
