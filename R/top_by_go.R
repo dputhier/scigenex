@@ -17,6 +17,7 @@
 #' @export top_by_go
 #' @keywords internal
 #' @examples
+#'\dontrun{
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
@@ -26,7 +27,7 @@
 #' # DNA Binding: "GO:0003677"
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
-#' 
+#' }
 setGeneric("top_by_go", 
            function(object,
                     go_id = "GO:0003677",
