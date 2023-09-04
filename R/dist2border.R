@@ -4,6 +4,9 @@
 #' @param ident The classes of the spots (0/1). A named vector (name = spot name; value = classes). 
 #' @param colours Colors for the spot classes.
 #' @param colours_stratum A set of colors for the stratum.
+#' @param pt_size The size of the points.
+#' @param breaks The number of breaks.
+#' @param labels Class labels.
 #' @param diagnostic_plot Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.
 #' @export stratify_seurat
 #' @importFrom ggplot2 aes element_blank element_rect facet_wrap geom_col geom_text scale_color_manual theme theme_minimal
@@ -11,6 +14,7 @@
 #' @importFrom scales hue_pal
 #' @examples 
 #' library(Seurat)
+#' library(ggplot2)
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)
@@ -20,9 +24,9 @@
 #' plot_spatial(lymph_node_tiny_2, metadata = "seurat_clusters", pt_size = 6) + h
 #' strat <- stratify_seurat(lymph_node_tiny_2, ident=classes)
 #' strat[[1]]
-#' strat[[2]] + coord_equal()
-#' strat[[3]] + coord_equal()
-#' strat[[4]] + coord_equal() 
+#' strat[[2]] + ggplot2::coord_equal()
+#' strat[[3]] + ggplot2::coord_equal()
+#' strat[[4]] + ggplot2::coord_equal() 
 stratify_seurat <- function(seurat_obj, 
                         ident=NULL,
                         colours=NULL,
@@ -197,6 +201,7 @@ stratify_seurat <- function(seurat_obj,
 #' @importFrom reshape2 melt
 #' @examples
 #' library(Seurat)
+#' library(ggplot2)
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)
@@ -208,7 +213,7 @@ stratify_seurat <- function(seurat_obj,
 #'                           colours_stratum = rev(discrete_palette(5, "De1")))
 #'  p <- plot_stratum(strats[[1]], gene_name="CCL19", polar = TRUE, 
 #'                    colours_stratum = rev(discrete_palette(5, "De1")))
-#' p + strats[[3]] + coord_equal()  + NoLegend()
+#' p + strats[[3]] + ggplot2::coord_equal()  + Seurat::NoLegend()
 plot_stratum <- function(seurat_obj=NULL,
                          gene_name=NULL,
                          metadata=NULL,
