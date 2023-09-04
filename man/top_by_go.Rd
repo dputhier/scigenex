@@ -34,6 +34,7 @@ genes in heatmaps (see \code{plot_heatmap} function). Here the function select
 top_genes based on GO terms.
 }
 \examples{
+\dontrun{
 # Set verbosity to 1 to display info messages only.
 set_verbosity(1)
 
@@ -43,6 +44,6 @@ load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 # DNA Binding: "GO:0003677"
 pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
 pbmc3k_medium_clusters@top_genes
-
+}
 }
 \keyword{internal}
