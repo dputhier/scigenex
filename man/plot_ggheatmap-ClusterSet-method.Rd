@@ -18,7 +18,8 @@
   xlab = "Spots",
   ylab = "Genes",
   hide_gene_name = TRUE,
-  hide_col_name = TRUE
+  hide_col_name = TRUE,
+  pseudocount = 0.1
 )
 }
 \arguments{
@@ -50,6 +51,8 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 \item{hide_gene_name}{Whether to hide gene names.}
 
 \item{hide_col_name}{Whether to hide column names.}
+
+\item{pseudocount}{A value for the pseudocount added before log transformation.}
 }
 \value{
 A ggplot diagram.

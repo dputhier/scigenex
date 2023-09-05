@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.1</span>
       </span>
     </div>
 
@@ -50,9 +50,6 @@
 </li>
 <li>
   <a href="../articles/2_usage.html">Guided tutorial</a>
-</li>
-<li>
-  <a href="../articles/3_cell_clustering.html">Cell clustering alternative</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -89,21 +86,46 @@
 <h2 id="installation-instructions">Installation instructions<a class="anchor" aria-label="anchor" href="#installation-instructions"></a>
 </h2>
 <div class="section level3">
+<h3 id="system-requirements">System requirements<a class="anchor" aria-label="anchor" href="#system-requirements"></a>
+</h3>
+<p>The partitioning steps are currently performed using a system call to
+the Markov Cluster (MCL) algorithm that presently limits the use of
+DBF-MCL to unix-like platforms. Importantly, the <code>mcl</code>
+command should be in your PATH and reachable from within R.</p>
+</div>
+<div class="section level3">
 <h3 id="step-1---installation-of-mcl">Step 1 - Installation of MCL<a class="anchor" aria-label="anchor" href="#step-1---installation-of-mcl"></a>
 </h3>
-<p>Install MCL from sources.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the latest version of mcl </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> http://micans.org/mcl/src/mcl-latest.tar.gz</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncompress and install mcl</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xvfz mcl-latest.tar.gz</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mcl-xx-xxx</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./configure</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> make install</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># You should get mcl in your path</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">mcl</span> <span class="at">-h</span></span></code></pre></div>
-<p>Or you may install MCL using conda. Importantly, the mcl command should be in your PATH and reachable from within R.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> bioconda mcl</span></code></pre></div>
+<div class="section level4">
+<h4 id="installation-of-mcl-using-install_mcl">Installation of MCL using install_mcl()<a class="anchor" aria-label="anchor" href="#installation-of-mcl-using-install_mcl"></a>
+</h4>
+<p>The <code><a href="../reference/install_mcl.html">install_mcl()</a></code> has been developed to ease MCL
+installation. This function should be call automatically from within R
+when calling the <code><a href="../reference/gene_clustering.html">gene_clustering()</a></code> function. If
+<code><a href="../reference/install_mcl.html">install_mcl()</a></code> does not detect MCL in the PATH it will
+install it in <code>~/.scigenex</code>.</p>
+</div>
+<div class="section level4">
+<h4 id="installation-of-mcl-from-source">Installation of MCL from source<a class="anchor" aria-label="anchor" href="#installation-of-mcl-from-source"></a>
+</h4>
+<p>One also can install MCL from source using the following code.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Download the latest version of mcl </span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">wget</span> http://micans.org/mcl/src/mcl-latest.tar.gz</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># Uncompress and install mcl</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">tar</span> xvfz mcl-latest.tar.gz</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="bu">cd</span> mcl-xx-xxx</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="ex">./configure</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">make</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">sudo</span> make install</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co"># You should get mcl in your path</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="ex">mcl</span> <span class="at">-h</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="installation-of-mcl-using-conda">Installation of MCL using conda<a class="anchor" aria-label="anchor" href="#installation-of-mcl-using-conda"></a>
+</h4>
+<p>Or you may install MCL using conda.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> bioconda mcl</span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="step-2---installation-of-scigenex">Step 2 - Installation of SciGeneX<a class="anchor" aria-label="anchor" href="#step-2---installation-of-scigenex"></a>
@@ -111,16 +133,19 @@
 <div class="section level4">
 <h4 id="from-r">From R<a class="anchor" aria-label="anchor" href="#from-r"></a>
 </h4>
-<p>The scigenex library is currently not available in CRAN or Bioc. To install from github, use:</p>
+<p>The scigenex library is currently not available in CRAN or Bioc. To
+install from github, use:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dputhier/scigenex"</span><span class="op">)</span></span>
 <span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dputhier/scigenex" class="external-link">scigenex</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="in-a-terminal">In a terminal<a class="anchor" aria-label="anchor" href="#in-a-terminal"></a>
+<h4 id="from-the-terminal">From the terminal<a class="anchor" aria-label="anchor" href="#from-the-terminal"></a>
 </h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL scigenex</span></code></pre></div>
-<p>And load the library in R.</p>
+<p>Download the <em>tar.gz</em> from github. Uncompress and run the
+following command:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL scigenex</span></code></pre></div>
+<p>Then load the library from within R.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dputhier/scigenex" class="external-link">scigenex</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -145,7 +170,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

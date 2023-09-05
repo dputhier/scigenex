@@ -18,5 +18,3 @@ navbar:
       href: articles/1_installation.html
     - text: "Guided tutorial"
       href: articles/2_usage.html
-    - text: "Cell clustering alternative"
-      href: articles/3_cell_clustering.html

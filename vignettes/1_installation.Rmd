@@ -1,7 +1,12 @@
 # Installation instructions
 
+## System requirements
+
+The partitioning steps are currently performed using a system call to the Markov Cluster (MCL) algorithm that presently limits the use of DBF-MCL to unix-like platforms. Importantly, the `mcl` command should be in your PATH and reachable from within R.
+
 ## Step 1 - Installation of MCL
 
+<<<<<<< HEAD
 You may skip this step as the latest versions of SciGeneX will call `scigenex::install_mcl()`to install MCL in `~/.scigenex` directory if this program is not found in the PATH.
 
 
@@ -10,6 +15,18 @@ You may skip this step as the latest versions of SciGeneX will call `scigenex::i
 Alternatively you may install MCL from sources and add it to the PATH.
 
 ```{bash , eval=F, echo=T}
+=======
+### Installation of MCL using install_mcl()
+
+The `install_mcl()` has been developed to ease MCL installation. This function should be call automatically from within R when calling the `gene_clustering()` function. If `install_mcl()` does not detect MCL in the PATH it will install it in `~/.scigenex`.
+
+
+### Installation of MCL from source
+
+One also can install MCL from source using the following code.
+
+```{bash , eval=FALSE, echo=TRUE}
+>>>>>>> main
 # Download the latest version of mcl 
 wget http://micans.org/mcl/src/mcl-latest.tar.gz
 # Uncompress and install mcl
@@ -22,11 +39,19 @@ sudo make install
 mcl -h
 ```
 
+<<<<<<< HEAD
 ### Installation of MCL from sources
 
 Finally you may install MCL using conda. Importantly, the mcl command should be available in your PATH from within R.
 
 ```{bash , eval=F, echo=T}
+=======
+### Installation of MCL using conda
+
+Or you may install MCL using conda. 
+
+```{bash , eval=FALSE, echo=TRUE}
+>>>>>>> main
 conda install -c bioconda mcl
 ```
 
@@ -37,20 +62,32 @@ conda install -c bioconda mcl
 
 The scigenex library is currently not available in CRAN or Bioc. To install from github, use:
 
+<<<<<<< HEAD
 ```{r , eval=F, echo=T}
+=======
+```{r, eval=FALSE, echo=TRUE}
+>>>>>>> main
  devtools::install_github("dputhier/scigenex")
  library(scigenex)
 ```
 
 ### From the terminal
 
+<<<<<<< HEAD
 Go inside the git directory and simply write:
+=======
+Download the *tar.gz* from github. Uncompress and run the following command:
+>>>>>>> main
 
 ```{bash , eval=F, echo=T}
 R CMD INSTALL .
 ```
 
+<<<<<<< HEAD
 Next load the library from R.
+=======
+Then load the library from within R.
+>>>>>>> main
 
 ```{r, eval=F, echo=T}
 library(scigenex)

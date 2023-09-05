@@ -259,6 +259,7 @@ setMethod("viz_enrich",
 #' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
 #' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
 #' @param return_mat Logical. Do not return a ggplot object but the prepared matrix.
+#' @param floor A value for flooring the statistic.
 #' 
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
@@ -293,7 +294,8 @@ setGeneric("plot_clust_enrichments",
                     gradient_palette=colors_for_gradient("Ju1"),
                     label_fun=NULL,
                     term_order=NULL,
-                    return_mat=FALSE) {
+                    return_mat=FALSE,
+                    floor=NULL) {
              standardGeneric("plot_clust_enrichments")
            })
 
@@ -309,6 +311,7 @@ setGeneric("plot_clust_enrichments",
 #' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
 #' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
 #' @param return_mat Logical. Do not return a ggplot object but the prepared matrix.
+#' @param floor A value for flooring the statistic.
 #' 
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
@@ -343,7 +346,8 @@ setMethod("plot_clust_enrichments",
                    gradient_palette=colors_for_gradient("Magma"),
                    label_fun=NULL,
                    term_order=NULL,
-                   return_mat=FALSE) {
+                   return_mat=FALSE,
+                   floor=NULL) {
             
             stat_shown <- match.arg(stat_shown)
             print_msg(paste0("Using ", stat_shown, " as ordering statistic"), msg_type = "DEBUG")
@@ -407,6 +411,9 @@ setMethod("plot_clust_enrichments",
             }
 
             m$Description <- factor(m$Description, levels=desc_levels, ordered = TRUE)
+            m$cluster <- factor(m$cluster, 
+                                levels=as.character(sort(as.numeric(unique(m$cluster)))), 
+                                ordered=TRUE)
             
             cluster <- go_term <- stat <- size <- rank <- Counts <- NULL
             
@@ -418,6 +425,10 @@ setMethod("plot_clust_enrichments",
             m_gg <- m_melt[order(m_melt[,"cluster"]), ]
             
             print_msg("Running ggplot...", msg_type = "DEBUG")
+            
+            if(!is.null(floor))
+              m_gg$stat[m_gg$stat > floor] <- floor
+            
             ggplot(data=m_gg, mapping=aes(x=cluster, y = go_term, color=stat, size=Counts)) +
               ggplot2::theme_bw() + 
               geom_point(shape=16) +
@@ -604,6 +615,7 @@ setMethod("plot_markers_to_clusters",
             
             cluster <- marker <- pvalue <- jaccard <- NULL
             print_msg("Running ggplot...", msg_type = "DEBUG")
+            
             ggplot(data=m_gg, mapping=aes(x=cluster, y = marker, color=pvalue, size=jaccard*jaccard_scale)) +
               ggplot2::theme_bw() + 
               geom_point(shape=15) +

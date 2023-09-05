@@ -93,7 +93,7 @@ select_genes <- function(data = NULL,
                                                   "kendall"))
   
   # Check if noise_level is between 0 and 1
-  if (noise_level < 0 || noise_level > 1) {
+  if (noise_level < 0 | noise_level > 1) {
     print_msg("noise_level argument should be >= 0 and <= 1.",
               msg_type = "STOP")              
   }

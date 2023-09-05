@@ -1,6 +1,19 @@
 
 # Changelog
 
+## v1.4.0
+
+*   Update of the documentation
+*   Added support for spatial transcriptomics: getFlippedTissueCoordinates(), plot_spatial(), plot_spatial_panel()
+*   Added import from matrix and Seurat object: cluster_set_from_matrix(), cluster_set_from_seurat().
+*   Added cluster_stats() and plot_cluster_stats() to perform statistics on clusters.
+*   Added export: cluster_set_to_xls().
+*   Added compare_genesets() and plot_cmp_genesets() to compare gene lists with various statistics.
+*   Added plot_clust_enrichments() to compare functional enrichment over clusters.
+*   Added plot_ggheatmap() for statically display heatmaps.
+*   Added plot_markers_to_clusters() to map markers onto clusters.
+*   Added top_by_go() to select top genes by GO terms.
+
 ## v1.3.1
 
 *   Update of the documentation
