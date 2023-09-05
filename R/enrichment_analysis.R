@@ -259,6 +259,7 @@ setMethod("viz_enrich",
 #' @param label_fun A function to customize the labels of the GO terms. Defaults to NULL.
 #' @param term_order A vector specifying the desired order of the GO terms. Defaults to NULL.
 #' @param return_mat Logical. Do not return a ggplot object but the prepared matrix.
+#' @param floor A value for flooring the statistic.
 #' 
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
@@ -427,6 +428,7 @@ setMethod("plot_clust_enrichments",
             
             if(!is.null(floor))
               m_gg$stat[m_gg$stat > floor] <- floor
+            
             ggplot(data=m_gg, mapping=aes(x=cluster, y = go_term, color=stat, size=Counts)) +
               ggplot2::theme_bw() + 
               geom_point(shape=16) +

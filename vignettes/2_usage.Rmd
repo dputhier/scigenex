@@ -17,7 +17,7 @@ For this tutorial, we will use scRNA-seq dataset of Peripheral Blood Mononuclear
 ### Preparing the pbmc3k dataset
 
 In this step, we will run the classical pre-processing steps from the. Please refer to [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html) for more informations. 
-If you have already your pre-processed your data with Seurat or use a normalized count matrix as input, you can skip this step.
+If you have already pre-processed your data with Seurat or have a normalized count matrix as input, you can skip this step.
 
 
 ```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide'}
@@ -41,7 +41,7 @@ data("pbmc3k")
 
 ```
 
-We next run here the classical steps of the seurat pipeline. For more information, you can check Seurat website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
+We next runthe classical steps of the seurat pipeline. For more information, you can check Seurat website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
 
 ```{r classicalsteps, echo=TRUE, eval=TRUE, warning=FALSE}
 # Quality control
@@ -72,7 +72,7 @@ DimPlot(pbmc3k, reduction = "umap")
 
 ## Extracting gene modules using SciGeneX
 
-In this section, we use the previously generated Seurat object as an input example to run SciGeneX main commands. This command run the main algorithm that will:
+In this section, we use the previously generated Seurat object as an input to run SciGeneX main commands. This command run the main algorithm that will:
  
 * Identify and extracts co-expressed genes
 * Partition selected genes into clusters
@@ -123,7 +123,7 @@ There are various methods associated with the `ClusterSet` objects.
 show_methods()
 ```
 
-As an example, the current object contains `r nrow(pbmc_scigenex)` informative genes, `r ncol(pbmc_scigenex)` samples and `r nclust(pbmc_scigenex)` gene modules.
+The current object contains `r nrow(pbmc_scigenex)` informative genes, `r ncol(pbmc_scigenex)` samples and `r nclust(pbmc_scigenex)` gene modules.
 
 ```{r}
 nrow(pbmc_scigenex)
@@ -226,7 +226,7 @@ plot_heatmap(pbmc_scigenex[3:5, ],
 
 ## Exporting modules
 
-Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from gene to modules.
+Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from genes to modules.
 
 ```{r echo=FALSE}
 tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
@@ -239,9 +239,9 @@ cluster_set_to_xls(object=pbmc_scigenex, file_path=tmp_file)
 
 ```
 
-## Functionnal enrichment analysis
+## Functional enrichment analysis
 
-Functionnal enrichment analysis can be performed for each gene module using the `enrich_go()` function. Enrichments can be displayed using the `plot_clust_enrichments()` function.
+Functional enrichment analysis can be performed for each gene module using the `enrich_go()` function. Enrichments can be displayed using the `plot_clust_enrichments()` function.
 
 ```{r , eval=TRUE, echo=TRUE}
 # Functional enrichment analysis
@@ -254,11 +254,19 @@ plot_clust_enrichments(pbmc_scigenex, gradient_palette=colors_for_gradient("Je1"
 
 ## Mapping cell populations markers onto the gene modules
 
-Given a set of markers, the `plot_markers_to_clusters()` function can be used to map cell type to gene modules. This function will display jaccard and hypergeometric statistics. Here we will use the markers from the [sctype.app](https://sctype.app/) database.
+Given a set of markers, the `plot_markers_to_clusters()` function can be used to map cell type markers to gene modules. This function will display jaccard and hypergeometric statistics. Here we will use the markers from the [sctype.app](https://sctype.app/) database.
 
-```{r}
+```{r eval=FALSE, echo=TRUE}
 library(dplyr)
 library(tidyr)
+```
+
+```{r eval=TRUE, echo=FALSE}
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(tidyr)))
+```
+
+```{r}
 sctype <- "https://zenodo.org/record/8269433/files/sctype.app.tsv"
 marker_table <- read.table(sctype, head=TRUE, sep="\t")
 marker_table <- marker_table %>% 
@@ -281,7 +289,7 @@ The scigenex package offers a certain number of function dedicated to spatial tr
 
 ### Pre-process spatial transcriptomics data
 
-Here we will use the GSE207205 dataset as example. In order to elucidate the spatial organisation of thymic cell populations,  Heimli *et al* have performed spatial transcriptomic of paediatric human thymic tissue section using  **Visium spatial transcriptomic** technology. Here we will first pre-process the dataset using Seurat.
+Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat.
 
 ```{r}
 #download.file("https://zenodo.org/record/8278514/files/brain1_gn.Rdata", 
@@ -305,7 +313,7 @@ SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 
 ### Calling scigenex
 
-We will call scigenex and apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.12). 
+We will call scigenex and apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
 
 ```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
 res_brain <- select_genes(data=brain1,
@@ -337,17 +345,20 @@ plot_ggheatmap(gcss_brain,
 
 ### Interactive heatmap
 
-Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. 
+Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 6 to 9.
 
 ```{r}
-plot_heatmap(gcss_brain[8:10, ], 
+plot_heatmap(gcss_brain[6:9, ], 
              use_top_genes = TRUE, 
              cell_clusters = Seurat::Idents(brain1))
+# Try selecting a subset of columns/rows
+# The 'home' button can be used to reset
+# the heatmap
 ```
 
 ### Visualizing topological clusters
 
-The scigenex library implements the `plot_spatial()` function to display topological information. In addition to the signal, specific regions can be highlighted using a hull that can be created using `display_hull()`. Here will also add a hull around cluster 0 and 2. We will first display signal for "seurat_clusters" metadata.
+The scigenex library implements the `plot_spatial()` function to display topological information. In addition to the signal, specific regions can be highlighted using a hull that can be created using the `display_hull()` function. Here will also add a hull around seurat cluster 0 and 2. We will then display signal for "seurat_clusters" metadata.
 
 ```{r hull_white, fig.width=6, fig.height=4}
 hull_white <- display_hull(getFlippedTissueCoordinates(brain1),
@@ -374,10 +385,14 @@ We may also want to visualize a specific gene. Here we will look at the pattern 
 Hpca_clust <- which_clust( gcss_brain, "Hpca")
 Hpca_clust
 ```
+
+To this aim we will use the `plot_spatial()` function.
+
 ```{r plot_spatial, fig.width=6, fig.height=4}
 plot_spatial(seurat_obj = brain1, 
-             gene_name = "Hpca", 
-             pt_size=2, coord_flip = T) + hull_white
+             gene_name = "Hpca",  
+             pt_size=2.5, coord_flip = T) + hull_white  +
+  ggtitle("Hpca expression pattern.")
 ```
 
 Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also contains several genes related to *Regulator Of G Protein* family and *Potassium Channel Tetramerization Domain*. This can be checked with a regular expression using the `grep_clust()` function:
@@ -385,7 +400,7 @@ Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also cont
 ```{r}
 grep_clust(gcss_brain[Hpca_clust, ], "(Rgs)|(Kctd)",)
 ```
-To visualize the topological distribution of signals in each cluster we will extract the `gene_clusters` slot from the `gcss` object, compute module score using the Seurat `AddModuleScore()`function and store the results in the seurat object. Note that, for each gene module, signal will be scaled from 0 to 1. This will allow to have a shared legend between all plots
+To visualize the topological distribution of signals in each cluster we will *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* compute module score using the Seurat `AddModuleScore()`function and *(iii)* store the results in the seurat object. Note that, for each gene module, signal will be scaled from 0 to 1. This will allow us to have a shared legend between all plots
 
 ```{r AddModuleScore, echo=TRUE, eval=TRUE, warning=FALSE}
 brain1 <- AddModuleScore(brain1, features = gcss_brain@gene_clusters)
@@ -398,7 +413,7 @@ for(i in 1:nclust(gcss_brain)){ # Normalizing module scores
 }
 ```
 
-The topological profile of cluster `r Hpca_clust` (that contains Hpca a strong hippocampus marker) is the following:
+The topological profile of cluster `r Hpca_clust` (that contains Hpca, a strong hippocampus marker) is the following:
 
 
 ```{r plot_spatialHpca_clust, fig.width=6, fig.height=4}
@@ -408,7 +423,7 @@ plot_spatial(seurat_obj = brain1,
              pt_size=2.5, coord_flip = T) + hull_white
 ```
 
-We can easily see that the pattern of the gene module containing Hpca is very similar to Hpca pattern. Moreover it also strongly overlaps the Seurat cell cluster number 0. However, the analysis seems to indicate that a more complex tissue architecture exists as Hpca signal extends beyond Seurat cluster 0.
+We can easily see that the pattern of the gene module containing Hpca is very similar to the Hpca pattern. Moreover this gene module pattern also strongly overlaps the Seurat cell cluster number 0. However, the analysis seems to indicate that a more complex tissue architecture exists as Hpca signal extends beyond Seurat cluster 0.
 
 We will then display the topological signal of all clusters using the `plot_spatial_panel()` function. 
 
@@ -419,7 +434,7 @@ p <- plot_spatial_panel(brain1,
                    ncol_layout = 3, 
                    pt_size=0.7, 
                    guide='collect',
-                   stroke = 0, size_title = 3.5, 
+                   stroke = 0, size_title = 5, 
                    face_title = 'plain', 
                    barwidth = 0.25, barheight = 1.5, 
                    coord_flip=T) 
