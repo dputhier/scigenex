@@ -27,9 +27,9 @@ stratify_seurat(
 
 \item{pt_size}{The size of the points.}
 
-\item{breaks}{The number of breaks.}
+\item{breaks}{Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of stratums in which spot are to be cut.}
 
-\item{labels}{Class labels.}
+\item{labels}{Labels for the levels of the stratum. By default, labels are constructed using "(a,b]" interval notation. If labels = FALSE, simple integer codes are returned instead of a factor.}
 
 \item{diagnostic_plot}{Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.}
 }

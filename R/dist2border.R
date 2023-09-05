@@ -5,8 +5,8 @@
 #' @param colours Colors for the spot classes.
 #' @param colours_stratum A set of colors for the stratum.
 #' @param pt_size The size of the points.
-#' @param breaks The number of breaks.
-#' @param labels Class labels.
+#' @param breaks Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of stratums in which spot are to be cut.
+#' @param labels Labels for the levels of the stratum. By default, labels are constructed using "(a,b]" interval notation. If labels = FALSE, simple integer codes are returned instead of a factor.
 #' @param diagnostic_plot Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.
 #' @export stratify_seurat
 #' @importFrom ggplot2 aes element_blank element_rect facet_wrap geom_col geom_text scale_color_manual theme theme_minimal
@@ -201,7 +201,7 @@ stratify_seurat <- function(seurat_obj,
 #' @importFrom reshape2 melt
 #' @examples
 #' library(Seurat)
-#' library(ggplot2)
+#' library(ggplot2 )
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' Seurat::SpatialDimPlot(lymph_node_tiny_2)
 #' identity <- Idents(lymph_node_tiny_2)

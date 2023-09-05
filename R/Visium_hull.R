@@ -509,5 +509,3 @@ display_hull <- function(data=NULL,
 
   return(p)            
 }
-
-
