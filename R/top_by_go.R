@@ -72,7 +72,7 @@ setMethod("top_by_go",
                     gene_id = "hgnc_symbol",
                     host="https://www.ensembl.org") {
             
-            ensembl <- biomaRt::useEnsembl(biomart = "ensembl")
+            ensembl <- biomaRt::useEnsembl(biomart = "ensembl", mirror='uswest')
             
             if(!species  %in% gsub("_gene_ensembl", "", biomaRt::listDatasets(mart = ensembl)$dataset))
               print_msg("Unknow species in biomaRt", msg_type = "STOP")
