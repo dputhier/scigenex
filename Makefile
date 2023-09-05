@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.3.1
+VERSION=1.4.0
 
 .PHONY: help
 
@@ -53,14 +53,50 @@ test_by_file:
 
 coverage:
 	@echo "Checking coverage"
-	@echo "usethis::use_github_action('test-coverage'); cov <- covr::package_coverage(); print(paste0('COVERAGE : ', covr::percent_coverage(cov)))" | R --slave
-
-coverage_by_file:
-	@echo "Checking coverage"
-	@echo "library(scigenex); usethis::use_github_action('test-coverage'); for(i in setdiff(dir('R', pattern='.R'), c('zzz.R', 'import_package.R'))) { print(paste0('TESTING file: ', i)); cov <- covr::file_coverage(source_files=file.path('R',i), test_files=file.path('tests', 'testthat', paste0('test.', i))); print(paste0(i, ' : ', covr::percent_coverage(cov)))}" | R --slave
+	@echo "usethis::use_github_action('test-coverage'); cov <- covr::package_coverage(); print(as.data.frame(cov))" | R --slave
 
 codecov:
 	@echo "Uploading coverage (https://app.codecov.io/github/dputhier/scigenex)"
 	@echo "library(covr); codecov(token ='8f08768a-0629-4ed0-91b9-bdd9f7019916')" | R --slave
 
+
+#------------------------------------------------------------------
+# Creating a release
+#------------------------------------------------------------------
+
+__check_defined_VER:
+	@[ "$(VER)" ] || ( echo ">> VER is not set"; exit 1 )
+
+release: __check_defined_VER
+	@ echo "#-----------------------------------------------#"
+	@ echo "# Starting the release $(VER)                   #"
+	@ echo "#-----------------------------------------------#"
+
+release_bump: release
+	@ echo "#-----------------------------------------------#"
+	@ echo "# Bumping the program version                   #"
+	@ echo "#-----------------------------------------------#"
+	@ git checkout ./DESCRIPTION
+	@ git checkout ./Makefile
+	@ R CMD INSTALL .
+	@ cat ./DESCRIPTION | perl -npe "s/Version: .*/Version: $(VER)/" > /tmp/scigenex.bump
+	@ mv /tmp/scigenex.bump ./DESCRIPTION
+	@ cat ./Makefile | perl -npe 's/^VERSION=.*/VERSION=$(VER)/' > /tmp/scigenex.bump
+	@ mv /tmp/scigenex.bump ./Makefile 
+	@ echo "Version was bump to $(VER)"
+	@ make install
+	@ git commit -m 'Bumped version $(VER)'
+
+doc_html:
+	@ echo "#-----------------------------------------------#"
+	@ echo "# Building doc                                  #"
+	@ echo "#-----------------------------------------------#"
+	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site()" | R --slave
+	@ git add -u
+	@ git commit -m "Updated html doc to $(VER)."
+
+
 all: doc install check test
+
+
+

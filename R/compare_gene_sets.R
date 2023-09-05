@@ -266,6 +266,7 @@ plot_cmp_genesets <- function(set_1=NULL,
     }else{
       legend_label <- paste0(transform, "(p-value)")
     }
+    
     inter <-compare_genesets(set_1=set_1, 
                              set_2=set_2, 
                              stat="jaccard")

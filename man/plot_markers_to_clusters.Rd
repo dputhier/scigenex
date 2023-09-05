@@ -42,5 +42,5 @@ m <- clustermole::clustermole_markers(species = "hs")
 markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
                  m$celltype[m$organ == "Blood" & m$species == "Human"])
 plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
-
 }
+\keyword{internal}

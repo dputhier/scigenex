@@ -371,6 +371,13 @@ discrete_palette <- function(n=10, palette=c("Ju1", "De1", "ggplot")){
 #' @keywords internal
 check_format_cluster_set <- function(object) {
   
+  print_msg("Checking ClusterSet format.", msg_type = "DEBUG")
+  
+  if(is.null(object)){
+    print_msg("The ClusterSet is a NULL object.", 
+              msg_type = "STOP")
+  }
+  
   if(!inherits(object, "ClusterSet"))
     print_msg("Please provide a ClusterSet as input.", 
               msg_type = "STOP")
@@ -457,9 +464,9 @@ show_methods <- function(class="ClusterSet",
 # -------------------------------------------------------------------------
 # load_example_dataset()   ------------------------------------------------
 # -------------------------------------------------------------------------
-#' @title Load/download a Visium (10X) example dataset.
+#' @title Load/download a Seurat or ClusterSet example dataset.
 #' @description
-#' Load/download a Visium (10X) example dataset.
+#' Load/download a Seurat or ClusterSet example dataset.
 #' @param dataset The name of the dataset.
 #' @param timeout Set the timout for download (options(timeout=timeout))
 #' @param force Reload the dataset even if already in globalEnv. 

@@ -11,7 +11,8 @@
   gradient_palette = colors_for_gradient("Magma"),
   label_fun = NULL,
   term_order = NULL,
-  return_mat = FALSE
+  return_mat = FALSE,
+  floor = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@
 \item{term_order}{A vector specifying the desired order of the GO terms. Defaults to NULL.}
 
 \item{return_mat}{Logical. Do not return a ggplot object but the prepared matrix.}
+
+\item{floor}{A value for flooring the statistic.}
 }
 \value{
 A ggplot object displaying the cluster enrichments for the GO terms.

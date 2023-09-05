@@ -17,6 +17,7 @@
 #' @export top_by_go
 #' @keywords internal
 #' @examples
+#'\dontrun{
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
@@ -26,7 +27,7 @@
 #' # DNA Binding: "GO:0003677"
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
-#' 
+#' }
 setGeneric("top_by_go", 
            function(object,
                     go_id = "GO:0003677",
@@ -71,7 +72,7 @@ setMethod("top_by_go",
                     gene_id = "hgnc_symbol",
                     host="https://www.ensembl.org") {
             
-            ensembl <- biomaRt::useEnsembl(biomart = "ensembl")
+            ensembl <- biomaRt::useEnsembl(biomart = "ensembl", mirror='uswest')
             
             if(!species  %in% gsub("_gene_ensembl", "", biomaRt::listDatasets(mart = ensembl)$dataset))
               print_msg("Unknow species in biomaRt", msg_type = "STOP")

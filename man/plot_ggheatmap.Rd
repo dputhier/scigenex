@@ -18,7 +18,8 @@ plot_ggheatmap(
   xlab = "Genes",
   ylab = "Spots",
   hide_gene_name = TRUE,
-  hide_col_name = TRUE
+  hide_col_name = TRUE,
+  pseudocount = 0.1
 )
 }
 \arguments{

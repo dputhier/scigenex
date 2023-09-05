@@ -147,10 +147,17 @@ plot_heatmap <- function(object,
   }  
   
   gene_to_clust <- gene_cluster(object)
-  
+
   if(is.null(cell_clusters)){
     print_msg("Ordering cells/columns using hierarchical clustering.",
               msg_type = "INFO")
+    
+    # Check if sd of column is > 0
+    # Otherwise HC will crash
+    if(length(colnames(m)[which(apply(m, 2, sd)==0)]) > 0){
+      print_msg("Some columns have sd equal to 0. Can not compute HC...", msg_type="INFO")
+      print_msg("Use cell_clusters argument for ordering..", msg_type="STOP")
+    }
     
     dist_cells <- cor(m, method = "pearson")
     dist_cells <- as.dist((1-dist_cells)/2)
@@ -525,7 +532,8 @@ setGeneric("plot_ggheatmap",
                     xlab="Genes",
                     ylab="Spots",
                     hide_gene_name=TRUE,
-                    hide_col_name=TRUE) {
+                    hide_col_name=TRUE,
+                    pseudocount=0.1) {
              
              standardGeneric("plot_ggheatmap")
            })
@@ -549,6 +557,7 @@ setGeneric("plot_ggheatmap",
 #' @param ylab A name for the y axis.
 #' @param hide_gene_name Whether to hide gene names.
 #' @param hide_col_name Whether to hide column names.
+#' @param pseudocount A value for the pseudocount added before log transformation.
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #' @importFrom reshape2 melt
@@ -583,7 +592,8 @@ setMethod(
            xlab="Spots",
            ylab="Genes",
            hide_gene_name=TRUE,
-           hide_col_name=TRUE) {
+           hide_col_name=TRUE,
+           pseudocount=0.1) {
     
     check_format_cluster_set(object)
     print_msg("getting matrix", msg_type="DEBUG")
@@ -608,11 +618,13 @@ setMethod(
       if(length(object@top_genes) == 0)
         print_msg("Please use top_gene() methods onto ClusterSet object.", msg_type = "STOP")
       m <- object@data[unlist(object@top_genes), ]
+    }else{
+      m <- object@data
     }
     
     
     if(to_log2) {
-      m <- log2(m + 0.1)
+      m <- log2(m + pseudocount)
     }
     
     ## median-centering of row
@@ -646,7 +658,17 @@ setMethod(
     colnames(m_melt) <- c("genes", "samples", "values")
     gclust <- gene_cluster(object, as_string = T)
     match_gclust <- match(m_melt$genes, names(gclust))
-    m_melt$gene_clusters <- factor(gclust[match_gclust], ordered = TRUE)
+    
+    lev_clust <- suppressWarnings(sort(unique(as.numeric(gclust))))
+
+    if(length(lev_clust) == 0){
+      lev_clust <- unique(gclust)
+      m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
+    }else{
+      m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
+    }
+    
+    
 
     if(!is.null(ident)){
       

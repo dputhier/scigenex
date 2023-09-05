@@ -1,7 +1,7 @@
 Package: scigenex
 Type: Package
 Title: The scigenex package (Single-Cell Informative GENe Explorer)
-Version: 1.3.1
+Version: 1.4.0
 Date: 2020-07-22
 Author: J. Bavais, Sebastien Nin, Lionel Spinelli and Denis Puthier
 Maintainer: J. Bavais <julie.bavais@yahoo.fr>
@@ -11,7 +11,8 @@ Collate: ClusterSet_class.R import_package.R enrichment_analysis.R top_genes.R v
 Description: The scigenex package (Single-Cell Informative GENe Explorer) proposes a set of functions to (i) extract informative genes from a scRNA-seq and Visium experiment, (ii) search clusters of co-expressed genes, (iii) store/manipulate these clusters, (v) and anotate these clusters. These clusters can be mapped onto UMAP or t-SNE diagrams to functionally annotate cell populations.
 biocViews: Clustering, Classification, Transcriptomics, SingleCell, ReportWriting, GeneRegulation
 License: GPL-3
-Suggests: covr, RColorBrewer, clustermole
+VignetteBuilder: knitr
+Suggests: covr, RColorBrewer, png, RCurl, clustermole, knitr, rmarkdown, SeuratData, tidyr
 LazyLoad: yes
 LazyDataCompression: xz
 URL: https://github.com/dputhier/scigenex
@@ -20,3 +21,4 @@ RoxygenNote: 7.2.3
 Encoding: UTF-8
 LazyData: true
 Config/testthat/edition: 3
+

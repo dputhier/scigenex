@@ -15,8 +15,6 @@ navbar:
     - icon: fa-home
       href: index.html
     - text: "Install"
-      href: articles/1_installation.html
+      href: articles/installation.html
     - text: "Guided tutorial"
-      href: articles/2_usage.html
-    - text: "Cell clustering alternative"
-      href: articles/3_cell_clustering.html
+      href: articles/usage.html
