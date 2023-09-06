@@ -14,7 +14,5 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Install"
-      href: articles/installation.html
     - text: "Guided tutorial"
       href: articles/usage.html
