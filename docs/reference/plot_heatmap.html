@@ -29,10 +29,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/1_installation.html">Install</a>
-</li>
-<li>
-  <a href="../articles/2_usage.html">Guided tutorial</a>
+  <a href="../articles/usage.html">Guided tutorial</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/dputhier/scigenex/" class="external-link">
@@ -235,7 +232,7 @@ Default to average.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot heatmap of 'top genes' of all gene clusters</span></span></span>
 <span class="r-in"><span><span class="co"># with cell ordered according to Seurat results</span></span></span>
-<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span>, cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span>, cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Extracting cell identity. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Ceiling matrix. </span>
@@ -248,7 +245,7 @@ Default to average.</p></dd>
 <span class="r-in"><span><span class="co"># with cell ordered according to Seurat results</span></span></span>
 <span class="r-in"><span><span class="co"># (non interactive version)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span>, </span></span>
-<span class="r-in"><span>             cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             cell_clusters<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>             interactive<span class="op">=</span><span class="cn">FALSE</span>, label_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Extracting cell identity. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>

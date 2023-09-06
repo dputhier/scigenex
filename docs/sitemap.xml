@@ -4,13 +4,13 @@
     <loc>https://scigenex.r-lib.org/404.html</loc>
   </url>
   <url>
-    <loc>https://scigenex.r-lib.org/articles/1_installation.html</loc>
-  </url>
-  <url>
-    <loc>https://scigenex.r-lib.org/articles/2_usage.html</loc>
-  </url>
-  <url>
     <loc>https://scigenex.r-lib.org/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/articles/scigenex.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/articles/usage.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/authors.html</loc>
