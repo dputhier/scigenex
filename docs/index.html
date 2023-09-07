@@ -74,64 +74,96 @@
 <div class="page-header"><h1 id="scigenex">scigenex<a class="anchor" aria-label="anchor" href="#scigenex"></a>
 </h1></div>
 <p>WARNING: scigenex library is still in beta version. WARNING: Online tutorial will be updated soon.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<div class="section level3">
-<h3 id="in-the-terminal">In the terminal<a class="anchor" aria-label="anchor" href="#in-the-terminal"></a>
-</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a> R CMD INSTALL scigenex</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a> </span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a> <span class="co"># In R</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a> </span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a> <span class="fu">library</span>(scigenex)</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a> </span></code></pre></div>
 </div>
+<div class="section level1">
+<h1 id="installation-instructions">Installation instructions<a class="anchor" aria-label="anchor" href="#installation-instructions"></a>
+</h1>
+<div class="section level2">
+<h2 id="system-requirements">System requirements<a class="anchor" aria-label="anchor" href="#system-requirements"></a>
+</h2>
+<p>The partitioning steps are currently performed using a system call to the Markov Cluster (MCL) algorithm that presently limits the use of DBF-MCL to unix-like platforms. Importantly, the <code>mcl</code> command should be in your PATH and reachable from within R (see dedicated section).</p>
+</div>
+<div class="section level2">
+<h2 id="step-1---installation-of-scigenex">Step 1 - Installation of SciGeneX<a class="anchor" aria-label="anchor" href="#step-1---installation-of-scigenex"></a>
+</h2>
 <div class="section level3">
 <h3 id="from-r">From R<a class="anchor" aria-label="anchor" href="#from-r"></a>
 </h3>
 <p>The scigenex library is currently not available in CRAN or Bioc. To install from github, use:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a> <span class="fu">library</span>(devtools)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a> <span class="fu">install_github</span>(<span class="st">"dputhier/scigenex"</span>)</span></code></pre></div>
-<p>To install from a tar in the terminal</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>tar xvfz scigenex.tar.gz</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>R CMD INSTALL dbfmcl</span></code></pre></div>
-<p>Or using the R interpreter:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"/path/to/the/package"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"scigenex"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"dputhier/scigenex"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="from-the-terminal">From the terminal<a class="anchor" aria-label="anchor" href="#from-the-terminal"></a>
+</h3>
+<p>Download the <em>tar.gz</em> from github or clone the main branch. Uncompress and run the following command from within the uncompressed scigenex folder:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>R CMD INSTALL .</span></code></pre></div>
+<p>Then load the library from within R.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="step-2---installation-of-mcl">Step 2 - Installation of MCL<a class="anchor" aria-label="anchor" href="#step-2---installation-of-mcl"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>    <span class="fu">library</span>(Seurat)</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    <span class="fu">library</span>(scigenex)</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="fu">set_verbosity</span>(<span class="dv">1</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="co"># Load a dataset</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="fu">load_example_dataset</span>(<span class="st">"7871581/files/pbmc3k_medium"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>    <span class="co"># Select informative genes</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">select_genes</span>(pbmc3k_medium,</span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>                         <span class="at">distance =</span> <span class="st">"pearson"</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>                         <span class="at">row_sum=</span><span class="dv">5</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>                         </span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>    <span class="co"># Cluster informative features</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>     </span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>    <span class="do">## Construct and partition the graph</span></span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">gene_clustering</span>(res, </span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>                           <span class="at">inflation =</span> <span class="fl">1.5</span>, </span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>                           <span class="at">threads =</span> <span class="dv">4</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>                            </span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>    <span class="co"># Display the heatmap of gene clusters</span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">top_genes</span>(res)</span>
-<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>    <span class="fu">plot_heatmap</span>(res, <span class="at">cell_clusters =</span> Seurat<span class="sc">::</span><span class="fu">Idents</span>(pbmc3k_medium))</span></code></pre></div>
+<p>You may skip this step as the latest versions of SciGeneX will call <code><a href="reference/install_mcl.html">scigenex::install_mcl()</a></code>to install MCL in <code>~/.scigenex</code> directory if this program is not found in the PATH.</p>
+<div class="section level3">
+<h3 id="installation-of-mcl-using-install_mcl">Installation of MCL using install_mcl()<a class="anchor" aria-label="anchor" href="#installation-of-mcl-using-install_mcl"></a>
+</h3>
+<p>The <code><a href="reference/install_mcl.html">install_mcl()</a></code> has been developed to ease MCL installation. This function should be call automatically from within R when calling the <code><a href="reference/gene_clustering.html">gene_clustering()</a></code> function. If <code><a href="reference/install_mcl.html">install_mcl()</a></code> does not detect MCL in the PATH it will install it in <code>~/.scigenex</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="installation-of-mcl-from-source">Installation of MCL from source<a class="anchor" aria-label="anchor" href="#installation-of-mcl-from-source"></a>
+</h3>
+<p>One also can install MCL from source using the following code.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Download the latest version of mcl </span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>wget http<span class="sc">:</span><span class="er">//</span>micans.org<span class="sc">/</span>mcl<span class="sc">/</span>src<span class="sc">/</span>mcl<span class="sc">-</span>latest.tar.gz</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Uncompress and install mcl</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>tar xvfz mcl<span class="sc">-</span>latest.tar.gz</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>cd mcl<span class="sc">-</span>xx<span class="sc">-</span>xxx</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>.<span class="sc">/</span>configure</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>make</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>sudo make install</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co"># You should get mcl in your path</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>mcl <span class="sc">-</span>h</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="installation-of-mcl-from-sources">Installation of MCL from sources<a class="anchor" aria-label="anchor" href="#installation-of-mcl-from-sources"></a>
+</h3>
+<p>Finally you may install MCL using conda. Importantly, the mcl command should be available in your PATH from within R.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>conda install <span class="sc">-</span>c bioconda mcl</span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="section level1">
+<h1 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h1>
+<p>The scigenex library contains several datasets including the pbmc3k_medium which is a subset from pbmc3k 10X dataset.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">set_verbosity</span>(<span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># Load a dataset</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">load_example_dataset</span>(<span class="st">"7871581/files/pbmc3k_medium"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># Select informative genes</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">select_genes</span>(pbmc3k_medium,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                     <span class="at">distance =</span> <span class="st">"pearson"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>                     <span class="at">row_sum=</span><span class="dv">5</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>                     </span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co"># Cluster informative features</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a> </span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="do">## Construct and partition the graph</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">gene_clustering</span>(res, </span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>                       <span class="at">inflation =</span> <span class="fl">1.5</span>, </span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>                       <span class="at">threads =</span> <span class="dv">4</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>                        </span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co"># Display the heatmap of gene clusters</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">top_genes</span>(res)</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="fu">plot_heatmap</span>(res, <span class="at">cell_clusters =</span> Seurat<span class="sc">::</span><span class="fu">Idents</span>(pbmc3k_medium))</span></code></pre></div>
 <div class="section level3">
 <h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h3>
 <p>Documentation (in progress) is available at <a href="https://dputhier.github.io/scigenex/" class="external-link">https://dputhier.github.io/scigenex/</a>.</p>
-</div>
 </div>
 </div>
 
