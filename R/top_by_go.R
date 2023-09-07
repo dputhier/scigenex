@@ -25,7 +25,8 @@
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' 
 #' # DNA Binding: "GO:0003677"
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
+#' # Here only for cluster 1 and 2
+#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters[1:2, ], go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
 #' }
 setGeneric("top_by_go", 
@@ -60,7 +61,8 @@ setGeneric("top_by_go",
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' 
 #' # DNA Binding: "GO:0003677"
-#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters, go_id = "GO:0003677")
+#' #' # DNA Binding: "GO:0003677"
+#' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters[1:2, ], go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
 #' 
 #' @importFrom biomaRt listDatasets useMart getBM
