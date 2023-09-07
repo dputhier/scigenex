@@ -234,6 +234,11 @@ plot_cmp_genesets <- function(set_1=NULL,
                             stat="hypergeom")
   }
   
+  if(stat == "hypergeom" | layout == "square"){
+    print_msg("Ceiling pvalue to 1e-320 (R limit).")
+    res[res <= 1e-320] <- 1e-320
+  }
+
   res_melt <- reshape2::melt(as.matrix(res))
   colnames(res_melt) <- c("Set_1", "Set_2", "stat")
   
@@ -280,31 +285,40 @@ plot_cmp_genesets <- function(set_1=NULL,
     res_melt$Set_1 <- as.numeric(as.factor(res_melt$Set_1))
     res_melt$Set_2 <- as.numeric(as.factor(res_melt$Set_2))
     
+    # Some 'magick' (or not...) for axes 
+
+    v1 <- length(unique(res_melt$label_set_1))
+    v2 <- length(unique(res_melt$label_set_2))
+    add_axe <- ifelse( v1 == v2,
+                      0,
+                      0.5)
+    
+    # Create the diagram
     ggplot(res_melt, mapping=aes(x=Set_1, 
                                  y=Set_2, 
                                  fill=stat,
                                  width=jaccard,
                                  height=jaccard)) + 
+      geom_tile() +
+      theme_bw() +
+      scale_size_area("Jaccard", max_size = 1, guide = "legend") +
+      scale_fill_gradientn(legend_label, colours = colors) +
       geom_vline(xintercept = seq(0.5, length(set_1), by=1), 
                  col="black",
                  linewidth=0.3) + 
       geom_hline(yintercept = seq(0.5, length(set_2), by=1), 
                  col="black",
                  linewidth=0.3) + 
-      geom_tile() +
-      theme_bw() +
       theme(panel.grid = element_blank(),
             axis.text.x = element_text(angle=45, vjust = 0.9, hjust=1)) +
       scale_x_continuous(expand=expansion(mult = c(0, 0), 
-                                             add = c(0, 0.5)), 
+                                             add = c(0, add_axe)), 
                          breaks = res_melt$Set_1, 
                          labels = res_melt$label_set_1) +
       scale_y_continuous(expand=expansion(mult = c(0, 0), 
-                                          add = c(0, 0.5)), 
+                                          add = c(0, add_axe)), 
                          breaks = res_melt$Set_2, 
                          labels = res_melt$label_set_2) +
-      scale_size_area("Jaccard", max_size = 1, guide = "legend") +
-      scale_fill_gradientn(legend_label, colours = colors, ) +
       coord_equal 
   }
 
