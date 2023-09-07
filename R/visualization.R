@@ -492,6 +492,8 @@ plot_dist <- function(object,
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
+#' @param color_ident A vector containing colors for the cell classes as. 
+#' also accepted which will results in multi-level facets.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
@@ -526,6 +528,7 @@ setGeneric("plot_ggheatmap",
                     panel_spacing=0.05,
                     colors = colors_for_gradient("Ju1"),
                     standardizing = FALSE,
+                    color_ident=NULL,
                     ceil=1,
                     floor=-1,
                     centering = TRUE,
@@ -550,6 +553,7 @@ setGeneric("plot_ggheatmap",
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
+#' @param color_ident A vector containing colors for the cell classes as. 
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
@@ -586,6 +590,7 @@ setMethod(
            panel_spacing=0.05,
            colors = colors_for_gradient("Ju1"),
            standardizing = FALSE,
+           color_ident=NULL,
            ceil=1,
            floor=-1,
            centering = TRUE,
@@ -690,7 +695,6 @@ setMethod(
         
     }
       
-      
     }
     
     
@@ -722,6 +726,8 @@ setMethod(
       name = "Signal"
     )
     
+    nb_cell_classes <- length(table(m_melt$cell_clusters))
+
     p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
     
     print_msg("Theming.", msg_type="DEBUG")
@@ -749,11 +755,18 @@ setMethod(
       hcl(h = hues, l = 65, c = 100)[1:n]
     }
     
-    nb_cell_classes <- length(table(m_melt$cell_clusters))
     
     if(!is.null(ident)){
       if(!is.list(ident)){
-        colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = gg_color_hue(nb_cell_classes)))
+        if(is.null(color_ident)){
+          color_ident <- gg_color_hue(nb_cell_classes)
+        }else{
+          if(length(color_ident) != nb_cell_classes){
+            print_msg("Need as many colors as cell classes", msg_type = "STOP")
+          }
+        }
+          
+        colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = color_ident))
         p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
                                     scales = "free", space = "free",
                                     strip=colored_strip)

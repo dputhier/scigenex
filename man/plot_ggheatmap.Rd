@@ -12,6 +12,7 @@ plot_ggheatmap(
   panel_spacing = 0.05,
   colors = colors_for_gradient("Ju1"),
   standardizing = FALSE,
+  color_ident = NULL,
   ceil = 1,
   floor = -1,
   centering = TRUE,
@@ -38,6 +39,9 @@ also accepted which will results in multi-level facets.}
 \item{colors}{A vector of colors for the gradient.}
 
 \item{standardizing}{Whether rows should be divided by standard deviation.}
+
+\item{color_ident}{A vector containing colors for the cell classes as. 
+also accepted which will results in multi-level facets.}
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
 
