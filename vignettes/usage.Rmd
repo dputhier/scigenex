@@ -410,6 +410,7 @@ Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also cont
 ```{r}
 grep_clust(gcss_brain[Hpca_clust, ], "(Rgs)|(Kctd)",)
 ```
+
 To visualize the topological distribution of signals in each cluster we will *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* compute module score using the Seurat `AddModuleScore()`function and *(iii)* store the results in the seurat object. Note that, for each gene module, signal will be scaled from 0 to 1. This will allow us to have a shared legend between all plots
 
 ```{r AddModuleScore, echo=TRUE, eval=TRUE, warning=FALSE}
@@ -457,7 +458,7 @@ It can be interesting to compare the clusters obtained using unsupervised approa
 
 First note that `Seurat::FindAllMarkers()` will tend to find shared markers between populations. 
 
-```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, results='hide'}
+```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE, results='hide'}
 seurat_brain_mk <- Seurat::FindAllMarkers(brain1)
 seurat_brain_mk<- split(seurat_brain_mk$gene, seurat_brain_mk$cluster)
 plot_cmp_genesets(seurat_brain_mk, seurat_brain_mk, layout = "square", transform="-log10" ) + 
