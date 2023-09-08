@@ -1,6 +1,18 @@
 
 # Changelog
 
+## v1.4.2
+
+* Added color for cell cluster in plot_ggheatmap()
+
+* Updated doc.
+
+## v1.4.1
+
+* Minor bug fix.
+
+* Updated doc
+
 ## v1.4.0
 
 *   Update of the documentation
