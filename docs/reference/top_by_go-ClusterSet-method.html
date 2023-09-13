@@ -111,69 +111,18 @@ use biomaRt::listFilters() to get the vailable list.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># DNA Binding: "GO:0003677"</span></span></span>
-<span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_by_go.html">top_by_go</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, go_id <span class="op">=</span> <span class="st">"GO:0003677"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#' # DNA Binding: "GO:0003677"</span></span></span>
+<span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_by_go.html">top_by_go</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span>, go_id <span class="op">=</span> <span class="st">"GO:0003677"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Ensembl site unresponsive, trying useast mirror</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Connecting to Biomart... </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 6 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 7 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 11 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 13 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 14 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 15 </span>
 <span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span><span class="op">@</span><span class="va">top_genes</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NACA" "RPL6" "RPS3"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "APP"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MAFB"   "MNDA"   "POU2F2" "SOD2"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HOPX"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GATA2" "LYL1" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[8]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NFE2"   "ZNF778"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[9]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[10]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SPHK1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[11]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GFI1B"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[12]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[13]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HES4"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[14]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[15]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
