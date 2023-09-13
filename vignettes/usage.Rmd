@@ -51,7 +51,7 @@ data("pbmc3k")
 
 ```
 
-We next runthe classical steps of the seurat pipeline. For more information, you can check Seurat website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
+We next run the classical steps of the seurat pipeline. For more information, you can check Seurat website [here](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html).
 
 ```{r classicalsteps, echo=TRUE, eval=TRUE, warning=FALSE}
 # Quality control
@@ -70,7 +70,7 @@ pbmc3k <- ScaleData(pbmc3k, features = rownames(pbmc3k), verbose = FALSE)
 # Perform principal component analysis
 pbmc3k <- RunPCA(pbmc3k, features = VariableFeatures(object = pbmc3k), verbose = FALSE)
 
-# Cell clustering 
+# Cell clustering
 pbmc3k <- FindNeighbors(pbmc3k, dims = 1:10, verbose = FALSE)
 pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
 
@@ -78,7 +78,6 @@ pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
 pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
 DimPlot(pbmc3k, reduction = "umap")
 ```
-
 
 ## Extracting gene modules using SciGeneX
 
@@ -166,7 +165,7 @@ pbmc_scigenex <- rename_clust(pbmc_scigenex)
 nclust(pbmc_scigenex)
 ```
 
-The we check the statistics again.
+Then we check the statistics again.
 
 ```{r}
 plot_cluster_stats(cluster_stats(pbmc_scigenex)) + 
@@ -481,6 +480,16 @@ plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "square", 
   xlab("Scigenex")
 ```
 
+## Creating a report
+
+A report can be created using the `cluster_set_report()`function. The arguments of these function are the processed clusterSet and the corresponding Seurat processed object. Ideally the clusterSet object should contain functionnal annotation (see `enrich_go()`). Currently, the process of creating a report may be rather long. It may also produce heavy html files that may take some time to load into de web browser.
+
+```{r report, echo=TRUE, eval=FALSE, warning=FALSE, results='hide'}
+# Uncomment to prepare the report.
+# gcss_brain <- enrich_go(gcss_brain, species = "Mmusculus", ontology = "BP")
+# cluster_set_report(clusterset_object = gcss_brain, seurat_object = brain1)
+```
+An example report is available [here]().
 
 
 ## Session info
