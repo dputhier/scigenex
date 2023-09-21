@@ -25,7 +25,7 @@ plot_heatmap(
   label_size = 10,
   line_size_vertical = 3,
   line_size_horizontal = 3,
-  link = c("average", "complete", "single")
+  link = c("average", "complete", "single", "ward.D", "ward.D2", "mcquitty")
 )
 }
 \arguments{

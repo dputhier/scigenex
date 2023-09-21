@@ -82,7 +82,7 @@ plot_heatmap <- function(object,
                          label_size = 10,
                          line_size_vertical = 3,
                          line_size_horizontal = 3,
-                         link=c("average", "complete", "single")) {
+                         link=c("average", "complete", "single", "ward.D", "ward.D2", "mcquitty")) {
   
   ## Check format object arg
   check_format_cluster_set(object)
