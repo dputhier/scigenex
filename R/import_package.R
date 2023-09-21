@@ -21,7 +21,6 @@
 #' @importFrom AnnotationDbi select
 #' @importFrom clusterProfiler enrichGO
 #' @importFrom qlcMatrix corSparse cosSparse
-#' @importFrom dynamicTreeCut cutreeHybrid
 #' @import org.Hs.eg.db
 #' @import org.Mm.eg.db
 #' @importFrom amap hcluster Dist
