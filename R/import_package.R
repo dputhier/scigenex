@@ -33,5 +33,7 @@
 #' @importFrom scales hue_pal
 #' @importFrom ggforce geom_mark_hull
 #' @importFrom grid unit
+#' @importFrom cluster silhouette
+#' @importFrom clValid connectivity dunn
 #' 
 NULL
