@@ -132,8 +132,7 @@ plot_cluster_stats <- function(x, highlight=NULL){
   }else{
     ggplot2::ggplot(data=x, 
                     mapping=ggplot2::aes(x=cluster,
-                                         y=value,
-                                         color=)) +
+                                         y=value)) +
       ggplot2::geom_col() + 
       ggplot2::facet_grid(~stat, scales = "free") +
       ggplot2::coord_flip()+
