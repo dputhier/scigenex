@@ -1,4 +1,5 @@
 #' @title Create a report from a ClusterSet and Seurat object.
+#' @description Create a report from a ClusterSet and Seurat object.
 #' @param clusterset_object The ClusterSet object.
 #' @param seurat_object The Seurat object.
 #' @param file_path A file path where to store the report (html extension).
