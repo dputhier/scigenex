@@ -111,14 +111,14 @@ cluster_set_from_matrix <- function(object=NULL,
     print_msg("The 'object' argument should be a data.frame or matrix.",
               msg_type="STOP")
   }
- 
-  object <- as.data.frame(object)
   
+ 
   if(!inherits(markers, "list")){
     print_msg("The 'marker' argument should be a list.",
               msg_type="STOP")
   }
   
+  print_msg("Checking markers.", msg_type = "INFO")
   marker_found <- unlist(markers)[unlist(markers) %in% rownames(object)]
   
   if(length(marker_found) == 0){
@@ -126,20 +126,28 @@ cluster_set_from_matrix <- function(object=NULL,
     return(new(Class = "ClusterSet"))
   }
   
+  print_msg("Subsetting object.", msg_type = "INFO")
   object <- object[marker_found, ]
+  
+  print_msg("Subsetting object.", msg_type = "INFO")
   select_markers <- function(x, y){ x[x %in% y] }
   markers <- lapply(markers, "select_markers", marker_found)
   clusters <- unlist(mapply(FUN = "rep", 1:length(markers), 
                      unlist(lapply(markers, length))))
 
-  centers <- split(object,  clusters)
+  print_msg("Computing centers.", msg_type = "INFO")
+  centers <- list()
   
-  centers <- lapply(centers, apply, 2, mean)
-  name_center <- names(centers)
+  for(i in 1:length(markers)){
+    centers[[i]] <- colMeans(object[markers[[i]],])
+  }
+  
+  name_center <- names(markers)
   centers <- do.call("rbind", centers)
   rownames(centers) <- name_center
   colnames(centers) <- colnames(object)
   
+  print_msg("Creating ClusterSet object.", msg_type = "INFO")
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- markers
   obj_out@data <- as.matrix(object)
