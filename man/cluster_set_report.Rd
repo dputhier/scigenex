@@ -16,7 +16,8 @@ cluster_set_report(
   coord_flip = TRUE,
   pt_size = 2.75,
   go_info = c("ID", "Description", "GeneRatio", "pvalue", "qvalue", "Count"),
-  verbosity = 1
+  verbosity = 1,
+  pandoc_heap_size = "512m"
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ cluster_set_report(
 "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "geneID", "Count"}
 
 \item{verbosity}{The verbosity level (0-3, defaut to 1.)}
+
+\item{pandoc_heap_size}{Fix the maximum memory used by pandoc. See https://pandoc.org/MANUAL.html.}
 }
 \description{
 Create a report from a ClusterSet and Seurat object.
