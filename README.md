@@ -5,7 +5,6 @@
 # scigenex
 
 WARNING: scigenex library is still in beta version.
-WARNING: Online tutorial will be updated soon.
 
 # Installation instructions
 

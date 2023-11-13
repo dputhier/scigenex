@@ -13,6 +13,7 @@
 #' @param go_info Info about GO stats. Should be from the list: "ONTOLOGY", "ID", "Description", 
 #' "GeneRatio", "BgRatio", "pvalue", "p.adjust", "qvalue", "geneID", "Count"
 #' @param verbosity The verbosity level (0-3, defaut to 1.)
+#' @param pandoc_heap_size Fix the maximum memory used by pandoc. See https://pandoc.org/MANUAL.html.
 #' @examples 
 #' # Load datasets
 #' # load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
@@ -36,7 +37,8 @@ cluster_set_report <- function(clusterset_object=NULL,
                                coord_flip=TRUE,
                                pt_size=2.75,
                                go_info=c("ID", "Description", "GeneRatio",  "pvalue", "qvalue", "Count"),
-                               verbosity=1) {
+                               verbosity=1,
+                               pandoc_heap_size ="512m") {
 
   check_format_cluster_set(clusterset_object)
   
@@ -103,6 +105,10 @@ output:
     theme: cerulean
     toc: no
     toc_depth: 3
+    pandoc_args: [
+      '+RTS', '-K{{ pandoc_heap_size }}',
+      '-RTS'
+    ]
 params:
   year: 
   region: Europe
@@ -125,7 +131,7 @@ clusterset_object <- top_genes(clusterset_object)
 
 if("Spatial" %in% names(seurat_object@assays)){
   
-  seurat_object <- AddModuleScore(seurat_object, features = clusterset_object@gene_clusters, ctrl=20)
+  seurat_object <- Seurat::AddModuleScore(seurat_object, features = clusterset_object@gene_clusters, ctrl=20)
   
   for(i in 1:nclust(clusterset_object)){ # Normalizing module scores
     tmp <- seurat_object[[paste0("Cluster", i, sep="")]] 
@@ -308,7 +314,8 @@ if(length(clusterset_object@gene_cluster_annotations) > 0){
                            report_author=report_author,
                            data_path=data_path,
                            heatmap_colors=capture.output(dput(heatmap_colors))[[1]],
-                           heatmap_color_ident=heatmap_color_ident
+                           heatmap_color_ident=heatmap_color_ident,
+                           pandoc_heap_size=pandoc_heap_size
   )
 
 
