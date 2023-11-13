@@ -17,7 +17,8 @@ cluster_set_report(
   pt_size = 2.75,
   go_info = c("ID", "Description", "GeneRatio", "pvalue", "qvalue", "Count"),
   verbosity = 1,
-  pandoc_heap_size = "512m"
+  pandoc_heap_size = "512m",
+  report_id = rlang::hash(clusterset_object)
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ cluster_set_report(
 \item{verbosity}{The verbosity level (0-3, defaut to 1.)}
 
 \item{pandoc_heap_size}{Fix the maximum memory used by pandoc. See https://pandoc.org/MANUAL.html.}
+
+\item{report_id}{Used to label code chunks.}
 }
 \description{
 Create a report from a ClusterSet and Seurat object.
