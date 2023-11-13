@@ -7,7 +7,7 @@
 gene_clustering(
   object = NULL,
   keep_nn = FALSE,
-  k = 5,
+  k_g = 5,
   inflation = 2,
   threads = 1,
   output_path = tempdir(),
@@ -19,8 +19,6 @@ gene_clustering(
 
 \item{keep_nn}{A logical value indicating whether the nearest neighbors graph from select_genes should be kept or not.}
 
-\item{k}{If keep_nn is set to FALSE, k is an integer value indicating the size of the neighbourhood to use in the graph construction. Default is 5.}
-
 \item{inflation}{A numeric value indicating the MCL inflation parameter. Default is 2.}
 
 \item{threads}{An integer value indicating the number of threads to use for MCL.}
@@ -28,6 +26,8 @@ gene_clustering(
 \item{output_path}{a character indicating the path where the output files will be stored.}
 
 \item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
+
+\item{k}{If keep_nn is set to FALSE, k is an integer value indicating the size of the neighbourhood to use in the graph construction. Default is 5.}
 }
 \value{
 A ClusterSet object
