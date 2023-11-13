@@ -11,8 +11,8 @@
 
 \item{regexp}{The regular expression}
 
-\item{val}{if FALSE, a vector containing the (integer) indices of the matches determined 
-by grep is returned, and if TRUE, a vector containing the matching elements themselves 
+\item{val}{if FALSE, a vector containing the (integer) indices of the matches determined
+by grep is returned, and if TRUE, a vector containing the matching elements themselves
 is returned.}
 }
 \description{
