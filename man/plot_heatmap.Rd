@@ -31,7 +31,7 @@ plot_heatmap(
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{center}{A logical to indicate whether to center row..}
+\item{center}{A logical to indicate whether to center row.}
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed centering.}
 
@@ -76,7 +76,7 @@ Default to average.}
 Iheatmap-class object.
 }
 \description{
-Plot the observed and simulated distance with the Kth nearest neighbors.
+Create a heatmap from a ClusterSet object.
 }
 \examples{
 library(Seurat)
