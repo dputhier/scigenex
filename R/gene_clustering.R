@@ -60,7 +60,7 @@
 
 gene_clustering <- function(object = NULL,
                             keep_nn = FALSE,
-                            k = 5,
+                            k_g = 5,
                             inflation = 2,
                             threads = 1,
                             output_path = tempdir(),
@@ -73,7 +73,7 @@ gene_clustering <- function(object = NULL,
                              name = name)
   } else {
     object <- construct_new_graph(object = object,
-                                  k = k,
+                                  k = k_g,
                                   output_path = output_path,
                                   name = name)
   }
