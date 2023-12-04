@@ -6,28 +6,34 @@
 \usage{
 gene_clustering(
   object = NULL,
-  keep_nn = FALSE,
-  k = 5,
+  k_g = 5,
   inflation = 2,
+  method = c("closest_neighborhood", "reciprocal_neighborhood"),
   threads = 1,
   output_path = tempdir(),
-  name = NULL
+  name = NULL,
+  keep_nn = FALSE
 )
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{keep_nn}{A logical value indicating whether the nearest neighbors graph from select_genes should be kept or not.}
-
-\item{k}{If keep_nn is set to FALSE, k is an integer value indicating the size of the neighbourhood to use in the graph construction. Default is 5.}
+\item{k_g}{If method="closest_neighborhood", k_g is an integer value indicating the size of the neighbourhood used for graph construction. Default is 5.}
 
 \item{inflation}{A numeric value indicating the MCL inflation parameter. Default is 2.}
+
+\item{method}{Which method to use to build the graph. If "closest_neighborhood", creates an edge between 
+two selected genes a and b if b is part of the kg closest nearest neighbors of a (with kg < k). If "reciprocal_neighborhood"),
+inspect the neighborhood of size k of all selected genes and put an edge between two genes a and b if they are reciprocally 
+in the neighborhood of the other}
 
 \item{threads}{An integer value indicating the number of threads to use for MCL.}
 
 \item{output_path}{a character indicating the path where the output files will be stored.}
 
 \item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
+
+\item{keep_nn}{Deprecated. Use 'method' instead.}
 }
 \value{
 A ClusterSet object
@@ -35,10 +41,7 @@ A ClusterSet object
 \description{
 This function performs gene clustering using the MCL algorithm. 
 The method starts by creating a graph with genes as nodes and edges connecting each gene to its nearest neighbors.
-Two methods are available based on keep_nn argument : 
-* when 'keep_nn = FALSE', the method construct a graph only based on the previously selected genes.
-* when 'keep_nn = TRUE', the method conserve the graph constructed using select_genes with selected genes and their nearest neighbors.
-Then the method use the MCL algorithm to detect clusters of co-expressed genes.
+Then the method use the MCL algorithm to detect clusters of co-expressed genes (method argument).
 }
 \examples{
 # Restrict vebosity to info messages only.
@@ -57,7 +60,7 @@ res <- select_genes(pbmc3k_medium,
 
 ## Method 1 - Construct a graph with a 
 ## novel neighborhood size
-res <- gene_clustering(res, keep_nn = FALSE, 
+res <- gene_clustering(res, method="closest_neighborhood",
                        inflation = 1.5, threads = 4)
                        
 # Display the heatmap of gene clusters
@@ -70,7 +73,7 @@ plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 ## size
 res <- gene_clustering(res, 
                        inflation = 2.2,
-                       keep_nn = TRUE)
+                       method="reciprocal_neighborhood")
                        
 # Display the heatmap of gene clusters
 res <- top_genes(res)
