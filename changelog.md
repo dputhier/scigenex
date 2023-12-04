@@ -1,6 +1,16 @@
 
 # Changelog
 
+## v1.4.4
+
+* Fix #134
+
+## v1.4.3
+
+* Remove DynmicTreeCut dependency.
+
+* Fix bug #137.
+
 ## v1.4.2
 
 * Added color for cell cluster in plot_ggheatmap()
