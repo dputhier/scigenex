@@ -1,6 +1,14 @@
 
 # Changelog
 
+## v1.4.6
+
+* Prefix version with a v...
+
+## v1.4.5
+
+* keep_nn argument is deprecated (gene_clustering()).
+
 ## v1.4.4
 
 * Fix #134
