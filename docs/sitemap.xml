@@ -49,6 +49,9 @@
     <loc>https://scigenex.r-lib.org/reference/cluster_set_from_seurat.html</loc>
   </url>
   <url>
+    <loc>https://scigenex.r-lib.org/reference/cluster_set_report.html</loc>
+  </url>
+  <url>
     <loc>https://scigenex.r-lib.org/reference/cluster_set_to_xls-ClusterSet-method.html</loc>
   </url>
   <url>
@@ -167,6 +170,12 @@
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/reference/mcl_system_cmd.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/reference/module_quality_scores-ClusterSet-method.html</loc>
+  </url>
+  <url>
+    <loc>https://scigenex.r-lib.org/reference/module_quality_scores.html</loc>
   </url>
   <url>
     <loc>https://scigenex.r-lib.org/reference/nclust-ClusterSet-method.html</loc>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.7</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="scigenex">scigenex<a class="anchor" aria-label="anchor" href="#scigenex"></a>
 </h1></div>
-<p>WARNING: scigenex library is still in beta version. WARNING: Online tutorial will be updated soon.</p>
+<p>WARNING: scigenex library is still in beta version.</p>
 </div>
 <div class="section level1">
 <h1 id="installation-instructions">Installation instructions<a class="anchor" aria-label="anchor" href="#installation-instructions"></a>
@@ -90,16 +90,16 @@
 <h3 id="from-r">From R<a class="anchor" aria-label="anchor" href="#from-r"></a>
 </h3>
 <p>The scigenex library is currently not available in CRAN or Bioc. To install from github, use:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"dputhier/scigenex"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"dputhier/scigenex"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(scigenex)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="from-the-terminal">From the terminal<a class="anchor" aria-label="anchor" href="#from-the-terminal"></a>
 </h3>
 <p>Download the <em>tar.gz</em> from github or clone the main branch. Uncompress and run the following command from within the uncompressed scigenex folder:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>R CMD INSTALL .</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>R CMD INSTALL .</span></code></pre></div>
 <p>Then load the library from within R.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(scigenex)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -115,22 +115,22 @@
 <h3 id="installation-of-mcl-from-source">Installation of MCL from source<a class="anchor" aria-label="anchor" href="#installation-of-mcl-from-source"></a>
 </h3>
 <p>One also can install MCL from source using the following code.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Download the latest version of mcl </span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>wget http<span class="sc">:</span><span class="er">//</span>micans.org<span class="sc">/</span>mcl<span class="sc">/</span>src<span class="sc">/</span>mcl<span class="sc">-</span>latest.tar.gz</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Uncompress and install mcl</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>tar xvfz mcl<span class="sc">-</span>latest.tar.gz</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>cd mcl<span class="sc">-</span>xx<span class="sc">-</span>xxx</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>.<span class="sc">/</span>configure</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>make</span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>sudo make install</span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co"># You should get mcl in your path</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>mcl <span class="sc">-</span>h</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Download the latest version of mcl </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>wget http<span class="op">:</span><span class="er">//</span>micans.org<span class="op">/</span>mcl<span class="op">/</span>src<span class="op">/</span>mcl<span class="op">-</span>latest.tar.gz</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co"># Uncompress and install mcl</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>tar xvfz mcl<span class="op">-</span>latest.tar.gz</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>cd mcl<span class="op">-</span>xx<span class="op">-</span>xxx</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>.<span class="op">/</span>configure</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>make</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>sudo make install</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co"># You should get mcl in your path</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>mcl <span class="op">-</span>h</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="installation-of-mcl-from-sources">Installation of MCL from sources<a class="anchor" aria-label="anchor" href="#installation-of-mcl-from-sources"></a>
 </h3>
 <p>Finally you may install MCL using conda. Importantly, the mcl command should be available in your PATH from within R.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>conda install <span class="sc">-</span>c bioconda mcl</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>conda install <span class="op">-</span>c bioconda mcl</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -138,28 +138,28 @@
 <h1 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h1>
 <p>The scigenex library contains several datasets including the pbmc3k_medium which is a subset from pbmc3k 10X dataset.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">library</span>(scigenex)</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">set_verbosity</span>(<span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># Load a dataset</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">load_example_dataset</span>(<span class="st">"7871581/files/pbmc3k_medium"</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># Select informative genes</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">select_genes</span>(pbmc3k_medium,</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>                     <span class="at">distance =</span> <span class="st">"pearson"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>                     <span class="at">row_sum=</span><span class="dv">5</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>                     </span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co"># Cluster informative features</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a> </span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="do">## Construct and partition the graph</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">gene_clustering</span>(res, </span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>                       <span class="at">inflation =</span> <span class="fl">1.5</span>, </span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>                       <span class="at">threads =</span> <span class="dv">4</span>)</span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>                        </span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co"># Display the heatmap of gene clusters</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">top_genes</span>(res)</span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="fu">plot_heatmap</span>(res, <span class="at">cell_clusters =</span> Seurat<span class="sc">::</span><span class="fu">Idents</span>(pbmc3k_medium))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">library</span>(Seurat)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">library</span>(scigenex)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">set_verbosity</span>(<span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co"># Load a dataset</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="kw">load_example_dataset</span>(<span class="st">"7871581/files/pbmc3k_medium"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="co"># Select informative genes</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">select_genes</span>(pbmc3k_medium,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>                     <span class="dt">distance =</span> <span class="st">"pearson"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>                     <span class="dt">row_sum=</span><span class="dv">5</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>                     </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="co"># Cluster informative features</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="co">## Construct and partition the graph</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">gene_clustering</span>(res, </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>                       <span class="dt">inflation =</span> <span class="fl">1.5</span>, </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a>                       <span class="dt">threads =</span> <span class="dv">4</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>                        </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a><span class="co"># Display the heatmap of gene clusters</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>res &lt;-<span class="st"> </span><span class="kw">top_genes</span>(res)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a><span class="kw">plot_heatmap</span>(res, <span class="dt">cell_clusters =</span> Seurat<span class="op">::</span><span class="kw">Idents</span>(pbmc3k_medium))</span></code></pre></div>
 <div class="section level3">
 <h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h3>

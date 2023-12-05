@@ -106,14 +106,14 @@ Then we call successively the `select_genes()` function which will select inform
 
 # Select informative genes
 pbmc_scigenex <- select_genes(pbmc3k,
-                              k = 80,
+                              k = 50,
                               distance_method = "pearson",
                               which_slot = "data",
                               row_sum=2)
 
 # Run MCL
 pbmc_scigenex <- gene_clustering(pbmc_scigenex,
-                                 k = 5,
+                                 k_g = 5,
                                  threads = 2,
                                  inflation = 2)
 ```
@@ -199,7 +199,7 @@ The visualization of a heatmap containing all cells and modules may be time cons
 ```{r}
 plot_ggheatmap(pbmc_scigenex[1:4, ], 
                use_top_genes = FALSE,
-               ident=Idents(pbmc3k)) + ggtitle("Cluster 1") 
+               ident=Idents(pbmc3k)) + ggtitle("Cluster 1 to 4") 
 ```
 
 ### Heatmap of representative genes
@@ -298,13 +298,9 @@ The scigenex package offers a certain number of function dedicated to spatial tr
 
 ### Pre-process spatial transcriptomics data
 
-Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat.
+Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat. 
 
 ```{r}
-#download.file("https://zenodo.org/record/8278514/files/brain1_gn.Rdata", 
-#              destfile = "brain1_gn.Rdata", 
-#              quiet = TRUE)
-#load("brain1_gn.Rdata")
 brain1 <- LoadData("stxBrain", type = "anterior1")
 brain1 <- NormalizeData(brain1, 
                         normalization.method = "LogNormalize",
@@ -322,14 +318,18 @@ SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 
 ### Calling scigenex
 
-We will call scigenex and apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
+Here we will used the alternative clustering methods proposed by scigenex ("reciprocal_neighborhood"). It is advise to increase slightly k (here k will be set to 80). After call to gene_clustering(). apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
 
 ```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
 res_brain <- select_genes(data=brain1,
+                    k=80,
                     distance_method="pearson",
                     row_sum = 5)
 
-gc_brain <- gene_clustering(res_brain, keep_nn = F, inflation = 2.2, threads = 4)
+gc_brain <- gene_clustering(res_brain, 
+                            method = "reciprocal_neighborhood", 
+                            inflation = 2, 
+                            threads = 4)
 gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
 df <- cluster_stats(gcs_brain) 
 gcss_brain <- gcs_brain[df$sd_total > 0.1, ]
@@ -357,7 +357,7 @@ plot_ggheatmap(gcss_brain,
 Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 6 to 9.
 
 ```{r}
-plot_heatmap(gcss_brain[6:9, ], 
+plot_heatmap(gcss_brain[6:9,], 
              use_top_genes = TRUE, 
              cell_clusters = Seurat::Idents(brain1))
 # Try selecting a subset of columns/rows
