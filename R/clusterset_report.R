@@ -17,6 +17,7 @@
 #' @param report_id Used to label code chunks.
 #' @examples 
 #' # Load datasets
+#' set_verbosity(3)
 #' library(Seurat)
 #' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
@@ -29,7 +30,7 @@ cluster_set_report <- function(clusterset_object=NULL,
                                seurat_object=NULL,
                                file_path = NULL,
                                force=FALSE,
-                               report_title="Scigenex report",
+                               report_title="Scigenex_report",
                                report_author="Unknown",
                                heatmap_colors = colors_for_gradient("Ju1"),
                                heatmap_color_ident=NULL,
@@ -95,9 +96,9 @@ cluster_set_report <- function(clusterset_object=NULL,
   
   rmd_code <- 
     r"(---
-title: {{ title }}
-author: {{ report_author }}
-date: '`r Sys.Date()`'
+title: "{{ title }}"
+author: "{{ report_author }}"
+date: "`r Sys.Date()`"
 output:
   html_document:
     fig_caption: yes
@@ -105,10 +106,7 @@ output:
     theme: cerulean
     toc: no
     toc_depth: 3
-    pandoc_args: [
-      '+RTS', '-K{{ pandoc_heap_size }}',
-      '-RTS'
-    ]
+    pandoc_args: [ '+RTS', '-K{{ pandoc_heap_size }}',  '-RTS', '-M', 'title={{title}}' ]
 params:
   year: 
   region: Europe
