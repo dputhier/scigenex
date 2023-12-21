@@ -1,6 +1,7 @@
 ---
 author: "Julie Bavais"
 date: "`r Sys.Date()`"
+title: "Guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::knitr}
