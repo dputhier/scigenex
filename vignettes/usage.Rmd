@@ -113,7 +113,7 @@ pbmc_scigenex <- select_genes(pbmc3k,
 
 # Run MCL
 pbmc_scigenex <- gene_clustering(pbmc_scigenex,
-                                 k_g = 5,
+                                 s = 5,
                                  threads = 2,
                                  inflation = 2)
 ```

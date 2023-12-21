@@ -1,6 +1,15 @@
 
 # Changelog
 
+
+## v1.4.8
+
+* Change k_g argument to 's' for clarity purpose. 
+
+## v1.4.7
+
+* Updated html doc.
+
 ## v1.4.6
 
 * Prefix version with a v...
