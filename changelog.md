@@ -3,7 +3,9 @@
 
 ## v1.4.7
 
-* Change k_g argument to 's' in gene_clustering() function for clarity purpose. 
+* Change k_g argument to 's' in gene_clustering() function for clarity purpose.
+
+* Added dependency to DT library (required by cluster_set_report()).
 
 * Updated html doc.
 

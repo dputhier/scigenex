@@ -56,13 +56,11 @@ Create a report from a ClusterSet and Seurat object.
 }
 \examples{
 # Load datasets
-# load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
-# load_example_dataset('7871581/files/pbmc3k_medium')
-# cluster_set_report(clusterset_object = pbmc3k_medium_clusters_enr[1:2,],
-#                    seurat_object=pbmc3k_medium)
-# load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-# load_example_dataset("7870305/files/lymph_node_tiny_2")
-# cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1:2,],
+library(Seurat)
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+# Create a report
+cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1,],
                    seurat_object=lymph_node_tiny_2,
                    pt_size=6)
 }
