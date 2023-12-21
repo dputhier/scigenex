@@ -491,8 +491,6 @@ A report can be created using the `cluster_set_report()`function. The arguments 
 # gcss_brain <- enrich_go(gcss_brain, species = "Mmusculus", ontology = "BP")
 # cluster_set_report(clusterset_object = gcss_brain, seurat_object = brain1)
 ```
-An example report is available [here]().
-
 
 ## Session info
 

@@ -17,13 +17,11 @@
 #' @param report_id Used to label code chunks.
 #' @examples 
 #' # Load datasets
-#' # load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
-#' # load_example_dataset('7871581/files/pbmc3k_medium')
-#' # cluster_set_report(clusterset_object = pbmc3k_medium_clusters_enr[1:2,],
-#' #                    seurat_object=pbmc3k_medium)
-#' # load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-#' # load_example_dataset("7870305/files/lymph_node_tiny_2")
-#' # cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1:2,],
+#' library(Seurat)
+#' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' # Create a report
+#' cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1,],
 #'                    seurat_object=lymph_node_tiny_2,
 #'                    pt_size=6)
 #' @export cluster_set_report
@@ -125,6 +123,9 @@ params:
 
 
 ```{r {{report_id}}_addModuleScore, echo=FALSE, result='hide', message=FALSE, warning=FALSE }
+library(scigenex)
+library(Seurat)
+library(DT)
 set_verbosity(0)
 load("{{data_path}}")
 clusterset_object <- top_genes(clusterset_object)
@@ -169,7 +170,7 @@ DimPlot(seurat_object, reduction = "umap", label = TRUE)
 
 ```{r {{report_id}}_spatialdimplot, echo=FALSE, result='hide', message=FALSE, warning=FALSE }
 if("Spatial" %in% names(seurat_object@assays)){
-  SpatialDimPlot(seurat_object, label = TRUE, label.size = 3, pt.size.factor = 1.4)
+  Seurat::SpatialDimPlot(seurat_object, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 }
 ```
 
