@@ -1,12 +1,9 @@
 
 # Changelog
 
-
-## v1.4.8
+## v1.4.7
 
 * Change k_g argument to 's' in gene_clustering() function for clarity purpose. 
-
-## v1.4.7
 
 * Updated html doc.
 
