@@ -97,6 +97,10 @@ doc_html:
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VER)."
 
+readme:
+	@ echo "- Rebuilting README.md from README.Rmd"
+	@ echo "devtools::build_readme()" | R --slave
+
 
 all: doc install check test
 
