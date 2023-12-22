@@ -20,7 +20,7 @@ cat(
 	badge_repostatus("Active"),
 	badge_license("MIT"),
 	badge_last_commit(ref="dputhier/scigenex"),
-	badge_coveralls("dputhier/scigenex")
+	badge_codecov("dputhier/scigenex")
 )
 ```
 

@@ -2,6 +2,8 @@
 
 <img src="https://github.com/dputhier/scigenex/raw/master/inst/sticker/scigenex_logo.png" width="150" height="150" align="right"/>
 
+    ## ✔ Setting active project to '/Users/puthier/Documents/git/project_dev/scigenex'
+
 [![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
@@ -9,7 +11,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![](https://img.shields.io/github/last-commit/dputhier/scigenex.svg)](https://github.com/dputhier/scigenex/commits/main)
-[![](https://coveralls.io/repos/github/dputhier/scigenex/badge.svg?branch=main)](https://coveralls.io/github/dputhier/scigenex)
+[![](https://codecov.io/gh/dputhier/scigenex/branch/main/graph/badge.svg)](https://codecov.io/gh/dputhier/scigenex)
 
 # SciGeneX repository
 
