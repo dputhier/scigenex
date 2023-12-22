@@ -6,7 +6,7 @@
 \usage{
 gene_clustering(
   object = NULL,
-  k_g = 5,
+  s = 5,
   inflation = 2,
   method = c("closest_neighborhood", "reciprocal_neighborhood"),
   threads = 1,
@@ -18,7 +18,7 @@ gene_clustering(
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{k_g}{If method="closest_neighborhood", k_g is an integer value indicating the size of the neighbourhood used for graph construction. Default is 5.}
+\item{s}{If method="closest_neighborhood", s is an integer value indicating the size of the neighbourhood used for graph construction. Default is 5.}
 
 \item{inflation}{A numeric value indicating the MCL inflation parameter. Default is 2.}
 

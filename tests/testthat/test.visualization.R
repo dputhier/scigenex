@@ -735,7 +735,7 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
   clust_set <- gene_clustering(object = clust_set,
                                inflation = 1.2,
                                keep_nn = FALSE,
-                               k = 5,
+                               s = 5,
                                threads = 1)
   
   ident <- Seurat::Idents(pbmc_small)
@@ -793,7 +793,7 @@ testthat::test_that("Test non interactive heatmaps.", {
   clust_set <- gene_clustering(object = clust_set,
                                inflation = 1.2,
                                keep_nn = FALSE,
-                               k = 5,
+                               s = 5,
                                threads = 1)
   
   ident <- Seurat::Idents(pbmc_small)
@@ -1612,7 +1612,7 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
   clust_set <- gene_clustering(object = clust_set,
                                inflation = 1.2,
                                keep_nn = FALSE,
-                               k = 5,
+                               s = 5,
                                threads = 1)
   
   ident <- Seurat::Idents(pbmc_small)
@@ -1670,7 +1670,7 @@ testthat::test_that("Test non interactive heatmaps.", {
   clust_set <- gene_clustering(object = clust_set,
                                inflation = 1.2,
                                keep_nn = FALSE,
-                               k = 5,
+                               s = 5,
                                threads = 1)
   
   ident <- Seurat::Idents(pbmc_small)

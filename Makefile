@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.4.2
+VERSION=1.4.7
 
 .PHONY: help
 
@@ -11,7 +11,7 @@ VERSION=1.4.2
 help:
 	@echo ""
 	@echo "- Available targets:"
-	@echo ""
+	@echo "- Info: make check VERSION=1.4.2 "
 	@perl -ne 'if(	/^(\w+):/){print "\t",$$1,"\n"}' $(MAKEFILE)
 	@echo ""
 	@echo ""
@@ -91,6 +91,8 @@ doc_html:
 	@ echo "#-----------------------------------------------#"
 	@ echo "# Building doc                                  #"
 	@ echo "#-----------------------------------------------#"
+	@ echo "- Rebuilting README.md from README.Rmd"
+	@ echo "devtools::build_readme()" | R --slave
 	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site()" | R --slave
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VER)."
