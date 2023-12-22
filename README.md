@@ -2,8 +2,6 @@
 
 <img src="https://github.com/dputhier/scigenex/raw/master/inst/sticker/scigenex_logo.png" width="150" height="150" align="right"/>
 
-    ## ✔ Setting active project to '/Users/puthier/Documents/git/project_dev/scigenex'
-
 [![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
