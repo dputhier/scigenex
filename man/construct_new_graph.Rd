@@ -4,7 +4,7 @@
 \alias{construct_new_graph}
 \title{Construct a new graph for a ClusterSet object}
 \usage{
-construct_new_graph(object = NULL, k = 5, output_path = tempdir(), name = NULL)
+construct_new_graph(object = NULL, k = 5, output_path = NULL, name = NULL)
 }
 \arguments{
 \item{object}{A ClusterSet object.}

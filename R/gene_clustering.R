@@ -64,10 +64,20 @@ gene_clustering <- function(object = NULL,
                             inflation = 2,
                             method=c("closest_neighborhood", "reciprocal_neighborhood"),
                             threads = 1,
-                            output_path = tempdir(),
+                            output_path = NULL,
                             name = NULL,
                             keep_nn = FALSE) {
   
+  if(is.null(output_path)){
+    output_path <- tempdir()
+    dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
+  }else{
+    if (!dir.exists(output_path)) {
+      dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
+    }
+  }
+  
+
   
   method <- match.arg(method)
   
@@ -179,19 +189,24 @@ gene_clustering <- function(object = NULL,
 #' @export construct_new_graph
 construct_new_graph <- function(object = NULL,
                                 k = 5,
-                                output_path = tempdir(),
+                                output_path = NULL,
                                 name = NULL) {
+  
+  if(is.null(output_path)){
+    output_path <- tempdir()
+    dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
+  }
+  
   ## Check format object arg
   check_format_cluster_set(object)
   
-  ## Generate output path
   # Get working directory if output_path is "."
   if (output_path == ".") {
     output_path <- getwd()
   }
-  # Check if output directory exists. If not stop the command.
-  if (!file.exists(output_path)) {
-    stop("Output directory provided does not exist.")
+
+  if (!dir.exists(output_path)) {
+    dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
   }
   
   # Create a random string if name is not provided
@@ -376,17 +391,21 @@ construct_new_graph <- function(object = NULL,
 #' @keywords internal
 #' @export keep_dbf_graph
 keep_dbf_graph <- function(object = NULL,
-                           output_path = tempdir(),
+                           output_path = NULL,
                            name = NULL) {
   
-  ## Generate output path
+  if(is.null(output_path)){
+    output_path <- tempdir()
+    dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
+  }
+
   # Get working directory if output_path is "."
   if (output_path == ".") {
     output_path <- getwd()
   }
-  # Check if output directory exists. If not stop the command.
-  if (!file.exists(output_path)) {
-    stop("Output directory provided does not exist.")
+
+  if (!dir.exists(output_path)) {
+    dir.create(output_path, recursive = TRUE, showWarnings = FALSE)
   }
   
   # Create a random string if name is not provided

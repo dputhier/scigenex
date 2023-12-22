@@ -10,7 +10,7 @@ gene_clustering(
   inflation = 2,
   method = c("closest_neighborhood", "reciprocal_neighborhood"),
   threads = 1,
-  output_path = tempdir(),
+  output_path = NULL,
   name = NULL,
   keep_nn = FALSE
 )
