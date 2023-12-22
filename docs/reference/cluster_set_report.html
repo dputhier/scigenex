@@ -61,7 +61,7 @@
 <span>  seurat_object <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  file_path <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  report_title <span class="op">=</span> <span class="st">"Scigenex report"</span>,</span>
+<span>  report_title <span class="op">=</span> <span class="st">"Scigenex_report"</span>,</span>
 <span>  report_author <span class="op">=</span> <span class="st">"Unknown"</span>,</span>
 <span>  heatmap_colors <span class="op">=</span> <span class="fu"><a href="colors_for_gradient.html">colors_for_gradient</a></span><span class="op">(</span><span class="st">"Ju1"</span><span class="op">)</span>,</span>
 <span>  heatmap_color_ident <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -137,6 +137,7 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load datasets</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="set_verbosity.html">set_verbosity</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7870305/files/lymph_node_tiny_clusters_2"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7870305/files/lymph_node_tiny_clusters_2 has been loaded. </span>
@@ -146,12 +147,14 @@
 <span class="r-in"><span><span class="fu">cluster_set_report</span><span class="op">(</span>clusterset_object <span class="op">=</span> <span class="va">lymph_node_tiny_clusters_2</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>,</span></span>
 <span class="r-in"><span>                   seurat_object<span class="op">=</span><span class="va">lymph_node_tiny_2</span>,</span></span>
 <span class="r-in"><span>                   pt_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Checking ClusterSet format. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Report ID is : e5cde0b97ddfd882ccff69e313ef025a </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Preparing report. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dumping dataset </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing report into /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpSaDOLL/scigenex_report8a0149e99306.Rmd </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Rmd file written at : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpSaDOLL/scigenex_report8a0149e99306.Rmd </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing report into /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpd2nXJP/scigenex_reportdeb41de8da24.Rmd </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Rmd file written at : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpd2nXJP/scigenex_reportdeb41de8da24.Rmd </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Rendering report. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating report at : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpSaDOLL/scigenex_report8a0149e99306.html </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating report at : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpd2nXJP/scigenex_reportdeb41de8da24.html </span>
 </code></pre></div>
     </div>
   </div>

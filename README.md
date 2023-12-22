@@ -7,6 +7,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![](https://img.shields.io/github/last-commit/dputhier/scigenex.svg)](https://github.com/dputhier/scigenex/commits/main)
+[![Codecov test coverage](https://codecov.io/gh/dputhier/scigenex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dputhier/scigenex?branch=main)
 
 # SciGeneX repository
 
