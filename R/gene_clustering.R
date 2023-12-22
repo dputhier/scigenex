@@ -6,7 +6,7 @@
 #' Then the method use the MCL algorithm to detect clusters of co-expressed genes (method argument).
 #'
 #' @param object A ClusterSet object.
-#' @param k_g If method="closest_neighborhood", k_g is an integer value indicating the size of the neighbourhood used for graph construction. Default is 5.
+#' @param s If method="closest_neighborhood", s is an integer value indicating the size of the neighbourhood used for graph construction. Default is 5.
 #' @param inflation A numeric value indicating the MCL inflation parameter. Default is 2.
 #' @param method Which method to use to build the graph. If "closest_neighborhood", creates an edge between 
 #' two selected genes a and b if b is part of the kg closest nearest neighbors of a (with kg < k). If "reciprocal_neighborhood"),
@@ -60,7 +60,7 @@
 #' @export gene_clustering
 
 gene_clustering <- function(object = NULL,
-                            k_g = 5,
+                            s = 5,
                             inflation = 2,
                             method=c("closest_neighborhood", "reciprocal_neighborhood"),
                             threads = 1,
@@ -83,7 +83,7 @@ gene_clustering <- function(object = NULL,
                              name = name)
   } else {
     object <- construct_new_graph(object = object,
-                                  k = k_g,
+                                  k = s,
                                   output_path = output_path,
                                   name = name)
   }

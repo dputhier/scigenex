@@ -9,7 +9,7 @@ cluster_set_report(
   seurat_object = NULL,
   file_path = NULL,
   force = FALSE,
-  report_title = "Scigenex report",
+  report_title = "Scigenex_report",
   report_author = "Unknown",
   heatmap_colors = colors_for_gradient("Ju1"),
   heatmap_color_ident = NULL,
@@ -56,13 +56,12 @@ Create a report from a ClusterSet and Seurat object.
 }
 \examples{
 # Load datasets
-# load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
-# load_example_dataset('7871581/files/pbmc3k_medium')
-# cluster_set_report(clusterset_object = pbmc3k_medium_clusters_enr[1:2,],
-#                    seurat_object=pbmc3k_medium)
-# load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-# load_example_dataset("7870305/files/lymph_node_tiny_2")
-# cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1:2,],
+set_verbosity(3)
+library(Seurat)
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+# Create a report
+cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1,],
                    seurat_object=lymph_node_tiny_2,
                    pt_size=6)
 }

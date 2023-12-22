@@ -18,7 +18,7 @@ testthat::test_that("Check if plot_profile is working properly", {
   clust_set <- gene_clustering(object = clust_set,
                                inflation = 1.2,
                                keep_nn = FALSE,
-                               k = 5,
+                               s = 5,
                                threads = 1)
   
   p <- plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small), size_text_y=5)

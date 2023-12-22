@@ -1,6 +1,7 @@
 ---
 author: "Julie Bavais"
 date: "`r Sys.Date()`"
+title: "Guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::knitr}
@@ -106,14 +107,14 @@ Then we call successively the `select_genes()` function which will select inform
 
 # Select informative genes
 pbmc_scigenex <- select_genes(pbmc3k,
-                              k = 80,
+                              k = 50,
                               distance_method = "pearson",
                               which_slot = "data",
                               row_sum=2)
 
 # Run MCL
 pbmc_scigenex <- gene_clustering(pbmc_scigenex,
-                                 k = 5,
+                                 s = 5,
                                  threads = 2,
                                  inflation = 2)
 ```
@@ -199,7 +200,7 @@ The visualization of a heatmap containing all cells and modules may be time cons
 ```{r}
 plot_ggheatmap(pbmc_scigenex[1:4, ], 
                use_top_genes = FALSE,
-               ident=Idents(pbmc3k)) + ggtitle("Cluster 1") 
+               ident=Idents(pbmc3k)) + ggtitle("Cluster 1 to 4") 
 ```
 
 ### Heatmap of representative genes
@@ -298,13 +299,10 @@ The scigenex package offers a certain number of function dedicated to spatial tr
 
 ### Pre-process spatial transcriptomics data
 
-Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat.
+Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat. 
 
 ```{r}
-#download.file("https://zenodo.org/record/8278514/files/brain1_gn.Rdata", 
-#              destfile = "brain1_gn.Rdata", 
-#              quiet = TRUE)
-#load("brain1_gn.Rdata")
+suppressWarnings(SeuratData::InstallData("stxBrain"))
 brain1 <- LoadData("stxBrain", type = "anterior1")
 brain1 <- NormalizeData(brain1, 
                         normalization.method = "LogNormalize",
@@ -322,14 +320,19 @@ SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 
 ### Calling scigenex
 
-We will call scigenex and apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
+Here we will used the alternative clustering methods proposed by scigenex ("reciprocal_neighborhood"). It is advise to increase slightly k (here k will be set to 80). After call to `gene_clustering()` we apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
 
 ```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
 res_brain <- select_genes(data=brain1,
+                    k=80,
                     distance_method="pearson",
                     row_sum = 5)
 
-gc_brain <- gene_clustering(res_brain, keep_nn = F, inflation = 2.2, threads = 4)
+gc_brain <- gene_clustering(res_brain, 
+                            method = "reciprocal_neighborhood", 
+                            inflation = 2, 
+                            threads = 4)
+
 gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
 df <- cluster_stats(gcs_brain) 
 gcss_brain <- gcs_brain[df$sd_total > 0.1, ]
@@ -357,7 +360,7 @@ plot_ggheatmap(gcss_brain,
 Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 6 to 9.
 
 ```{r}
-plot_heatmap(gcss_brain[6:9, ], 
+plot_heatmap(gcss_brain[6:9,], 
              use_top_genes = TRUE, 
              cell_clusters = Seurat::Idents(brain1))
 # Try selecting a subset of columns/rows
@@ -404,10 +407,10 @@ plot_spatial(seurat_obj = brain1,
   ggtitle("Hpca expression pattern.")
 ```
 
-Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also contains several genes related to *Regulator Of G Protein* family and *Potassium Channel Tetramerization Domain*. This can be checked with a regular expression using the `grep_clust()` function:
+Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also contains several genes related to *Regulator Of G Protein* family. This can be checked with a regular expression using the `grep_clust()` function:
 
 ```{r}
-grep_clust(gcss_brain[Hpca_clust, ], "(Rgs)|(Kctd)",)
+grep_clust(gcss_brain[Hpca_clust, ], "^Rgs")
 ```
 
 To visualize the topological distribution of signals in each cluster we will *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* compute module score using the Seurat `AddModuleScore()`function and *(iii)* store the results in the seurat object. Note that, for each gene module, signal will be scaled from 0 to 1. This will allow us to have a shared legend between all plots
@@ -428,8 +431,7 @@ The topological profile of cluster `r Hpca_clust` (that contains Hpca, a strong 
 
 ```{r plot_spatialHpca_clust, fig.width=6, fig.height=4}
 plot_spatial(seurat_obj = brain1, 
-             metadata = paste("Cluster", setNames(Hpca_clust, NULL), 
-                                         sep=""), 
+             metadata = paste("Cluster", setNames(Hpca_clust, NULL), sep=""), 
              pt_size=2.5, coord_flip = T) + hull_white
 ```
 
@@ -490,8 +492,6 @@ A report can be created using the `cluster_set_report()`function. The arguments 
 # gcss_brain <- enrich_go(gcss_brain, species = "Mmusculus", ontology = "BP")
 # cluster_set_report(clusterset_object = gcss_brain, seurat_object = brain1)
 ```
-An example report is available [here]().
-
 
 ## Session info
 

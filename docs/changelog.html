@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.7</span>
       </span>
     </div>
 
@@ -50,19 +50,50 @@
     </div>
 
 <div id="changelog" class="section level1">
-
+<div class="section level2">
+<h2 id="v147">v1.4.7<a class="anchor" aria-label="anchor" href="#v147"></a></h2>
+<ul><li><p>Change k_g argument to ‘s’ in <code><a href="reference/gene_clustering.html">gene_clustering()</a></code> function for clarity purpose.</p></li>
+<li><p>Added dependency to DT library (required by <code><a href="reference/cluster_set_report.html">cluster_set_report()</a></code>).</p></li>
+<li><p>Updated html doc.</p></li>
+<li><p>Fix an issue with pandoc in <code>clusterset_report()</code>.</p></li>
+<li><p>Improved importfrom in <code>clusterset_report()</code>.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="v146">v1.4.6<a class="anchor" aria-label="anchor" href="#v146"></a></h2>
+<ul><li>Prefix version with a v…</li></ul></div>
+<div class="section level2">
+<h2 id="v145">v1.4.5<a class="anchor" aria-label="anchor" href="#v145"></a></h2>
+<ul><li>keep_nn argument is deprecated (<code><a href="reference/gene_clustering.html">gene_clustering()</a></code>).</li></ul></div>
+<div class="section level2">
+<h2 id="v144">v1.4.4<a class="anchor" aria-label="anchor" href="#v144"></a></h2>
+<ul><li>Fix #134</li></ul></div>
+<div class="section level2">
+<h2 id="v143">v1.4.3<a class="anchor" aria-label="anchor" href="#v143"></a></h2>
+<ul><li><p>Remove DynmicTreeCut dependency.</p></li>
+<li><p>Fix bug #137.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="v142">v1.4.2<a class="anchor" aria-label="anchor" href="#v142"></a></h2>
+<ul><li><p>Added color for cell cluster in <code><a href="reference/plot_ggheatmap.html">plot_ggheatmap()</a></code>.</p></li>
+<li><p>Updated doc.</p></li>
+</ul></div>
+<div class="section level2">
+<h2 id="v141">v1.4.1<a class="anchor" aria-label="anchor" href="#v141"></a></h2>
+<ul><li><p>Minor bug fix.</p></li>
+<li><p>Updated doc</p></li>
+</ul></div>
 <div class="section level2">
 <h2 id="v140">v1.4.0<a class="anchor" aria-label="anchor" href="#v140"></a></h2>
 <ul><li>Update of the documentation</li>
-<li>Added support for spatial transcriptomics: getFlippedTissueCoordinates(), plot_spatial(), plot_spatial_panel()</li>
-<li>Added import from matrix and Seurat object: cluster_set_from_matrix(), cluster_set_from_seurat().</li>
-<li>Added cluster_stats() and plot_cluster_stats() to perform statistics on clusters.</li>
-<li>Added export: cluster_set_to_xls().</li>
-<li>Added compare_genesets() and plot_cmp_genesets() to compare gene lists with various statistics.</li>
-<li>Added plot_clust_enrichments() to compare functional enrichment over clusters.</li>
-<li>Added plot_ggheatmap() for statically display heatmaps.</li>
-<li>Added plot_markers_to_clusters() to map markers onto clusters.</li>
-<li>Added top_by_go() to select top genes by GO terms.</li>
+<li>Added support for spatial transcriptomics: <code><a href="reference/getFlippedTissueCoordinates.html">getFlippedTissueCoordinates()</a></code>, <code><a href="reference/plot_spatial.html">plot_spatial()</a></code>, <code><a href="reference/plot_spatial_panel.html">plot_spatial_panel()</a></code>.</li>
+<li>Added import from matrix and Seurat object: <code><a href="reference/cluster_set_from_matrix.html">cluster_set_from_matrix()</a></code>, <code><a href="reference/cluster_set_from_seurat.html">cluster_set_from_seurat()</a></code>.</li>
+<li>Added <code><a href="reference/cluster_stats.html">cluster_stats()</a></code> and <code><a href="reference/plot_cluster_stats.html">plot_cluster_stats()</a></code> to perform statistics on clusters.</li>
+<li>Added export: <code><a href="reference/cluster_set_to_xls.html">cluster_set_to_xls()</a></code>.</li>
+<li>Added <code><a href="reference/compare_genesets.html">compare_genesets()</a></code> and <code><a href="reference/plot_cmp_genesets.html">plot_cmp_genesets()</a></code> to compare gene lists with various statistics.</li>
+<li>Added <code><a href="reference/plot_clust_enrichments.html">plot_clust_enrichments()</a></code> to compare functional enrichment over clusters.</li>
+<li>Added <code><a href="reference/plot_ggheatmap.html">plot_ggheatmap()</a></code> for statically display heatmaps.</li>
+<li>Added <code><a href="reference/plot_markers_to_clusters.html">plot_markers_to_clusters()</a></code> to map markers onto clusters.</li>
+<li>Added <code><a href="reference/top_by_go.html">top_by_go()</a></code> to select top genes by GO terms.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="v131">v1.3.1<a class="anchor" aria-label="anchor" href="#v131"></a></h2>
@@ -110,58 +141,36 @@
 </ul></div>
 <div class="section level2">
 <h2 id="v101">v1.0.1<a class="anchor" aria-label="anchor" href="#v101"></a></h2>
-<div class="section level3">
-<h3 id="bug-fixes">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes"></a></h3>
-</div>
+<div class="section level3"><h3 id="bug-fixes">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes"></a></h3></div>
 <div class="section level3">
 <h3 id="apicli-changes">API/CLI Changes<a class="anchor" aria-label="anchor" href="#apicli-changes"></a></h3>
 <ul><li>Scigenex now depends on R 4.0.0</li>
 <li>No more reference to Biobase in the code.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="code-changes">Code changes<a class="anchor" aria-label="anchor" href="#code-changes"></a></h3>
-</div>
-<div class="section level3">
-<h3 id="new-features">New Features<a class="anchor" aria-label="anchor" href="#new-features"></a></h3>
-</div>
+<div class="section level3"><h3 id="code-changes">Code changes<a class="anchor" aria-label="anchor" href="#code-changes"></a></h3></div>
+<div class="section level3"><h3 id="new-features">New Features<a class="anchor" aria-label="anchor" href="#new-features"></a></h3></div>
 </div>
 <div class="section level2">
 <h2 id="v017">v0.1.7<a class="anchor" aria-label="anchor" href="#v017"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1"></a></h3>
-<ul><li>Fix call to MCL.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="apicli-changes-1">API/CLI Changes<a class="anchor" aria-label="anchor" href="#apicli-changes-1"></a></h3>
-</div>
-<div class="section level3">
-<h3 id="code-changes-1">Code changes<a class="anchor" aria-label="anchor" href="#code-changes-1"></a></h3>
-</div>
-<div class="section level3">
-<h3 id="new-features-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-1"></a></h3>
-</div>
+<ul><li>Fix call to MCL.</li></ul></div>
+<div class="section level3"><h3 id="apicli-changes-1">API/CLI Changes<a class="anchor" aria-label="anchor" href="#apicli-changes-1"></a></h3></div>
+<div class="section level3"><h3 id="code-changes-1">Code changes<a class="anchor" aria-label="anchor" href="#code-changes-1"></a></h3></div>
+<div class="section level3"><h3 id="new-features-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-1"></a></h3></div>
 </div>
 <div class="section level2">
 <h2 id="v016">v0.1.6<a class="anchor" aria-label="anchor" href="#v016"></a></h2>
-<div class="section level3">
-<h3 id="bug-fixes-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2"></a></h3>
-</div>
+<div class="section level3"><h3 id="bug-fixes-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2"></a></h3></div>
 <div class="section level3">
 <h3 id="apicli-changes-2">API/CLI Changes<a class="anchor" aria-label="anchor" href="#apicli-changes-2"></a></h3>
-<ul><li>Now provides a support for R MCL library (not recommended).</li>
-</ul></div>
-<div class="section level3">
-<h3 id="code-changes-2">Code changes<a class="anchor" aria-label="anchor" href="#code-changes-2"></a></h3>
-</div>
-<div class="section level3">
-<h3 id="new-features-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-2"></a></h3>
-</div>
+<ul><li>Now provides a support for R MCL library (not recommended).</li></ul></div>
+<div class="section level3"><h3 id="code-changes-2">Code changes<a class="anchor" aria-label="anchor" href="#code-changes-2"></a></h3></div>
+<div class="section level3"><h3 id="new-features-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-2"></a></h3></div>
 </div>
 <div class="section level2">
 <h2 id="v014">v0.1.4<a class="anchor" aria-label="anchor" href="#v014"></a></h2>
-<div class="section level3">
-<h3 id="bug-fixes-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-3"></a></h3>
-</div>
+<div class="section level3"><h3 id="bug-fixes-3">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-3"></a></h3></div>
 <div class="section level3">
 <h3 id="apicli-changes-3">API/CLI Changes<a class="anchor" aria-label="anchor" href="#apicli-changes-3"></a></h3>
 <ul><li><p>The <em>DBFMCLresult</em> object has been replaced by a more versatile object: <em>ClusterSet</em>.</p></li>
@@ -170,11 +179,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="code-changes-3">Code changes<a class="anchor" aria-label="anchor" href="#code-changes-3"></a></h3>
-<ul><li>Several code changes which were not clearly traced at the moment… Sry.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="new-features-3">New Features<a class="anchor" aria-label="anchor" href="#new-features-3"></a></h3>
-</div>
+<ul><li>Several code changes which were not clearly traced at the moment… Sry.</li></ul></div>
+<div class="section level3"><h3 id="new-features-3">New Features<a class="anchor" aria-label="anchor" href="#new-features-3"></a></h3></div>
 </div>
 </div>
 

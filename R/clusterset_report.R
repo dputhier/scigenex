@@ -17,21 +17,22 @@
 #' @param report_id Used to label code chunks.
 #' @examples 
 #' # Load datasets
-#' # load_example_dataset("8028126/files/pbmc3k_medium_clusters_enr")
-#' # load_example_dataset('7871581/files/pbmc3k_medium')
-#' # cluster_set_report(clusterset_object = pbmc3k_medium_clusters_enr[1:2,],
-#' #                    seurat_object=pbmc3k_medium)
-#' # load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-#' # load_example_dataset("7870305/files/lymph_node_tiny_2")
-#' # cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1:2,],
+#' set_verbosity(3)
+#' library(Seurat)
+#' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+#' load_example_dataset("7870305/files/lymph_node_tiny_2")
+#' # Create a report
+#' cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1,],
 #'                    seurat_object=lymph_node_tiny_2,
 #'                    pt_size=6)
+#' @importFrom DT datatable
+#' @importFrom Seurat AddModuleScore DimPlot SpatialDimPlot 
 #' @export cluster_set_report
 cluster_set_report <- function(clusterset_object=NULL,
                                seurat_object=NULL,
                                file_path = NULL,
                                force=FALSE,
-                               report_title="Scigenex report",
+                               report_title="Scigenex_report",
                                report_author="Unknown",
                                heatmap_colors = colors_for_gradient("Ju1"),
                                heatmap_color_ident=NULL,
@@ -41,6 +42,14 @@ cluster_set_report <- function(clusterset_object=NULL,
                                verbosity=1,
                                pandoc_heap_size ="512m",
                                report_id=rlang::hash(clusterset_object)) {
+  
+  # This function are used but are enclosed in the markdown
+  # So I force the system to know we are using it.
+  
+  tmp_fun <- DT::datatable
+  tmp_fun <- Seurat::AddModuleScore 
+  tmp_fun <-  Seurat::DimPlot 
+  tmp_fun <-  Seurat::SpatialDimPlot
   
   check_format_cluster_set(clusterset_object)
   print_msg(paste0("Report ID is : ", report_id), msg_type = "DEBUG")
@@ -97,9 +106,9 @@ cluster_set_report <- function(clusterset_object=NULL,
   
   rmd_code <- 
     r"(---
-title: {{ title }}
-author: {{ report_author }}
-date: '`r Sys.Date()`'
+title: "{{ title }}"
+author: "{{ report_author }}"
+date: "`r Sys.Date()`"
 output:
   html_document:
     fig_caption: yes
@@ -107,10 +116,7 @@ output:
     theme: cerulean
     toc: no
     toc_depth: 3
-    pandoc_args: [
-      '+RTS', '-K{{ pandoc_heap_size }}',
-      '-RTS'
-    ]
+    pandoc_args: [ '+RTS', '-K{{ pandoc_heap_size }}',  '-RTS', '-M', 'title={{title}}' ]
 params:
   year: 
   region: Europe
@@ -125,6 +131,9 @@ params:
 
 
 ```{r {{report_id}}_addModuleScore, echo=FALSE, result='hide', message=FALSE, warning=FALSE }
+library(scigenex)
+library(Seurat)
+library(DT)
 set_verbosity(0)
 load("{{data_path}}")
 clusterset_object <- top_genes(clusterset_object)
@@ -169,7 +178,7 @@ DimPlot(seurat_object, reduction = "umap", label = TRUE)
 
 ```{r {{report_id}}_spatialdimplot, echo=FALSE, result='hide', message=FALSE, warning=FALSE }
 if("Spatial" %in% names(seurat_object@assays)){
-  SpatialDimPlot(seurat_object, label = TRUE, label.size = 3, pt.size.factor = 1.4)
+  Seurat::SpatialDimPlot(seurat_object, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 }
 ```
 

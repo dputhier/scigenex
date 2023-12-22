@@ -19,7 +19,7 @@ res <- select_genes(data=pbmc_small,
 res <- gene_clustering(object = res,
                        inflation = 1.2,
                        keep_nn = FALSE,
-                       k = 5,
+                       s = 5,
                        threads = 1)
 set_verbosity(2)
 
