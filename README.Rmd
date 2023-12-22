@@ -19,7 +19,8 @@ cat(
 	badge_lifecycle(stage = "stable", color="green"),
 	badge_repostatus("Active"),
 	badge_license("MIT"),
-	badge_last_commit(ref="dputhier/scigenex")
+	badge_last_commit(ref="dputhier/scigenex"),
+	badge_coveralls("dputhier/scigenex")
 )
 ```
 
