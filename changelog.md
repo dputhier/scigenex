@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.4.8
+
+* Fix an issue with temp dir.
+
 ## v1.4.7
 
 * Change k_g argument to 's' in `gene_clustering()` function for clarity purpose.

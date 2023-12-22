@@ -4,7 +4,7 @@
 \alias{keep_dbf_graph}
 \title{Construct a graph based on selected genes in a ClusterSet object and their neighbors}
 \usage{
-keep_dbf_graph(object = NULL, output_path = tempdir(), name = NULL)
+keep_dbf_graph(object = NULL, output_path = NULL, name = NULL)
 }
 \arguments{
 \item{object}{A ClusterSet object.}

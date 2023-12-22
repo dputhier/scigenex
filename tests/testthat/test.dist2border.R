@@ -1,6 +1,9 @@
 library(Seurat)
 library(ggplot2)
 
+# Set verbosity to 0
+set_verbosity(0)
+
 load_example_dataset("7870305/files/lymph_node_tiny_2")
 identity <- Idents(lymph_node_tiny_2)
 classes <- ifelse(Idents(lymph_node_tiny_2) == 7, 1, 0)

@@ -11,6 +11,9 @@ html_preview: false
 library("badger")
 ```
 
+<img src="https://github.com/dputhier/scigenex/raw/master/inst/sticker/scigenex_logo.png" width="150" height="150" align="right"/>
+
+
 ```{r, echo = FALSE, results='asis'}
 cat(
 	badge_lifecycle(stage = "stable", color="green"),
