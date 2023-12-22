@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.4.2
+VERSION=1.4.7
 
 .PHONY: help
 
@@ -11,7 +11,7 @@ VERSION=1.4.2
 help:
 	@echo ""
 	@echo "- Available targets:"
-	@echo ""
+	@echo "- Info: make check VERSION=1.4.2 "
 	@perl -ne 'if(	/^(\w+):/){print "\t",$$1,"\n"}' $(MAKEFILE)
 	@echo ""
 	@echo ""

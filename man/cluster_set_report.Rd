@@ -9,7 +9,7 @@ cluster_set_report(
   seurat_object = NULL,
   file_path = NULL,
   force = FALSE,
-  report_title = "Scigenex report",
+  report_title = "Scigenex_report",
   report_author = "Unknown",
   heatmap_colors = colors_for_gradient("Ju1"),
   heatmap_color_ident = NULL,
@@ -56,6 +56,7 @@ Create a report from a ClusterSet and Seurat object.
 }
 \examples{
 # Load datasets
+set_verbosity(3)
 library(Seurat)
 load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 load_example_dataset("7870305/files/lymph_node_tiny_2")

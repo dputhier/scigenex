@@ -25,6 +25,8 @@
 #' cluster_set_report(clusterset_object = lymph_node_tiny_clusters_2[1,],
 #'                    seurat_object=lymph_node_tiny_2,
 #'                    pt_size=6)
+#' @importFrom DT datatable
+#' @importFrom Seurat AddModuleScore DimPlot SpatialDimPlot 
 #' @export cluster_set_report
 cluster_set_report <- function(clusterset_object=NULL,
                                seurat_object=NULL,
@@ -40,6 +42,14 @@ cluster_set_report <- function(clusterset_object=NULL,
                                verbosity=1,
                                pandoc_heap_size ="512m",
                                report_id=rlang::hash(clusterset_object)) {
+  
+  # This function are used but are enclosed in the markdown
+  # So I force the system to know we are using it.
+  
+  tmp_fun <- DT::datatable
+  tmp_fun <- Seurat::AddModuleScore 
+  tmp_fun <-  Seurat::DimPlot 
+  tmp_fun <-  Seurat::SpatialDimPlot
   
   check_format_cluster_set(clusterset_object)
   print_msg(paste0("Report ID is : ", report_id), msg_type = "DEBUG")
