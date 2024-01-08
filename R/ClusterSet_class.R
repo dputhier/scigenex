@@ -678,25 +678,24 @@ setMethod("cluster_set_to_xls",
             
             
             gnc <- gene_cluster(object)
-            xlsx::write.xlsx(
-              data.frame(
-                cluster = unname(gnc),
-                "official_gene_symbol" = names(gnc)
-              ),
-              file = file_path,
-              sheetName = "All_modules"
+            df_list <- list(x=data.frame(All_modules = unname(gnc),
+                                         "official_gene_symbol" = names(gnc)))
+            
+            tmp <- lapply(object@gene_clusters, as.data.frame)
+            for(i in 1:length(tmp)){
+              colnames(tmp[[i]]) <- paste0("Module ", i)
+              
+            }
+            
+            df_list <- append(df_list, tmp)                           
+
+            WriteXLS::WriteXLS(
+              x=df_list,
+              ExcelFileName = file_path,
+              SheetNames = c("All_modules", paste0("Module ", 1:length(object@gene_clusters)))
             )
             
             
-            for (i in 1:nclust(object)) {
-              xlsx::write.xlsx(
-                data.frame("official_gene_symbol" = object@gene_clusters[[i]]),
-                file = file_path,
-                sheetName = paste0("Module ", i),
-                append = TRUE
-              )
-              
-            }
           })
 
 
