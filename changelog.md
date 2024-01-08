@@ -1,5 +1,9 @@
-
+changelog.md
 # Changelog
+
+## v1.4.9
+
+* Remove xlxs dependency in favor with WriteXLS dependency (to avoid rJava dependency).
 
 ## v1.4.8
 

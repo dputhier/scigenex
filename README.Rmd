@@ -11,7 +11,7 @@ html_preview: false
 library("badger")
 ```
 
-<img src="https://github.com/dputhier/scigenex/raw/master/inst/sticker/scigenex_logo.png" width="150" height="150" align="right"/>
+<img src="https://github.com/dputhier/scigenex/blob/main/inst/sticker/scigenex_logo.png" width="150"  align="right"/>
 
 
 ```{r, echo = FALSE, results='asis'}
@@ -19,7 +19,8 @@ cat(
 	badge_lifecycle(stage = "stable", color="green"),
 	badge_repostatus("Active"),
 	badge_license("MIT"),
-	badge_last_commit(ref="dputhier/scigenex")
+	badge_last_commit(ref="dputhier/scigenex"),
+	badge_codecov("dputhier/scigenex")
 )
 ```
 

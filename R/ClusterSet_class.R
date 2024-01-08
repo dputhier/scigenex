@@ -682,6 +682,7 @@ setMethod("cluster_set_to_xls",
                                          "official_gene_symbol" = names(gnc)))
             
             tmp <- lapply(object@gene_clusters, as.data.frame)
+            
             for(i in 1:length(tmp)){
               colnames(tmp[[i]]) <- paste0("Module ", i)
               
@@ -695,8 +696,7 @@ setMethod("cluster_set_to_xls",
               SheetNames = c("All_modules", paste0("Module ", 1:length(object@gene_clusters)))
             )
             
-            
-          })
+})
 
 
 

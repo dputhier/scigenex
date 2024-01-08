@@ -9,10 +9,11 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![](https://img.shields.io/github/last-commit/dputhier/scigenex.svg)](https://github.com/dputhier/scigenex/commits/main)
+[![](https://codecov.io/gh/dputhier/scigenex/branch/main/graph/badge.svg)](https://codecov.io/gh/dputhier/scigenex)
 
 # SciGeneX repository
 
-## :arrow\_double\_down: Installation
+## :arrow_double_down: Installation
 
 ### System requirements
 
@@ -49,7 +50,7 @@ You may skip this step as the latest versions of SciGeneX will call
 `scigenex::install_mcl()`to install MCL in `~/.scigenex` directory if
 this program is not found in the PATH.
 
-#### Installation of MCL using install\_mcl()
+#### Installation of MCL using install_mcl()
 
 The `install_mcl()` has been developed to ease MCL installation. This
 function should be call automatically from within R when calling the
@@ -81,15 +82,15 @@ should be available in your PATH from within R.
 ## Example
 
 The scigenex library contains several datasets including the
-pbmc3k\_medium which is a subset from pbmc3k 10X dataset.
+pbmc3k_medium which is a subset from pbmc3k 10X dataset.
 
     library(Seurat)
     library(scigenex)
     set_verbosity(1)
-    
+
     # Load a dataset
     load_example_dataset("7871581/files/pbmc3k_medium")
-    
+
     # Select informative genes
     res <- select_genes(pbmc3k_medium,
                          distance = "pearson",
