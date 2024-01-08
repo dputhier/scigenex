@@ -1,6 +1,6 @@
 <!-- README.md is generated from README.Rmd using devtools::build_readme(). Please edit that file -->
 
-<img src="https://github.com/dputhier/scigenex/blob/main/inst/sticker/scigenex_logo.png" width="150"  align="right"/>
+<img src="https://raw.githubusercontent.com/dputhier/scigenex/main/inst/sticker/scigenex_logo.png" width="150"  align="right"/>
 
 [![](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
