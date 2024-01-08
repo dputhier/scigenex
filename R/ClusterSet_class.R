@@ -649,38 +649,42 @@ setGeneric("cluster_set_to_xls",
 #' dir.create(tp_dir, showWarnings = FALSE)
 #' cluster_set_to_xls(pbmc3k_medium_clusters, file.path(tp_dir, "test.xls"))
 #' @export cluster_set_to_xls
-setMethod("cluster_set_to_xls",            
-          signature("ClusterSet"), 
+setMethod("cluster_set_to_xls",
+          signature("ClusterSet"),
           function(object,
                    file_path = NULL) {
-            
             check_format_cluster_set(object)
             object <- reorder_genes(object)
             dir_n <- dirname(file_path)
             
-            if(!dir.exists(dir_n))
+            if (!dir.exists(dir_n))
               print_msg("Directory does not exist. Exiting.", msg_type = "STOP")
             
             
-            if(file.exists(file_path))
+            if (file.exists(file_path))
               print_msg("File  already exist. Exiting.", msg_type = "STOP")
             
-
-              gnc <- gene_cluster(object)
-              xlsx::write.xlsx(data.frame(cluster=unname(gnc), "official_gene_symbol"=names(gnc)), 
-                               file=file_path, 
-                               sheetName="All_modules")
-              
-
-              for(i in 1:nclust(object)){
-                xlsx::write.xlsx(data.frame("official_gene_symbol"=object@gene_clusters[[i]]), 
-                                 file=file_path, 
-                                 sheetName=paste0("Module ", i),
-                                 append =TRUE)
+            
+            gnc <- gene_cluster(object)
+            df_list <- list(x=data.frame(All_modules = unname(gnc),
+                                         "official_gene_symbol" = names(gnc)))
+            
+            tmp <- lapply(object@gene_clusters, as.data.frame)
+            for(i in 1:length(tmp)){
+              colnames(tmp[[i]]) <- paste0("Module ", i)
               
             }
+            
+            df_list <- append(df_list, tmp)                           
+            
+            WriteXLS::WriteXLS(
+              x=df_list,
+              ExcelFileName = file_path,
+              SheetNames = c("All_modules", paste0("Module ", 1:length(object@gene_clusters)))
+            )
+            
+            
 })
-
 
 
 ################################################################################
