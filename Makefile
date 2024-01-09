@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.4.11
+VERSION=1.4.12
 
 .PHONY: help
 
@@ -11,7 +11,7 @@ VERSION=1.4.11
 help:
 	@echo ""
 	@echo "- Available targets:"
-	@echo "- Info: make check VERSION=1.4.8 "
+	@echo "- Info: make check VERSION=1.4.12 "
 	@perl -ne 'if(	/^(\w+):/){print "\t",$$1,"\n"}' $(MAKEFILE)
 	@echo ""
 	@echo ""
@@ -65,11 +65,11 @@ codecov:
 #------------------------------------------------------------------
 
 __check_defined_VER:
-	@[ "$(VER)" ] || ( echo ">> VER is not set"; exit 1 )
+	@[ "$(VERSION)" ] || ( echo ">> VER is not set"; exit 1 )
 
 release: __check_defined_VER
 	@ echo "#-----------------------------------------------#"
-	@ echo "# Starting the release $(VER)                   #"
+	@ echo "# Starting the release $(VERSION)                   #"
 	@ echo "#-----------------------------------------------#"
 
 release_bump: release
@@ -79,13 +79,13 @@ release_bump: release
 	@ git checkout ./DESCRIPTION
 	@ git checkout ./Makefile
 	@ R CMD INSTALL .
-	@ cat ./DESCRIPTION | perl -npe "s/Version: .*/Version: $(VER)/" > /tmp/scigenex.bump
+	@ cat ./DESCRIPTION | perl -npe "s/Version: .*/Version: $(VERSION)/" > /tmp/scigenex.bump
 	@ mv /tmp/scigenex.bump ./DESCRIPTION
-	@ cat ./Makefile | perl -npe 's/^VERSION=.*/VERSION=$(VER)/' > /tmp/scigenex.bump
+	@ cat ./Makefile | perl -npe 's/^VERSION=.*/VERSION=$(VERSION)/' > /tmp/scigenex.bump
 	@ mv /tmp/scigenex.bump ./Makefile 
-	@ echo "Version was bump to $(VER)"
+	@ echo "Version was bump to $(VERSION)"
 	@ make install
-	@ git commit -m 'Bumped version $(VER)'
+	@ git commit -m 'Bumped version $(VERSION)'
 
 readme:
 	@ echo "- Rebuilting README.md from README.Rmd"
@@ -97,7 +97,7 @@ doc_html:
 	@ echo "#-----------------------------------------------#"
 	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site()" | R --slave
 	@ git add -u
-	@ git commit -m "Updated html doc to $(VER)."
+	@ git commit -m "Updated html doc to $(VERSION)."
 
 
 all: doc install check test
