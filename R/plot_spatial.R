@@ -100,11 +100,29 @@ plot_spatial <- function(seurat_obj=NULL,
     
   }else{
     if(intensity_slot=="sct"){
+      
       slot_intensity <- seurat_obj@assays$SC
+      
     }else if(intensity_slot=="counts"){
-      slot_intensity <- seurat_obj@assays$Spatial@counts
+      
+      slot_intensity <- try({
+        seurat_obj@assays$Spatial$counts
+      }, silent = TRUE)
+      
+      if (class(slot_intensity) == "try-error") {
+        slot_intensity <- seurat_obj@assays$Spatial@counts
+      }
+
     }else if(intensity_slot=="data"){
-      slot_intensity <- seurat_obj@assays$Spatial@data
+      
+      slot_intensity <- try({
+        seurat_obj@assays$Spatial$data
+      }, silent = TRUE)
+      
+      if (class(slot_intensity) == "try-error") {
+        slot_intensity <- seurat_obj@assays$Spatial@data
+      }
+      
     }
     
     if(is.null(slot_intensity))
