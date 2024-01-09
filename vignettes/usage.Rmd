@@ -11,24 +11,24 @@ vignette: >
 
 # Guided tutorial
 
-The simplest way to use scigenex is to run the following steps using the Seurat R package:
+The easiest way to use scigenex is to perform the following steps using the Seurat R package:
 
 * Load data into a Seurat object
-* Perform quality Control
+* Perform quality control
 * Perform normalization
 
 
-The subsequent object can be used as input to SciGeneX. Alternatively, you can provide a normalized matrix as input.
+The resulting object can be used as input to SciGeneX. You can also provide a normalized matrix as input.
 
 
 ## The dataset
 
-For this tutorial, we will use scRNA-seq dataset of Peripheral Blood Mononuclear Cells (PBMC) freely available on 10x Genomics web site. This dataset contains 2700 single cells sequenced on the Illumina NextSeq 500.  This dataset can be downloaded [**from 10X Genomics**](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz) or through the `SeuratData`library
+For this tutorial, we'll be using a peripheral blood mononuclear cell (PBMC) scRNA-seq dataset available from the 10x Genomics website. This dataset contains 2700 individual cells sequenced on the Illumina NextSeq 500 and can be downloaded [**from 10X Genomics**](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)  web site or via the `SeuratData` library.
 
 ### Preparing the pbmc3k dataset
 
-In this step, we will run the classical pre-processing steps from the. Please refer to [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html) for more informations. 
-If you have already pre-processed your data with Seurat or have a normalized count matrix as input, you can skip this step.
+In this step, we'll carry out the classic pre-processing steps of the tutorial. Please refer to [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html) for more information. 
+If you have already pre-processed your data with Seurat, or if you have a normalized count matrix as input, you can skip this step.
 
 
 ```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide'}
@@ -82,13 +82,13 @@ DimPlot(pbmc3k, reduction = "umap")
 
 ## Extracting gene modules using SciGeneX
 
-In this section, we use the previously generated Seurat object as an input to run SciGeneX main commands. This command run the main algorithm that will:
+In this section, we use the previously generated Seurat object as input to run the main SciGeneX commands. This command executes the main algorithm which will:
  
-* Identify and extracts co-expressed genes
-* Partition selected genes into clusters
-* Store the result in a ClusterSet object
+* identify and extract co-expressed genes
+* divide the selected genes into groups
+* store the result in a ClusterSet object.
 
-First we will load the Scigenex library. To limit the verbosity of Scigenex function we will set the verbosity level to zero (which will switch off information messages and debugging messages).
+First, we'll load the SciGeneX library. To limit the verbosity of the SciGeneX functions, we'll set the verbosity level to zero (which will disable information and debug messages).
 
 
 ```{r loadlib1, warning=FALSE, results='hide', echo = FALSE, eval=TRUE}
@@ -141,7 +141,7 @@ ncol(pbmc_scigenex)
 nclust(pbmc_scigenex)
 ```
 
-At this step, several modules need to be filtered out as lots of them may be singletons. Interestingly, the `ClusterSet` class implements the indexing operator/function ("["). The first argument/dimension of the indexing function corresponds to the cluster stored in the object. The second dimension correspond to cell names. As an example, one can simply keep gene modules with size (*i.e* number of genes) greater than 7 using the following code. This leads to an object containing `r nclust(pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ])` gene modules.
+At this stage, several modules need to be filtered, as many of them may be singletons. Interestingly, the `ClusterSet` class implements the indexing operator/function ("["). The first argument/dimension of the indexing function corresponds to the cluster stored in the object. The second dimension corresponds to the cell/spot names. As an example, we can simply store gene modules whose size (*i.e. number of genes) is greater than 7 using the following code. The result is an object containing gene modules `r nclust(pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ])`.
 
 ```{r}
 pbmc_scigenex <- pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ]
@@ -190,11 +190,11 @@ tail(gene_cluster(pbmc_scigenex))
 ```
 
 
-## Visualisation using heatmap
+## Heatmap visualization
 
-### Visualization of specific gene modules
+### Visualization of specific genetic modules
 
-The visualization of a heatmap containing all cells and modules may be time consuming and may require important memory ressources. A first alternative is to look at gene cluster individually or a subset of clusters. The gene modules can be visualized using the `plot_heatmap()` or the `plot_ggheatmap()` functions. The first is mainly intented to propose interactive vizualisation based on the `iheatmapr` library and allows to easily browse the results and zoom on particular regions of the heatmap The second should be mostly used for non interactive vizualisation. This second solution leads to a plot that is more easilly customable as it is bas    ed on the ggplot framework. Here we use `plot_ggheatmap()` to have a look at the 4 first clusters. Note that here, we choose to order columns/cells on `Seurat::FindClusters` results.
+Visualizing a heatmap containing all cells and modules can be time-consuming and require significant memory resources. A first alternative is to examine gene modules individually or a subset of modules. Gene modules can be visualized using the `plot_heatmap()` the `plot_ggheatmap()` functions. The former is primarily intended to provide an interactive visualization based on the `iheatmapr` library, and allows easy browsing of results and zooming in on particular regions of the heatmap. This second solution leads to a diagram that is more easily customized, as it is based on the ggplot framework. Here, we use `plot_ggheatmap()` to view the first 4 clusters. Note that here, we choose to order the columns/cells on the results of `Seurat::FindClusters`.
 
 
 ```{r}
@@ -205,7 +205,7 @@ plot_ggheatmap(pbmc_scigenex[1:4, ],
 
 ### Heatmap of representative genes
 
-However one alternative is to extract the most representative genes of each cluster. This can be achieved using the `top_genes()` function. This function will store the identifiers of these representative genes inside the `top_genes` slot of the `ClusterSet` object. The `top_genes`slot can be accessed the `get_genes()` function. 
+However, an alternative is to extract the most representative genes from each group. This can be achieved using the `top_genes()` function. This function stores the identifiers of these representative genes in the `top_genes` slot of the `ClusterSet` object. The `get_genes()` function is used to access the `top_genes` slot. 
 
 ```{r}
 pbmc_scigenex <- top_genes(pbmc_scigenex)
@@ -225,7 +225,7 @@ plot_ggheatmap(pbmc_scigenex,
 
 ### Interactive heatmap
 
-A very interesting feature of Scigenex is its ability to display gene expression levels across cells through interactive heatmaps. Using this feature, user can interactively assess the expression levels in selected cells or cluster or on the whole dataset. However, it is generally advisable, when using all the clusters to restrict analysis using `top_genes=TRUE`. Here we will display the expression levels across cells of cluster 3 to 5.
+A very interesting feature of SciGeneX is its ability to display gene expression levels in cells/spots using interactive heatmaps. With this function, the user can interactively evaluate expression levels in selected cells or groups, or over the whole dataset. However, it is generally advisable, when using all clusters, to restrict the analysis using `top_genes=TRUE`. Here, we'll display expression levels in cells from clusters 3 to 5.
 
 ```{r}
 plot_heatmap(pbmc_scigenex[3:5, ], 
@@ -293,7 +293,7 @@ plot_markers_to_clusters(pbmc_scigenex,
 
 ## Working with spatial transcriptomics datasets
 
-The scigenex package offers a certain number of function dedicated to spatial transcriptomic data analysis. At the moment these functions have been mainly developed to analyse VISIUM technology (10X Genomics).
+The scigenex package offers a certain number of functions dedicated to spatial transcriptomic data analysis. At the moment these functions have been mainly developed to analyse VISIUM technology (10X Genomics).
 
 ### Searching for gene modules
 
@@ -413,7 +413,7 @@ Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also cont
 grep_clust(gcss_brain[Hpca_clust, ], "^Rgs")
 ```
 
-To visualize the topological distribution of signals in each cluster we will *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* compute module score using the Seurat `AddModuleScore()`function and *(iii)* store the results in the seurat object. Note that, for each gene module, signal will be scaled from 0 to 1. This will allow us to have a shared legend between all plots
+To visualize the topological distribution of signals in each cluster, we'll *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* calculate the module score using Seurat's `AddModuleScore()` function and *(iii)* store the results in the seurat object. Note that, for each gene module, the signal will be scaled from 0 to 1, allowing us to have a common legend for all plots.
 
 ```{r AddModuleScore, echo=TRUE, eval=TRUE, warning=FALSE}
 brain1 <- AddModuleScore(brain1, features = gcss_brain@gene_clusters)
@@ -435,7 +435,7 @@ plot_spatial(seurat_obj = brain1,
              pt_size=2.5, coord_flip = T) + hull_white
 ```
 
-We can easily see that the pattern of the gene module containing Hpca is very similar to the Hpca pattern. Moreover this gene module pattern also strongly overlaps the Seurat cell cluster number 0. However, the analysis seems to indicate that a more complex tissue architecture exists as Hpca signal extends beyond Seurat cluster 0.
+We can easily see that the Hpca-containing gene module pattern is very similar to the Hpca pattern. However, the analysis suggests a more complex tissue architecture than expected, as the Hpca signal extends beyond Seurat's cluster 0.
 
 We will then display the topological signal of all clusters using the `plot_spatial_panel()` function. 
 
@@ -455,9 +455,9 @@ print(p + guide_area())
 
 ## Comparing FindAllMarkers() and Scigenex gene modules
 
-It can be interesting to compare the clusters obtained using unsupervised approach (scigenex) to the list of genes obtained using `Seurat::FindAllMarkers()` that search for differentially expressed genes between the cell populations infered by `Seurat::FindClusters()`. Here the comparison is performed using results obtained for spatial transcriptomics data.
+It may be interesting to compare the clusters obtained using an unsupervised approach (SciGeneX) with those obtained from `Seurat::FindAllMarkers()`, which searches for genes differentially expressed between cell populations deduced by `Seurat::FindClusters()`. 
 
-First note that `Seurat::FindAllMarkers()` will tend to find shared markers between populations. 
+As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers are shared between gene modules.
 
 ```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE, results='hide'}
 seurat_brain_mk <- Seurat::FindAllMarkers(brain1)
@@ -485,7 +485,7 @@ plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "square", 
 
 ## Creating a report
 
-A report can be created using the `cluster_set_report()`function. The arguments of these function are the processed clusterSet and the corresponding Seurat processed object. Ideally the clusterSet object should contain functionnal annotation (see `enrich_go()`). Currently, the process of creating a report may be rather long. It may also produce heavy html files that may take some time to load into de web browser.
+A report can be created using the `cluster_set_report()` function. The arguments to this function are the processed clusterSet and the corresponding processed Seurat object. Ideally, the clusterSet object should contain functional annotations (see `enrich_go()`). Currently, the process of creating a report can be quite time consuming It can also produce heavy html files which may take some time to load in the web browser.
 
 ```{r report, echo=TRUE, eval=FALSE, warning=FALSE, results='hide'}
 # Uncomment to prepare the report.

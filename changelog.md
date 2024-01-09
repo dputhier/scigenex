@@ -1,6 +1,11 @@
 changelog.md
 # Changelog
 
+## v1.4.10
+
+* Fix NAMESPACE (xlxs dependency).
+* Rebuilt doc in html format.
+
 ## v1.4.9
 
 * Remove xlxs dependency in favor with WriteXLS dependency (to avoid rJava dependency).

@@ -651,8 +651,8 @@ setGeneric("cluster_set_to_xls",
 #' @description  Write gene lists from a Cluster-Set object into an excel sheet.
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
-#' @importFrom xlsx write.xlsx
-#' @examples
+#' @importFrom WriteXLS WriteXLS
+#' @examples 
 #' #' Load an example dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #'
