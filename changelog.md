@@ -1,6 +1,15 @@
 changelog.md
 # Changelog
 
+## v1.4.12
+
+* Rebuilt doc in html format.
+
+## v1.4.11
+
+* Fix #141
+
+
 ## v1.4.10
 
 * Fix NAMESPACE (xlxs dependency).
