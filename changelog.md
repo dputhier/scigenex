@@ -1,4 +1,3 @@
-changelog.md
 # Changelog
 
 ## v1.4.10
