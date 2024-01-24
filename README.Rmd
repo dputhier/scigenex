@@ -11,7 +11,7 @@ html_preview: false
 library("badger")
 ```
 
-<img src="https://raw.githubusercontent.com/dputhier/scigenex/main/inst/sticker/scigenex_logo.png" width="150"  align="right"/>
+<!-- <img src="https://raw.githubusercontent.com/dputhier/scigenex/main/inst/sticker/scigenex_logo.png" width="150"  align="right"/> -->
 
 
 ```{r, echo = FALSE, results='asis'}
