@@ -7,14 +7,17 @@
 #' @param object A \code{ClusterSet} object.
 #' @param top A value for the number of genes to select from each cluster.
 #' @param cluster A vector of gene cluster identity.
-#'
+#' @param fast Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.
+#' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.
 #' @return A \code{ClusterSet} object.
 #' @export top_genes
 #' @keywords internal
 setGeneric("top_genes", 
            function(object,
                     top = 20,
-                    cluster = "all")
+                    cluster = "all",
+                    fast=FALSE,
+                    distance_method=NULL)
              standardGeneric("top_genes")
 )
 
@@ -24,7 +27,8 @@ setGeneric("top_genes",
 #' @param object A \code{ClusterSet} object.
 #' @param top A value for the number of genes to select from each cluster.
 #' @param cluster A vector of gene cluster identity.
-#'
+#' @param fast Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.
+#' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.   
 #' @return A \code{ClusterSet} object.
 #' @export top_genes
 #'
@@ -42,7 +46,9 @@ setMethod("top_genes",
           signature("ClusterSet"), 
               function(object,
                       top = 20,
-                      cluster = "all") {
+                      cluster = "all",
+                      fast=FALSE,
+                      distance_method=NULL) {
   
   ## Check format object arg
   check_format_cluster_set(object)
@@ -64,20 +70,47 @@ setMethod("top_genes",
     }
   }
   
-  # Initialization for the for loop
+  
   clusters <- object@gene_clusters
   genes_top <- matrix(ncol = top)
   
-  # Extract top co-expressed genes for each gene cluster
+  print_msg("Extracting top co-expressed genes for each gene cluster", 
+            msg_type="DEBUG")
+  
+  # Compute distances between genes in cluster i
+  # Use the same distance used by SciGeneX
+  if(!is.null(distance_method)){
+    if(!distance_method %in% c("kendall", "spearman", "cosine", "euclidean", "pearson")){
+      print('dist_method should be one of "kendall", "spearman", "cosine", "euclidean", "pearson".', 
+            msg_type="STOP")
+    }
+
+    dist_method <-distance_method
+
+  }else{
+    dist_method <- object@parameters$distance_method
+  }
+  
   for (i in cluster) {
+    
+    print_msg(paste0("Processing cluster ", i), msg_type="DEBUG")
+    
     # Extract gene names in cluster i
     genes <- clusters[[i]]
     
-    # Compute distances between genes in cluster i
-    # Use the same distance used by SciGeneX
-    dist_method <- object@parameters$distance_method
+    if (dist_method == "pearson"){
+      if(!fast){
+        dist <- cor(t(object@data[genes, ]), method = dist_method)
+      }else{
+        print_msg("Using fast computation of pearson correlations.", msg_type="DEBUG")
+        dist <- as.matrix(qlcMatrix::corSparse(t(object@data[genes, ])))
+        colnames(dist) <- genes
+        rownames(dist) <- genes
+      }
+      dist <- 1 - dist
+    }
     
-    if (dist_method %in% c("kendall", "pearson", "spearman")) {
+    if(dist_method %in% c("kendall", "spearman")) {
       dist <- cor(t(object@data[genes, ]), method = dist_method)
       dist <- 1 - dist
     }
@@ -85,6 +118,8 @@ setMethod("top_genes",
     if (dist_method == "cosine") {
       dist <- as.matrix(qlcMatrix::cosSparse(t(object@data[genes, ])))
       dist <- 1 - dist
+      colnames(dist) <- genes
+      rownames(dist) <- genes
     }
     
     if (dist_method == "euclidean") {
@@ -96,6 +131,9 @@ setMethod("top_genes",
       diag(dist) <- NA
     }
     
+    if (dist_method == "unknown") {
+      print_msg("Distance type is unknown", msg_type = "STOP")
+    }
 
     # Compute mean correlation for each gene in cluster i
     dist_means <- colMeans(dist, na.rm = TRUE)

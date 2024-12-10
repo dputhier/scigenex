@@ -1,6 +1,6 @@
-#' Plot mean expression profiles of each cluster from a ClusterSet object.
+#' @title Plot mean expression profiles of each cluster from a ClusterSet object.
 #'
-#' This function generates a barplot showing the expression profiles of
+#' @description This function generates a barplot showing the expression profiles of
 #' cell type-specific genes across different cell types.
 #'
 #' @param data A ClusterSet object.
@@ -33,7 +33,7 @@
 #' @importFrom scales hue_pal
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 .data
-#' @export
+#' @export plot_profiles
 plot_profiles <- function(data = NULL,
                           ident = NULL,
                           nb_column = NULL,
@@ -144,5 +144,144 @@ plot_profiles <- function(data = NULL,
       strip.text = ggplot2::element_blank()
     ) +
     ggplot2::scale_fill_manual(values=color_cell_type, name=legend_name)
+  
+}
+
+#' @title Plot a summarized view of expression profiles.
+#'
+#' @description This function generates line plots displaying mean expression profiles accross
+#' cell types and modules.
+#'
+#' @param data A ClusterSet object.
+#' @param ident A named vector containing the cell type identities for each cell.
+#' Typically the result from the Idents() function on a Seurat object (see Seurat library).
+#' @param color_cell_type A named vector of colors (with cell type as names) used to 
+#' distinguish between different clusters.
+#' @param size_text_y The font size of the y-axis tick labels.
+#' @param size_label The font size of the cluster labels.
+#' @param legend_name A name for the legend.
+#' @param center Whether to center (substract mean) each row.
+#' @return A ggplot object showing the expression profiles of cell type-specific genes.
+#'
+#' @examples
+#' # Load a Seurat object
+#' load_example_dataset("7871581/files/pbmc3k_medium")
+#' # Load a ClusterSet object
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#'                             
+#' plot_multi_profiles(pbmc3k_medium_clusters, ident=Seurat::Idents(pbmc3k_medium))
+#' pal <- discrete_palette(nclust(pbmc3k_medium_clusters))
+#' names(pal) <- names(pbmc3k_medium_clusters@gene_clusters)
+#' plot_multi_profiles(pbmc3k_medium_clusters, 
+#'         ident=Seurat::Idents(pbmc3k_medium), color_cluster = pal)
+#' plot_multi_profiles(pbmc3k_medium_clusters[2:4,], 
+#'       ident=Seurat::Idents(pbmc3k_medium), 
+#'       color_cluster = pal[2:4],
+#'       center=TRUE)
+#' 
+#' @importFrom ggplot2 geom_col facet_wrap theme_minimal geom_text scale_color_manual
+#' @importFrom scales hue_pal
+#' @importFrom reshape2 melt
+#' @importFrom ggplot2 .data
+#' @export plot_multi_profiles
+plot_multi_profiles <- function(data = NULL,
+                                ident = NULL,
+                                color_cluster = NULL,
+                                size_text_y = 5,
+                                size_label = 2,
+                                legend_name="Cell\ntype",
+                                nb_column=NULL,
+                                center=FALSE) {
+  
+  if (is.null(nb_column))
+    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
+  
+  if (is.null(data) | !inherits(data, "ClusterSet"))
+    print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
+
+  centers <- data@dbf_output$center
+  
+  if(center){
+    centers <- sweep(centers, 1, STATS=rowMeans(centers), FUN="-")
+  }
+
+  if (is.null(ident))
+    print_msg("Please provide cell identification.", msg_type = "STOP")
+  
+  if (length(ident) < ncol(data@data))
+    print_msg("The length of the 'ident' argument should be equal or greater to ncol(data).", msg_type = "STOP")
+  
+  if (is.null(names(ident)))
+    names(ident) <- colnames(data@data)
+  
+  ident <- ident[colnames(data@data)]
+  
+  ident <- sort(ident)
+  ident <- factor(ident, levels=levels(as.factor(ident)), ordered = T)
+  
+  if (is.null(color_cluster)){
+    color_cluster <- scales::hue_pal()(nrow(centers))
+  }else{
+    if(nrow(centers) != length(color_cluster)){
+      print_msg(paste0("Number of clusters: ", nrow(centers)), msg_type = "DEBUG")
+      print_msg(paste0("Number of colors: ", length(color_cluster)), msg_type = "DEBUG")
+      print_msg("The number of colors should be the same as the number of gene clusters.", 
+                msg_type = "STOP")
+    }
+
+    if(is.null(names(color_cluster)))
+      print_msg("The color_cluster argument should be a named vector.", 
+                msg_type = "STOP")
+    
+    if(!all(names(color_cluster) %in% unique(rownames(centers))))
+      print_msg("The color_cluster argument contains unknown clusters.", 
+                msg_type = "STOP")
+  }
+  
+  nb_cells <- ncol(centers)
+  
+  print_msg(paste0("Number of cells: ", nb_cells),
+            msg_type = "INFO")
+  
+  centers <- centers[, names(ident), drop=FALSE]
+  
+  centers <- centers[, names(ident), drop=FALSE]
+  
+  centers_summarized_by_cell_type <- matrix(NA,
+                                            nr=nrow(centers),
+                                            ncol=length(levels(ident)))
+  for(rown in 1:nrow(centers)){
+    centers_summarized_by_cell_type[rown, ] <- tapply(centers[rown,], ident, mean)
+  }
+  
+  colnames(centers_summarized_by_cell_type) <- as.character(levels(ident))
+  rownames(centers_summarized_by_cell_type) <- rownames(centers)
+  
+  print_msg(paste0("Centers dimension: ", paste0(dim(centers), collapse = " ")),
+            msg_type = "DEBUG")
+  
+  m <- reshape2::melt(centers_summarized_by_cell_type)
+
+  colnames(m) <- c("Cluster", "Cell_type", "Intensity")
+  m$Cell_type <- factor(m$Cell_type, levels=levels(ident), ordered = TRUE)
+  m$Cluster <-   factor(m$Cluster, levels=unique(m$Cluster), ordered = TRUE)
+  
+  ggplot2::ggplot(data= m,
+                  ggplot2::aes(
+                    x = .data[["Cell_type"]],
+                    y = .data[["Intensity"]],
+                    group = Cluster,
+                    color = .data[["Cluster"]]
+                  )) + 
+    ggplot2::geom_line() +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      panel.grid = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white"),
+      axis.text.y = ggplot2::element_text(size = size_text_y),
+      strip.text = ggplot2::element_blank()
+    ) +
+    ggplot2::scale_color_manual(values=color_cluster, name=legend_name)
   
 }

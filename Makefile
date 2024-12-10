@@ -99,7 +99,6 @@ doc_html:
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VERSION)."
 
-
 all: doc install check test
 
 
