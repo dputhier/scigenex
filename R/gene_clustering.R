@@ -16,6 +16,7 @@
 #' @param output_path a character indicating the path where the output files will be stored.
 #' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #' @param keep_nn Deprecated. Use 'method' instead.
+#' @param louv_resolution Resolution of Louvain algorithm if chosen.
 #' @return A ClusterSet object
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
@@ -63,10 +64,13 @@ gene_clustering <- function(object = NULL,
                             s = 5,
                             inflation = 2,
                             method=c("closest_neighborhood", "reciprocal_neighborhood"),
+                            algorithm=c("MCL", "louvain", "walktrap"),
                             threads = 1,
                             output_path = NULL,
                             name = NULL,
-                            keep_nn = FALSE) {
+                            keep_nn = FALSE,
+                            louv_resolution=1,
+                            walktrap_step=4) {
   
   if(is.null(output_path)){
     output_path <- tempdir()
@@ -77,15 +81,14 @@ gene_clustering <- function(object = NULL,
     }
   }
   
-
-  
   method <- match.arg(method)
+  algorithm <- match.arg(algorithm)
   
   if(keep_nn){
     print_msg("The use of keep_nn=TRUE is deprecated. Use 'method' argument set to 'reciprocal_neighborhood'.")
     method <- "reciprocal_neighborhood"
   }
-    
+  
   # Construct graph for mcl and save it in a new file
   if (method == "reciprocal_neighborhood") {
     object <- keep_dbf_graph(object = object,
@@ -98,26 +101,54 @@ gene_clustering <- function(object = NULL,
                                   name = name)
   }
   
-  # Run MCL algorithm
-  object <- mcl_system_cmd(object = object,
-                           inflation = inflation,
-                           threads = threads)
   
-  print_msg(paste0("Adding results to a ClusterSet object."), msg_type = "INFO")
+  if(algorithm == "MCL"){
+
+    print_msg("MCL algorithm has been selected.")
+    object <- mcl_system_cmd(object = object,
+                             inflation = inflation,
+                             threads = threads)
+    
+    print_msg(paste0("Adding results to a ClusterSet object."), msg_type = "INFO")
+    
+    # Update ClusterSet object
+    ## Read mcl out file
+    clust_out_file <- file.path(object@parameters$output_path,
+                              paste0(object@parameters$name, ".graph_out.txt"))
+    
+    
+  }else if(algorithm == "louvain"){
   
-  # Update ClusterSet object
-  ## Read mcl out file
-  mcl_out_file <- file.path(object@parameters$output_path,
-                            paste0(object@parameters$name, ".mcl_out.txt"))
+    print_msg("Louvain algorithm has been selected.")
+    object <- call_louvain_clusterset(object = object,
+                                      resolution = louv_resolution)
+    
+    clust_out_file <- file.path(object@parameters$output_path,
+                                paste0(object@parameters$name, ".graph_out.txt"))
+    
+  }else if(algorithm == "walktrap"){
+    
+    print_msg("The walktrap algorithm has been selected.")
+
+    object <- call_walktrap_clusterset(object, step=walktrap_step)
+    return(object)
+    
+    clust_out_file <- file.path(object@parameters$output_path,
+                                paste0(object@parameters$name, ".graph_out.txt"))
+    
+    
+    
+  }
   
   ## Extract gene clusters
-  print_msg(paste0("Read MCL output file."), msg_type = "DEBUG")
-  mcl_cluster <- readLines(mcl_out_file)
-  mcl_cluster <- strsplit(mcl_cluster, "\t")
-  names(mcl_cluster) <- seq(1, length(mcl_cluster))
-  
+  print_msg(paste0("Read graph clustering output file."), msg_type = "DEBUG")
+  algo_cluster <- readLines(clust_out_file)
+  algo_cluster <- strsplit(algo_cluster, "\t")
+  names(algo_cluster) <- seq(1, length(algo_cluster))
+
   ## Add gene clusters to ClusterSet object
-  object@gene_clusters <- mcl_cluster
+  object@gene_clusters <- algo_cluster
+  
   
   ## Update gene_cluster_metadata slots
   object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
@@ -126,6 +157,7 @@ gene_clustering <- function(object = NULL,
   
   ## Update data slot
   object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE), ]
+  
   
   ## Compute centers
   print_msg(paste0("Compute centers."), msg_type = "DEBUG")
@@ -215,10 +247,10 @@ construct_new_graph <- function(object = NULL,
   }
   
   # Directory and name of the principal output
-  path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
-  path_input_mcl <- gsub(pattern = "//",
+  path_input_graph <- paste(output_path, "/", name, ".graph_input.txt", sep = "")
+  path_input_graph <- gsub(pattern = "//",
                          replacement = "/",
-                         x = path_input_mcl)
+                         x = path_input_graph)
   
   
   
@@ -287,7 +319,7 @@ construct_new_graph <- function(object = NULL,
   # ======================
   #### Create the input file for mcl algorithm ####
   # ======================
-  print_msg(paste0("Creating the input file for MCL algorithm."), msg_type = "INFO")
+  print_msg(paste0("Creating the input file for graph partitioning."), msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
   
@@ -333,7 +365,7 @@ construct_new_graph <- function(object = NULL,
   print_msg(paste0("Writing the input file."), msg_type = "INFO")
   data.table::fwrite(
     mcl_out_as_df,
-    file = path_input_mcl,
+    file = path_input_graph,
     sep = "\t",
     eol = "\n",
     row.names = FALSE,
@@ -343,11 +375,12 @@ construct_new_graph <- function(object = NULL,
   # Add k used to construct graph to ClusterSet object
   object@parameters <- append(object@parameters,
                               list("keep_nn" = FALSE,
-                                   "k_mcl_graph" = k,
+                                   "k_graph" = k,
                                    "output_path" = output_path,
                                    "name" = name))
-  
-  print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
+ 
+   
+  print_msg(paste0("The input file saved in '", path_input_graph, "'."), msg_type = "INFO")
   
   return(object)
 }
@@ -414,10 +447,10 @@ keep_dbf_graph <- function(object = NULL,
   }
   
   # Directory and name of the principal output
-  path_input_mcl <- paste(output_path, "/", name, ".input_mcl.txt", sep = "")
-  path_input_mcl <- gsub(pattern = "//",
+  path_input_graph <- paste(output_path, "/", name, ".graph_input.txt", sep = "")
+  path_input_graph <- gsub(pattern = "//",
                          replacement = "/",
-                         x = path_input_mcl)
+                         x = path_input_graph)
   
   
   # Extract list of distances for each gene
@@ -470,24 +503,19 @@ keep_dbf_graph <- function(object = NULL,
   
   ############# Write input files for mcl
   print_msg(paste0("Writing the input file."), msg_type = "INFO")
+  
   data.table::fwrite(
     mcl_out_as_df,
-    file = path_input_mcl,
+    file = path_input_graph,
     sep = "\t",
     eol = "\n",
     row.names = FALSE,
     col.names = FALSE
   )
-  print_msg(paste0("The input file saved in '", path_input_mcl, "'."), msg_type = "INFO")
+  print_msg(paste0("The input file saved in '", path_input_graph, "'."), msg_type = "INFO")
   
   return(object)
 }
-
-
-
-
-
-
 
 ################################################################################
 #' Call MCL program for graph partitioning (internal).
@@ -565,13 +593,13 @@ mcl_system_cmd <- function(object = NULL,
                 input_path,
                 "/",
                 name,
-                ".input_mcl.txt ",
+                ".graph_input.txt ",
                 i,
                 " --abc -o ",
                 input_path,
                 "/",
                 name,
-                ".mcl_out.txt ",
+                ".graph_out.txt ",
                 verb,
                 threads)
 
@@ -586,13 +614,173 @@ mcl_system_cmd <- function(object = NULL,
   print_msg("MCL step is finished.", msg_type = "DEBUG")
   print_msg(paste0("creating file : ",
                    file.path(
-                     getwd(), paste(name, ".mcl_out.txt", sep = "")
+                     getwd(), paste(name, ".graph_out.txt", sep = "")
                    )),
             msg_type = "DEBUG")
   
   # Add inflation parameter to ClusterSet object
   object@parameters <- append(object@parameters,
-                              list("inflation" = inflation))
+                              list("inflation" = inflation,
+                                   "algorithm"="mcl"))
+  
+  return(object)
+}
+
+#' Perform Community Detection Using the Louvain Algorithm (internal function)
+#'
+#' Applies the Louvain algorithm for community detection on a graph derived 
+#' from the input data in a `ClusterSet` object. Outputs the resulting clusters 
+#' to a specified file and updates the parameters in the `ClusterSet` object.
+#'
+#' @param object A `ClusterSet` object. 
+#' 
+#' @param resolution The level of resolution.
+#'
+#' @return The modified `ClusterSet` object with updated parameters, including 
+#'   the Walktrap algorithm results
+#'
+#' @details This function reads a graph from the input file defined in the `ClusterSet` 
+#'   object, processes the graph using the Louvain community detection algorithm 
+#'   from the `igraph` package, and return the clusters enclose in the `ClusterSet`.
+#'
+#' @examples
+#' # Restrict vebosity to info messages only.
+#' set_verbosity(1)
+#' # Load a dataset
+#' load_example_dataset("7871581/files/pbmc3k_medium")
+#' # Select informative genes
+#' res <- select_genes(pbmc3k_medium,
+#'                     distance = "pearson",
+#'                     row_sum=5)
+#' 
+#' # Cluster informative features
+#' res <- gene_clustering(res, method="closest_neighborhood",
+#'                        algorithm="louvain")
+#' 
+#' @importFrom data.table fread
+#' @importFrom igraph graph_from_data_frame cluster_louvain
+#' @export
+call_louvain_clusterset <- function(object, 
+                                    resolution = 1){
+
+  name <- object@parameters$name
+  input_dir <- object@parameters$output_path
+  input_path <- file.path(input_dir, 
+                           paste0(name, ".graph_input.txt"))
+  
+  g <- data.table::fread(input_path, 
+                         header = FALSE)
+  g <- as.data.frame(g)
+  colnames(g) <- c("src", "dest", "weight")
+  
+  g <- g[!duplicated(paste0(g$src, g$dest)), ]
+  
+  g <- igraph::graph_from_data_frame(g, directed = FALSE)
+   
+  print_msg("Calling Louvain algorithm.")
+  clust <- igraph::cluster_louvain(g, resolution=resolution)
+  
+  clust <- split(clust$names, clust$membership)
+  clust <- lapply(clust, paste0, collapse="\t")
+  clust <- unlist(clust)
+  
+  out_path <- file.path(input_dir, 
+                        paste0(name, ".graph_out.txt"))
+  
+  print_msg(paste0("Output writen to ", out_path), msg_type = "DEBUG")
+  
+  cat(clust, file=out_path, sep = "\n")
+  
+  # Add inflation parameter to ClusterSet object
+  params <- object@parameters
+  params$resolution <- resolution
+  params$algorithm <- "louvain"
+  object@parameters <- params 
+  
+ return(object)
+}
+
+
+#' Perform Community Detection Using the Walktrap Algorithm (internal function)
+#'
+#' Applies the Walktrap algorithm for community detection on a graph derived 
+#' from the input data in a `ClusterSet` object. Outputs the resulting clusters 
+#' to a specified file and updates the parameters in the `ClusterSet` object.
+#'
+#' @param object A `ClusterSet` object.
+#' @param steps The length of the random walks to perform.
+#'
+#' @return The modified `ClusterSet` object with updated parameters, including 
+#'   the Walktrap algorithm results
+#'
+#' @details This function reads a graph from the input file defined in the `ClusterSet` 
+#'   object, processes the graph using the Walktrap community detection algorithm 
+#'   from the `igraph` package, and return the clusters enclose in the `ClusterSet`.
+#'
+#' @examples
+#' # Restrict vebosity to info messages only.
+#' set_verbosity(1)
+#' # Load a dataset
+#' load_example_dataset("7871581/files/pbmc3k_medium")
+#' # Select informative genes
+#' res <- select_genes(pbmc3k_medium,
+#'                     distance = "pearson",
+#'                     row_sum=5)
+#' 
+#' # Cluster informative features
+#' res <- gene_clustering(res, method="closest_neighborhood",
+#'                        algorithm="walktrap")
+#' 
+#' @importFrom data.table fread
+#' @importFrom igraph graph_from_data_frame cluster_walktrap
+#' @export
+call_walktrap_clusterset <- function(object, 
+                                     steps = 4,
+                                     merges = FALSE,
+                                     modularity = FALSE,
+                                     membership = TRUE){
+  
+  name <- object@parameters$name
+  input_dir <- object@parameters$output_path
+  input_path <- file.path(input_dir, 
+                          paste0(name, ".graph_input.txt"))
+  
+  g <- data.table::fread(input_path, 
+                         header = FALSE)
+  g <- as.data.frame(g)
+  colnames(g) <- c("src", "dest", "weight")
+  
+  g <- g[!duplicated(paste0(g$src, g$dest)), ]
+  
+  g <- igraph::graph_from_data_frame(g, directed = FALSE)
+  
+  print_msg("Calling walktrap algorithm.")
+
+  clust <- igraph::cluster_walktrap(g, 
+                                    steps=steps,
+                                    merges=merges,
+                                    modularity=modularity,
+                                    membership=membership)
+
+  clust <- split(clust$names, clust$membership)
+  clust <- lapply(clust, paste0, collapse="\t")
+  clust <- unlist(clust)
+  
+  out_path <- file.path(input_dir, 
+                        paste0(name, ".graph_out.txt"))
+  
+  print_msg(paste0("Output writen to ", out_path), msg_type = "DEBUG")
+  
+  cat(clust, file=out_path, sep = "\n")
+  
+  # Add inflation parameter to ClusterSet object
+  params <- object@parameters
+  params$steps <- steps
+  params$merges <- merges
+  params$modularity <- modularity
+  params$membership <- membership
+  params$algorithm <- "walktrap"
+  object@parameters <- params 
   
   return(object)
 }
