@@ -138,7 +138,6 @@ gene_clustering <- function(object = NULL,
                                 paste0(object@parameters$name, ".graph_out.txt"))
   }
   
-  
   print_msg(paste0("Reading graph clustering output file."), msg_type = "DEBUG")
   algo_cluster <- readLines(clust_out_file)
   algo_cluster <- strsplit(algo_cluster, "\t")
@@ -178,7 +177,6 @@ gene_clustering <- function(object = NULL,
   
   return(object)
 }
-
 
 
 ################################################################################
@@ -342,10 +340,6 @@ do_closest_neighbor_graph <- function(object = NULL,
 
   return(object)
 }
-
-
-
-
 
 
 ################################################################################
@@ -651,7 +645,6 @@ call_louvain_clusterset <- function(object,
   
  return(object)
 }
-
 
 #' Perform Community Detection Using the Walktrap Algorithm (internal function)
 #'
