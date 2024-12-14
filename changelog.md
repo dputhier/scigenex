@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.0
+
+* Added support for Louvain and walktrap: call_walktrap_clusterset(), call_louvain_clusterset()
+* construct_new_graph() was renamed do_closest_neighbor_graph()
+* keep_dbf_graph() was renamed do_reciprocal_neighbor_graph()
+* code refactoring (mainly comments).
+
+
 ## v1.4.10
 
 * Fix NAMESPACE (xlxs dependency).
