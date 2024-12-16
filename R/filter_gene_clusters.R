@@ -35,14 +35,16 @@ filter_cluster_size <- function(object = NULL,
   print_msg(
     paste(
       sum(!cluster_to_keep),
-      " clusters with less than", min_cluster_size, "genes will be filtered out."
+      " clusters with less than", min_cluster_size, "were filtered out."
     ),
     msg_type = "INFO"
   )
   
   object <- object[cluster_to_keep, ]
-  object <- rename_clust(object)
+  c <- rename_clust(object)
 
+  print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
+  
   return(object)
 }
   
@@ -110,12 +112,15 @@ filter_nb_supporting_cells <- function(object = NULL,
   
 
   if(length(cluster_to_keep)==0){
-    return(object[-c(1:nclust(object)),])
+    object <- object[-c(1:nclust(object)),]
   }else{
     object <- object[cluster_to_keep, ]
     object <- rename_clust(object)
-    return(object)
   }
+  
+  print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
+  
+  return(object)
 }
 
 
@@ -265,12 +270,14 @@ filter_cluster_sd <- function(object = NULL,
   )
   
   if(length(cluster_to_keep)==0){
-    return(object[-c(1:nclust(object)),])
+    object <- object[-c(1:nclust(object)),]
   }else{
     object <- object[cluster_to_keep, ]
     object <- rename_clust(object)
-    return(object)
   }
   
+  print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
+  
+  return(object)
 }
 
