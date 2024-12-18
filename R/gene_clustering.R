@@ -69,7 +69,7 @@ gene_clustering <- function(object = NULL,
                             output_path = NULL,
                             name = NULL,
                             keep_nn = FALSE,
-                            louv_resolution=1,
+                            louv_resolution=5,
                             walktrap_step=4) {
   
   print_msg("Retrieving args.", msg_type = "DEBUG")
