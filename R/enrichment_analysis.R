@@ -79,6 +79,10 @@ setMethod("enrich_go",
               cluster_name = paste0("Cluster_", cluster)
               query = object@gene_clusters[[cluster]]
               
+              # Remove "MT-" or "mt-" not recognized in AnnotationDbi::select()
+              query = gsub("MT-", "", query)
+              query = gsub("mt-", "", query)
+              
               # Convert gene id to EntrezId format
               suppressMessages(query_entrezid <- AnnotationDbi::select(org_db, 
                                                                        keys = query,

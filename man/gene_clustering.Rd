@@ -9,10 +9,13 @@ gene_clustering(
   s = 5,
   inflation = 2,
   method = c("closest_neighborhood", "reciprocal_neighborhood"),
+  algorithm = c("MCL", "louvain", "walktrap"),
   threads = 1,
   output_path = NULL,
   name = NULL,
-  keep_nn = FALSE
+  keep_nn = FALSE,
+  louv_resolution = 5,
+  walktrap_step = 4
 )
 }
 \arguments{
@@ -34,6 +37,8 @@ in the neighborhood of the other}
 \item{name}{a character string giving the name for the output files. If NULL, a random name is generated.}
 
 \item{keep_nn}{Deprecated. Use 'method' instead.}
+
+\item{louv_resolution}{Resolution of Louvain algorithm if chosen.}
 }
 \value{
 A ClusterSet object
