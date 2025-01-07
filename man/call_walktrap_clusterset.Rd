@@ -16,6 +16,12 @@ call_walktrap_clusterset(
 \item{object}{A `ClusterSet` object.}
 
 \item{steps}{The length of the random walks to perform.}
+
+\item{merges}{See igraph::cluster_walktrap().}
+
+\item{modularity}{See igraph::cluster_walktrap().}
+
+\item{membership}{See igraph::cluster_walktrap().}
 }
 \value{
 The modified `ClusterSet` object with updated parameters, including 

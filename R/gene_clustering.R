@@ -12,11 +12,15 @@
 #' two selected genes a and b if b is part of the kg closest nearest neighbors of a (with kg < k). If "reciprocal_neighborhood"),
 #' inspect the neighborhood of size k of all selected genes and put an edge between two genes a and b if they are reciprocally 
 #' in the neighborhood of the other
+#' @param algorithm The algorihm to use for clustering: MCL", "infomap", "louvain" or "walktrap".
 #' @param threads An integer value indicating the number of threads to use for MCL.
 #' @param output_path a character indicating the path where the output files will be stored.
 #' @param name a character string giving the name for the output files. If NULL, a random name is generated.
 #' @param keep_nn Deprecated. Use 'method' instead.
 #' @param louv_resolution Resolution of Louvain algorithm if chosen.
+#' @param walktrap_step The length of the random walks to perform for walktrap algorithm.
+#' @param infomap_nb nb.trials parameter for igraph::cluster_infomap().
+#' @param infomap_modularity modularity parameter for igraph::cluster_infomap().
 #' @return A ClusterSet object
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
@@ -64,13 +68,15 @@ gene_clustering <- function(object = NULL,
                             s = 5,
                             inflation = 2,
                             method=c("closest_neighborhood", "reciprocal_neighborhood"),
-                            algorithm=c("MCL", "louvain", "walktrap"),
+                            algorithm=c("MCL", "infomap", "louvain", "walktrap"),
                             threads = 1,
                             output_path = NULL,
                             name = NULL,
                             keep_nn = FALSE,
                             louv_resolution=5,
-                            walktrap_step=4) {
+                            walktrap_step=4,
+                            infomap_nb=10,
+                            infomap_modularity=TRUE) {
   
   print_msg("Retrieving args.", msg_type = "DEBUG")
   
@@ -136,7 +142,20 @@ gene_clustering <- function(object = NULL,
     
     clust_out_file <- file.path(object@parameters$output_path,
                                 paste0(object@parameters$name, ".graph_out.txt"))
+  
+  }else if(algorithm == "infomap"){
+    
+    print_msg("The infomap algorithm has been selected.")
+    
+    object <- call_infomap_clusterset(object, 
+                                      nb.trials=infomap_nb,
+                                      modularity=infomap_modularity)
+    return(object)
+    
+    clust_out_file <- file.path(object@parameters$output_path,
+                                paste0(object@parameters$name, ".graph_out.txt"))
   }
+  
   
   print_msg(paste0("Reading graph clustering output file."), msg_type = "DEBUG")
   algo_cluster <- readLines(clust_out_file)
@@ -175,6 +194,7 @@ gene_clustering <- function(object = NULL,
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
                                       row.names = colnames(object@data))
   
+  print_msg(paste0("Number of clusters found: ", nclust(object)))
   return(object)
 }
 
@@ -654,7 +674,9 @@ call_louvain_clusterset <- function(object,
 #'
 #' @param object A `ClusterSet` object.
 #' @param steps The length of the random walks to perform.
-#'
+#' @param merges See igraph::cluster_walktrap().
+#' @param  modularity See igraph::cluster_walktrap().
+#' @param  membership See igraph::cluster_walktrap().
 #' @return The modified `ClusterSet` object with updated parameters, including 
 #'   the Walktrap algorithm results
 #'
@@ -725,6 +747,88 @@ call_walktrap_clusterset <- function(object,
   params$modularity <- modularity
   params$membership <- membership
   params$algorithm <- "walktrap"
+  object@parameters <- params 
+  
+  return(object)
+}
+
+
+
+#' Perform Community Detection Using the infomap Algorithm (internal function)
+#'
+#' Applies the infomap algorithm for community detection on a graph derived 
+#' from the input data in a `ClusterSet` object. Outputs the resulting clusters 
+#' to a specified file and updates the parameters in the `ClusterSet` object.
+#'
+#' @param object A `ClusterSet` object.
+#' @param modularity See igraph::cluster_infomap().
+#' @param nb.trials See igraph::cluster_infomap().
+#'
+#' @return The modified `ClusterSet` object with updated parameters, including 
+#'   the infomap algorithm results
+#'
+#' @details This function reads a graph from the input file defined in the `ClusterSet` 
+#'   object, processes the graph using the infomap community detection algorithm 
+#'   from the `igraph` package, and return the clusters enclose in the `ClusterSet`.
+#'
+#' @examples
+#' # Restrict vebosity to info messages only.
+#' set_verbosity(1)
+#' # Load a dataset
+#' load_example_dataset("7871581/files/pbmc3k_medium")
+#' # Select informative genes
+#' res <- select_genes(pbmc3k_medium,
+#'                     distance = "pearson",
+#'                     row_sum=5)
+#' 
+#' # Cluster informative features
+#' res <- gene_clustering(res, method="closest_neighborhood",
+#'                        algorithm="infomap")
+#' 
+#' @importFrom data.table fread
+#' @importFrom igraph graph_from_data_frame cluster_walktrap
+#' @export
+call_infomap_clusterset <- function(object, 
+                                    modularity = FALSE,
+                                    nb.trials = 10){
+  
+  name <- object@parameters$name
+  input_dir <- object@parameters$output_path
+  input_path <- file.path(input_dir, 
+                          paste0(name, ".graph_input.txt"))
+  
+  g <- data.table::fread(input_path, 
+                         header = FALSE)
+  g <- as.data.frame(g)
+  colnames(g) <- c("src", "dest", "weight")
+  
+  g <- g[!duplicated(paste0(g$src, g$dest)), ]
+  
+  g <- igraph::graph_from_data_frame(g, directed = FALSE)
+  
+  print_msg("Calling infomap algorithm.")
+  
+  clust <- igraph::cluster_infomap(g, 
+                                   modularity=modularity,
+                                   nb.trials=nb.trials)
+  
+
+  clust <- split(clust$names, clust$membership)
+  clust <- lapply(clust, paste0, collapse="\t")
+  clust <- unlist(clust)
+  
+  out_path <- file.path(input_dir, 
+                        paste0(name, ".graph_out.txt"))
+  
+  print_msg(paste0("Output writen to ", out_path), msg_type = "DEBUG")
+  
+  cat(clust, file=out_path, sep = "\n")
+  
+  # Add inflation parameter to ClusterSet object
+  params <- object@parameters
+  params$modularity <- modularity
+  params$nb.trials <- nb.trials
+  params$algorithm <- "infomap"
   object@parameters <- params 
   
   return(object)

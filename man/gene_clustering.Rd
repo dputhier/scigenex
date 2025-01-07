@@ -9,13 +9,15 @@ gene_clustering(
   s = 5,
   inflation = 2,
   method = c("closest_neighborhood", "reciprocal_neighborhood"),
-  algorithm = c("MCL", "louvain", "walktrap"),
+  algorithm = c("MCL", "infomap", "louvain", "walktrap"),
   threads = 1,
   output_path = NULL,
   name = NULL,
   keep_nn = FALSE,
   louv_resolution = 5,
-  walktrap_step = 4
+  walktrap_step = 4,
+  infomap_nb = 10,
+  infomap_modularity = TRUE
 )
 }
 \arguments{
@@ -30,6 +32,8 @@ two selected genes a and b if b is part of the kg closest nearest neighbors of a
 inspect the neighborhood of size k of all selected genes and put an edge between two genes a and b if they are reciprocally 
 in the neighborhood of the other}
 
+\item{algorithm}{The algorihm to use for clustering: MCL", "infomap", "louvain" or "walktrap".}
+
 \item{threads}{An integer value indicating the number of threads to use for MCL.}
 
 \item{output_path}{a character indicating the path where the output files will be stored.}
@@ -39,6 +43,12 @@ in the neighborhood of the other}
 \item{keep_nn}{Deprecated. Use 'method' instead.}
 
 \item{louv_resolution}{Resolution of Louvain algorithm if chosen.}
+
+\item{walktrap_step}{The length of the random walks to perform for walktrap algorithm.}
+
+\item{infomap_nb}{nb.trials parameter for igraph::cluster_infomap().}
+
+\item{infomap_modularity}{modularity parameter for igraph::cluster_infomap().}
 }
 \value{
 A ClusterSet object

@@ -239,6 +239,7 @@ setMethod("row_names", "ClusterSet",
 setMethod("[", signature(x = "ClusterSet"),
           function (x, i, j, ..., drop = FALSE) {
             
+            
             if(is.null(names(x@gene_clusters_metadata$cluster_id)))
                names(x@gene_clusters_metadata$cluster_id) <-  names(x@gene_clusters)
             
@@ -315,6 +316,8 @@ setMethod("[", signature(x = "ClusterSet"),
               }
             }
             
+            cname <- clust_names(x)
+            csize <- clust_size(x)
             
             new(
               "ClusterSet",

@@ -40,7 +40,12 @@ get_data_for_scigenex <- function(data = NULL,
               msg_type = "DEBUG")
     
     if (which_slot %in% c("data", "counts")) {
-      data <- SeuratObject::GetAssayData(data, slot = which_slot)
+      if("Spatial" %in% names(data@assays)){
+        assay_type <- "Spatial"
+      }else{
+        assay_type <- "RNA"
+      }
+      data <- SeuratObject::LayerData(data, assay=assay_type, layer=which_slot)
     } else if (which_slot == "sct") {
       if ("SCT" %in% names(data@assays)) {
         data <- data@assays$SCT@data
