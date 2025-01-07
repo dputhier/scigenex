@@ -4,7 +4,7 @@ date: "`r Sys.Date()`"
 title: "Guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{Guided tutorial}
   %\usepackage[UTF-8]{inputenc}
 ---
