@@ -79,7 +79,8 @@ pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
 
 # Dimension reduction
 pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
-DimPlot(pbmc3k, reduction = "umap")
+dim_plot_orig <- DimPlot(pbmc3k, reduction = "umap")
+dim_plot_orig
 ```
 
 ## Extracting gene modules using SciGeneX
@@ -239,6 +240,29 @@ plot_heatmap(sub_clust,
             cell_clusters =Seurat::Idents(pbmc3k))
 ```
 
+## Improving cell resolution on UMAP
+
+On can use scigenex selected genes as input for PCA. One can expect some improvement regarding cell population resolution compare to original Seurat pipeline :
+
+```{r}
+# Scaling data using genes from scigenex
+pbmc3k <- ScaleData(pbmc3k, features = rownames(pbmc_scigenex), verbose = FALSE)
+
+# Perform principal component analysis
+pbmc3k <- RunPCA(pbmc3k, features = VariableFeatures(object = pbmc3k), verbose = FALSE)
+
+# Cell clustering
+pbmc3k <- FindNeighbors(pbmc3k, dims = 1:10, verbose = FALSE)
+pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
+
+# Dimension reduction
+pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
+dim_plot_sci <- DimPlot(pbmc3k, reduction = "umap")
+
+dim_plot_orig + dim_plot_sci
+```
+
+
 
 ## Exporting modules
 
@@ -386,10 +410,14 @@ plot_ggheatmap(gcss_brain,
 
 ### Interactive heatmap
 
-Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 6 to 9.
+Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 1 to 9.
 
 ```{r plot_heatmap_st}
-plot_heatmap(gcss_brain[6:9,], 
+gcss_brain_sub <- subsample_by_ident(gcss_brain, 
+                                     nbcell = 30, 
+                                     ident =  Seurat::Idents(brain1))
+
+plot_heatmap(gcss_brain_sub[1:9,], 
              use_top_genes = TRUE, 
              cell_clusters = Seurat::Idents(brain1))
 # Try selecting a subset of columns/rows
