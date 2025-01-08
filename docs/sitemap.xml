@@ -99,6 +99,8 @@
 <url><loc>https://scigenex.r-lib.org/reference/show_methods.html</loc></url>
 <url><loc>https://scigenex.r-lib.org/reference/stratify_seurat.html</loc></url>
 <url><loc>https://scigenex.r-lib.org/reference/sub-ClusterSet-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>https://scigenex.r-lib.org/reference/subsample_by_ident-ClusterSet-method.html</loc></url>
+<url><loc>https://scigenex.r-lib.org/reference/subsample_by_ident.html</loc></url>
 <url><loc>https://scigenex.r-lib.org/reference/top_by_go-ClusterSet-method.html</loc></url>
 <url><loc>https://scigenex.r-lib.org/reference/top_by_go.html</loc></url>
 <url><loc>https://scigenex.r-lib.org/reference/top_genes-ClusterSet-method.html</loc></url>

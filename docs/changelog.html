@@ -52,11 +52,13 @@
 <div id="changelog" class="section level1">
 
 <div class="section level2">
-<h2 id="v150">v1.5.0<a class="anchor" aria-label="anchor" href="#v150"></a></h2>
+<h2 id="v1413">v1.4.13<a class="anchor" aria-label="anchor" href="#v1413"></a></h2>
 <ul><li>Added support for Louvain and walktrap: call_walktrap_clusterset(), call_louvain_clusterset()</li>
 <li>construct_new_graph() was renamed do_closest_neighbor_graph()</li>
 <li>keep_dbf_graph() was renamed do_reciprocal_neighbor_graph()</li>
 <li>code refactoring (mainly comments).</li>
+<li>Deleted code relics (ident argument as list) from plot_ggheatmap().</li>
+<li>Added the subsample_by_ident() method for a ClusterSet object. handy to be used with plot_ggheatmap or plot_heatmap (to put emphasis on small populations).</li>
 </ul></div>
 <div class="section level2">
 <h2 id="v1410">v1.4.10<a class="anchor" aria-label="anchor" href="#v1410"></a></h2>
