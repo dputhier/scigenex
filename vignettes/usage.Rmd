@@ -4,7 +4,7 @@ date: "`r Sys.Date()`"
 title: "Guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Guided tutorial}
   %\usepackage[UTF-8]{inputenc}
 ---
@@ -112,7 +112,7 @@ pbmc_scigenex <- select_genes(pbmc3k,
                               k = 50,
                               distance_method = "pearson",
                               which_slot = "data",
-                              row_sum=2)
+                              row_sum=5)
 
 # Run MCL
 pbmc_scigenex <- gene_clustering(pbmc_scigenex,
@@ -227,12 +227,16 @@ plot_ggheatmap(pbmc_scigenex,
 
 ### Interactive heatmap
 
-A very interesting feature of SciGeneX is its ability to display gene expression levels in cells/spots using interactive heatmaps. With this function, the user can interactively evaluate expression levels in selected cells or groups, or over the whole dataset. However, it is generally advisable, when using all clusters, to restrict the analysis using `top_genes=TRUE`. Here, we'll display expression levels in cells from clusters 3 to 5.
+A very interesting feature of SciGeneX is its ability to display gene expression levels in cells/spots using interactive heatmaps. With this function, the user can interactively evaluate expression levels in selected cells or groups, or over the whole dataset. However, it is generally advisable, when using all clusters, to restrict the analysis using `top_genes=TRUE`. Here we will also select a subset of cells from each cluster.
 
-```{r plot_heatmap}
-plot_heatmap(pbmc_scigenex[3:5, ],
-               use_top_genes = TRUE,
-               cell_clusters =Seurat::Idents(pbmc3k))
+```{r plot_heatmap, echo=TRUE, eval=TRUE}
+sub_clust <- subsample_by_ident(pbmc_scigenex, 
+                                        nbcell=15,
+                                        ident=Seurat::Idents(pbmc3k)) 
+                                        
+plot_heatmap(sub_clust,
+            use_top_genes = TRUE,
+            cell_clusters =Seurat::Idents(pbmc3k))
 ```
 
 
