@@ -426,7 +426,7 @@ install_mcl <- function(){
         mcl_version <- dir(pattern = "mcl*")
         setwd(mcl_version)
         print_msg("Installing MCL.", msg_type = "INFO")
-        system("sh configure; make")
+        system("make clean; sh configure --prefix=$PWD; make")
         
         print_msg("MCL program installed.", 
                   msg_type = "INFO")
