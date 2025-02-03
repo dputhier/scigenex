@@ -112,6 +112,10 @@ plot_heatmap <- function(object,
     print_msg("Not enough colors for cell_clusters (see colors_cell_clusters).", 
               msg_type="STOP")
   
+  # If object as been processed using subsample_by_ident() it may not contain all cells from
+  # cell_clusters
+  cell_clusters <- cell_clusters[col_names(object)]
+  
   # Ensure there is no class equal to zero
   if(0 %in% cell_clusters){
     names_cell_clusters <- names(cell_clusters)
@@ -127,6 +131,9 @@ plot_heatmap <- function(object,
   print_msg(paste0("Color palette for cells: ", paste0(colors_cell_clusters, collapse=", ")),
             msg_type = "DEBUG")
   
+
+  
+    
   m <- as.matrix(object@data)
   
   # Centering
@@ -573,7 +580,12 @@ setGeneric("plot_ggheatmap",
 #' # Use plot_ggheatmap
 #' ident_pbmc3k <- sort(Seurat::Idents(pbmc3k_medium))
 #' new_obj <- top_genes(new_obj)
-#' plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
+#' plot_ggheatmap(new_obj, ident=ident_pbmc3k)
+#' 
+#' # Only show a set of randomly selected cells from each class
+#' # to get balanced classes
+#' sub_obj <- subsample_by_ident(new_obj, nbcell=10, ident=ident_pbmc3k)
+#' plot_ggheatmap(sub_obj, ident=ident_pbmc3k)
 setMethod(
   "plot_ggheatmap",
   signature(object = "ClusterSet"),
@@ -597,20 +609,24 @@ setMethod(
     check_format_cluster_set(object)
     print_msg("getting matrix", msg_type="DEBUG")
     
-    if(!is.list(ident)){
-      
-      name_idents <- names(ident)
-      
-      if(is.null(name_idents)){
-        print_msg("The 'ident' argument needs a named vector or a named list of named vector.")
-      }
-      
-      if(length(which(names(ident) == "")) != 0){
-        print_msg("The 'ident' argument needs a named vector or a named list of named vector.")
-      }
-      
+    if(length(ident) == 0 | is.null(ident)){
+      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
     }
     
+    name_idents <- names(ident)
+    
+    if(is.null(name_idents)){
+      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
+    }
+    
+    if(length(which(name_idents == "")) != 0){
+      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
+    }
+    
+    print_msg("Subsetting the object with cells from 'Ident'.", msg_type = "DEBUG")
+    name_idents <- intersect(name_idents, col_names(object))
+    object <- object[, name_idents]
+    ident <- ident[name_idents]
     nb <- nclust(object)
     
     if(use_top_genes){
@@ -667,31 +683,13 @@ setMethod(
       m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
     }
     
-    
 
-    if(!is.null(ident)){
-      
-      if(!is.list(ident)){
-        
-        if(!all(m_melt$cell %in% names(ident))){
-          print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
-        }
-        m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
-      
-      }else{
-        
-        for(i in 1:length(names(ident))){
-          if(!all(m_melt$cell %in% names(ident[[i]]))){
-            print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
-          }
-          m_melt[, names(ident[i])] <- factor(ident[[i]][m_melt$samples], ordered = TRUE)
-        }
-        
+    if(!all(m_melt$cell %in% names(ident))){
+      print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
     }
-      
-    }
-    
-    
+  
+    m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
+  
     ## plotting
     # Note that samples, value, gene, cluster
     # may appear as undefined variable to "R check" command.
@@ -703,7 +701,7 @@ setMethod(
 
     p <- ggplot2::ggplot(
       data = m_melt,
-      aes(
+      ggplot2::aes(
         x = samples,
         y = genes,
         fill = values

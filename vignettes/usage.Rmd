@@ -4,7 +4,7 @@ date: "`r Sys.Date()`"
 title: "Guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Guided tutorial}
   %\usepackage[UTF-8]{inputenc}
 ---
@@ -38,6 +38,7 @@ suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(SeuratData, quietly = TRUE)))
 suppressMessages(suppressWarnings(InstallData("pbmc3k")))
 suppressMessages(suppressWarnings(data("pbmc3k")))
+pbmc3k <- UpdateSeuratObject(object = pbmc3k)
 
 ```
 
@@ -49,6 +50,7 @@ library(SeuratData)
 
 InstallData("pbmc3k")
 data("pbmc3k")
+pbmc3k <- UpdateSeuratObject(object = pbmc3k)
 
 ```
 
@@ -77,7 +79,8 @@ pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
 
 # Dimension reduction
 pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
-DimPlot(pbmc3k, reduction = "umap")
+dim_plot_orig <- DimPlot(pbmc3k, reduction = "umap")
+dim_plot_orig
 ```
 
 ## Extracting gene modules using SciGeneX
@@ -110,7 +113,7 @@ pbmc_scigenex <- select_genes(pbmc3k,
                               k = 50,
                               distance_method = "pearson",
                               which_slot = "data",
-                              row_sum=2)
+                              row_sum=5)
 
 # Run MCL
 pbmc_scigenex <- gene_clustering(pbmc_scigenex,
@@ -121,7 +124,7 @@ pbmc_scigenex <- gene_clustering(pbmc_scigenex,
 
 The object produced is a `ClusterSet` objet that is a S4 object that is intented to store gene modules. 
 
-```{r}
+```{r isS4}
 isS4(pbmc_scigenex)
 pbmc_scigenex
 ```
@@ -129,13 +132,13 @@ pbmc_scigenex
 There are various methods associated with the `ClusterSet` objects.
 
 
-```{r}
+```{r show_methods}
 show_methods()
 ```
 
 The current object contains `r nrow(pbmc_scigenex)` informative genes, `r ncol(pbmc_scigenex)` samples and `r nclust(pbmc_scigenex)` gene modules.
 
-```{r}
+```{r nrow_ncol}
 nrow(pbmc_scigenex)
 ncol(pbmc_scigenex)
 nclust(pbmc_scigenex)
@@ -143,14 +146,14 @@ nclust(pbmc_scigenex)
 
 At this stage, several modules need to be filtered, as many of them may be singletons. Interestingly, the `ClusterSet` class implements the indexing operator/function ("["). The first argument/dimension of the indexing function corresponds to the cluster stored in the object. The second dimension corresponds to the cell/spot names. As an example, we can simply store gene modules whose size (*i.e. number of genes) is greater than 7 using the following code. The result is an object containing gene modules `r nclust(pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ])`.
 
-```{r}
+```{r clust_size}
 pbmc_scigenex <- pbmc_scigenex[clust_size(pbmc_scigenex) > 7, ]
 nclust(pbmc_scigenex)
 ```
 
 It may also be important to filter out gene based on dispersion. Several parameters can be computed for each cluster using the `cluster_stats()`function.
 
-```{r}
+```{r plot_cluster_stats_1}
 plot_cluster_stats(cluster_stats(pbmc_scigenex)) + 
  ggplot2::theme(axis.text.y = ggplot2::element_blank(),
                 axis.text.x = element_text(angle=45, vjust = 0.5),
@@ -160,7 +163,7 @@ plot_cluster_stats(cluster_stats(pbmc_scigenex)) +
 
 Here we will select gene modules based on standard deviation (> 0.1) and rename the cluster (from 1 to the number of clusters):
 
-```{r}
+```{r rename_clust}
 pbmc_scigenex <- pbmc_scigenex[cluster_stats(pbmc_scigenex)$sd_total > 0.1, ] 
 pbmc_scigenex <- rename_clust(pbmc_scigenex)
 nclust(pbmc_scigenex)
@@ -168,7 +171,7 @@ nclust(pbmc_scigenex)
 
 Then we check the statistics again.
 
-```{r}
+```{r plot_cluster_stats}
 plot_cluster_stats(cluster_stats(pbmc_scigenex)) + 
  ggplot2::theme(axis.text.y = ggplot2::element_blank(),
                 axis.text.x = element_text(angle=45, vjust = 0.5),
@@ -177,14 +180,14 @@ plot_cluster_stats(cluster_stats(pbmc_scigenex)) +
 
 Clusters of genes are stored in the `gene_clusters` slot. One can access the gene names from a cluster using the `get_genes()` command. By default, all genes are returned.
 
-```{r }
+```{r genes_module_5}
 # Extract gene names from the 5th gene cluster
 genes_module_5 <- get_genes(pbmc_scigenex, cluster = 5)
 head(genes_module_5)
 ```
 One can also access the gene to cluster mapping using `get_genes()`.
 
-```{r}
+```{r head}
 head(gene_cluster(pbmc_scigenex))
 tail(gene_cluster(pbmc_scigenex))
 ```
@@ -197,7 +200,7 @@ tail(gene_cluster(pbmc_scigenex))
 Visualizing a heatmap containing all cells and modules can be time-consuming and require significant memory resources. A first alternative is to examine gene modules individually or a subset of modules. Gene modules can be visualized using the `plot_heatmap()` the `plot_ggheatmap()` functions. The former is primarily intended to provide an interactive visualization based on the `iheatmapr` library, and allows easy browsing of results and zooming in on particular regions of the heatmap. This second solution leads to a diagram that is more easily customized, as it is based on the ggplot framework. Here, we use `plot_ggheatmap()` to view the first 4 clusters. Note that here, we choose to order the columns/cells on the results of `Seurat::FindClusters`.
 
 
-```{r}
+```{r plot_ggheatmap_1}
 plot_ggheatmap(pbmc_scigenex[1:4, ], 
                use_top_genes = FALSE,
                ident=Idents(pbmc3k)) + ggtitle("Cluster 1 to 4") 
@@ -207,7 +210,7 @@ plot_ggheatmap(pbmc_scigenex[1:4, ],
 
 However, an alternative is to extract the most representative genes from each group. This can be achieved using the `top_genes()` function. This function stores the identifiers of these representative genes in the `top_genes` slot of the `ClusterSet` object. The `get_genes()` function is used to access the `top_genes` slot. 
 
-```{r}
+```{r top_genes}
 pbmc_scigenex <- top_genes(pbmc_scigenex)
 genes_cl5_top <- get_genes(pbmc_scigenex, cluster = 5, top = TRUE)
 genes_cl5_top
@@ -215,7 +218,7 @@ genes_cl5_top
 
 Both `plot_heatmap()` and `plot_ggheatmap()` support the `use_top_genes`argument:
 
-```{r, warning=FALSE }
+```{r plot_ggheatmap, warning=FALSE }
 
 plot_ggheatmap(pbmc_scigenex, 
                use_top_genes = TRUE,
@@ -225,25 +228,53 @@ plot_ggheatmap(pbmc_scigenex,
 
 ### Interactive heatmap
 
-A very interesting feature of SciGeneX is its ability to display gene expression levels in cells/spots using interactive heatmaps. With this function, the user can interactively evaluate expression levels in selected cells or groups, or over the whole dataset. However, it is generally advisable, when using all clusters, to restrict the analysis using `top_genes=TRUE`. Here, we'll display expression levels in cells from clusters 3 to 5.
+A very interesting feature of SciGeneX is its ability to display gene expression levels in cells/spots using interactive heatmaps. With this function, the user can interactively evaluate expression levels in selected cells or groups, or over the whole dataset. However, it is generally advisable, when using all clusters, to restrict the analysis using `top_genes=TRUE`. Here we will also select a subset of cells from each cluster.
+
+```{r plot_heatmap, echo=TRUE, eval=TRUE}
+sub_clust <- subsample_by_ident(pbmc_scigenex, 
+                                        nbcell=15,
+                                        ident=Seurat::Idents(pbmc3k)) 
+                                        
+plot_heatmap(sub_clust,
+            use_top_genes = TRUE,
+            cell_clusters =Seurat::Idents(pbmc3k))
+```
+
+## Improving cell resolution on UMAP
+
+On can use scigenex selected genes as input for PCA. One can expect some improvement regarding cell population resolution compare to original Seurat pipeline :
 
 ```{r}
-plot_heatmap(pbmc_scigenex[3:5, ], 
-               use_top_genes = TRUE,
-               cell_clusters =Seurat::Idents(pbmc3k))
+# Scaling data using genes from scigenex
+pbmc3k <- ScaleData(pbmc3k, features = rownames(pbmc_scigenex), verbose = FALSE)
+
+# Perform principal component analysis
+pbmc3k <- RunPCA(pbmc3k, features = VariableFeatures(object = pbmc3k), verbose = FALSE)
+
+# Cell clustering
+pbmc3k <- FindNeighbors(pbmc3k, dims = 1:10, verbose = FALSE)
+pbmc3k <- FindClusters(pbmc3k, resolution = 0.5, verbose = FALSE)
+
+# Dimension reduction
+pbmc3k <-suppressWarnings(RunUMAP(pbmc3k, dims = 1:10, verbose = FALSE))
+dim_plot_sci <- DimPlot(pbmc3k, reduction = "umap")
+
+dim_plot_orig + dim_plot_sci
 ```
+
 
 
 ## Exporting modules
 
 Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from genes to modules.
 
-```{r echo=FALSE}
+```{r exporting_1, echo=FALSE}
 tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
 out <- suppressWarnings(file.remove(tmp_file))
+dir.create(dirname(tmp_file), recursive = TRUE, showWarnings = FALSE)
 ```
 
-```{r}
+```{r exporting_2}
 tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
 cluster_set_to_xls(object=pbmc_scigenex, file_path=tmp_file)
 
@@ -253,7 +284,7 @@ cluster_set_to_xls(object=pbmc_scigenex, file_path=tmp_file)
 
 Functional enrichment analysis can be performed for each gene module using the `enrich_go()` function. Enrichments can be displayed using the `plot_clust_enrichments()` function.
 
-```{r , eval=TRUE, echo=TRUE}
+```{r func_enrich, eval=TRUE, echo=TRUE}
 # Functional enrichment analysis
 pbmc_scigenex <- enrich_go(pbmc_scigenex, specie = "Hsapiens", ontology = "BP")
 plot_clust_enrichments(pbmc_scigenex, gradient_palette=colors_for_gradient("Je1"), 
@@ -266,17 +297,17 @@ plot_clust_enrichments(pbmc_scigenex, gradient_palette=colors_for_gradient("Je1"
 
 Given a set of markers, the `plot_markers_to_clusters()` function can be used to map cell type markers to gene modules. This function will display jaccard and hypergeometric statistics. Here we will use the markers from the [sctype.app](https://sctype.app/) database.
 
-```{r eval=FALSE, echo=TRUE}
+```{r markers, eval=FALSE, echo=TRUE}
 library(dplyr)
 library(tidyr)
 ```
 
-```{r eval=TRUE, echo=FALSE}
+```{r suppressMessages, eval=TRUE, echo=FALSE}
 suppressMessages(suppressWarnings(library(dplyr)))
 suppressMessages(suppressWarnings(library(tidyr)))
 ```
 
-```{r}
+```{r plot_markers_to_clusters}
 sctype <- "https://zenodo.org/record/8269433/files/sctype.app.tsv"
 marker_table <- read.table(sctype, head=TRUE, sep="\t")
 marker_table <- marker_table %>% 
@@ -288,6 +319,28 @@ markers <- split(marker_table$Marker_genes,
                  marker_table$Cell.type)
 plot_markers_to_clusters(pbmc_scigenex, 
                          markers=markers, background = rownames(pbmc3k))
+```
+## Using scigenex selected genes to improve UMAP
+
+One can restrict PCA computation to the subset of genes selected by Scigenex. One can expected a significant improvement of segregation of cell populations. To do so one needs to provide the list of genes selected by scigenex to the `ScaleData()` function of Seurat. A indicated in the RunPCA() help function : "PCA will be run using the variable features for the Assay. Note that the features must be present in the scaled data. Any requested features that are not scaled or have 0 variance will be dropped, and the PCA will be run using the remaining features." 
+
+```{r improve_umap}
+# Scaling data
+feature_2_scale <- row_names(pbmc_scigenex)
+pbmc3k_alt <- ScaleData(pbmc3k, features = feature_2_scale, verbose = FALSE)
+
+# Perform principal component analysis
+pbmc3k_alt <- RunPCA(pbmc3k_alt, features = VariableFeatures(object = pbmc3k_alt), verbose = FALSE)
+
+# Cell clustering
+pbmc3k_alt <- FindNeighbors(pbmc3k_alt, dims = 1:10, verbose = FALSE)
+pbmc3k_alt <- FindClusters(pbmc3k_alt, resolution = 0.5, verbose = FALSE)
+
+# Dimension reduction
+pbmc3k_alt <-suppressWarnings(RunUMAP(pbmc3k_alt, dims = 1:10, verbose = FALSE))
+
+# Compare alternative projection (pbmc3k_alt) to original (pbmc3k)
+DimPlot(pbmc3k, reduction = "umap")  + DimPlot(pbmc3k_alt, reduction = "umap") 
 ```
 
 
@@ -301,7 +354,7 @@ The scigenex package offers a certain number of functions dedicated to spatial t
 
 Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat. 
 
-```{r}
+```{r spt}
 suppressWarnings(SeuratData::InstallData("stxBrain"))
 brain1 <- LoadData("stxBrain", type = "anterior1")
 brain1 <- NormalizeData(brain1, 
@@ -357,10 +410,14 @@ plot_ggheatmap(gcss_brain,
 
 ### Interactive heatmap
 
-Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 6 to 9.
+Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 1 to 9.
 
-```{r}
-plot_heatmap(gcss_brain[6:9,], 
+```{r plot_heatmap_st}
+gcss_brain_sub <- subsample_by_ident(gcss_brain, 
+                                     nbcell = 30, 
+                                     ident =  Seurat::Idents(brain1))
+
+plot_heatmap(gcss_brain_sub[1:9,], 
              use_top_genes = TRUE, 
              cell_clusters = Seurat::Idents(brain1))
 # Try selecting a subset of columns/rows
@@ -392,7 +449,7 @@ plot_spatial(seurat_obj = brain1,
 
 We may also want to visualize a specific gene. Here we will look at the pattern of "Hpca" which is part of the cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` detected by Scigenex.
 
-```{r}
+```{r Hpca_clust}
 "Hpca" %in% gcss_brain
 Hpca_clust <- which_clust( gcss_brain, "Hpca")
 Hpca_clust
@@ -400,7 +457,7 @@ Hpca_clust
 
 To this aim we will use the `plot_spatial()` function.
 
-```{r plot_spatial, fig.width=6, fig.height=4}
+```{r plot_spatial_Hpca, fig.width=6, fig.height=4}
 plot_spatial(seurat_obj = brain1, 
              gene_name = "Hpca",  
              pt_size=2.5, coord_flip = T) + hull_white  +
@@ -409,7 +466,7 @@ plot_spatial(seurat_obj = brain1,
 
 Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also contains several genes related to *Regulator Of G Protein* family. This can be checked with a regular expression using the `grep_clust()` function:
 
-```{r}
+```{r grep_clust}
 grep_clust(gcss_brain[Hpca_clust, ], "^Rgs")
 ```
 
@@ -469,7 +526,7 @@ plot_cmp_genesets(seurat_brain_mk, seurat_brain_mk, layout = "square", transform
 
 In contrast, gene partitioning in Scigenex is a hard clustering method (elements are not shared between clusters).
 
-```{r}
+```{r plot_cmp_genesets}
 plot_cmp_genesets(gcss_brain@gene_clusters, gcss_brain@gene_clusters, layout = "square", transform="-log10") + 
   xlab("Scigenex") + 
   ylab("Scigenex") 
@@ -477,7 +534,7 @@ plot_cmp_genesets(gcss_brain@gene_clusters, gcss_brain@gene_clusters, layout = "
 
 When comparing both one can see that, although some overlaps exist between gene clusters obtained from both appraoches, they are capturing different information that are probably complementary.
 
-```{r}
+```{r plot_cmp_genesets_2}
 plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "square", transform="-log10" )  +
   ylab("Seurat::FindAllMarkers()") + 
   xlab("Scigenex")

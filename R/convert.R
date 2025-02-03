@@ -4,7 +4,8 @@
 #' @param markers A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).
 #' @param which_slot One of 'data', 'counts' or 'sct'. The slot to extract from the seurat object to perform clustering analysis.
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
-#' @importFrom SeuratObject GetAssayData
+#' @param assay_type The type of assay ("RNA" or "Spatial").
+#' @importFrom SeuratObject LayerData
 #' @examples
 #' ## From a scRNA-seq/Seurat object
 #' library(SeuratObject)
@@ -21,12 +22,14 @@
 #' @export cluster_set_from_seurat
 cluster_set_from_seurat <- function(object=NULL, 
                                     markers=NULL,
-                                    which_slot=c('data', 'counts', 'sct')){
+                                    which_slot=c('data', 'counts', 'sct'),
+                                    assay_type=c('RNA', 'Spatial')){
   
   which_slot <- match.arg(which_slot)
+  assay_type <- match.arg(assay_type)
   
   if (which_slot %in% c("data", "counts")) {
-    object <- SeuratObject::GetAssayData(object, slot = which_slot)
+    object <- SeuratObject::LayerData(object, assay=assay_type, layer=which_slot)
   } else if (which_slot == "sct") {
     if ("SCT" %in% names(object@assays)) {
       object <- object@assays$SCT@data

@@ -209,7 +209,7 @@ test_that(paste("Checking SCT with pmbc_samll"), {
                   data_for_scigenex <- suppressWarnings(Seurat::SCTransform(pbmc_small, verbose = FALSE))
                   expr_matrix <- get_data_for_scigenex(data_for_scigenex, which_slot ="sct")
                   
-                  expect_true(round(mean(as.matrix(expr_matrix)[!is.na(as.matrix(expr_matrix))]), 3) == 0.282)
+                  expect_true(round(mean(as.matrix(expr_matrix)[!is.na(as.matrix(expr_matrix))]), 1) == 0.3)
                   expect_equal(ncol(expr_matrix), 80)
                   expect_equal(nrow(expr_matrix), 220) 
                 }

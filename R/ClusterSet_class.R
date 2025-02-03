@@ -246,9 +246,10 @@ setMethod("[", signature(x = "ClusterSet"),
               names(x@gene_clusters_metadata$cluster_id) <-
                 names(x@gene_clusters)
             
-            if (is.null(names(x@gene_clusters_metadata$size)))
-              names(x@gene_clusters_metadata$size) <-
-                names(x@gene_clusters)
+            
+            if(is.null(names(x@gene_clusters_metadata$cluster_id)))
+               names(x@gene_clusters_metadata$cluster_id) <-  names(x@gene_clusters)
+
             
             if (missing(j)) {
               if (missing(i)) {
@@ -331,6 +332,8 @@ setMethod("[", signature(x = "ClusterSet"),
               }
             }
             
+            cname <- clust_names(x)
+            csize <- clust_size(x)
             
             new(
               "ClusterSet",
@@ -821,3 +824,102 @@ setMethod("grep_clust",
               }
             lapply(object@gene_clusters, fgrep, regexp, val)
           })
+
+
+################################################################################
+##      Method for selecting a subset of column/cell for each identity
+################################################################################
+
+#' @title Given ncell, a target number, select ncell from each class of cell/column.
+#' @description Given ncell, a target number, select ncell from each class of cell/column.
+#' @param object a ClusterSet object.
+#' @param ident A named vector. Names are cell/column names, values are classes/identity. 
+#' Typically the result of the Seurat::Ident() function.
+#' @param nbcell The number of cell to select.
+#' @param seed A seed for subsampling.
+#' @export subsample_by_ident
+#' @examples
+#' # load a dataset
+#' @keywords internal
+setGeneric("subsample_by_ident", 
+           function(object, 
+                    ident=NULL, 
+                    nbcell=TRUE,
+                    seed=123)
+             standardGeneric("subsample_by_ident")
+)
+
+#' @title Given ncell, a target number, select ncell from each class of cell/column.
+#' @description Given ncell, a target number, select ncell from each class of cell/column.
+#' @param object a ClusterSet object.
+#' @param ident A named vector. Names are cell/column names, values are classes/identity. 
+#' Typically the result of the Seurat::Ident() function.
+#' @param nbcell The number of cell to select.
+#' @param seed A seed for subsampling.
+#' @export subsample_by_ident
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' idents <- sample(1:10, size=ncol(pbmc3k_medium_clusters), rep=TRUE)
+#' names(idents) <- col_names(pbmc3k_medium_clusters)
+#' sub <- subsample_by_ident(pbmc3k_medium_clusters, 
+#'          ident=idents,
+#'          nbcell=10)
+setMethod("subsample_by_ident", 
+          signature("ClusterSet"), 
+          function(object, 
+                   ident=NULL, 
+                   nbcell=TRUE,
+                   seed=123) {
+            
+            
+            check_format_cluster_set(object)
+            
+            print_msg(paste0("Number of cell in the object: ", ncol(object)), msg_type = "DEBUG")
+            
+            if(is.null(ident)){
+              print_msg('Please set the ident argument.')
+            }else{
+              
+              name_idents <- names(ident)
+              
+              if(is.null(name_idents)){
+                print_msg("The 'ident' argument needs a named vector.")
+              }
+              
+              if(length(which(names(ident) == "")) != 0){
+                print_msg("The 'ident' argument needs a named vector or a named list of named vector.")
+              }
+              
+              
+            }
+            
+            cell_ident <- split(names(ident),  ident)
+            
+            subsample <- function(x, y, seed){
+                            if(length(x) < y){
+                              print_msg("Not enough cells for sampling, returning max", msg_type = "DEBUG")
+                                return(x)
+                            }else{
+                              set.seed(seed)
+                              print_msg("Sampling requested number of cells", msg_type = "DEBUG")
+                              return(sample(x, size = y, replace = FALSE))
+                            }
+                        }
+            
+            cell_ident <- unlist(lapply(cell_ident, subsample, nbcell, seed))
+            
+            print_msg(paste0("Number of cell left: ", length(cell_ident)), msg_type = "DEBUG")
+            
+            object <- object[, cell_ident]
+
+            return(object)
+            
+          })
+
+
+
+

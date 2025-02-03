@@ -483,3 +483,24 @@ test_that("Checking gene_cluster() is working...", {
   expect_equal(paste0(unlist(res@gene_clusters[1:4]), collapse = " "), 
                paste0(names(gene_cluster(res, cluster = 1:4)), collapse = " "))
 })
+
+
+test_that("Checking subsample_by_ident() is working...", { 
+  
+  # Set verbosity to 0
+  set_verbosity(0)
+  
+  load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+  res <- pbmc3k_medium_clusters
+
+  set.seed(123)
+  idents <- sample(1:10, size=ncol(pbmc3k_medium_clusters), rep=TRUE)
+  names(idents) <- col_names(pbmc3k_medium_clusters)
+  sub <- subsample_by_ident(pbmc3k_medium_clusters, 
+            ident=idents,
+            nbcell=10)
+            
+  expect_equal(ncol(sub), 100)
+  expect_equal(nrow(sub), nrow(pbmc3k_medium_clusters))
+  expect_equal(all(row_names(pbmc3k_medium_clusters)==row_names(sub)), TRUE)
+})
