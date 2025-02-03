@@ -553,6 +553,9 @@ setMethod("which_clust",
             tmp[genes]
 })
 
+################################################################################
+##      Method for searching genes using REGEXP
+################################################################################
 
 #' @title Search gene module using a regular expression.
 #' @description Search gene module using a regular expression.
@@ -793,54 +796,6 @@ setMethod("reorder_clust",
             
             return(object)
             
-          })
-
-################################################################################
-##      Method for searching genes using REGEXP
-################################################################################
-
-#' @title Search genes within ClusterSet using a REGEXP.
-#' @description Search genes within ClusterSet using a REGEXP.
-#' @param object a ClusterSet object.
-#' @param regexp The regular expression
-#' @param val if FALSE, a vector containing the (integer) indices of the matches determined 
-#' by grep is returned, and if TRUE, a vector containing the matching elements themselves 
-#' is returned.
-#' @export grep_clust
-#' @examples
-#' # load a dataset
-#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-#' grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")
-#' @keywords internal
-setGeneric("grep_clust", 
-           function(object, regexp=NULL, val=TRUE)
-             standardGeneric("grep_clust")
-)
-
-#' @title Search genes within ClusterSet using a REGEXP.
-#' @description Search genes within ClusterSet using a REGEXP.
-#' @param object a ClusterSet object.
-#' @param regexp The regular expression
-#' @param val if FALSE, a vector containing the (integer) indices of the matches determined 
-#' by grep is returned, and if TRUE, a vector containing the matching elements themselves 
-#' is returned.
-#' @export grep_clust
-#' @examples
-#' # load a dataset
-#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-#' grep_clust(pbmc3k_medium_clusters, "^CD")
-setMethod("grep_clust", 
-          signature("ClusterSet"), 
-          function(object, 
-                   regexp=NULL, val=TRUE) {
-            
-            check_format_cluster_set(object)
-            
-            if(is.null(regexp)){
-              print_msg('Please provide regexp argument.')
-            }
-            fgrep <- function(x, regexp, val){grep(regexp, x, value=val)}
-            lapply(object@gene_clusters, fgrep, regexp, val)
           })
 
 
