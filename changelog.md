@@ -7,7 +7,8 @@
 * keep_dbf_graph() was renamed do_reciprocal_neighbor_graph()
 * code refactoring (mainly comments).
 * Deleted code relics (ident argument as list) from plot_ggheatmap().
-* Added the subsample_by_ident() method for a ClusterSet object. handy to be used with plot_ggheatmap or plot_heatmap (to put emphasis on small populations). 
+* Added the subsample_by_ident() method for a ClusterSet object. handy to be used with plot_ggheatmap or plot_heatmap (to put emphasis on small populations).
+* Added grep_clust().
 
 ## v1.4.10
 
