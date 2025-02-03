@@ -1,12 +1,13 @@
 # Changelog
 
-## v1.5.0
+## v1.4.13
 
 * Added support for Louvain and walktrap: call_walktrap_clusterset(), call_louvain_clusterset()
 * construct_new_graph() was renamed do_closest_neighbor_graph()
 * keep_dbf_graph() was renamed do_reciprocal_neighbor_graph()
 * code refactoring (mainly comments).
-
+* Deleted code relics (ident argument as list) from plot_ggheatmap().
+* Added the subsample_by_ident() method for a ClusterSet object. handy to be used with plot_ggheatmap or plot_heatmap (to put emphasis on small populations). 
 
 ## v1.4.10
 

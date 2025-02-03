@@ -75,5 +75,10 @@ new_obj <- rename_clust(pbmc3k_medium_clusters, new_name=sprintf("M\%02d", as.in
 # Use plot_ggheatmap
 ident_pbmc3k <- sort(Seurat::Idents(pbmc3k_medium))
 new_obj <- top_genes(new_obj)
-plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
+plot_ggheatmap(new_obj, ident=ident_pbmc3k)
+
+# Only show a set of randomly selected cells from each class
+# to get balanced classes
+sub_obj <- subsample_by_ident(new_obj, nbcell=10, ident=ident_pbmc3k)
+plot_ggheatmap(sub_obj, ident=ident_pbmc3k)
 }

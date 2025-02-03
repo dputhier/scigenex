@@ -1,10 +1,9 @@
-pandoc: '2.10'
-pkgdown: 2.0.7
+pandoc: '3.5'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   usage: usage.html
-last_built: 2024-01-24T08:39Z
+last_built: 2025-01-08T12:55Z
 urls:
   reference: https://scigenex.r-lib.org/reference
   article: https://scigenex.r-lib.org/articles
-
