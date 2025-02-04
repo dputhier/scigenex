@@ -536,6 +536,8 @@ mcl_system_cmd <- function(object = NULL,
     }
     
   }
+  
+  print(paste0("MCL path : ", mcl_dir))
 
   name <- object@parameters$name
   input_path <- object@parameters$output_path
