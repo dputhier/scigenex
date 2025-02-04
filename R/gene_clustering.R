@@ -548,6 +548,8 @@ mcl_system_cmd <- function(object = NULL,
   threads <- paste("-te", threads, sep = " ")
   
   ## launching mcl program
+  print_msg(paste0("mcl_dir:", mcl_dir))
+  
   if(mcl_dir == "" | mcl_dir == " "){
     mcl_path <- "mcl"
   }else{
