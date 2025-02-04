@@ -528,6 +528,9 @@ mcl_system_cmd <- function(object = NULL,
     if(length(mcl_dir) == 0){
       print_msg("MCL was not found in the PATH nor in  ~/.scigenex. Installing in ~/.scigenex")  
       install_mcl()
+      mcl_dir <- file.path(path.expand('~'), 
+                           ".scigenex", "mcl*",
+                           "bin")
     }else{
       print_msg("MCL was found in the .scigenex home directory.")
     }
