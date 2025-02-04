@@ -522,7 +522,7 @@ mcl_system_cmd <- function(object = NULL,
   }
   
   ## Testing mcl installation
-  if(!is.null(mcl_dir)){
+  if(is.null(mcl_dir)){
     
     if (Sys.which("mcl") != "") {
       print_msg("Found MCL program in the path...", msg_type = "DEBUG")
