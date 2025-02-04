@@ -92,8 +92,8 @@ setMethod("top_by_go",
               print_msg(paste0("Processing cluster ", i), msg_type = "INFO")
               
               go_list <- biomaRt::getBM(attributes=c("go_id",
-                                            "hgnc_symbol"),
-                               filters = "hgnc_symbol",
+                                                     gene_id),
+                               filters = gene_id,
                                values = object@gene_clusters[[i]],
                                mart=mart)
               

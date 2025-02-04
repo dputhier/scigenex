@@ -1,11 +1,11 @@
 ---
 author: "Julie Bavais"
 date: "`r Sys.Date()`"
-title: "2 - Spatial transcriptomics guided tutorial"
+title: "Visium guided tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Guided tutorial}
+  %\VignetteIndexEntry{Visium guided tutorial}
   %\usepackage[UTF-8]{inputenc}
 ---
 
@@ -180,4 +180,36 @@ p <- plot_spatial_panel(brain1,
                    barwidth = 0.25, barheight = 1.5, 
                    coord_flip=T) 
 print(p + guide_area())
+```
+
+## Comparing FindAllMarkers() and Scigenex gene modules
+
+The SciGeneX package propose several functions to evaluate to compare gene sets. They can be handy to compare, for instance, the clusters from two ClusterSet objects (*e.g.* obtained with different parameters). We may
+
+It may be interesting to compare the clusters obtained using an unsupervised approach (SciGeneX) with those obtained from `Seurat::FindAllMarkers()`, which searches for genes differentially expressed between cell populations deduced by `Seurat::FindClusters()`.
+
+As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers are shared between gene modules.
+
+```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE, results='hide'}
+seurat_brain_mk <- Seurat::FindAllMarkers(brain1)
+seurat_brain_mk<- split(seurat_brain_mk$gene, seurat_brain_mk$cluster)
+plot_cmp_genesets(seurat_brain_mk, seurat_brain_mk, layout = "square", transform="-log10" ) + 
+  xlab("Seurat::FindAllMarkers()") + 
+  ylab("Seurat::FindAllMarkers")
+```
+
+In contrast, gene partitioning in Scigenex is a hard clustering method (elements are not shared between clusters).
+
+```{r plot_cmp_genesets}
+plot_cmp_genesets(gcss_brain@gene_clusters, gcss_brain@gene_clusters, layout = "square", transform="-log10") + 
+  xlab("Scigenex") + 
+  ylab("Scigenex") 
+```
+
+When comparing both one can see that, although some overlaps exist between gene clusters obtained from both appraoches, they are capturing different information that are probably complementary.
+
+```{r plot_cmp_genesets_2}
+plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "square", transform="-log10" )  +
+  ylab("Seurat::FindAllMarkers()") + 
+  xlab("Scigenex")
 ```

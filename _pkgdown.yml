@@ -1,5 +1,5 @@
 title: scigenex
-url: https://scigenex.r-lib.org
+url: https://github.com/dputhier/scigenex
 
 template:
   params :
@@ -14,5 +14,7 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Guided tutorial"
+    - text: "1 - scRNA-seq guided tutorial"
       href: articles/usage.html
+    - text: "2 - Spatial transcriptomics guided tutorial"
+      href: articles/spatial.html
