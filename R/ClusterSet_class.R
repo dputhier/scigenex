@@ -893,3 +893,68 @@ setMethod("subsample_by_ident",
             
           })
 
+################################################################################
+##      Method for printing gene clusters
+################################################################################
+
+#' @title Write the cluster to files.
+#' @description  Write the cluster to files.
+#' @param object a ClusterSet object.
+#' @param sep The separator
+#' @param file_prefix A file prefix.
+#' @param path A directory to store the files.
+#' @export write_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' write_clust(pbmc3k_medium_clusters[1:3,], path="/tmp")
+#' @keywords internal
+
+setGeneric("write_clust", 
+           function(object,
+                    sep = "\n",
+                    file_prefix="scigenex_clust_",
+                    path=NULL)
+             standardGeneric("write_clust")
+)
+
+#' @title Write the cluster to files.
+#' @description  Write the cluster to files.
+#' @param object a ClusterSet object.
+#' @param sep The separator
+#' @param file_prefix A file prefix.
+#' @param path A directory to store the files.
+#' @export write_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' write_clust(pbmc3k_medium_clusters[1:3,], path="/tmp")
+setMethod("write_clust", 
+          signature("ClusterSet"), 
+          function(object,
+                   sep = "\n",
+                   file_prefix="scigenex_clust_",
+                   path=NULL) {
+            
+            if(is.null(path)){
+              path <- getwd()
+            }else{
+              if(!dir.exists(path)){
+                print_msg(paste0("Creating a path for output: ", 
+                                 path), 
+                          msg_type = "INFO")
+                dir.create(path, showWarnings = FALSE, recursive = TRUE) 
+                
+              }
+            }
+            
+            check_format_cluster_set(object)
+            cat_fun <- function(x, sep=NULL, file=NULL) cat(paste0(sort(x), collapse = sep), file=file) 
+            
+            for(i in 1:length(object@gene_clusters)){
+              file_out <- paste0(file_prefix, "_", i, ".txt")
+              cat_fun(object@gene_clusters[[i]], sep=sep, 
+                      file=file.path(path, file_out))
+            }
+            
+ })
