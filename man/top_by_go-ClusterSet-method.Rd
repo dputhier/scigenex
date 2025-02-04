@@ -9,7 +9,8 @@
   go_id = "GO:0003677",
   species = "hsapiens",
   gene_id = "hgnc_symbol",
-  host = "https://www.ensembl.org"
+  host = "https://www.ensembl.org",
+  as_list = FALSE
 )
 }
 \arguments{
@@ -24,9 +25,11 @@
 use biomaRt::listFilters() to get the vailable list.}
 
 \item{host}{Host to connect to. Defaults to www.ensembl.org.}
+
+\item{as_list}{Return a list not a ClusterSet object.}
 }
 \value{
-A \code{ClusterSet} object.
+A \code{ClusterSet} object or a list (see as_list).
 }
 \description{
 The clusterSet object contains a top_genes slot that can be used to display 

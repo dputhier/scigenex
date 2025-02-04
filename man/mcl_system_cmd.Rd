@@ -4,7 +4,12 @@
 \alias{mcl_system_cmd}
 \title{Call MCL program for graph partitioning (internal).}
 \usage{
-mcl_system_cmd(object = NULL, inflation = inflation, threads = 1)
+mcl_system_cmd(
+  object = NULL,
+  inflation = inflation,
+  threads = 1,
+  mcl_dir = NULL
+)
 }
 \arguments{
 \item{object}{a ClusterSet object.}

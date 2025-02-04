@@ -21,6 +21,7 @@
 #' @param walktrap_step The length of the random walks to perform for walktrap algorithm.
 #' @param infomap_nb nb.trials parameter for igraph::cluster_infomap().
 #' @param infomap_modularity modularity parameter for igraph::cluster_infomap().
+#' @param mcl_dir A path to MCL (if issue with automated installation).
 #' @return A ClusterSet object
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
@@ -76,7 +77,8 @@ gene_clustering <- function(object = NULL,
                             louv_resolution=5,
                             walktrap_step=4,
                             infomap_nb=10,
-                            infomap_modularity=TRUE) {
+                            infomap_modularity=TRUE,
+                            mcl_dir=NULL) {
   
   print_msg("Retrieving args.", msg_type = "DEBUG")
   
@@ -118,7 +120,8 @@ gene_clustering <- function(object = NULL,
     print_msg("MCL algorithm has been selected.")
     object <- mcl_system_cmd(object = object,
                              inflation = inflation,
-                             threads = threads)
+                             threads = threads,
+                             mcl_dir=mcl_dir)
     
     clust_out_file <- file.path(object@parameters$output_path,
                               paste0(object@parameters$name, ".graph_out.txt"))
@@ -509,7 +512,8 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
 #' @export mcl_system_cmd
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,
-                           threads = 1) {
+                           threads = 1,
+                           mcl_dir=NULL) {
   ## testing the system
   if (.Platform$OS.type == "windows") {
     stop("--> A unix-like OS is required to launch the MCL program.")
@@ -518,21 +522,31 @@ mcl_system_cmd <- function(object = NULL,
   }
   
   ## Testing mcl installation
-  if (Sys.which("mcl") != "") {
-    print_msg("Found MCL program in the path...", msg_type = "DEBUG")
-    mcl_dir <- ""
-  } else {
-    mcl_dir <- Sys.glob(file.path(path.expand('~'), 
-                                  ".scigenex", "mcl*",
-                                  "bin"))
-    if(length(mcl_dir) == 0){
-      print_msg("MCL was not found in the PATH nor in  ~/.scigenex. Installing in ~/.scigenex")  
-      install_mcl()
-    }else{
-      print_msg("MCL was found in the .scigenex home directory.")
+  if(is.null(mcl_dir)){
+    
+    if (Sys.which("mcl") != "") {
+      print_msg("Found MCL program in the path...", msg_type = "DEBUG")
+      mcl_dir <- ""
+    } else {
+      mcl_dir <- Sys.glob(file.path(path.expand('~'), 
+                                    ".scigenex", "mcl*",
+                                    "src", "shmcl"))
+      if(length(mcl_dir) == 0){
+        print_msg("MCL was not found in the PATH nor in  ~/.scigenex. Installing in ~/.scigenex")  
+        install_mcl()
+        mcl_dir <- Sys.glob(file.path(path.expand('~'), 
+                                      ".scigenex", "mcl*",
+                                      "src", "shmcl"))
+      }else{
+        print_msg("MCL was found in the .scigenex home directory.")
+      }
+      
     }
     
   }
+  
+  
+  print(paste0("MCL path : ", mcl_dir))
 
   name <- object@parameters$name
   input_path <- object@parameters$output_path
@@ -550,13 +564,15 @@ mcl_system_cmd <- function(object = NULL,
   ## launching mcl program
   print_msg(paste0("mcl_dir:", mcl_dir))
   
-  if(mcl_dir == "" | mcl_dir == " "){
-    mcl_path <- "mcl"
+  if(mcl_dir == ""){
+    mcl_dir <- "mcl"
+  }else if(mcl_dir == " "){
+    mcl_dir <- "mcl"
   }else{
-    mcl_path <- file.path(mcl_dir, "mcl")
+    mcl_dir <- file.path(mcl_dir, "mcl")
   }
   
-  cmd <- paste0(mcl_path, 
+  cmd <- paste0(mcl_dir, 
                 " ",
                 input_path,
                 "/",

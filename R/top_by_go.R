@@ -13,7 +13,8 @@
 #' @param gene_id The type of gene identifier in the clusterSet object (default hgnc_symbol). 
 #' use biomaRt::listFilters() to get the vailable list.
 #' @param host Host to connect to. Defaults to www.ensembl.org.
-#' @return A \code{ClusterSet} object.
+#' @param as_list Return a list not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
 #' @export top_by_go
 #' @keywords internal
 #' @examples
@@ -34,7 +35,8 @@ setGeneric("top_by_go",
                     go_id = "GO:0003677",
                     species = "hsapiens",
                     gene_id = "hgnc_symbol",
-                    host="https://www.ensembl.org")
+                    host="https://www.ensembl.org",
+                    as_list=FALSE)
              standardGeneric("top_by_go")
 )
 
@@ -50,9 +52,9 @@ setGeneric("top_by_go",
 #' @param gene_id The type of gene identifier in the clusterSet object (default hgnc_symbol). 
 #' use biomaRt::listFilters() to get the vailable list.
 #' @param host Host to connect to. Defaults to www.ensembl.org.
-#' @return A \code{ClusterSet} object.
+#' @param as_list Return a list not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
 #' @export top_by_go
-#'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -72,7 +74,8 @@ setMethod("top_by_go",
                     go_id = "GO:0003677",
                     species = "hsapiens",
                     gene_id = "hgnc_symbol",
-                    host="https://www.ensembl.org") {
+                    host="https://www.ensembl.org",
+                    as_list=FALSE) {
             
             ensembl <- biomaRt::useEnsembl(biomart = "ensembl", mirror='uswest')
             
@@ -104,7 +107,12 @@ setMethod("top_by_go",
             top_gn <- lapply(top_gn, unique)
             top_gn <- lapply(top_gn, sort)
             
-            object@top_genes <- top_gn
+            if(as_list){
+              return(top_gn)
+            }else{
+              object@top_genes <- top_gn
+              return(object)
+            }
             
-            return(object)
 })
+

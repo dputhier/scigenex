@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.1
+
+* Fix gene_clustering() and mcl_install(). Added 'mcl_dir' argument to `gene_clustering()` (in case automated installation in difficult, e.g., when running in a proprietary environnement).
+* Fix `top_by_go()`. Added argument 'as_list'.
+* Documentation has been splitted in two part (scRNA-seq and ST).
+
 ## v1.4.13
 
 * Added support for Louvain and walktrap: call_walktrap_clusterset(), call_louvain_clusterset()

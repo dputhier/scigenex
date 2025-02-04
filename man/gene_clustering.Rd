@@ -17,7 +17,8 @@ gene_clustering(
   louv_resolution = 5,
   walktrap_step = 4,
   infomap_nb = 10,
-  infomap_modularity = TRUE
+  infomap_modularity = TRUE,
+  mcl_dir = NULL
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ in the neighborhood of the other}
 \item{infomap_nb}{nb.trials parameter for igraph::cluster_infomap().}
 
 \item{infomap_modularity}{modularity parameter for igraph::cluster_infomap().}
+
+\item{mcl_dir}{A path to MCL (if issue with automated installation).}
 }
 \value{
 A ClusterSet object
