@@ -96,8 +96,8 @@ setMethod("top_by_go",
                                filters = gene_id,
                                values = object@gene_clusters[[i]],
                                mart=mart)
-              
-              to_keep <- go_list$hgnc_symbol[go_list$go_id %in% go_id]
+
+              to_keep <- go_list[,gene_id][go_list$go_id %in% go_id]
               top_gn[[i]] <- sort(to_keep)
             }
             
