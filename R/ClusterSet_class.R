@@ -587,7 +587,7 @@ setMethod("grep_clust",
           function(object=NULL, 
                    reg_exp=NULL) {
             check_format_cluster_set(object)
-            grep_clust <- function(x, y, val=TRUE){ grep(y, x, val=val)}
+            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val)}
             hits <- stack(lapply(object@gene_clusters, grep_term, reg_exp))
             hits <- setNames(hits$values, hits$ind)
             return(hits)
