@@ -568,6 +568,46 @@ setMethod("which_clust",
             tmp[genes]
           })
 
+################################################################################
+##      Method for searching genes using REGEXP
+################################################################################
+
+#' @title Search gene module using a regular expression.
+#' @description Search gene module using a regular expression.
+#' @param object a ClusterSet object.
+#' @param reg_exp The regular expression indicating the genes to be found.
+#' @export grep_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' hit <- grep_clust(pbmc3k_medium_clusters, reg_exp="^T.*[0-9]$")
+#' @keywords internal
+setGeneric("grep_clust", 
+           function(object,
+                    reg_exp = NULL)
+             standardGeneric("grep_clust")
+)
+
+#' @title Search gene module using a regular expression.
+#' @description Search gene module using a regular expression.
+#' @param object a ClusterSet object.
+#' @param reg_exp The regular expression indicating the genes to be found.
+#' @export grep_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' hit <- grep_clust(pbmc3k_medium_clusters, reg_exp="^T.*[0-9]$")
+setMethod("grep_clust", 
+          signature("ClusterSet"), 
+          function(object=NULL, 
+                   reg_exp=NULL) {
+            check_format_cluster_set(object)
+            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val)}
+            hits <- stack(lapply(object@gene_clusters, grep_term, reg_exp))
+            hits <- setNames(hits$values, hits$ind)
+            return(hits)
+          })
+
 
 ################################################################################
 ##      Method for renaming clusters from a clusterSet
@@ -773,6 +813,7 @@ setMethod("reorder_clust",
             
           })
 
+
 ################################################################################
 ##      Method for searching genes using REGEXP
 ################################################################################
@@ -824,6 +865,7 @@ setMethod("grep_clust",
               }
             lapply(object@gene_clusters, fgrep, regexp, val)
           })
+
 
 
 ################################################################################
@@ -919,7 +961,4 @@ setMethod("subsample_by_ident",
             return(object)
             
           })
-
-
-
 

@@ -2,8 +2,10 @@
 % Please edit documentation in R/ClusterSet_class.R
 \name{grep_clust}
 \alias{grep_clust}
-\title{Search genes within ClusterSet using a REGEXP.}
+\title{Search gene module using a regular expression.}
 \usage{
+grep_clust(object, regexp = NULL, val = TRUE)
+
 grep_clust(object, regexp = NULL, val = TRUE)
 }
 \arguments{
@@ -14,11 +16,18 @@ grep_clust(object, regexp = NULL, val = TRUE)
 \item{val}{if FALSE, a vector containing the (integer) indices of the matches determined
 by grep is returned, and if TRUE, a vector containing the matching elements themselves
 is returned.}
+
+\item{reg_exp}{The regular expression indicating the genes to be found.}
 }
 \description{
+Search gene module using a regular expression.
+
 Search genes within ClusterSet using a REGEXP.
 }
 \examples{
+# load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+hit <- grep_clust(pbmc3k_medium_clusters, reg_exp="^T.*[0-9]$")
 # load a dataset
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 grep_clust(pbmc3k_medium_clusters, "[Kk][Rr][Tt]")

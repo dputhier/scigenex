@@ -531,3 +531,18 @@ load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
 
 }
 
+
+# -------------------------------------------------------------------------
+# Reload the package     --------------------------------------------------
+# -------------------------------------------------------------------------
+#' @title Reload scigenex (used for development).
+#' @description
+#' Reload scigenex (used for development).
+#' @returns NULL
+#' @examples
+#' reload_pac()
+#' @export reload_pac
+reload_pac <- function(){
+  tryCatch(detach("package:scigenex", unload = TRUE))
+  library(scigenex)
+}
