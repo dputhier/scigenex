@@ -1,0 +1,183 @@
+---
+author: "Julie Bavais"
+date: "`r Sys.Date()`"
+title: "2 - Spatial transcriptomics guided tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Guided tutorial}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+
+## Working with spatial transcriptomics datasets
+
+The scigenex package offers a certain number of functions dedicated to spatial transcriptomic data analysis. At the moment these functions have been mainly developed to analyse VISIUM technology (10X Genomics).
+
+### Searching for gene modules
+
+### Pre-process spatial transcriptomics data
+
+Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat. 
+
+```{r spt}
+library(Seurat)
+library(SeuratData)
+library(scigenex)
+library(ggplot2)
+library(patchwork)
+
+suppressWarnings(SeuratData::InstallData("stxBrain"))
+brain1 <- LoadData("stxBrain", type = "anterior1")
+brain1 <- NormalizeData(brain1, 
+                        normalization.method = "LogNormalize",
+                        verbose = FALSE)
+brain1 <- ScaleData(brain1, verbose = FALSE)
+brain1 <- FindVariableFeatures(brain1, verbose = FALSE)
+brain1 <- RunPCA(brain1, assay = "Spatial", verbose = FALSE)
+brain1 <- FindNeighbors(brain1, reduction = "pca", dims = 1:20, verbose = FALSE)
+brain1 <- FindClusters(brain1, verbose = FALSE)
+brain1 <- RunUMAP(brain1, reduction = "pca", dims = 1:20, verbose = FALSE)
+
+DimPlot(brain1, reduction = "umap", label = TRUE)
+SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
+```
+
+### Calling scigenex
+
+Here we will used the alternative clustering methods proposed by scigenex ("reciprocal_neighborhood"). It is advise to increase slightly k (here k will be set to 80). After call to `gene_clustering()` we apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
+
+```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
+res_brain <- select_genes(data=brain1,
+                    k=80,
+                    distance_method="pearson",
+                    row_sum = 5)
+
+gc_brain <- gene_clustering(res_brain, 
+                            method = "reciprocal_neighborhood", 
+                            inflation = 2, 
+                            threads = 4)
+
+gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
+df <- cluster_stats(gcs_brain) 
+gcss_brain <- gcs_brain[df$sd_total > 0.1, ]
+gcss_brain <- rename_clust(gcss_brain)
+length(row_names(gcss_brain))
+nclust(gcss_brain)
+```
+
+Interestingly, Scigenex algorithm is able to retrieve `nclust(gcss_brain)` gene modules. This is most probably reminiscent of cell complexity but also of numerous molecular pathways that are differentially activated across the organ and unanticipated complexity.  
+
+### Visualizing corresponding heatmap
+
+We then may display the corresponding heatmap using `plot_ggheatmap()`.
+
+```{r heatspatial, warning=FALSE }
+gcss_brain <- top_genes(gcss_brain)
+plot_ggheatmap(gcss_brain, 
+               use_top_genes = TRUE,
+               ident=Idents(brain1)) + ggtitle("All clusters (top genes)") +
+               theme(strip.text.y = element_text(size=3))
+```
+
+### Interactive heatmap
+
+Again, as in the context of scRNA-seq, we may also  use the powerful `plot_heatmap()` fonction which allows interactive exploration of all or specific clusters. Here we look at cluster 1 to 9.
+
+```{r plot_heatmap_st}
+gcss_brain_sub <- subsample_by_ident(gcss_brain, 
+                                     nbcell = 30, 
+                                     ident =  Seurat::Idents(brain1))
+
+plot_heatmap(gcss_brain_sub[1:9,], 
+             use_top_genes = TRUE, 
+             cell_clusters = Seurat::Idents(brain1))
+# Try selecting a subset of columns/rows
+# The 'home' button can be used to reset
+# the heatmap
+```
+
+### Visualizing topological clusters
+
+The scigenex library implements the `plot_spatial()` function to display topological information. In addition to the signal, specific regions can be highlighted using a hull that can be created using the `display_hull()` function. Here will also add a hull around seurat cluster 0 and 2. We will then display signal for "seurat_clusters" metadata.
+
+```{r hull_white, fig.width=6, fig.height=4}
+hull_white <- display_hull(getFlippedTissueCoordinates(brain1),
+                           ident = ifelse(Idents(brain1) %in% c(0, 2), 
+                                          1, 0),
+                           color = "white", 
+                           size_x=4, size_y=3, 
+                           hull_type = "wall", 
+                           size = 0.5, 
+                           step_x = 2.6, 
+                           step_y=2.4, 
+                           delta = 1.5)
+
+plot_spatial(seurat_obj = brain1, 
+             metadata = "seurat_clusters", 
+             pt_size=2.5, coord_flip = T) + hull_white
+
+```
+
+We may also want to visualize a specific gene. Here we will look at the pattern of "Hpca" which is part of the cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` detected by Scigenex.
+
+```{r Hpca_clust}
+"Hpca" %in% gcss_brain
+Hpca_clust <- which_clust( gcss_brain, "Hpca")
+Hpca_clust
+```
+
+To this aim we will use the `plot_spatial()` function.
+
+```{r plot_spatial_Hpca, fig.width=6, fig.height=4}
+plot_spatial(seurat_obj = brain1, 
+             gene_name = "Hpca",  
+             pt_size=2.5, coord_flip = T) + hull_white  +
+  ggtitle("Hpca expression pattern.")
+```
+
+Note that cluster `r setNames(which_clust( gcss_brain, "Hpca"), NULL)` also contains several genes related to *Regulator Of G Protein* family. This can be checked with a regular expression using the `grep_clust()` function:
+
+```{r grep_clust}
+grep_clust(gcss_brain[Hpca_clust, ], "^Rgs")
+```
+
+To visualize the topological distribution of signals in each cluster, we'll *(i)* extract the `gene_clusters` slot from the `gcss` object, *(ii)* calculate the module score using Seurat's `AddModuleScore()` function and *(iii)* store the results in the seurat object. Note that, for each gene module, the signal will be scaled from 0 to 1, allowing us to have a common legend for all plots.
+
+```{r AddModuleScore, echo=TRUE, eval=TRUE, warning=FALSE}
+brain1 <- AddModuleScore(brain1, features = gcss_brain@gene_clusters)
+
+for(i in 1:nclust(gcss_brain)){ # Normalizing module scores
+  tmp <- brain1[[paste0("Cluster", i, sep="")]] 
+  max_tmp <- max(tmp)
+  min_tmp <- min(tmp)
+  brain1[[paste0("Cluster", i, sep="")]]  <- (tmp[,1] - min(tmp))/(max_tmp - min_tmp)
+}
+```
+
+The topological profile of cluster `r Hpca_clust` (that contains Hpca, a strong hippocampus marker) is the following:
+
+
+```{r plot_spatialHpca_clust, fig.width=6, fig.height=4}
+plot_spatial(seurat_obj = brain1, 
+             metadata = paste("Cluster", setNames(Hpca_clust, NULL), sep=""), 
+             pt_size=2.5, coord_flip = T) + hull_white
+```
+
+We can easily see that the Hpca-containing gene module pattern is very similar to the Hpca pattern. However, the analysis suggests a more complex tissue architecture than expected, as the Hpca signal extends beyond Seurat's cluster 0.
+
+We will then display the topological signal of all clusters using the `plot_spatial_panel()` function. 
+
+```{r topoclusters, echo=TRUE, eval=TRUE, warning=FALSE, fig.width=6, fig.height=10}
+p <- plot_spatial_panel(brain1, 
+                        metadata = paste("Cluster", 1:nclust(gcss_brain), 
+                                         sep=""), 
+                   ncol_layout = 3, 
+                   pt_size=0.7, 
+                   guide='collect',
+                   stroke = 0, size_title = 5, 
+                   face_title = 'plain', 
+                   barwidth = 0.25, barheight = 1.5, 
+                   coord_flip=T) 
+print(p + guide_area())
+```
