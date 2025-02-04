@@ -55,7 +55,6 @@ setGeneric("top_by_go",
 #' @param as_list Return a list not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
 #' @export top_by_go
-#'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -116,3 +115,4 @@ setMethod("top_by_go",
             }
             
 })
+
