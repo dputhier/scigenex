@@ -562,6 +562,7 @@ setMethod("which_clust",
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
 #' @export grep_clust
+#' @param as_list Whether to return the result as a list.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -569,7 +570,8 @@ setMethod("which_clust",
 #' @keywords internal
 setGeneric("grep_clust", 
            function(object,
-                    reg_exp = NULL)
+                    reg_exp = NULL,
+                    as_list=FALSE)
              standardGeneric("grep_clust")
 )
 
@@ -577,6 +579,7 @@ setGeneric("grep_clust",
 #' @description Search gene module using a regular expression.
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
+#' @param as_list Whether to return the result as a list.
 #' @export grep_clust
 #' @examples
 #' # load a dataset
@@ -585,12 +588,20 @@ setGeneric("grep_clust",
 setMethod("grep_clust", 
           signature("ClusterSet"), 
           function(object=NULL, 
-                   reg_exp=NULL) {
+                   reg_exp=NULL,
+                   as_list=FALSE) {
             check_format_cluster_set(object)
-            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val)}
-            hits <- stack(lapply(object@gene_clusters, grep_term, reg_exp))
-            hits <- setNames(hits$values, hits$ind)
-            return(hits)
+            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val, perl = TRUE)}
+            hits <- lapply(object@gene_clusters, grep_term, reg_exp)
+            if(as_list){
+              return(hits)
+            }else{
+              hits <- stack(hits)
+              hits <- setNames(hits$values, hits$ind)
+              return(hits)
+            }
+            
+            
           })
 
 
