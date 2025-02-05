@@ -14,6 +14,7 @@
 #' @param size_text_y The font size of the y-axis tick labels.
 #' @param size_label The font size of the cluster labels.
 #' @param legend_name A name for the legend.
+#' @param to_lin Transform in linear scale (i.e. 2^x).
 #' @return A ggplot object showing the expression profiles of cell type-specific genes.
 #'
 #' @examples
@@ -40,7 +41,8 @@ plot_profiles <- function(data = NULL,
                           color_cell_type = NULL,
                           size_text_y = 5,
                           size_label = 2,
-                          legend_name="Cell\ntype") {
+                          legend_name="Cell\ntype",
+                          to_lin=FALSE) {
   
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
@@ -103,6 +105,9 @@ plot_profiles <- function(data = NULL,
   )
   
   m$Ident <- ident[m$Cell]
+  
+  if(to_lin)
+    m$Intensity <- 2^m$Intensity 
   
   print_msg(paste0("Centers dimension: ", paste0(dim(centers), collapse = " ")),
             msg_type = "DEBUG")
