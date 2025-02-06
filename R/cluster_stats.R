@@ -31,15 +31,17 @@ setMethod(
                      row.names = names(clust_size(object)))
     
     gene_clust <- as.factor(gene_cluster(object))
-    df_split <- split(object@data, gene_clust)
+    df_split <- split(as.data.frame(object@data), gene_clust)
     
-    tmp <- unlist(lapply(df_split, sum)) / unlist(lapply(df_split, nrow))
+    tmp <- unlist(lapply(df_split, sum)) 
+    tmp_2 <-  clust_size(object)
 
-    df$sum_count <- tmp[row.names(df)]
+    df$sum_by_row <- tmp[row.names(df)] / tmp_2[row.names(df)]
     
     tmp <- unlist(lapply(df_split, stats::var)) 
     df$var <- tmp[row.names(df)]
     
+    df_split <- split(object@data, gene_clust)
     tmp <- unlist(lapply(df_split, stats::sd))
     df$sd <- tmp[row.names(df)]
  
