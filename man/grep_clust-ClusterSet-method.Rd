@@ -4,12 +4,14 @@
 \alias{grep_clust,ClusterSet-method}
 \title{Search gene module using a regular expression.}
 \usage{
-\S4method{grep_clust}{ClusterSet}(object = NULL, reg_exp = NULL)
+\S4method{grep_clust}{ClusterSet}(object = NULL, reg_exp = NULL, as_list = FALSE)
 }
 \arguments{
 \item{object}{a ClusterSet object.}
 
 \item{reg_exp}{The regular expression indicating the genes to be found.}
+
+\item{as_list}{Whether to return the result as a list.}
 }
 \description{
 Search gene module using a regular expression.

@@ -914,6 +914,7 @@ setMethod("subsample_by_ident",
 #' @param sep The separator
 #' @param file_prefix A file prefix.
 #' @param path A directory to store the files.
+#' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
 #' @export write_clust
 #' @examples
 #' # load a dataset
@@ -925,7 +926,8 @@ setGeneric("write_clust",
            function(object,
                     sep = "\n",
                     file_prefix="scigenex_clust_",
-                    path=NULL)
+                    path=NULL,
+                    single_file=FALSE)
              standardGeneric("write_clust")
 )
 
@@ -935,6 +937,7 @@ setGeneric("write_clust",
 #' @param sep The separator
 #' @param file_prefix A file prefix.
 #' @param path A directory to store the files.
+#' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
 #' @export write_clust
 #' @examples
 #' # load a dataset
@@ -945,7 +948,8 @@ setMethod("write_clust",
           function(object,
                    sep = "\n",
                    file_prefix="scigenex_clust_",
-                   path=NULL) {
+                   path=NULL,
+                   single_file=FALSE) {
             
             if(is.null(path)){
               path <- getwd()
@@ -960,12 +964,24 @@ setMethod("write_clust",
             }
             
             check_format_cluster_set(object)
-            cat_fun <- function(x, sep=NULL, file=NULL) cat(paste0(sort(x), collapse = sep), file=file) 
             
-            for(i in 1:length(object@gene_clusters)){
-              file_out <- paste0(file_prefix, "_", i, ".txt")
-              cat_fun(object@gene_clusters[[i]], sep=sep, 
-                      file=file.path(path, file_out))
+            if(!single_file){
+              cat_fun <- function(x, sep=NULL, file=NULL) cat(paste0(sort(x), collapse = sep), file=file) 
+              
+              for(i in 1:length(object@gene_clusters)){
+                file_out <- paste0(file_prefix, "_", i, ".txt")
+                cat_fun(object@gene_clusters[[i]], sep=sep, 
+                        file=file.path(path, file_out))
+              }
+            }else{
+              for(i in 1:length(object@gene_clusters)){
+                cat(paste0(object@gene_clusters[[i]], collapse = sep),
+                    file=file.path(path, file_prefix), 
+                    append = TRUE,
+                    sep="\n")
+                
+              }
             }
+
             
  })

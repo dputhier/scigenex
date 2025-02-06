@@ -11,7 +11,8 @@ plot_profiles(
   color_cell_type = NULL,
   size_text_y = 5,
   size_label = 2,
-  legend_name = "Cell\\ntype"
+  legend_name = "Cell\\ntype",
+  to_lin = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ hue color palette is used.}
 \item{size_label}{The font size of the cluster labels.}
 
 \item{legend_name}{A name for the legend.}
+
+\item{to_lin}{Transform in linear scale (i.e. 2^x).}
 }
 \value{
 A ggplot object showing the expression profiles of cell type-specific genes.
