@@ -33,35 +33,18 @@ setMethod(
     gene_clust <- as.factor(gene_cluster(object))
     df_split <- split(object@data, gene_clust)
     
-    tmp <- unlist(lapply(df_split, sum))
+    tmp <- unlist(lapply(df_split, sum)) / unlist(lapply(df_split, nrow))
+
     df$sum_count <- tmp[row.names(df)]
     
-    tmp <- unlist(lapply(df_split, stats::var))
-    df$var_total <- tmp[row.names(df)]
+    tmp <- unlist(lapply(df_split, stats::var)) 
+    df$var <- tmp[row.names(df)]
     
     tmp <- unlist(lapply(df_split, stats::sd))
-    df$sd_total <- tmp[row.names(df)]
-    
-    all_dot_prod <- vector()
-    
-    for (i in 1:length(object@gene_clusters)) {
-      
-      print_msg(paste0("Computing dot product for cluster: ", i), 
-                msg_type = "DEBUG")
-      cur_clust <- object@data[object@gene_clusters[[i]],]
-      cur_clust[cur_clust >= 1] <- 1
-      cur_clust[cur_clust < 1] <- 0
-      cur_dot_prod <- cur_clust %*% t(cur_clust)
-      diag(cur_dot_prod) <- NA
-      cur_dot_prod_median_of_max <-median(apply(cur_dot_prod, 
-                                                1, 
-                                                max, 
-                                                na.rm = T))
-      all_dot_prod[i] <- cur_dot_prod_median_of_max
-      
-    }
-    
-    df$dot_prod <- all_dot_prod
+    df$sd <- tmp[row.names(df)]
+ 
+    tmp <- unlist(lapply(df_split, stats::sd)) / unlist(lapply(df_split, mean))
+    df$cv <- tmp[row.names(df)]
     
     return(df)
     
