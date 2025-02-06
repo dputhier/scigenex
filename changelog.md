@@ -5,6 +5,7 @@
 * Added as_list argument to grep_clust().
 * Added single_file to write_clust().
 * Added to_lin to plot_profile.
+* Deleted dot_prod from cluster_stats() and added CV.
 
 ## v1.5.1
 
