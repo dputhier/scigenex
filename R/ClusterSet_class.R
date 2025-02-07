@@ -985,3 +985,81 @@ setMethod("write_clust",
 
             
  })
+
+
+
+#################################################################
+##    Define top_by_intersect function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on intersection with a list.
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on intersection with a list.
+#' @param object A \code{ClusterSet} object.
+#' @param set A list to compare clusters to.
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_intersect
+#' @keywords internal
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' set <- c('MS4A1', 'ISG20', 'CD3D', 'SEC14L5', 'RPL11', 'RPL32')
+#' pbmc3k_medium_clusters <- top_by_intersect(pbmc3k_medium_clusters, set=set)
+#' pbmc3k_medium_clusters@top_genes
+setGeneric("top_by_intersect", 
+           function(object,
+                    set=NULL,
+                    as_list=FALSE)
+             standardGeneric("top_by_intersect")
+)
+
+#################################################################
+##    Define top_by_intersect function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on intersection with a list.
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on intersection with a list.
+#' @param object A \code{ClusterSet} object.
+#' @param set A list to compare clusters to.
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_intersect
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' set <- c('MS4A1', 'ISG20', 'CD3D', 'SEC14L5', 'RPL11', 'RPL32')
+#' pbmc3k_medium_clusters <- top_by_intersect(pbmc3k_medium_clusters, set=set)
+#' pbmc3k_medium_clusters@top_genes
+setMethod("top_by_intersect", 
+          signature("ClusterSet"), 
+          function(object,
+                   set=NULL,
+                   as_list=FALSE) {
+            
+            if(is.null(set))
+              print_msg("Please provide a set ('set' argument)", 
+                        msg_type = "STOP")
+            
+            top_gn <- lapply(object@gene_clusters, intersect, set)
+            
+            if(as_list){
+              return(top_gn)
+            }else{
+              object@top_genes <- top_gn
+              return(object)
+            }
+            
+          })
+

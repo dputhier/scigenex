@@ -6,6 +6,7 @@
 * Added single_file to write_clust().
 * Added to_lin to plot_profile.
 * Deleted dot_prod from cluster_stats() and added CV.
+* Added top_by_intersect().
 
 ## v1.5.1
 
