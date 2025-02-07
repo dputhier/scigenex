@@ -30,21 +30,27 @@ setMethod(
     df <- data.frame(size=clust_size(object), 
                      row.names = names(clust_size(object)))
     
+    print_msg('Splitting expression data', msg_type="DEBUG")
     gene_clust <- as.factor(gene_cluster(object))
     df_split <- split(as.data.frame(object@data), gene_clust)
     
+    print_msg('Computing sum', msg_type="DEBUG")
     tmp <- unlist(lapply(df_split, sum)) 
     tmp_2 <-  clust_size(object)
 
+
     df$sum_by_row <- tmp[row.names(df)] / tmp_2[row.names(df)]
     
+    print_msg('Computing var.', msg_type="DEBUG")
     tmp <- unlist(lapply(df_split, stats::var)) 
     df$var <- tmp[row.names(df)]
     
+    print_msg('Computing sd.', msg_type="DEBUG")
     df_split <- split(object@data, gene_clust)
     tmp <- unlist(lapply(df_split, stats::sd))
     df$sd <- tmp[row.names(df)]
  
+    print_msg('Computing cv.', msg_type="DEBUG")
     tmp <- unlist(lapply(df_split, stats::sd)) / unlist(lapply(df_split, mean))
     df$cv <- tmp[row.names(df)]
     
