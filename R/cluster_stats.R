@@ -41,12 +41,14 @@ setMethod(
 
     df$sum_by_row <- tmp[row.names(df)] / tmp_2[row.names(df)]
     
+    print_msg('Computing sd.', msg_type="DEBUG")
+    df_split <- split(object@data, gene_clust)
+    
     print_msg('Computing var.', msg_type="DEBUG")
     tmp <- unlist(lapply(df_split, stats::var)) 
     df$var <- tmp[row.names(df)]
     
-    print_msg('Computing sd.', msg_type="DEBUG")
-    df_split <- split(object@data, gene_clust)
+
     tmp <- unlist(lapply(df_split, stats::sd))
     df$sd <- tmp[row.names(df)]
  
