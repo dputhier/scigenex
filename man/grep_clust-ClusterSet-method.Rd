@@ -18,6 +18,8 @@ by grep is returned, and if TRUE, a vector containing the matching elements them
 is returned.}
 
 \item{reg_exp}{The regular expression indicating the genes to be found.}
+
+\item{as_list}{Whether to return the result as a list.}
 }
 \description{
 Search gene module using a regular expression.

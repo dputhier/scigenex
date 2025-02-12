@@ -577,6 +577,7 @@ setMethod("which_clust",
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
 #' @export grep_clust
+#' @param as_list Whether to return the result as a list.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -584,7 +585,8 @@ setMethod("which_clust",
 #' @keywords internal
 setGeneric("grep_clust", 
            function(object,
-                    reg_exp = NULL)
+                    reg_exp = NULL,
+                    as_list=FALSE)
              standardGeneric("grep_clust")
 )
 
@@ -592,6 +594,7 @@ setGeneric("grep_clust",
 #' @description Search gene module using a regular expression.
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
+#' @param as_list Whether to return the result as a list.
 #' @export grep_clust
 #' @examples
 #' # load a dataset
@@ -600,12 +603,20 @@ setGeneric("grep_clust",
 setMethod("grep_clust", 
           signature("ClusterSet"), 
           function(object=NULL, 
-                   reg_exp=NULL) {
+                   reg_exp=NULL,
+                   as_list=FALSE) {
             check_format_cluster_set(object)
-            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val)}
-            hits <- stack(lapply(object@gene_clusters, grep_term, reg_exp))
-            hits <- setNames(hits$values, hits$ind)
-            return(hits)
+            grep_term <- function(x, y, val=TRUE){ grep(y, x, val=val, perl = TRUE)}
+            hits <- lapply(object@gene_clusters, grep_term, reg_exp)
+            if(as_list){
+              return(hits)
+            }else{
+              hits <- stack(hits)
+              hits <- setNames(hits$values, hits$ind)
+              return(hits)
+            }
+            
+            
           })
 
 
@@ -959,6 +970,165 @@ setMethod("subsample_by_ident",
             object <- object[, cell_ident]
 
             return(object)
+            
+          })
+
+################################################################################
+##      Method for printing gene clusters
+################################################################################
+
+#' @title Write the cluster to files.
+#' @description  Write the cluster to files.
+#' @param object a ClusterSet object.
+#' @param sep The separator
+#' @param file_prefix A file prefix.
+#' @param path A directory to store the files.
+#' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
+#' @export write_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' write_clust(pbmc3k_medium_clusters[1:3,], path="/tmp")
+#' @keywords internal
+
+setGeneric("write_clust", 
+           function(object,
+                    sep = "\n",
+                    file_prefix="scigenex_clust_",
+                    path=NULL,
+                    single_file=FALSE)
+             standardGeneric("write_clust")
+)
+
+#' @title Write the cluster to files.
+#' @description  Write the cluster to files.
+#' @param object a ClusterSet object.
+#' @param sep The separator
+#' @param file_prefix A file prefix.
+#' @param path A directory to store the files.
+#' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
+#' @export write_clust
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' write_clust(pbmc3k_medium_clusters[1:3,], path="/tmp")
+setMethod("write_clust", 
+          signature("ClusterSet"), 
+          function(object,
+                   sep = "\n",
+                   file_prefix="scigenex_clust_",
+                   path=NULL,
+                   single_file=FALSE) {
+            
+            if(is.null(path)){
+              path <- getwd()
+            }else{
+              if(!dir.exists(path)){
+                print_msg(paste0("Creating a path for output: ", 
+                                 path), 
+                          msg_type = "INFO")
+                dir.create(path, showWarnings = FALSE, recursive = TRUE) 
+                
+              }
+            }
+            
+            check_format_cluster_set(object)
+            
+            if(!single_file){
+              cat_fun <- function(x, sep=NULL, file=NULL) cat(paste0(sort(x), collapse = sep), file=file) 
+              
+              for(i in 1:length(object@gene_clusters)){
+                file_out <- paste0(file_prefix, "_", i, ".txt")
+                cat_fun(object@gene_clusters[[i]], sep=sep, 
+                        file=file.path(path, file_out))
+              }
+            }else{
+              for(i in 1:length(object@gene_clusters)){
+                cat(paste0(object@gene_clusters[[i]], collapse = sep),
+                    file=file.path(path, file_prefix), 
+                    append = TRUE,
+                    sep="\n")
+                
+              }
+            }
+
+            
+ })
+
+
+
+#################################################################
+##    Define top_by_intersect function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on intersection with a list.
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on intersection with a list.
+#' @param object A \code{ClusterSet} object.
+#' @param set A list to compare clusters to.
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_intersect
+#' @keywords internal
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' set <- c('MS4A1', 'ISG20', 'CD3D', 'SEC14L5', 'RPL11', 'RPL32')
+#' pbmc3k_medium_clusters <- top_by_intersect(pbmc3k_medium_clusters, set=set)
+#' pbmc3k_medium_clusters@top_genes
+setGeneric("top_by_intersect", 
+           function(object,
+                    set=NULL,
+                    as_list=FALSE)
+             standardGeneric("top_by_intersect")
+)
+
+#################################################################
+##    Define top_by_intersect function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on intersection with a list.
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on intersection with a list.
+#' @param object A \code{ClusterSet} object.
+#' @param set A list to compare clusters to.
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_intersect
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' set <- c('MS4A1', 'ISG20', 'CD3D', 'SEC14L5', 'RPL11', 'RPL32')
+#' pbmc3k_medium_clusters <- top_by_intersect(pbmc3k_medium_clusters, set=set)
+#' pbmc3k_medium_clusters@top_genes
+setMethod("top_by_intersect", 
+          signature("ClusterSet"), 
+          function(object,
+                   set=NULL,
+                   as_list=FALSE) {
+            
+            if(is.null(set))
+              print_msg("Please provide a set ('set' argument)", 
+                        msg_type = "STOP")
+            
+            top_gn <- lapply(object@gene_clusters, intersect, set)
+            
+            if(as_list){
+              return(top_gn)
+            }else{
+              object@top_genes <- top_gn
+              return(object)
+            }
             
           })
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.2
+
+* Added as_list argument to grep_clust().
+* Added single_file to write_clust().
+* Added to_lin to plot_profile.
+* Deleted dot_prod from cluster_stats() and added CV.
+* Added top_by_intersect().
+
 ## v1.5.1
 
 * Fix gene_clustering() and mcl_install(). Added 'mcl_dir' argument to `gene_clustering()` (in case automated installation in difficult, e.g., when running in a proprietary environnement).
