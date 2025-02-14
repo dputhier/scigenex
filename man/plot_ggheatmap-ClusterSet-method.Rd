@@ -16,11 +16,12 @@
   ceil = 1,
   floor = -1,
   centering = TRUE,
-  xlab = "Spots",
+  xlab = "Cells",
   ylab = "Genes",
   hide_gene_name = TRUE,
   hide_col_name = TRUE,
-  pseudocount = 0.1
+  pseudocount = 0.1,
+  coord_flip = FALSE
 )
 }
 \arguments{
@@ -56,6 +57,8 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 \item{hide_col_name}{Whether to hide column names.}
 
 \item{pseudocount}{A value for the pseudocount added before log transformation.}
+
+\item{coord_flip}{Whether to flip the coordinates.}
 }
 \value{
 A ggplot diagram.

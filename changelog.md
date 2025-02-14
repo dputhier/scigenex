@@ -2,6 +2,7 @@
 
 ##
 
+* Aded coord_flip argument to plot_ggheatmap()
 * Added top_by_grep()
 
 ## v1.5.2
