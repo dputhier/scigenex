@@ -1,5 +1,9 @@
 # Changelog
 
+##
+
+* Added top_by_grep()
+
 ## v1.5.2
 
 * Added as_list argument to grep_clust().
