@@ -734,7 +734,12 @@ setMethod(
     
     nb_cell_classes <- length(table(m_melt$cell_clusters))
 
-    p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
+    if(!coord_flip){
+      p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
+    }else{
+      p <- p + ggplot2::xlab(ylab) + ggplot2::ylab(xlab)
+    }
+    
     
     print_msg("Theming.", msg_type="DEBUG")
     
