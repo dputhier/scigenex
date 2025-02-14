@@ -485,16 +485,14 @@ plot_dist <- function(object,
 #' @description
 #' Plot the results (heatmap) contained in a ClusterSet object.
 #' @param object A ClusterSet object.
-#' @param to_log2 Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).
+#' @param to_log2 Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param ident A named vector containing the cell type identities for each cell.
-#' Typically the result from the Idents() function on a Seurat object (see Seurat library). Lists are
-#' also accepted which will results in multi-level facets.
+#' Typically the result from the Idents() function on a Seurat object (see Seurat library).
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param color_ident A vector containing colors for the cell classes as. 
-#' also accepted which will results in multi-level facets.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
@@ -502,7 +500,8 @@ plot_dist <- function(object,
 #' @param ylab A name for the y axis.
 #' @param hide_gene_name Whether to hide gene names.
 #' @param hide_col_name Whether to hide column names.
-#' 
+#' @param pseudocount A value for the pseudocount added before log transformation.
+#' @param coord_flip Whether to flip the coordinates.
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #'
@@ -537,7 +536,8 @@ setGeneric("plot_ggheatmap",
                     ylab="Spots",
                     hide_gene_name=TRUE,
                     hide_col_name=TRUE,
-                    pseudocount=0.1) {
+                    pseudocount=0.1,
+                    coord_flip=FALSE) {
              
              standardGeneric("plot_ggheatmap")
            })
@@ -563,6 +563,7 @@ setGeneric("plot_ggheatmap",
 #' @param hide_gene_name Whether to hide gene names.
 #' @param hide_col_name Whether to hide column names.
 #' @param pseudocount A value for the pseudocount added before log transformation.
+#' @param coord_flip Whether to flip the coordinates.
 #' @return A ggplot diagram.
 #' @export plot_ggheatmap
 #' @importFrom reshape2 melt
@@ -600,11 +601,12 @@ setMethod(
            ceil=1,
            floor=-1,
            centering = TRUE,
-           xlab="Spots",
+           xlab="Cells",
            ylab="Genes",
            hide_gene_name=TRUE,
            hide_col_name=TRUE,
-           pseudocount=0.1) {
+           pseudocount=0.1,
+           coord_flip=FALSE) {
     
     check_format_cluster_set(object)
     print_msg("getting matrix", msg_type="DEBUG")
@@ -699,14 +701,26 @@ setMethod(
     print_msg("Preparing diagram (tile).", msg_type="DEBUG")
     print_msg(paste0("Matrix columns :", colnames(m_melt)), msg_type="DEBUG")
 
-    p <- ggplot2::ggplot(
-      data = m_melt,
-      ggplot2::aes(
-        x = samples,
-        y = genes,
-        fill = values
+    if(!coord_flip){
+      p <- ggplot2::ggplot(
+        data = m_melt,
+        ggplot2::aes(
+          x = samples,
+          y = genes,
+          fill = values
+        )
       )
-    )
+    }else{
+      p <- ggplot2::ggplot(
+        data = m_melt,
+        ggplot2::aes(
+          y = samples,
+          x = genes,
+          fill = values
+        )
+      )
+    }
+
 
     print_msg("Preparing color palette.", msg_type="DEBUG")
     color.ramp <- grDevices::colorRampPalette(colors)(10)
@@ -723,14 +737,29 @@ setMethod(
     p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
     
     print_msg("Theming.", msg_type="DEBUG")
+    
+    if(!coord_flip){
+      sbx <- ggplot2::element_rect(colour = "white")
+      sby <- ggplot2::element_rect(fill = "#444444", colour = "white")
+      sty <- ggplot2::element_text(colour = "white", angle = 0)
+      stx <- ggplot2::element_text(colour = "black", angle = 0)
+    }else{
+      sby <- ggplot2::element_rect(colour = "white")
+      sbx <- ggplot2::element_rect(fill = "#444444", colour = "white")
+      sty <- ggplot2::element_text(colour = "black", angle = 0)
+      stx <- ggplot2::element_text(colour = "white", angle = 0)
+    }
+    
+    
     p <- p + ggplot2::theme(
       axis.ticks.y = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(),
-      panel.spacing = grid::unit(0.05, "lines"),
+      panel.spacing = grid::unit(panel_spacing, "lines"),
       panel.border = ggplot2::element_blank(),
-      strip.background.x = ggplot2::element_rect(colour = "white"),
-      strip.background.y = ggplot2::element_rect(fill = "#444444", colour = "white"),
-      strip.text.y = ggplot2::element_text(colour = "white", angle = 0),
+      strip.background.x = sbx,
+      strip.background.y = sby,
+      strip.text.y = sty,
+      strip.text.x = stx
     )
     
     if(hide_gene_name){
@@ -740,6 +769,7 @@ setMethod(
     if(hide_col_name){
       p <- p + ggplot2::theme(axis.text.x = ggplot2::element_blank())
     }
+    
     print_msg("Adding facets.", msg_type="DEBUG")
     
     gg_color_hue <- function(n) {
@@ -749,7 +779,11 @@ setMethod(
     
     
     if(!is.null(ident)){
+      
+      print_msg("Adding facets. Using cell identity.", msg_type="DEBUG")
+      
       if(!is.list(ident)){
+        
         if(is.null(color_ident)){
           color_ident <- gg_color_hue(nb_cell_classes)
         }else{
@@ -758,19 +792,44 @@ setMethod(
           }
         }
           
-        colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = color_ident))
-        p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
-                                    scales = "free", space = "free",
-                                    strip=colored_strip)
+        
+        
+        if(!coord_flip){
+          colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = color_ident))
+          p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
+                                      scales = "free", space = "free",
+                                      strip=colored_strip)
+        }else{
+          colored_strip <- ggh4x::strip_themed(background_y = ggh4x::elem_list_rect(fill = color_ident))
+          p <- p + ggh4x::facet_grid2(cell_clusters ~ gene_clusters, 
+                                      scales = "free", space = "free",
+                                      strip=colored_strip)
+        }
+
       }else{
-        p <- p + ggplot2::facet_grid(as.formula(paste0("gene_clusters ~ ",  paste0(names(ident), collapse = " + "))), 
+        print_msg("Adding facets. No cell identity.", msg_type="DEBUG")
+        
+        if(!coord_flip){
+          p <- p + ggplot2::facet_grid(as.formula(paste0("gene_clusters ~ ",  paste0(names(ident), collapse = " + "))), 
                                     scales = "free", space = "free")
+        }else{
+          
+          p <- p + ggplot2::facet_grid(as.formula(paste0(names(ident), collapse = " + "), paste0("~ gene_clusters")), 
+                                       scales = "free", space = "free")
+        }
       }
 
                                   
     }else{
-      p <- p + ggplot2::facet_grid(gene_clusters ~ ., scales = "free", space = "free")
+      if(!coord_flip){
+        p <- p + ggplot2::facet_grid(gene_clusters ~ ., scales = "free", space = "free")
+      }else{
+        p <- p + ggplot2::facet_grid(. ~ gene_clusters, scales = "free", space = "free") 
+      }
     }
+    
+    p <- p + ggplot2::theme(panel.background = ggplot2::element_blank(), 
+                          panel.grid = ggplot2::element_blank())
     
     return(p)
 })
