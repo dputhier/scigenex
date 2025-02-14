@@ -1063,3 +1063,78 @@ setMethod("top_by_intersect",
             
           })
 
+
+#################################################################
+##    Define top_by_grep function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on a regular expression search
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on a regular expression search
+#' @param object A \code{ClusterSet} object.
+#' @param regexp A regular expression
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_grep
+#' @keywords internal
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' pbmc3k_medium_clusters <- top_by_grep(pbmc3k_medium_clusters, regexp="^CD")
+#' pbmc3k_medium_clusters@top_genes
+setGeneric("top_by_grep", 
+           function(object,
+                    regexp=NULL,
+                    as_list=FALSE)
+             standardGeneric("top_by_grep")
+)
+
+#################################################################
+##    Define top_by_grep function for a ClusterSet object
+#################################################################
+#' @title Select top_genes based on a regular expression search
+#' @description
+#' The clusterSet object contains a top_genes slot that can be used to display 
+#' genes in heatmaps (see \code{plot_heatmap} function). Here the function select 
+#' top_genes based on a regular expression search
+#' @param object A \code{ClusterSet} object.
+#' @param regexp A regular expression
+#' @param as_list Return a list of clusters not a ClusterSet object.
+#' @return A \code{ClusterSet} object or a list (see as_list).
+#' @export top_by_grep
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' 
+#' pbmc3k_medium_clusters <- top_by_grep(pbmc3k_medium_clusters, regexp="^CD")
+#' pbmc3k_medium_clusters@top_genes
+setMethod("top_by_grep", 
+          signature("ClusterSet"), 
+          function(object,
+                   regexp=NULL,
+                   as_list=FALSE) {
+            
+            if(is.null(regexp))
+              print_msg("Please provide a regexp ('regexp' argument)", 
+                        msg_type = "STOP")
+            
+            fun_grep <- function(x, regexp, val=TRUE, perl=TRUE) grep(regexp, x, val=val, perl=perl)
+            top_gn <- lapply(object@gene_clusters, fun_grep, regexp, val=TRUE, perl=TRUE)
+            
+            if(as_list){
+              return(top_gn)
+            }else{
+              object@top_genes <- top_gn
+              return(object)
+            }
+            
+          })
+
