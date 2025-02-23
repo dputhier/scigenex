@@ -10,6 +10,7 @@
 * Added single_file to write_clust().
 * Added to_lin to plot_profile.
 * Deleted dot_prod from cluster_stats() and added CV.
+* The row_sum is now normalized by cluster size in cluster_stats().
 * Added top_by_intersect().
 
 ## v1.5.1
