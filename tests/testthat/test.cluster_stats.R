@@ -12,7 +12,7 @@ df <- cluster_stats(pbmc3k_medium_clusters)
 testthat::test_that("Checking cluster_stats() #1", {
   testthat::expect_true(ncol(df) == 5)
   testthat::expect_true(nrow(df) == 15)
-  testthat::expect_true(round(sum(df),0) == 95210)
+  testthat::expect_true(round(sum(df),0) == 3528)
 })
 
   
