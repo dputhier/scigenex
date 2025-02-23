@@ -7,10 +7,18 @@
 cluster_stats(object)
 }
 \arguments{
-\item{object}{a ClusterSet object..}
+\item{object}{a ClusterSet object.}
 }
 \description{
 Compute statistics about the clusters
+}
+\details{
+For each cluster this function computes:
+- The sum of (normalized) counts divided by the number of genes (cluster size). 
+This gives a good estimates of whether the genes are weakly or highly expressed (*i.e* housekeeping)
+- The variance. This provides an estimate of the dispertion of the values inside a cluster.
+- The standard deviation. This provides an estimate of the dispertion of the values inside a cluster.
+- The coefficient of variation. This provides an estimate of the dispertion of the values inside a cluster (normalized by the mean expression).
 }
 \examples{
 # load a dataset
