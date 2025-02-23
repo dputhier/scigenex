@@ -341,17 +341,23 @@ plot_cmp_genesets <- function(set_1=NULL,
 
 
 #################################################################
-##    Map a single gene set to a ClusterSet and
+##    Map a user list to a ClusterSet and
 ##    Display various metrics related to overlap 
 ##    with internaly stored clusters   
 #################################################################
-#' @title Map a single gene_set to a ClusterSet and Display various metrics 
-#'
+#' @title Map a user list to a ClusterSet and display various metrics  related to overlap
+#' with internaly stored clusters 
 #' @description
-#' Map a single gene_set to a ClusterSet and Display various metrics 
+#' Map a user list to a ClusterSet and display various metrics  related to overlap
+#' with internaly stored clusters 
 #' @param object A ClusterSet object
-#' @param set A set of elements to be compared to clusters stored in the object.
-#' @return A ggplot object representing the various metrics 
+#' @param user_list A set of elements to be compared to clusters stored in the object.
+#' @param name_user_list A name for the user list.
+#' @param background A background(e.g. all the gene of the genome).
+#' @param colors A set of colors.
+#' @param module The analyses to be performed.
+#' @param as.list Whether a list of plot should be returned (default to a patchwork).
+#' @return A patchwork representing the various metrics (or a list of diagram). 
 #' @importFrom ggplot2 theme_minimal theme element_blank geom_col aes coord_flip 
 #' @importFrom ggplot2 scale_fill_manual scale_y_continuous geom_bar ggtitle coord_polar
 #' @importFrom scales percent
