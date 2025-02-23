@@ -19,7 +19,7 @@ Then the method use the MCL algorithm to detect clusters of co-expressed genes (
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.2</span>
       </span>
     </div>
 
@@ -77,7 +77,8 @@ Then the method use the MCL algorithm to detect clusters of co-expressed genes (
 <span>  walktrap_step <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  infomap_nb <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  infomap_modularity <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  mcl_dir <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  mcl_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  delete_output_file <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -143,6 +144,10 @@ in the neighborhood of the other</p></dd>
 <dt id="arg-mcl-dir">mcl_dir<a class="anchor" aria-label="anchor" href="#arg-mcl-dir"></a></dt>
 <dd><p>A path to MCL (if issue with automated installation).</p></dd>
 
+
+<dt id="arg-delete-output-file">delete_output_file<a class="anchor" aria-label="anchor" href="#arg-delete-output-file"></a></dt>
+<dd><p>Whether to delete output files (.graph_input.txt, .graph_out.txt).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -188,7 +193,7 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Deleting reciprocal edges. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpTtzxNa/R14z6ff8TV.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmptu55kC/R14z6ff8TV.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL algorithm has been selected. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MCL path : "</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  mcl_dir: </span>
@@ -225,7 +230,7 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Convert distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Selecting only reciprocal neighborhood. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpTtzxNa/65vDYGyn24.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmptu55kC/65vDYGyn24.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL algorithm has been selected. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MCL path : "</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  mcl_dir: </span>

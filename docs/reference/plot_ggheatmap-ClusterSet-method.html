@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.2</span>
       </span>
     </div>
 
@@ -72,11 +72,12 @@
 <span>  ceil <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
 <span>  centering <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  xlab <span class="op">=</span> <span class="st">"Spots"</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">"Cells"</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="st">"Genes"</span>,</span>
 <span>  hide_gene_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  hide_col_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  pseudocount <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>  pseudocount <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  coord_flip <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -147,6 +148,10 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 
 <dt id="arg-pseudocount">pseudocount<a class="anchor" aria-label="anchor" href="#arg-pseudocount"></a></dt>
 <dd><p>A value for the pseudocount added before log transformation.</p></dd>
+
+
+<dt id="arg-coord-flip">coord_flip<a class="anchor" aria-label="anchor" href="#arg-coord-flip"></a></dt>
+<dd><p>Whether to flip the coordinates.</p></dd>
 
 </dl></div>
     <div id="value">

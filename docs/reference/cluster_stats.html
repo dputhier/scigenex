@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.2</span>
       </span>
     </div>
 
@@ -67,9 +67,18 @@
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>a ClusterSet object..</p></dd>
+<dd><p>a ClusterSet object.</p></dd>
 
 </dl></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>For each cluster this function computes:
+- The sum of (normalized) counts divided by the number of genes (cluster size).
+This gives a good estimates of whether the genes are weakly or highly expressed (*i.e* housekeeping)
+- The variance. This provides an estimate of the dispertion of the values inside a cluster.
+- The standard deviation. This provides an estimate of the dispertion of the values inside a cluster.
+- The coefficient of variation. This provides an estimate of the dispertion of the values inside a cluster (normalized by the mean expression).</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>

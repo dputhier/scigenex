@@ -20,19 +20,19 @@ plot_ggheatmap(
   ylab = "Spots",
   hide_gene_name = TRUE,
   hide_col_name = TRUE,
-  pseudocount = 0.1
+  pseudocount = 0.1,
+  coord_flip = FALSE
 )
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
-\item{to_log2}{Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).}
+\item{to_log2}{Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).}
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
 \item{ident}{A named vector containing the cell type identities for each cell.
-Typically the result from the Idents() function on a Seurat object (see Seurat library). Lists are
-also accepted which will results in multi-level facets.}
+Typically the result from the Idents() function on a Seurat object (see Seurat library).}
 
 \item{panel_spacing}{Spacing between facets/panels ("line" units).}
 
@@ -40,8 +40,7 @@ also accepted which will results in multi-level facets.}
 
 \item{standardizing}{Whether rows should be divided by standard deviation.}
 
-\item{color_ident}{A vector containing colors for the cell classes as. 
-also accepted which will results in multi-level facets.}
+\item{color_ident}{A vector containing colors for the cell classes as.}
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
 
@@ -56,6 +55,10 @@ also accepted which will results in multi-level facets.}
 \item{hide_gene_name}{Whether to hide gene names.}
 
 \item{hide_col_name}{Whether to hide column names.}
+
+\item{pseudocount}{A value for the pseudocount added before log transformation.}
+
+\item{coord_flip}{Whether to flip the coordinates.}
 }
 \value{
 A ggplot diagram.

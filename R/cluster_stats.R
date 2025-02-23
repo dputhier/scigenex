@@ -1,7 +1,14 @@
 #' @title Compute statistics about the clusters
 #' @description Compute statistics about the clusters
-#' @param object a ClusterSet object..
+#' @param object a ClusterSet object.
 #' @importFrom stats var
+#' @details
+#' For each cluster this function computes:
+#' - The sum of (normalized) counts divided by the number of genes (cluster size). 
+#' This gives a good estimates of whether the genes are weakly or highly expressed (*i.e* housekeeping)
+#' - The variance. This provides an estimate of the dispertion of the values inside a cluster.
+#' - The standard deviation. This provides an estimate of the dispertion of the values inside a cluster.
+#' - The coefficient of variation. This provides an estimate of the dispertion of the values inside a cluster (normalized by the mean expression).
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -15,8 +22,15 @@ setGeneric("cluster_stats",
 
 #' @title Compute statistics about the clusters
 #' @description Compute statistics about the clusters
-#' @param object a ClusterSet object..
+#' @param object a ClusterSet object.
 #' @importFrom stats var
+#' @details
+#' For each cluster this function computes:
+#' - The sum of (normalized) counts divided by the number of genes (cluster size). 
+#' This gives a good estimates of whether the genes are weakly or highly expressed (*i.e* housekeeping)
+#' - The variance. This provides an estimate of the dispertion of the values inside a cluster.
+#' - The standard deviation. This provides an estimate of the dispertion of the values inside a cluster.
+#' - The coefficient of variation. This provides an estimate of the dispertion of the values inside a cluster (normalized by the mean expression).
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')

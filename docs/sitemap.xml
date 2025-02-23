@@ -26,6 +26,7 @@
 <url><loc>https://github.com/dputhier/scigenex/reference/cluster_set_to_xls.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/cluster_stats-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/cluster_stats.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/cmp_to_a_list.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/col_names-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/col_names.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/colors_for_gradient.html</loc></url>
@@ -105,11 +106,17 @@
 <url><loc>https://github.com/dputhier/scigenex/reference/subsample_by_ident.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/top_by_go-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/top_by_go.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/top_by_grep-ClusterSet-method.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/top_by_grep.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/top_by_intersect-ClusterSet-method.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/top_by_intersect.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/top_genes-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/top_genes.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/viz_enrich-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/viz_enrich.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/which_clust-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/which_clust.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/write_clust-ClusterSet-method.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/write_clust.html</loc></url>
 </urlset>
 

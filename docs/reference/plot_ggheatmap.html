@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.2</span>
       </span>
     </div>
 
@@ -75,7 +75,8 @@
 <span>  ylab <span class="op">=</span> <span class="st">"Spots"</span>,</span>
 <span>  hide_gene_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  hide_col_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  pseudocount <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>  pseudocount <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  coord_flip <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,7 +89,7 @@
 
 
 <dt id="arg-to-log-">to_log2<a class="anchor" aria-label="anchor" href="#arg-to-log-"></a></dt>
-<dd><p>Whether data should be transform in logarithm base 2 (+ 1 as a pseudocount).</p></dd>
+<dd><p>Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).</p></dd>
 
 
 <dt id="arg-use-top-genes">use_top_genes<a class="anchor" aria-label="anchor" href="#arg-use-top-genes"></a></dt>
@@ -97,8 +98,7 @@
 
 <dt id="arg-ident">ident<a class="anchor" aria-label="anchor" href="#arg-ident"></a></dt>
 <dd><p>A named vector containing the cell type identities for each cell.
-Typically the result from the Idents() function on a Seurat object (see Seurat library). Lists are
-also accepted which will results in multi-level facets.</p></dd>
+Typically the result from the Idents() function on a Seurat object (see Seurat library).</p></dd>
 
 
 <dt id="arg-panel-spacing">panel_spacing<a class="anchor" aria-label="anchor" href="#arg-panel-spacing"></a></dt>
@@ -114,8 +114,7 @@ also accepted which will results in multi-level facets.</p></dd>
 
 
 <dt id="arg-color-ident">color_ident<a class="anchor" aria-label="anchor" href="#arg-color-ident"></a></dt>
-<dd><p>A vector containing colors for the cell classes as.
-also accepted which will results in multi-level facets.</p></dd>
+<dd><p>A vector containing colors for the cell classes as.</p></dd>
 
 
 <dt id="arg-ceil">ceil<a class="anchor" aria-label="anchor" href="#arg-ceil"></a></dt>
@@ -144,6 +143,14 @@ also accepted which will results in multi-level facets.</p></dd>
 
 <dt id="arg-hide-col-name">hide_col_name<a class="anchor" aria-label="anchor" href="#arg-hide-col-name"></a></dt>
 <dd><p>Whether to hide column names.</p></dd>
+
+
+<dt id="arg-pseudocount">pseudocount<a class="anchor" aria-label="anchor" href="#arg-pseudocount"></a></dt>
+<dd><p>A value for the pseudocount added before log transformation.</p></dd>
+
+
+<dt id="arg-coord-flip">coord_flip<a class="anchor" aria-label="anchor" href="#arg-coord-flip"></a></dt>
+<dd><p>Whether to flip the coordinates.</p></dd>
 
 </dl></div>
     <div id="value">

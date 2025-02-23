@@ -95,7 +95,7 @@ doc_html:
 	@ echo "#-----------------------------------------------#"
 	@ echo "# Building doc                                  #"
 	@ echo "#-----------------------------------------------#"
-	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site()" | R --slave
+	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site(devel=TRUE)" | R --slave
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VERSION)."
 

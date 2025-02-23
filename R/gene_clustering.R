@@ -22,6 +22,7 @@
 #' @param infomap_nb nb.trials parameter for igraph::cluster_infomap().
 #' @param infomap_modularity modularity parameter for igraph::cluster_infomap().
 #' @param mcl_dir A path to MCL (if issue with automated installation).
+#' @param delete_output_file Whether to delete output files (.graph_input.txt, .graph_out.txt).
 #' @return A ClusterSet object
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
@@ -64,7 +65,6 @@
 #' plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 #' 
 #' @export gene_clustering
-
 gene_clustering <- function(object = NULL,
                             s = 5,
                             inflation = 2,
@@ -78,7 +78,8 @@ gene_clustering <- function(object = NULL,
                             walktrap_step=4,
                             infomap_nb=10,
                             infomap_modularity=TRUE,
-                            mcl_dir=NULL) {
+                            mcl_dir=NULL,
+                            delete_output_file=FALSE) {
   
   print_msg("Retrieving args.", msg_type = "DEBUG")
   
@@ -141,6 +142,7 @@ gene_clustering <- function(object = NULL,
     print_msg("The walktrap algorithm has been selected.")
 
     object <- call_walktrap_clusterset(object, step=walktrap_step)
+    
     return(object)
     
     clust_out_file <- file.path(object@parameters$output_path,
@@ -158,8 +160,7 @@ gene_clustering <- function(object = NULL,
     clust_out_file <- file.path(object@parameters$output_path,
                                 paste0(object@parameters$name, ".graph_out.txt"))
   }
-  
-  
+
   print_msg(paste0("Reading graph clustering output file."), msg_type = "DEBUG")
   algo_cluster <- readLines(clust_out_file)
   algo_cluster <- strsplit(algo_cluster, "\t")
@@ -198,6 +199,16 @@ gene_clustering <- function(object = NULL,
                                       row.names = colnames(object@data))
   
   print_msg(paste0("Number of clusters found: ", nclust(object)))
+  
+  if(delete_output_file){
+    unlink(Sys.glob(paste0(file.path(object@parameters$output_path, 
+                                     object@parameters$name),
+                           "*")), 
+           force = TRUE)
+    object@parameters$output_path <- ""
+    object@parameters$name <- ""
+  }
+    
   return(object)
 }
 
@@ -352,6 +363,7 @@ do_closest_neighbor_graph <- function(object = NULL,
   )
   
   print_msg("Storing analysis parameters in ClusterSet object.", msg_type = "DEBUG")
+  
   object@parameters <- append(object@parameters,
                               list("keep_nn" = FALSE,
                                    "k_graph" = k,

@@ -2,10 +2,15 @@
 
 ## v1.5.2
 
+* Fix #147 and #145.
+* Added cmp_to_a_list() function.
+* Added coord_flip argument to plot_ggheatmap()
+* Added top_by_grep()
 * Added as_list argument to grep_clust().
 * Added single_file to write_clust().
 * Added to_lin to plot_profile.
 * Deleted dot_prod from cluster_stats() and added CV.
+* The row_sum is now normalized by cluster size in cluster_stats().
 * Added top_by_intersect().
 
 ## v1.5.1
