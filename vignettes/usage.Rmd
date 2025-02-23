@@ -158,7 +158,7 @@ plot_cluster_stats(cluster_stats(pbmc_scigenex)) +
 Here we will select gene modules based on standard deviation (\> 0.1) and rename the cluster (from 1 to the number of clusters):
 
 ```{r rename_clust}
-pbmc_scigenex <- pbmc_scigenex[cluster_stats(pbmc_scigenex)$sd_total > 0.1, ] 
+pbmc_scigenex <- pbmc_scigenex[cluster_stats(pbmc_scigenex)$sd > 0.1, ] 
 pbmc_scigenex <- rename_clust(pbmc_scigenex)
 nclust(pbmc_scigenex)
 ```

@@ -18,7 +18,8 @@ gene_clustering(
   walktrap_step = 4,
   infomap_nb = 10,
   infomap_modularity = TRUE,
-  mcl_dir = NULL
+  mcl_dir = NULL,
+  delete_output_file = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ in the neighborhood of the other}
 \item{infomap_modularity}{modularity parameter for igraph::cluster_infomap().}
 
 \item{mcl_dir}{A path to MCL (if issue with automated installation).}
+
+\item{delete_output_file}{Whether to delete output files (.graph_input.txt, .graph_out.txt).}
 }
 \value{
 A ClusterSet object

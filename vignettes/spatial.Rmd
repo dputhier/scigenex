@@ -60,7 +60,7 @@ gc_brain <- gene_clustering(res_brain,
 
 gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
 df <- cluster_stats(gcs_brain) 
-gcss_brain <- gcs_brain[df$sd_total > 0.1, ]
+gcss_brain <- gcs_brain[df$sd > 0.1, ]
 gcss_brain <- rename_clust(gcss_brain)
 length(row_names(gcss_brain))
 nclust(gcss_brain)
