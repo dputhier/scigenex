@@ -412,7 +412,7 @@ cmp_to_a_list <- function(object=NULL,
         df$gene_set <- factor(df$gene_set, levels=rev(c(name_user_list, 
                                                         clust_names(object))),
                               ordered = TRUE)
-        print(head(df))
+
         p1 <- ggplot(df, aes(x=gene_set, 
                              y=size, 
                              fill = source)) +
@@ -494,7 +494,7 @@ cmp_to_a_list <- function(object=NULL,
         intersection <- compare_genesets(object@gene_clusters, list(user_list), 
                                          stat = "intersection", 
                                          background = background)[,1]
-        print(intersection)
+
         df_1 <- data.frame(gene_set=names(intersection), 
                          intersection=intersection/length(user_list) * 100)
         
