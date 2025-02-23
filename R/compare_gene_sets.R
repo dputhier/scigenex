@@ -125,12 +125,12 @@ compare_genesets <- function(set_1=NULL,
   
   for(i in set_1){
     if(length(i)==0)
-      print_msg("Empty sets not allowed.")
+      print_msg("Empty sets not allowed.", msg_type = "STOP")
   }
   
   for(i in set_2){
     if(length(i)==0)
-      print_msg("Empty sets not allowed.")
+      print_msg("Empty sets not allowed.", msg_type = "STOP")
   }
   
   if(is.null(background)){
@@ -139,8 +139,12 @@ compare_genesets <- function(set_1=NULL,
     background <- unique(c(unlist(set_1), unlist(set_2)))
   }else{
     background <- unique(background)
+
   }
 
+  print_msg(paste0("Background size : ", length(background)),
+            msg_type = "INFO")
+  
   if(stat != "hypergeom"){
     res <- outer(X=set_1, 
                  Y=set_2, 
@@ -333,3 +337,260 @@ plot_cmp_genesets <- function(set_1=NULL,
   }
 
 }
+
+
+
+#################################################################
+##    Map a single gene set to a ClusterSet and
+##    Display various metrics related to overlap 
+##    with internaly stored clusters   
+#################################################################
+#' @title Map a single gene_set to a ClusterSet and Display various metrics 
+#'
+#' @description
+#' Map a single gene_set to a ClusterSet and Display various metrics 
+#' @param object A ClusterSet object
+#' @param set A set of elements to be compared to clusters stored in the object.
+#' @return A ggplot object representing the various metrics 
+#' @importFrom ggplot2 theme_minimal theme element_blank geom_col aes coord_flip 
+#' @importFrom ggplot2 scale_fill_manual scale_y_continuous geom_bar ggtitle coord_polar
+#' @importFrom scales percent
+#' @export cmp_to_a_list
+#'
+#' @examples
+#' set.seed(124)
+#' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+#' user_list <- sample(row_names(pbmc3k_medium_clusters), 100)
+#' cmp_to_a_list(pbmc3k_medium_clusters, user_list, background=user_list)
+cmp_to_a_list <- function(object=NULL, 
+                          user_list=NULL,
+                          name_user_list="user list",
+                          background=NULL,
+                          colors=c("#ED7931", "#3C78AE"),
+                          module=c("clust_size", 
+                                   "overlap_size",
+                                   "percent_overlap",
+                                   "percent_covered",
+                                   "jacard_stat",
+                                   "hypergeom"),
+                         as.list=FALSE){
+      
+      check_format_cluster_set(object)
+      
+      if(is.null(user_list))
+        print_msg('Please provide a lists as input.', msg_type = "STOP")
+      
+      if(is.null(background))
+        print_msg("Please provide background genes (e.g all the known genes).",
+                  msg_type = "STOP")
+    
+      
+      print_msg(paste0("Background size : ", length(background)),
+                msg_type = "INFO")
+    
+      plot_list <- list()
+      
+      theming <- theme_minimal() +
+                 theme(panel.grid.minor = element_blank()) 
+      
+      if("clust_size" %in% module){
+
+        print_msg("Computing cluster sizes.", msg_type = "INFO")
+    
+        tmp <- clust_size(object)
+        df <- data.frame(gene_set=c(name_user_list, names(tmp)), 
+                         size=c(length(user_list), tmp),
+                         source=c(name_user_list, 
+                                  rep("ClusterSet", nclust(object))))
+        
+        df$gene_set <- factor(df$gene_set, levels=rev(c(name_user_list, 
+                                                        clust_names(object))),
+                              ordered = TRUE)
+        print(head(df))
+        p1 <- ggplot(df, aes(x=gene_set, 
+                             y=size, 
+                             fill = source)) +
+          geom_col(color="white") +
+          scale_fill_manual(values=colors) + 
+          coord_flip() +
+          ylab("Number of\ngenes") +
+          xlab("Gene set") +
+          theming
+       
+        plot_list[["clust_size"]] <-  p1
+      }
+      
+      if("overlap_size" %in% module){
+        
+        print_msg("Computing 'overlap_size'.")
+        
+        print_msg("Computing overlapping sizes.", msg_type = "INFO")
+        
+        intersection <- compare_genesets(object@gene_clusters, list(user_list), stat = "intersection")[,1]
+        
+        df <- data.frame(gene_set=names(tmp), 
+                         intersection=tmp)
+        
+        df$gene_set <- factor(df$gene_set, levels=rev(clust_names(object)),
+                              ordered = TRUE)
+    
+        p2 <- ggplot(df, aes(x=gene_set, 
+                             y=intersection)) +
+          geom_col(fill=colors[1], color="white") +
+          scale_fill_manual(values=colors) + 
+          coord_flip() +
+          ylab(paste0("Number of genes\nintersecting with\n", name_user_list)) +
+          xlab("") +
+          theming
+        
+        plot_list[["overlap_size"]] <-  p2
+      }
+      
+      if("percent_overlap" %in% module){
+        
+        print_msg("Computing 'percent_overlap'.")
+        
+        tmp <- gene_cluster(object)
+        
+        df <- data.frame(gene_set=tmp, 
+                         gene=names(tmp),
+                         overlap=ifelse(names(tmp) %in% user_list, 
+                                        name_user_list, 
+                                        paste0("Not in ", name_user_list)))
+        
+        df$gene_set <- factor(df$gene_set, 
+                              levels=rev(clust_names(object)),
+                              ordered = TRUE)
+        
+        this_col <- colors[1:2]
+        
+        names(this_col) <- c(name_user_list, paste0("Not in ", name_user_list))
+        
+        p3 <- ggplot(df, aes(x=gene_set, 
+                             fill=overlap)) +
+          geom_bar(aes(y = (..count..)/sum(..count..)), color="white", position="fill") + 
+          scale_y_continuous(labels=scales::percent) +
+          scale_fill_manual(values=this_col) + 
+          coord_flip() +
+          ylab(paste0("Fraction of Gene Set covered \nby ",  name_user_list)) +
+          xlab("") +
+          theming
+        
+        plot_list[["percent_overlap"]] <-  p3
+      }
+      
+      if("percent_covered" %in% module){
+        
+        names(this_col) <- c("In gene set", "Not in gene set" )
+        
+        print_msg("Computing 'percent_covered'.")
+        
+        intersection <- compare_genesets(object@gene_clusters, list(user_list), 
+                                         stat = "intersection", 
+                                         background = background)[,1]
+        print(intersection)
+        df_1 <- data.frame(gene_set=names(intersection), 
+                         intersection=intersection/length(user_list) * 100)
+        
+        df_1$source <- "In gene set" 
+        
+        df_2 <- df_1
+        
+        df_2$intersection <- 100 - df_1$intersection
+        
+        df_2$source <-  "Not in gene set" 
+        
+        
+        df_3 <- rbind(df_2, df_1)
+    
+        df_3$source <- factor(df_3$source, 
+                              levels=rev(c("In gene set", "Not in gene set" )), 
+                              ordered = TRUE)
+        
+        df_3$gene_set <- factor(df_3$gene_set, 
+                                levels=rev(clust_names(object)),
+                                ordered = TRUE)
+        
+        p4 <- ggplot(df_3, aes(x=gene_set, 
+                               y=intersection,
+                               fill=source)) +
+          geom_col(color="white", position = "stack") + 
+          coord_flip() +
+          scale_fill_manual(values=this_col) +
+          ylab(paste0("Fraction of\n",  name_user_list, " covered")) +
+          xlab("") +
+          theming
+        
+        plot_list[["percent_covered"]] <-  p4
+      }
+      
+      if("jacard_stat" %in% module){
+        
+        print_msg("Computing 'jacard_stat'.")
+        
+        print_msg("Computing overlapping sizes.", msg_type = "INFO")
+        
+        jaccard <- compare_genesets(object@gene_clusters, list(user_list), stat = "jaccard", background=background)[,1]
+        
+        df <- data.frame(gene_set=names(jaccard), 
+                         jaccard=jaccard)
+        
+        df$gene_set <- factor(df$gene_set, 
+                              levels=rev(clust_names(object)),
+                              ordered = TRUE)
+
+        p5 <- ggplot(df, aes(x=gene_set, 
+                             y=jaccard)) +
+          geom_col(fill=colors[1], color="white") +
+          scale_fill_manual(values=colors) + 
+          ggtitle("Jaccard value") +
+          xlab("Clusters") +
+          ylab("") +
+          coord_polar() +
+          theming 
+        
+        
+        plot_list[["jacard_stat"]] <-  p5
+      }
+      
+      if("hypergeom" %in% module){
+        
+        print_msg("Computing 'hypergeometric'.")
+        
+        print_msg("Computing overlapping sizes.", msg_type = "INFO")
+        
+        hypergeometric <- compare_genesets(object@gene_clusters, list(user_list), stat = "hypergeom", background=background)[,1]
+        hypergeometric <- -log10(hypergeometric)
+        
+        df <- data.frame(gene_set=names(hypergeometric), 
+                         jaccard=hypergeometric)
+        
+        df$gene_set <- factor(df$gene_set, 
+                              levels=rev(clust_names(object)),
+                              ordered = TRUE)
+        
+        p6 <- ggplot(df, aes(x=gene_set, 
+                             y=hypergeometric)) +
+          geom_col(fill=colors[1], color="white") +
+          scale_fill_manual(values=colors) + 
+          ggtitle("Hypergeometric test\n-log10(p-value)") +
+          xlab("Clusters") +
+          ylab("") +
+          coord_polar() + 
+          theming 
+        
+        plot_list[["hypergeom"]] <-  p6
+      }
+      
+      if(as.list){
+        return(plot_list)
+      }else{
+        return((p1 | p2 | p3 ) / (p4 | p5 | p6 ))
+      }
+
+}
+
+  
+    
+    
+    
