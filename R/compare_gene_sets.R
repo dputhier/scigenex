@@ -434,8 +434,8 @@ cmp_to_a_list <- function(object=NULL,
         
         intersection <- compare_genesets(object@gene_clusters, list(user_list), stat = "intersection")[,1]
         
-        df <- data.frame(gene_set=names(tmp), 
-                         intersection=tmp)
+        df <- data.frame(gene_set=names(intersection), 
+                         intersection=intersection)
         
         df$gene_set <- factor(df$gene_set, levels=rev(clust_names(object)),
                               ordered = TRUE)
