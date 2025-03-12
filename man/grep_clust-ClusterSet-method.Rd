@@ -4,10 +4,18 @@
 \alias{grep_clust,ClusterSet-method}
 \title{Search gene module using a regular expression.}
 \usage{
-\S4method{grep_clust}{ClusterSet}(object = NULL, reg_exp = NULL, as_list = FALSE)
+\S4method{grep_clust}{ClusterSet}(object, regexp = NULL, val = TRUE)
+
+\S4method{grep_clust}{ClusterSet}(object, regexp = NULL, val = TRUE)
 }
 \arguments{
 \item{object}{a ClusterSet object.}
+
+\item{regexp}{The regular expression}
+
+\item{val}{if FALSE, a vector containing the (integer) indices of the matches determined
+by grep is returned, and if TRUE, a vector containing the matching elements themselves
+is returned.}
 
 \item{reg_exp}{The regular expression indicating the genes to be found.}
 
@@ -15,9 +23,14 @@
 }
 \description{
 Search gene module using a regular expression.
+
+Search genes within ClusterSet using a REGEXP.
 }
 \examples{
 # load a dataset
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 hit <- grep_clust(pbmc3k_medium_clusters, reg_exp="^T.*[0-9]$")
+# load a dataset
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+grep_clust(pbmc3k_medium_clusters, "^CD")
 }
