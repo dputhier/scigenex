@@ -239,7 +239,7 @@ On can use scigenex selected genes as input for PCA. One can expect some improve
 
 ```{r}
 # Scaling data using genes from scigenex
-pbmc3k <- ScaleData(pbmc3k, features = rownames(pbmc_scigenex), verbose = FALSE)
+pbmc3k <- ScaleData(pbmc3k, features = row_names(pbmc_scigenex), verbose = FALSE)
 
 # Perform principal component analysis
 pbmc3k <- RunPCA(pbmc3k, features = VariableFeatures(object = pbmc3k), verbose = FALSE)
@@ -257,7 +257,7 @@ dim_plot_orig + dim_plot_sci
 
 ## Exporting modules
 
-Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from genes to modules.
+Gene modules can be exported using the `cluster_set_to_xls()`. This function will create a Excel workbook that will contain the mapping from genes to modules. You may also use `write_clust()`.
 
 ```{r exporting_1, echo=FALSE}
 tmp_file <- file.path(tempdir(), "pbmc_scigenex_out.xls")
