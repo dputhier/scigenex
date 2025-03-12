@@ -36,7 +36,7 @@ load_example_dataset("7871581/files/pbmc3k_medium")
 
 # Select informative genes
 res <- select_genes(pbmc3k_medium)
-                    
+
 # Cluster informative features
 res <- gene_clustering(res, inflation=1.6)
 is(res)
@@ -51,7 +51,7 @@ plot_heatmap(res[1:2, 1:15], row_labels = FALSE, line_size_horizontal = 2)
 idents <- Seurat::Idents(pbmc3k_medium)
 plot_profiles(res,
               ident = idents)
-             
+
 # Some methods of the ClusterSet object
 x <- ncol(res)
 x <- nrow(res)
@@ -67,6 +67,6 @@ res <- res[2:3, ]
 res <- rename_clust(res)
 clust_names(res)
 res <- res[, col_names(res)[1:10]]
-show(res)    
+show(res)
 show_methods(res)
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+
+## v1.5.4
+
+* Add write_cname and file_suffix arguments to write_clust(). Changed default behaviour.
+
 ## v1.5.2
 
 * Fix #147 and #145.
