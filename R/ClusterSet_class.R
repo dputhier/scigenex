@@ -982,8 +982,10 @@ setMethod("subsample_by_ident",
 #' @param object a ClusterSet object.
 #' @param sep The separator
 #' @param file_prefix A file prefix.
+#' @param file_suffix A file suffix.
 #' @param path A directory to store the files.
 #' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
+#' @param write_cname Whether to add the cluster name. The cluster name is written as a prefix of each line in file(s) and followed by two pipes ("||"). 
 #' @export write_clust
 #' @examples
 #' # load a dataset
@@ -994,9 +996,11 @@ setMethod("subsample_by_ident",
 setGeneric("write_clust", 
            function(object,
                     sep = "\n",
-                    file_prefix="scigenex_clust_",
+                    file_prefix="scigenex_clust",
+                    file_suffix=".csv",
                     path=NULL,
-                    single_file=FALSE)
+                    single_file=FALSE,
+                    write_cname=FALSE)
              standardGeneric("write_clust")
 )
 
@@ -1005,8 +1009,10 @@ setGeneric("write_clust",
 #' @param object a ClusterSet object.
 #' @param sep The separator
 #' @param file_prefix A file prefix.
+#' @param file_suffix A file suffix.
 #' @param path A directory to store the files.
 #' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
+#' @param write_cname Whether to add the cluster name. The cluster name is written as a prefix of each line in file(s) and followed by two pipes ("||"). 
 #' @export write_clust
 #' @examples
 #' # load a dataset
@@ -1015,10 +1021,12 @@ setGeneric("write_clust",
 setMethod("write_clust", 
           signature("ClusterSet"), 
           function(object,
-                   sep = "\n",
-                   file_prefix="scigenex_clust_",
+                   sep = ",",
+                   file_prefix="scigenex_clust",
+                   file_suffix=".csv",
                    path=NULL,
-                   single_file=FALSE) {
+                   single_file=TRUE,
+                   write_cname=TRUE) {
             
             if(is.null(path)){
               path <- getwd()
@@ -1035,25 +1043,43 @@ setMethod("write_clust",
             check_format_cluster_set(object)
             
             if(!single_file){
-              cat_fun <- function(x, sep=NULL, file=NULL) cat(paste0(sort(x), collapse = sep), file=file) 
+              
+              cat_fun <- function(x, sep=NULL, file=NULL, write_cname=FALSE, clust_names){
+                if(!write_cname){
+                  cat(paste0(sort(x), collapse = sep), file=file)
+                }else{
+                  cat(paste0(clust_names, "||", paste0(sort(x), collapse = sep), sep=""), file=file)
+                }
+              }  
               
               for(i in 1:length(object@gene_clusters)){
-                file_out <- paste0(file_prefix, "_", i, ".txt")
-                cat_fun(object@gene_clusters[[i]], sep=sep, 
-                        file=file.path(path, file_out))
+                file_out <- paste0(file_prefix, "_", i, file_suffix)
+                cat_fun(object@gene_clusters[[i]], 
+                        sep=sep, 
+                        file=file.path(path, file_out),
+                        write_cname=write_cname,
+                        clust_names=names(object@gene_clusters)[i])
               }
             }else{
               for(i in 1:length(object@gene_clusters)){
-                cat(paste0(object@gene_clusters[[i]], collapse = sep),
-                    file=file.path(path, file_prefix), 
-                    append = TRUE,
-                    sep="\n")
+                if(!write_cname){
+                  cat(paste0(object@gene_clusters[[i]], collapse = sep),
+                      file=file.path(path, paste0(file_prefix, file_suffix)), 
+                      append = TRUE,
+                      sep="\n")
+                }else{
+                  clust_names <- names(object@gene_clusters)[i]
+                  cat(paste0(clust_names, "||", paste0(object@gene_clusters[[i]], collapse = sep)),
+                      file=file.path(path, paste0(file_prefix, file_suffix)), 
+                      append = TRUE,
+                      sep="\n")
+                }
+                
                 
               }
             }
-
             
- })
+          })
 
 
 

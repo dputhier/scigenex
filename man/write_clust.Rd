@@ -7,9 +7,11 @@
 write_clust(
   object,
   sep = "\\n",
-  file_prefix = "scigenex_clust_",
+  file_prefix = "scigenex_clust",
+  file_suffix = ".csv",
   path = NULL,
-  single_file = FALSE
+  single_file = FALSE,
+  write_cname = FALSE
 )
 }
 \arguments{
@@ -19,9 +21,13 @@ write_clust(
 
 \item{file_prefix}{A file prefix.}
 
+\item{file_suffix}{A file suffix.}
+
 \item{path}{A directory to store the files.}
 
 \item{single_file}{Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.}
+
+\item{write_cname}{Whether to add the cluster name. The cluster name is written as a prefix of each line in file(s) and followed by two pipes ("||").}
 }
 \description{
 Write the cluster to files.
