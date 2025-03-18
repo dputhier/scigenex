@@ -6,7 +6,8 @@
 \usage{
 select_genes(
   data = NULL,
-  distance_method = c("pearson", "cosine", "euclidean", "spearman", "kendall", "binary"),
+  distance_method = c("pearson", "cosine", "euclidean", "spearman", "kendall",
+    "binary_assym"),
   noise_level = 5e-05,
   k = 80,
   row_sum = 1,
