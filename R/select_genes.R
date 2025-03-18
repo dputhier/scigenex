@@ -62,7 +62,7 @@ select_genes <- function(data = NULL,
                                              "euclidean",
                                              "spearman",
                                              "kendall",
-                                             "binary"),
+                                             "binary_assym"),
                          noise_level = 0.00005,
                          k = 80,
                          row_sum = 1,
@@ -85,11 +85,11 @@ select_genes <- function(data = NULL,
   distance_method <- match.arg(distance_method)
   which_slot <- match.arg(which_slot)
   
-  print_msg(paste0("Slot for computing distances was set to: ", which_slot), msg_type = "INFO")
-  print_msg(paste0("Final expression slot was set to: ", final_slot), msg_type = "INFO")
+  print_msg(paste0("Slot for computing distances was set to: '", which_slot, "'."), msg_type = "INFO")
+  print_msg(paste0("Final expression slot was set to: '", final_slot, "'."), msg_type = "INFO")
   
-  if(distance_method == "binary" & which_slot != 'counts'){
-    print_msg("Method binary was selected forcing the use of 'counts', slot", msg_type = "INFO")
+  if(distance_method == "binary_assym" & which_slot != 'counts'){
+    print_msg("Method 'binary_assym' was selected forcing the use of 'counts', slot.", msg_type = "INFO")
     which_slot <- 'counts'
   }
   
@@ -120,7 +120,7 @@ select_genes <- function(data = NULL,
   print_msg(
     paste0(
       "Computing distances using selected method: ",
-      distance_method
+      distance_method, "."
     ),
     msg_type = "INFO"
   )
@@ -152,7 +152,8 @@ select_genes <- function(data = NULL,
     dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
     dist_matrix <- as.matrix(dist(mtx_sel))
-  }else if (distance_method == "binary") {
+  }else if (distance_method == "binary_assym") {
+    mtx_sel[mtx_sel > 0 ] <- 1
     dist_matrix <- ((1 - mtx_sel) %*% t(mtx_sel) + mtx_sel %*% t(1 - mtx_sel)) / (mtx_sel %*% t(mtx_sel) + (1 - mtx_sel) %*% t(mtx_sel) + (mtx_sel) %*% t(1 - mtx_sel))
   }
   
@@ -171,8 +172,6 @@ select_genes <- function(data = NULL,
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix) <- NA
   
-  
-
   # Compute distance to KNN -------------------------------------------------
   
   print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
