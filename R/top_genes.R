@@ -110,7 +110,7 @@ setMethod("top_genes",
       dist <- 1 - dist
     }
     
-    if (dist_method == "binary"){
+    if (dist_method == "binary_assym"){
       
       mtx_sel <- object@data[genes, ,drop=FALSE]
       dist <- ((1 - mtx_sel) %*% t(mtx_sel) + mtx_sel %*% t(1 - mtx_sel)) / (mtx_sel %*% t(mtx_sel) + (1 - mtx_sel) %*% t(mtx_sel) + (mtx_sel) %*% t(1 - mtx_sel))
