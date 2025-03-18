@@ -15,10 +15,12 @@
 #' @param k An integer specifying the size of the neighborhood.
 #' @param row_sum A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes. 
 #' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 100).
-#' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts"). 
+#' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts") to compute distances. 
 #' @param no_dknn_filter a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.
 #' @param no_anti_cor If TRUE, correlation below 0 are set to zero ("pearson", "cosine", "spearman" "kendall"). This may increase the 
 #' relative weight of positive correlation (as true anti-correlation may be rare).
+#' @param final_slot This is the slot to export in the final object. In case distance is set to binary, the function will force the usage of 'counts' for distance
+#' computation. However, the final object may contain normalized data (i.e log transformed) extract from the 'data' slot.
 #' @param seed An integer specifying the random seed to use.
 #'
 #' @return a ClusterSet class object
@@ -59,7 +61,8 @@ select_genes <- function(data = NULL,
                                              "cosine",
                                              "euclidean",
                                              "spearman",
-                                             "kendall"),
+                                             "kendall",
+                                             "binary"),
                          noise_level = 0.00005,
                          k = 80,
                          row_sum = 1,
@@ -67,45 +70,42 @@ select_genes <- function(data = NULL,
                          which_slot = c("data", "sct", "counts"),
                          no_dknn_filter = FALSE,
                          no_anti_cor=FALSE,
+                         final_slot=c("data", "sct", "counts"),
                          seed = 123) {
-  
-  # ======================
-  ## Set parameters
-  # ======================
-  
+
+
+  # Set parameters ----------------------------------------------------------
+
   ## set a seed for reproductibility
   if (!is.null(seed)) {
     set.seed(seed)
   }
   
-  # Get normalized gene expression matrix
+  final_slot <- match.arg(final_slot)
+  distance_method <- match.arg(distance_method)
   which_slot <- match.arg(which_slot)
+  
+  print_msg(paste0("Slot for computing distances was set to: ", which_slot), msg_type = "INFO")
+  print_msg(paste0("Final expression slot was set to: ", final_slot), msg_type = "INFO")
+  
+  if(distance_method == "binary" & which_slot != 'counts'){
+    print_msg("Method binary was selected forcing the use of 'counts', slot", msg_type = "INFO")
+    which_slot <- 'counts'
+  }
+  
   data <- get_data_for_scigenex(data = data, which_slot=which_slot)
   
-  # Check if distance provided match with one used by DBF()
-  if (length(distance_method) > 1) {
-    distance_method <- distance_method[1]
-  }
-  distance_method <- match.arg(distance_method, c("pearson",
-                                                  "cosine",
-                                                  "euclidean",
-                                                  "spearman",
-                                                  "kendall"))
-  
+
   # Check if noise_level is between 0 and 1
   if (noise_level < 0 | noise_level > 1) {
     print_msg("noise_level argument should be >= 0 and <= 1.",
               msg_type = "STOP")              
   }
   
-  
-  
-  # ======================
-  #### Compute distance matrix ####
-  # ======================
-  
-  #################### Correlation and distance matrices
-  # Remove genes with 0 values for all cells
+
+  # Computing the distance matrix -------------------------------------------
+
+  # Remove genes with small counts
   
   if(!inherits(data, "dgCMatrix")){
     genes_to_keep <- rowSums(data) > row_sum
@@ -113,7 +113,7 @@ select_genes <- function(data = NULL,
     genes_to_keep <- Matrix::rowSums(data) > row_sum
   }
   
-  select_for_correlation <- data[genes_to_keep, ]
+  mtx_sel <- data[genes_to_keep, ]
   
   # Compute gene-gene correlation/distance matrix
   
@@ -124,34 +124,36 @@ select_genes <- function(data = NULL,
     ),
     msg_type = "INFO"
   )
-  print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
+  print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(mtx_sel)), 
             msg_type = "DEBUG")
   
   # Compute correlations and corresponding 
   # distance matrix. Note that for pearson
   # and cosine, 0 < distance < 2.
   if (distance_method == "pearson") {
-    dist_matrix <- qlcMatrix::corSparse(t(select_for_correlation))
+    dist_matrix <- qlcMatrix::corSparse(t(mtx_sel))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   }else  if (distance_method == "kendall") {
-    dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "kendall"))
+    dist_matrix <- as.matrix(cor(t(mtx_sel), method = "kendall"))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix  
   }else  if (distance_method == "spearman") {
-      dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "spearman"))
+      dist_matrix <- as.matrix(cor(t(mtx_sel), method = "spearman"))
       if(no_anti_cor)
         dist_matrix[dist_matrix < 0] <- 0
       dist_matrix <- 1 - dist_matrix                      
   } else if (distance_method == "cosine") {
-    dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(select_for_correlation)))
+    dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(mtx_sel)))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
-    dist_matrix <- as.matrix(dist(select_for_correlation))
+    dist_matrix <- as.matrix(dist(mtx_sel))
+  }else if (distance_method == "binary") {
+    dist_matrix <- ((1 - mtx_sel) %*% t(mtx_sel) + mtx_sel %*% t(1 - mtx_sel)) / (mtx_sel %*% t(mtx_sel) + (1 - mtx_sel) %*% t(mtx_sel) + (mtx_sel) %*% t(1 - mtx_sel))
   }
   
   print_stat("Distance matrix stats", 
@@ -163,17 +165,15 @@ select_genes <- function(data = NULL,
   max_dist <- max(dist_matrix)
   
   # Set the rownames / colnames of the distance matrix
-  rownames(dist_matrix) <- rownames(select_for_correlation)
-  colnames(dist_matrix) <- rownames(select_for_correlation)
+  rownames(dist_matrix) <- rownames(mtx_sel)
+  colnames(dist_matrix) <- rownames(mtx_sel)
   
   # The distance from a gene to itself is 'hidden'
   diag(dist_matrix) <- NA
   
   
-  
-  # ======================
-  #### Compute distance to KNN ####
-  # ======================
+
+  # Compute distance to KNN -------------------------------------------------
   
   print_msg(paste0("Computing distances to KNN."), msg_type = "INFO")
   
@@ -202,7 +202,7 @@ select_genes <- function(data = NULL,
     # Add the neigbhors to the list
     l_knn[[gene]] <- gene_dist
     
-    # Select the kth pearson correlation values. 
+    # Select the kth distance values. 
     # This value corresponds to the DKNN of the gene(i)
     df_dknn[gene, "dknn_values"] <- gene_dist[k]
   }
@@ -210,11 +210,9 @@ select_genes <- function(data = NULL,
   print_stat("Observed DKNN stats", 
              data = df_dknn$dknn_values, msg_type = "DEBUG")
   
-  
-  # ======================
-  #### Compute simulated distance to KNN ####
-  # ======================
-  
+
+  # Compute simulated distance to KNN ---------------------------------------
+
   sim_dknn <- vector()
   critical_distance <- vector()
   
@@ -223,7 +221,7 @@ select_genes <- function(data = NULL,
     #################### DKNN simulation
     print_msg(paste0("Computing simulated distances to KNN."), msg_type = "INFO")
     
-    nb_selected_genes <- nrow(select_for_correlation)
+    nb_selected_genes <- nrow(mtx_sel)
     
     if (noise_level == 0) {
       tresh_dknn <- min(df_dknn$dknn_values)
@@ -257,10 +255,9 @@ select_genes <- function(data = NULL,
     mean_sim <- mean(sim_dknn)
     sd_sim <- sd(sim_dknn)
     
-    
-    # ======================
-    #### Compute the DKNN threshold (or critical distance) ####
-    # ======================
+
+    # Compute the DKNN threshold (or critical distance) -----------------------
+
     # Order genes by DKNN values
     print_msg(paste0("Computing threshold of distances to KNN (DKNN threshold)."),
               msg_type = "INFO")
@@ -281,10 +278,8 @@ select_genes <- function(data = NULL,
     
     df_dknn$FDR[df_dknn$FDR > 100] <- 100
     
+    # Select genes with a distance value under critical distance ------------
 
-    # ======================
-    #### Select genes with a distance value under critical distance ####
-    # ======================
     print_msg(paste0("Selecting informative genes."), msg_type = "INFO")
     fdr_tresh_pos <- which(df_dknn$FDR > fdr)[1]
     selected_genes <- df_dknn[1:fdr_tresh_pos,]$gene_id
@@ -295,13 +290,17 @@ select_genes <- function(data = NULL,
   }
   
 
-  # ======================
-    #### Create the ClusterSet object ####
-  # ======================
+
+  # Create the ClusterSet object --------------------------------------------
+
   print_msg(paste0("Creating the ClusterSet object."), msg_type = "INFO")
+
+  if(final_slot != which_slot){
+    data <- get_data_for_scigenex(data = data, which_slot=final_slot)
+  }  
   
   obj <- new("ClusterSet")
-  
+
   if (length(selected_genes) > 0) {
     obj@data <- as.matrix(data[selected_genes, ])
     obj@gene_clusters <- list("1" = rownames(obj@data))

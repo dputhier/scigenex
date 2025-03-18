@@ -6,7 +6,7 @@
 \usage{
 select_genes(
   data = NULL,
-  distance_method = c("pearson", "cosine", "euclidean", "spearman", "kendall"),
+  distance_method = c("pearson", "cosine", "euclidean", "spearman", "kendall", "binary"),
   noise_level = 5e-05,
   k = 80,
   row_sum = 1,
@@ -14,6 +14,7 @@ select_genes(
   which_slot = c("data", "sct", "counts"),
   no_dknn_filter = FALSE,
   no_anti_cor = FALSE,
+  final_slot = c("data", "sct", "counts"),
   seed = 123
 )
 }
@@ -33,12 +34,15 @@ with high dknn (i.e close to noise).}
 
 \item{fdr}{A numeric value indicating the false discovery rate threshold (range: 0 to 100).}
 
-\item{which_slot}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts").}
+\item{which_slot}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts") to compute distances.}
 
 \item{no_dknn_filter}{a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.}
 
 \item{no_anti_cor}{If TRUE, correlation below 0 are set to zero ("pearson", "cosine", "spearman" "kendall"). This may increase the 
 relative weight of positive correlation (as true anti-correlation may be rare).}
+
+\item{final_slot}{This is the slot to export in the final object. In case distance is set to binary, the function will force the usage of 'counts' for distance
+computation. However, the final object may contain normalized data (i.e log transformed) extract from the 'data' slot.}
 
 \item{seed}{An integer specifying the random seed to use.}
 }

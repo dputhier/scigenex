@@ -110,20 +110,28 @@ setMethod("top_genes",
       dist <- 1 - dist
     }
     
+    if (dist_method == "binary"){
+      
+      mtx_sel <- object@data[genes, ,drop=FALSE]
+      dist <- ((1 - mtx_sel) %*% t(mtx_sel) + mtx_sel %*% t(1 - mtx_sel)) / (mtx_sel %*% t(mtx_sel) + (1 - mtx_sel) %*% t(mtx_sel) + (mtx_sel) %*% t(1 - mtx_sel))
+      colnames(dist) <- genes
+      rownames(dist) <- genes
+      }
+    
     if(dist_method %in% c("kendall", "spearman")) {
-      dist <- cor(t(object@data[genes, ]), method = dist_method)
+      dist <- cor(t(object@data[genes, , drop=FALSE]), method = dist_method)
       dist <- 1 - dist
     }
     
     if (dist_method == "cosine") {
-      dist <- as.matrix(qlcMatrix::cosSparse(t(object@data[genes, ])))
+      dist <- as.matrix(qlcMatrix::cosSparse(t(object@data[genes, , drop=FALSE])))
       dist <- 1 - dist
       colnames(dist) <- genes
       rownames(dist) <- genes
     }
     
     if (dist_method == "euclidean") {
-      dist <- as.matrix(dist(object@data[genes, ],
+      dist <- as.matrix(dist(object@data[genes, , drop=FALSE],
                              method = "euclidean",
                              upper = TRUE,
                              diag = TRUE
@@ -147,7 +155,7 @@ setMethod("top_genes",
   if (length(cluster) > 1) {
     genes_top <- genes_top[2:(length(cluster) + 1), ]
   } else {
-    genes_top <- as.matrix(t(genes_top[2:(length(cluster) + 1), ]))
+    genes_top <- as.matrix(t(genes_top[2:(length(cluster) + 1), , drop=FALSE]))
   }
   
   colnames(genes_top) <- paste0("gene_top_", 1:top)

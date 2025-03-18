@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v1.6.0
+
+* Added the 'binary' (aka asymmetric binary) distance to select_genes (jaccard index). The implementation based on dot products is relatively fast and seems, at least in the first tests, to provide interesting results.
+
+
 ## v1.5.4
 
 * Add write_cname and file_suffix arguments to write_clust(). Changed default behaviour.
