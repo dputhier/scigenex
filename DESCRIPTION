@@ -1,7 +1,7 @@
 Package: scigenex
 Type: Package
 Title: The scigenex package (Single-Cell Informative GENe Explorer)
-Version: 1.5.4
+Version: 1.6.0
 Date: 2020-07-22
 Author: J. Bavais, Sebastien Nin, Lionel Spinelli and Denis Puthier
 Maintainer: J. Bavais <julie.bavais@yahoo.fr>
