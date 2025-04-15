@@ -1,5 +1,5 @@
 ---
-author: "Julie Bavais"
+author: "Julie Bavais & Denis Puthier"
 date: "`r Sys.Date()`"
 title: "Visium guided tutorial"
 output: rmarkdown::html_vignette
