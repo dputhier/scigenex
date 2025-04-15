@@ -52,7 +52,7 @@ setMethod("top_genes",
     # Display an info message if there is less than 
     # n top genes in a gene cluster
     if(any(object@gene_clusters_metadata$size < top)){
-      print_msg(paste0("One our several cluster contains less than ", 
+      print_msg(paste0("One or several clusters contain less than ", 
                        top, " genes. Retrieving all genes"),
                 msg_type = "INFO")
     }              
