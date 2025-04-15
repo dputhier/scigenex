@@ -32,7 +32,7 @@ suppressMessages(suppressWarnings(library(ggplot2, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(patchwork, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(SeuratData, quietly = TRUE)))
-suppressMessages(suppressWarnings(InstallData("pbmc3k")))
+suppressMessages(suppressWarnings(InstallData("pbmc3k", quiet=TRUE)))
 suppressMessages(suppressWarnings(data("pbmc3k")))
 pbmc3k <- UpdateSeuratObject(object = pbmc3k)
 
