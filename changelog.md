@@ -6,6 +6,7 @@
 * The top_genes() has new argument 'distance_method' to allow overridding the default distance method (which can be
 unknown when object is obtained using cluster_set_from_matrix()).
 * The top_genes() has a new argument 'fast' to allow fast computation of Pearson-based distances.
+* Added plot_multi_profiles().
 
 ## v1.6.0
 
