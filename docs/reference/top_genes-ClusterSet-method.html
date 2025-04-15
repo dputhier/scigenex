@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">object</span>, top <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">object</span>, top <span class="op">=</span> <span class="fl">20</span>, fast <span class="op">=</span> <span class="cn">FALSE</span>, distance_method <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,6 +73,14 @@
 
 <dt id="arg-top">top<a class="anchor" aria-label="anchor" href="#arg-top"></a></dt>
 <dd><p>A value for the number of genes to select from each cluster.</p></dd>
+
+
+<dt id="arg-fast">fast<a class="anchor" aria-label="anchor" href="#arg-fast"></a></dt>
+<dd><p>Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.</p></dd>
+
+
+<dt id="arg-distance-method">distance_method<a class="anchor" aria-label="anchor" href="#arg-distance-method"></a></dt>
+<dd><p>Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -91,7 +99,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Store top genes in the object</span></span></span>
 <span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One our several cluster contains less than 20 genes. Retrieving all genes </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One or several clusters contain less than 20 genes. Retrieving all genes </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
