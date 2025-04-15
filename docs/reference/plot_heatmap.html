@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -192,17 +192,8 @@ Default to average.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot heatmap of 'top genes' of all gene clusters</span></span></span>
 <span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 6. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 7. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 8. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 9. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 10. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 11. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 12. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 13. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 14. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 15. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in top_genes slot of ClusterSet object. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One our several cluster contains less than 20 genes. Retrieving all genes </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
 <span class="r-in"><span><span class="fu">plot_heatmap</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, use_top_genes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>

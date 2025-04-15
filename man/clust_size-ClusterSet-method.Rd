@@ -16,5 +16,5 @@ The sizes of the clusters stored in a ClusterSet object.
 \examples{
 # load a dataset
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-x <- clust_size(pbmc3k_medium_clusters)
+clust_size(pbmc3k_medium_clusters)
 }

@@ -4,20 +4,12 @@
 \alias{top_genes}
 \title{Most co-expressed genes from each gene cluster}
 \usage{
-top_genes(
-  object,
-  top = 20,
-  cluster = "all",
-  fast = FALSE,
-  distance_method = NULL
-)
+top_genes(object, top = 20, fast = FALSE, distance_method = NULL)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
 \item{top}{A value for the number of genes to select from each cluster.}
-
-\item{cluster}{A vector of gene cluster identity.}
 
 \item{fast}{Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.}
 

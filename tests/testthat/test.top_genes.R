@@ -1,7 +1,7 @@
 # Set verbosity to 0
 set_verbosity(0)
 library(Seurat)
-
+library(testthat)
 load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 
 res <- pbmc3k_medium_clusters
@@ -10,7 +10,7 @@ test_that("Cheking top_gene()", {
 
   # ========================================
   # Top 20
-  res_20 <- top_genes(res, cluster = "all", top = 20)
+  res_20 <- top_genes(res,top = 20)
   
   # Test top genes list in all cluster
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
@@ -69,7 +69,7 @@ test_that("Cheking top_gene()", {
   
   # ========================================
   # Top 10
-  res_10 <- top_genes(res, cluster = "all", top = 10)
+  res_10 <- top_genes(res, top = 10)
   
   # Test top genes list in all cluster
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 
@@ -115,7 +115,7 @@ test_that("Cheking top_gene()", {
   
   # ========================================
   # Top 5
-  res_5 <- top_genes(res, cluster = "all", top = 5)
+  res_5 <- top_genes(res, top = 5)
   
   # Test top genes list in all cluster
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "SDPR", "GNG11", 
@@ -148,7 +148,7 @@ test_that("Cheking top_gene()", {
   
   # ========================================
   # Top 100
-  res_100 <- suppressWarnings(top_genes(res, cluster = "all", top = 100))
+  res_100 <- suppressWarnings(top_genes(res, top = 100))
   
   # Test top genes list in all cluster
   gene_name_to_check <- c("RPL11", "RPL32", "RPS12", "RPL18A", "RPS18", "RPS23", "RPS16", 

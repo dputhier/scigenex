@@ -11,6 +11,7 @@
     "abspearson", "correlation", "abscorrelation", "spearman", "kendall"),
   link = c("average", "single", "complete", "ward", "mcquitty", "median", "centroid",
     "centroid2"),
+  decreasing = FALSE,
   nb_proc = 2
 )
 }
@@ -26,6 +27,8 @@ with the cluster center.}
 \item{method}{The distance measure to be used order_by=='hclust'.}
 
 \item{link}{The agglomeration method to be used if order_by=='hclust'.}
+
+\item{decreasing}{Whether the sorting should be decreasing (FALSE by default)}
 
 \item{nb_proc}{The number of processor to be used if order_by=='hclust'.}
 }

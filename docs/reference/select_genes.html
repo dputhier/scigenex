@@ -20,7 +20,7 @@ A threshold is set based on permutation analysis and FDR computation."><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -71,7 +71,7 @@ A threshold is set based on permutation analysis and FDR computation.</p>
 <span>  noise_level <span class="op">=</span> <span class="fl">5e-05</span>,</span>
 <span>  k <span class="op">=</span> <span class="fl">80</span>,</span>
 <span>  row_sum <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  fdr <span class="op">=</span> <span class="fl">0.005</span>,</span>
+<span>  fdr <span class="op">=</span> <span class="fl">5e-05</span>,</span>
 <span>  which_slot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"sct"</span>, <span class="st">"counts"</span><span class="op">)</span>,</span>
 <span>  no_dknn_filter <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  no_anti_cor <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -107,7 +107,7 @@ with high dknn (i.e close to noise).</p></dd>
 
 
 <dt id="arg-fdr">fdr<a class="anchor" aria-label="anchor" href="#arg-fdr"></a></dt>
-<dd><p>A numeric value indicating the false discovery rate threshold (range: 0 to 100).</p></dd>
+<dd><p>A numeric value indicating the false discovery rate threshold (range: 0 to 1).</p></dd>
 
 
 <dt id="arg-which-slot">which_slot<a class="anchor" aria-label="anchor" href="#arg-which-slot"></a></dt>

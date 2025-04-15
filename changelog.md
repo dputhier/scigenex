@@ -1,9 +1,24 @@
 # Changelog
 
 
+## v1.6.1
+
+* The top_genes() has new argument 'distance_method' to allow overridding the default distance method (which can be
+unknown when object is obtained using cluster_set_from_matrix()).
+* The top_genes() has a new argument 'fast' to allow fast computation of Pearson-based distances.
+
+## v1.6.0
+
+* The FDR in `select_genes()` is now computed differently using BH. This may impact your results. 
+* The FDR is no more a purcentage but a ratio. The fdr default value in `select_genes()` has been 
+changed accordingly. 
+* The 'cluster' argument has been deleted from top_genes(). The method has been refactored.
+* The reorder_genes() has been refactored. Added argument 'decreasing'. 
+
 ## v1.5.4
 
 * Add write_cname and file_suffix arguments to write_clust(). Changed default behaviour.
+* Fix #150.
 
 ## v1.5.2
 

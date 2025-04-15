@@ -160,6 +160,10 @@ setGeneric("clust_names",
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
 #' @export clust_names
+#' @examples
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' clust_names(pbmc3k_medium_clusters)
+#' 
 setMethod("clust_names",
           "ClusterSet",
           function(x) {
@@ -194,6 +198,9 @@ setGeneric(
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
+#' @examples
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' col_names(pbmc3k_medium_clusters)
 #' @export col_names
 setMethod(
   f = "col_names",
@@ -219,6 +226,9 @@ setGeneric("row_names",
 #' @description
 #' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
+#' @examples
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' row_names(pbmc3k_medium_clusters)
 #' @export row_names
 setMethod("row_names", "ClusterSet",
           function(x)
@@ -392,7 +402,7 @@ setMethod("nclust", signature("ClusterSet"),
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-#' x <- clust_size(pbmc3k_medium_clusters)
+#' clust_size(pbmc3k_medium_clusters)
 #' @keywords internal
 setGeneric("clust_size",
            function(x)
@@ -407,7 +417,7 @@ setGeneric("clust_size",
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
-#' x <- clust_size(pbmc3k_medium_clusters)
+#' clust_size(pbmc3k_medium_clusters)
 setMethod("clust_size", signature("ClusterSet"),
           function(x) {
             x@gene_clusters_metadata$size

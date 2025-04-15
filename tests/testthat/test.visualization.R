@@ -750,24 +750,24 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:80]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 86)) # 80 + 6 NA columns
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 86)) # 80 + 6 NA columns
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 10))
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:20]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 23)) # 20 + 3 NA columns
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 23)) # 20 + 3 NA columns
   
   p <- plot_heatmap(clust_set[1,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(91, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(93, 10))
   expect_equal(dim(p@plots@listData$`Exp. level`@data), c(length(clust_set@gene_clusters$`1`), 10))
   
   p <- plot_heatmap(clust_set[2 ,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(52, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(64, 10))
   expect_equal(dim(p@plots@listData$`Exp. level`@data), c(length(clust_set@gene_clusters$`2`), 10))
 })
 
@@ -1627,24 +1627,24 @@ testthat::test_that("Check plot_heatmap, subsetting and clustering", {
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:80]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 86)) # 80 + 6 NA columns
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 86)) # 80 + 6 NA columns
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 10))
   
   p <- plot_heatmap(clust_set[,colnames(clust_set@data)[1:20]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(178, 23)) # 20 + 3 NA columns
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(192, 23)) # 20 + 3 NA columns
   
   p <- plot_heatmap(clust_set[1,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(91, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(93, 10))
   expect_equal(dim(p@plots@listData$`Exp. level`@data), c(length(clust_set@gene_clusters$`1`), 10))
   
   p <- plot_heatmap(clust_set[2 ,colnames(clust_set@data)[1:10]], cell_clusters=Seurat::Idents(pbmc_small))
   testthat::expect_error(print(p), NA)
-  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(52, 10))
+  expect_equal(dim(p@plots@listData$`Exp. level`@data), c(64, 10))
   expect_equal(dim(p@plots@listData$`Exp. level`@data), c(length(clust_set@gene_clusters$`2`), 10))
 })
 

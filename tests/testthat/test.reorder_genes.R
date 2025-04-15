@@ -40,8 +40,38 @@ test_that("Checking reorder_genes function using order_by='gene_names'...", {
                                         "CST7", "CTSW", "EFHD2", "FGFBP2", "GNLY", "GZMA", "GZMB", "HLA-C", 
                                         "HOPX", "IGFBP7", "IL2RB", "KLRF1", "PLEK", "PRF1", "PTPRCAP", 
                                         "SPON2", "XCL1"))
+  
+  res <- reorder_genes(res, order_by = "gene_names", decreasing=TRUE)
+  expect_equal(res@gene_clusters$`1`, rev(c("BTG1", "EEF1A1", "EEF1B2", "MALAT1", "NACA", "RPL11", "RPL12", 
+                                        "RPL14", "RPL15", "RPL17", "RPL18", "RPL18A", "RPL21", "RPL23A", 
+                                        "RPL26", "RPL27", "RPL27A", "RPL28", "RPL29", "RPL3", "RPL31", 
+                                        "RPL32", "RPL35A", "RPL36", "RPL5", "RPL6", "RPL7A", "RPL9", 
+                                        "RPLP1", "RPLP2", "RPS10", "RPS11", "RPS12", "RPS13", "RPS15A", 
+                                        "RPS16", "RPS18", "RPS19", "RPS20", "RPS23", "RPS25", "RPS26", 
+                                        "RPS28", "RPS29", "RPS3", "RPS3A", "RPS4X", "RPS8", "RPS9", "RPSAP58", 
+                                        "TPT1")))
+  
+  expect_equal(res@gene_clusters$`2`, rev(c("ACRBP", "ACTN1", "AP001189.4", "APP", "ASAH1", "CA2", "CD151", 
+                                        "CLU", "CTSA", "F13A1", "FERMT3", "GAS2L1", "GNG11", "GP9", "GRAP2", 
+                                        "GSN", "H2AFJ", "HIST1H2AC", "HIST1H2BK", "ILK", "MARCH2", "MFSD1", 
+                                        "MMD", "MPP1", "MYL12A", "MYL9", "NGFRAP1", "ODC1", "PARVB", 
+                                        "PDLIM1", "PF4", "PLA2G12A", "PPBP", "PTCRA", "PTGS1", "PVALB", 
+                                        "RAP1B", "RGS18", "SDPR", "SNCA", "SNN", "SPARC", "TMEM40", "TPM1", 
+                                        "TPM4", "TPTEP1", "TREML1", "TUBB1", "YWHAH")))
+  
+  expect_equal(res@gene_clusters$`3`, rev(c("ALDH2", "AP2S1", "APOBEC3A", "ATG3", "BID", "BLVRA", "C1orf162", 
+                                        "CAMK1", "CAPG", "CD14", "CD300LF", "CD302", "CFD", "CNPY3", 
+                                        "COTL1", "CPVL", "CSTB", "CTSS", "CTSZ", "CYBB", "EIF4EBP1", 
+                                        "FCGR2A", "GABARAP", "GAPDH", "GCA", "GRINA", "IFI6", "IFNGR2", 
+                                        "IGSF6", "LGALS2", "LILRB2", "LILRB4", "MAFB", "MNDA", "NAAA", 
+                                        "NUP214", "POU2F2", "S100A10", "S100A11", "SLC7A7", "SOD2", "TGFBI", 
+                                        "TNFSF13B", "TYMP", "WARS")))
+  
+  expect_equal(res@gene_clusters$`4`, rev(c("AKR1C3", "CCL4", "CCL5", "CD247", "CD7", "CD99", "CLIC3", 
+                                        "CST7", "CTSW", "EFHD2", "FGFBP2", "GNLY", "GZMA", "GZMB", "HLA-C", 
+                                        "HOPX", "IGFBP7", "IL2RB", "KLRF1", "PLEK", "PRF1", "PTPRCAP", 
+                                        "SPON2", "XCL1")))
 })
-
 
 
 

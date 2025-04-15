@@ -6,7 +6,6 @@
 #' Extract the most highly co-expressed genes of each gene cluster.
 #' @param object A \code{ClusterSet} object.
 #' @param top A value for the number of genes to select from each cluster.
-#' @param cluster A vector of gene cluster identity.
 #' @param fast Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.
 #' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.
 #' @return A \code{ClusterSet} object.
@@ -15,7 +14,6 @@
 setGeneric("top_genes", 
            function(object,
                     top = 20,
-                    cluster = "all",
                     fast=FALSE,
                     distance_method=NULL)
              standardGeneric("top_genes")
@@ -26,9 +24,8 @@ setGeneric("top_genes",
 #' Extract the most highly co-expressed genes of each gene cluster.
 #' @param object A \code{ClusterSet} object.
 #' @param top A value for the number of genes to select from each cluster.
-#' @param cluster A vector of gene cluster identity.
 #' @param fast Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.
-#' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.   
+#' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.
 #' @return A \code{ClusterSet} object.
 #' @export top_genes
 #'
@@ -46,125 +43,91 @@ setMethod("top_genes",
           signature("ClusterSet"), 
               function(object,
                       top = 20,
-                      cluster = "all",
                       fast=FALSE,
                       distance_method=NULL) {
-  
-  ## Check format object arg
-  check_format_cluster_set(object)
-  
-  if (unique(cluster == "all")) {
-    cluster <- object@gene_clusters_metadata$cluster_id
-  }
-  
-  # Display an info message if there is less than n top genes in a gene cluster
-  loop <- 0
-  for (size in object@gene_clusters_metadata$size[cluster]) {
-    loop <- loop + 1
-
-    if (top > size) {
-      print_msg(paste0("Number of top genes is greater than the number of genes in cluster ", 
-                       loop, 
-                       ". All genes will be used."),
+    
+    ## Check format object arg
+    check_format_cluster_set(object)
+    
+    # Display an info message if there is less than 
+    # n top genes in a gene cluster
+    if(any(object@gene_clusters_metadata$size < top)){
+      print_msg(paste0("One our several cluster contains less than ", 
+                       top, " genes. Retrieving all genes"),
                 msg_type = "INFO")
-    }
-  }
-  
-  
-  clusters <- object@gene_clusters
-  genes_top <- matrix(ncol = top)
-  
-  print_msg("Extracting top co-expressed genes for each gene cluster", 
-            msg_type="DEBUG")
-  
-  # Compute distances between genes in cluster i
-  # Use the same distance used by SciGeneX
-  if(!is.null(distance_method)){
-    if(!distance_method %in% c("kendall", "spearman", "cosine", "euclidean", "pearson")){
-      print('dist_method should be one of "kendall", "spearman", "cosine", "euclidean", "pearson".', 
-            msg_type="STOP")
-    }
-
-    dist_method <-distance_method
-
-  }else{
-    dist_method <- object@parameters$distance_method
-  }
-  
-  for (i in cluster) {
+    }              
     
-    print_msg(paste0("Processing cluster ", i), msg_type="DEBUG")
+    # Prepare some vars
+    clusters <- object@gene_clusters
+    genes_top <- list()
     
-    # Extract gene names in cluster i
-    genes <- clusters[[i]]
-    
-    if (dist_method == "pearson"){
-      if(!fast){
+    # Extract top co-expressed genes for each gene cluster
+    for (cl_name in names(clusters)) {
+      # Extract gene names in cluster i
+      genes <- clusters[[cl_name]]
+      
+      # Compute distances between genes in cluster i
+      # Use the same distance used by SciGeneX
+      dist_method <- object@parameters$distance_method
+      
+      if (dist_method == "unknown") {
+        print_msg("Distance type is unknown", msg_type = "INFO")
+        print_msg("Using Pearson", msg_type = "INFO")
+        dist_method<- "pearson"
+      }
+      
+      if (dist_method == "pearson"){
+        if(!fast){
+          dist <- cor(t(object@data[genes, ]), method = dist_method)
+        }else{
+          print_msg("Using fast computation of pearson correlations.", msg_type="DEBUG")
+          dist <- as.matrix(qlcMatrix::corSparse(t(object@data[genes, ])))
+          colnames(dist) <- genes
+          rownames(dist) <- genes
+        }
+        dist <- 1 - dist
+      }
+      
+      if(dist_method %in% c("kendall", "spearman")) {
         dist <- cor(t(object@data[genes, ]), method = dist_method)
-      }else{
-        print_msg("Using fast computation of pearson correlations.", msg_type="DEBUG")
-        dist <- as.matrix(qlcMatrix::corSparse(t(object@data[genes, ])))
+        dist <- 1 - dist
+      }
+      
+      if (dist_method == "cosine") {
+        dist <- as.matrix(qlcMatrix::cosSparse(t(object@data[genes, ])))
+        dist <- 1 - dist
         colnames(dist) <- genes
         rownames(dist) <- genes
       }
-      dist <- 1 - dist
+      
+      if (dist_method == "euclidean") {
+        dist <- as.matrix(dist(object@data[genes, ],
+                               method = "euclidean",
+                               upper = TRUE,
+                               diag = TRUE
+        ))
+        diag(dist) <- NA
+      }
+      
+      
+      # Compute mean correlation for each gene in cluster i
+      dist_means <- colMeans(dist, na.rm = TRUE)
+      dist_means <- dist_means[order(dist_means, decreasing = FALSE)]
+      
+      # Extract top genes with the highest correlation mean
+      max_g <- ifelse(top > length(dist_means), length(dist_means), top) 
+      genes_top[[cl_name]] <- names(dist_means[1:max_g])
     }
     
-    if(dist_method %in% c("kendall", "spearman")) {
-      dist <- cor(t(object@data[genes, ]), method = dist_method)
-      dist <- 1 - dist
-    }
     
-    if (dist_method == "cosine") {
-      dist <- as.matrix(qlcMatrix::cosSparse(t(object@data[genes, ])))
-      dist <- 1 - dist
-      colnames(dist) <- genes
-      rownames(dist) <- genes
-    }
+    object@top_genes <- genes_top
     
-    if (dist_method == "euclidean") {
-      dist <- as.matrix(dist(object@data[genes, ],
-                             method = "euclidean",
-                             upper = TRUE,
-                             diag = TRUE
-      ))
-      diag(dist) <- NA
-    }
+    # Print
+    print_msg(
+      msg = "Results are stored in 'top_genes' slot of the object.",
+      msg_type = "INFO"
+    )
     
-    if (dist_method == "unknown") {
-      print_msg("Distance type is unknown", msg_type = "STOP")
-    }
+    return(object)
+  })
 
-    # Compute mean correlation for each gene in cluster i
-    dist_means <- colMeans(dist, na.rm = TRUE)
-    dist_means <- dist_means[order(dist_means, decreasing = FALSE)]
-    
-    # Extract top genes with the highest correlation mean
-    genes_top <- rbind(genes_top, names(dist_means[1:top]))
-  }
-  
-  # Prepare top gene matrix
-  if (length(cluster) > 1) {
-    genes_top <- genes_top[2:(length(cluster) + 1), ]
-  } else {
-    genes_top <- as.matrix(t(genes_top[2:(length(cluster) + 1), ]))
-  }
-  
-  colnames(genes_top) <- paste0("gene_top_", 1:top)
-  rownames(genes_top) <- paste0("cluster_", cluster)
-  
-  # Put top gene matrix in object@top_genes
-  object@top_genes <- split(x = unname(genes_top), f = cluster)
-  
-  for (clust in cluster) {
-    object@top_genes[[clust]] <- object@top_genes[[as.character(clust)]][!is.na(object@top_genes[[as.character(clust)]])]
-  }
-  
-  # Print
-  print_msg(
-    msg = "Results are stored in top_genes slot of ClusterSet object.",
-    msg_type = "INFO"
-  )
-  
-  return(object)
-})
