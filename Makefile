@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.6.0
+VERSION=1.6.1
 
 .PHONY: help
 
@@ -98,7 +98,6 @@ doc_html:
 	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site(devel=TRUE)" | R --slave
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VERSION)."
-
 
 all: doc install check test
 

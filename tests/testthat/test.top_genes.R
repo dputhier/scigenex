@@ -227,6 +227,14 @@ test_that("Cheking top_gene()", {
     c(res_100@top_genes$`2`, res_100@top_genes$`3`),
     gene_name_to_check
   )
+  
+  # Test 'fast' arg.
+  b <- top_genes(pbmc3k_medium_clusters, fast=F)
+  a <- top_genes(pbmc3k_medium_clusters, fast=T)
+  
+  expect_equal(all(unlist(mapply("==", a@top_genes, b@top_genes))), TRUE)
+  
+  
 })
 
 

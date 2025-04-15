@@ -5,9 +5,9 @@
 #' @title
 #' plot_heatmap
 #' @description
-#' Plot the observed and simulated distance with the Kth nearest neighbors.
+#' Create a heatmap from a ClusterSet object.
 #' @param object A ClusterSet object.
-#' @param center A logical to indicate whether to center row.. 
+#' @param center A logical to indicate whether to center row.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed centering.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after centering.
 #' @param cell_clusters A vector of cell clusters with cell barcodes as names.

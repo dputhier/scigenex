@@ -1,5 +1,5 @@
 ---
-author: "Julie Bavais"
+author: "Julie Bavais & Denis Puthier"
 date: "`r Sys.Date()`"
 title: "Visium guided tutorial"
 output: rmarkdown::html_vignette
@@ -48,6 +48,7 @@ SpatialDimPlot(brain1, label = TRUE, label.size = 3, pt.size.factor = 1.4)
 Here we will used the alternative clustering methods proposed by scigenex ("reciprocal_neighborhood"). It is advise to increase slightly k (here k will be set to 80). After call to `gene_clustering()` we apply filtering on gene modules based on cluster size (min number of genes 7) and standard deviation (gene module sd > 0.1). 
 
 ```{r spatialrun, echo=TRUE, eval=TRUE, warning=FALSE}
+set_verbosity(0)
 res_brain <- select_genes(data=brain1,
                     k=80,
                     distance_method="pearson",
@@ -58,6 +59,7 @@ gc_brain <- gene_clustering(res_brain,
                             inflation = 2, 
                             threads = 4)
 
+set_verbosity(1)
 gcs_brain <- filter_cluster_size(gc_brain, min_cluster_size = 7)
 df <- cluster_stats(gcs_brain) 
 gcss_brain <- gcs_brain[df$sd > 0.1, ]
@@ -73,6 +75,7 @@ Interestingly, Scigenex algorithm is able to retrieve `nclust(gcss_brain)` gene 
 We then may display the corresponding heatmap using `plot_ggheatmap()`.
 
 ```{r heatspatial, warning=FALSE }
+set_verbosity(0)
 gcss_brain <- top_genes(gcss_brain)
 plot_ggheatmap(gcss_brain, 
                use_top_genes = TRUE,
@@ -188,7 +191,7 @@ The SciGeneX package propose several functions to evaluate to compare gene sets.
 
 It may be interesting to compare the clusters obtained using an unsupervised approach (SciGeneX) with those obtained from `Seurat::FindAllMarkers()`, which searches for genes differentially expressed between cell populations deduced by `Seurat::FindClusters()`.
 
-As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers are shared between gene modules.
+As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers are shared between gene modules. The size of the square is related to the Jaccard index.
 
 ```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE, results='hide'}
 seurat_brain_mk <- Seurat::FindAllMarkers(brain1)
@@ -206,10 +209,10 @@ plot_cmp_genesets(gcss_brain@gene_clusters, gcss_brain@gene_clusters, layout = "
   ylab("Scigenex") 
 ```
 
-When comparing both one can see that, although some overlaps exist between gene clusters obtained from both appraoches, they are capturing different information that are probably complementary.
+When comparing both (here using hypergeometric) one can see that, although some overlaps exist between gene clusters obtained from both approaches, they are capturing different information that are probably complementary.
 
 ```{r plot_cmp_genesets_2}
-plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "square", transform="-log10" )  +
+plot_cmp_genesets(gcss_brain@gene_clusters, seurat_brain_mk, layout = "raster", stat="hypergeom", transform="-log10" )  +
   ylab("Seurat::FindAllMarkers()") + 
   xlab("Scigenex")
 ```
