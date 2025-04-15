@@ -509,6 +509,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
 #' @param object a ClusterSet object.
 #' @param inflation numeric. The inflation parameter used to control the granularity of the clustering.
 #' @param threads integer. The number of threads to use.
+#' @param mcl_dir The directory were mcl is installed (guessed otherwise).
 #'
 #' @section Warnings: With the current implementation, this function only works
 #' only on UNIX-like plateforms.

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -72,6 +72,86 @@
 
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
+<span class="r-in"><span><span class="fu"><a href="row_names.html">row_names</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "MALAT1"        "RPL9"          "RPL23A"        "RPL21"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5] "RPS25"         "RPS19"         "RPS3"          "RPS12"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [9] "RPL18A"        "RPL11"         "RPL32"         "RPLP2"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] "RPS18"         "RPL3"          "RPL29"         "RPL14"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [17] "RPS3A"         "RPS15A"        "RPS23"         "RPL27A"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [21] "RPS16"         "RPL12"         "EEF1A1"        "RPL31"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "RPS4X"         "RPS8"          "RPL28"         "RPS29"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] "RPS10"         "RPS13"         "RPS11"         "RPS26"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] "RPL35A"        "TPT1"          "BTG1"          "RPL15"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "RPL18"         "RPS20"         "RPS28"         "RPL36"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "RPL5"          "EEF1B2"        "RPL7A"         "RPL17"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [45] "NACA"          "RPL27"         "RPL26"         "RPS9"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] "RPLP1"         "RPSAP58"       "RPL6"          "PTCRA"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [53] "ACRBP"         "SDPR"          "GNG11"         "PF4"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] "HIST1H2AC"     "TMEM40"        "TUBB1"         "SPARC"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "PPBP"          "GP9"           "MMD"           "AP001189.4"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] "CLU"           "RGS18"         "MPP1"          "CA2"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69] "F13A1"         "TPM1"          "MYL9"          "TREML1"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "NGFRAP1"       "PTGS1"         "GAS2L1"        "GRAP2"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77] "ODC1"          "SNCA"          "TPM4"          "CTSA"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "ILK"           "PDLIM1"        "ACTN1"         "FERMT3"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "PLA2G12A"      "HIST1H2BK"     "SNN"           "APP"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] "YWHAH"         "ASAH1"         "RAP1B"         "MFSD1"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93] "GSN"           "MARCH2"        "H2AFJ"         "TPTEP1"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "PARVB"         "MYL12A"        "CD151"         "PVALB"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "TYMP"          "COTL1"         "CTSS"          "CFD"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [105] "S100A11"       "LGALS2"        "GABARAP"       "APOBEC3A"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109] "TNFSF13B"      "CPVL"          "MNDA"          "CD14"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [113] "IGSF6"         "CSTB"          "MAFB"          "AP2S1"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [117] "WARS"          "IFI6"          "LILRB2"        "LILRB4"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "C1orf162"      "SLC7A7"        "IFNGR2"        "SOD2"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [125] "TGFBI"         "BLVRA"         "CAPG"          "BID"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [129] "CTSZ"          "NAAA"          "FCGR2A"        "CD300LF"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [133] "S100A10"       "GAPDH"         "ALDH2"         "EIF4EBP1"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [137] "GRINA"         "NUP214"        "CD302"         "ATG3"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [141] "CAMK1"         "CYBB"          "CNPY3"         "GCA"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [145] "POU2F2"        "CCL5"          "GZMA"          "CST7"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [149] "CTSW"          "HLA-C"         "FGFBP2"        "GZMB"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [153] "GNLY"          "PRF1"          "SPON2"         "CCL4"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [157] "PTPRCAP"       "CLIC3"         "IL2RB"         "HOPX"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [161] "CD247"         "AKR1C3"        "IGFBP7"        "KLRF1"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [165] "CD99"          "CD7"           "XCL1"          "EFHD2"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [169] "PLEK"          "HEMGN"         "EGFL7"         "AC137932.6"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [173] "hsa-mir-1199"  "SEC14L5"       "HEXIM2"        "GATA2"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [177] "SH3BGRL2"      "KIAA0513"      "PCP2"          "PYGL"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [181] "DPY19L1"       "RAB27B"        "CLIC4"         "LYL1"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [185] "FAM110A"       "RILP"          "DAB2"          "KIFC3"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [189] "BTK"           "SPOCD1"        "ARHGAP21"      "ITGB3"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [193] "ALOX12"        "SCFD2"         "ATP9A"         "FAM212A"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [197] "ABCC3"         "RP11-359I18.5" "TGFB1I1"       "CTNNAL1"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [201] "ENDOD1"        "NEXN"          "ABHD16A"       "ARG2"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [205] "GLA"           "WIPI1"         "PPP1R14A"      "CLEC1B"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [209] "CMTM5"         "GP1BA"         "RP11-367G6.3"  "HIST1H2BD"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [213] "FNTB"          "SENCR"         "SEPT4"         "MLH3"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [217] "SCGB1C1"       "HIST2H2BE"     "C1orf198"      "H1F0"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [221] "GLUL"          "LGALSL"        "SMOX"          "SSX2IP"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [225] "AC147651.3"    "C19orf33"      "FAM212B"       "SERPINE2"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [229] "ZNF778"        "TMCC2"         "TRIM58"        "FN3K"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [233] "NFE2"          "MGLL"          "MOB3B"         "HLA-DPA1"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [237] "HLA-DRB1"      "HLA-DRA"       "HLA-DRB5"      "HLA-DPB1"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [241] "CD74"          "HLA-DQA1"      "HLA-DQB1"      "FAM26F"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [245] "LY86"          "HLA-DMB"       "SLC25A6"       "CD37"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [249] "RNASET2"       "C2orf88"       "CLDN5"         "HIST1H2BJ"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [253] "FAM63A"        "SPHK1"         "SLC40A1"       "TUBA1C"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [257] "TMEM91"        "XPNPEP1"       "PRKAR2B"       "TJP2"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [261] "AC092295.7"    "ENKUR"         "LCN2"          "GFI1B"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [265] "ANKRD9"        "PRUNE"         "SMIM5"         "PTPN18"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [269] "CD3D"          "IL32"          "CD3E"          "LDHB"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [273] "IL7R"          "AES"           "CD27"          "HES4"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [277] "FCGR3A"        "RHOC"          "IFITM2"        "ABI3"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [281] "CLIC1"         "RP11-879F14.2" "MEST"          "ZHX1-C8ORF76" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [285] "MTURN"         "CAPZA2"        "MS4A1"         "LINC00926"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [289] "CD79B"         "ISG20"         "PKIG"         </span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

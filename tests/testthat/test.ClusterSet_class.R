@@ -366,7 +366,7 @@ test_that("Checking get_genes is providing the right list of genes", {
 
 
 test_that("Checking get_genes using top genes.", {
-  res <- top_genes(res, top = 20, cluster = "all")
+  res <- top_genes(res, top = 20)
   
   # =======================================================
   # Test top gene list in all cluster
@@ -503,4 +503,27 @@ test_that("Checking subsample_by_ident() is working...", {
   expect_equal(ncol(sub), 100)
   expect_equal(nrow(sub), nrow(pbmc3k_medium_clusters))
   expect_equal(all(row_names(pbmc3k_medium_clusters)==row_names(sub)), TRUE)
+})
+
+test_that("Additional test on indexing", { 
+  
+  # Set verbosity to 0
+  set_verbosity(0)
+  
+  load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+  res <- pbmc3k_medium_clusters
+  res <- top_genes(res)
+  expect_equal(length(res[1,]@top_genes), 1)
+  expect_equal(length(res[4,]@top_genes[[1]]), length(res@top_genes[[4]]))
+  expect_equal(length(res[c(2, 3),]@top_genes), 2)
+  expect_equal(length(res[c(2, 3),]@top_genes[[1]]), length(res@top_genes[[2]]))
+  expect_equal(length(res[c(2, 3),]@top_genes[[2]]), length(res@top_genes[[3]]))
+  res <- top_genes(res, top=max(clust_size(res)))
+  expect_equal(nrow(res[c(2, 3),]@data), length(unlist(res@top_genes[c(2,3)])))
+  expect_equal(nrow(res[c("2", "3"),]@data), length(unlist(res@top_genes[c(2,3)])))
+  expect_equal(nrow(res[c("2", "3"),]@data), length(unlist(res@top_genes[c("2","3")])))
+  res <- rename_clust(res, paste0("M", clust_names(res)))
+  expect_equal(nrow(res[c("M2", "M3"),]@data), length(unlist(res@top_genes[c("M2","M3")])))
+  res <- res[c(4,5), ]
+  expect_equal(names(rename_clust(res)@top_genes), names(rename_clust(res)@gene_clusters))
 })

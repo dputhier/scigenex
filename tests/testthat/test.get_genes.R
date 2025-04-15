@@ -114,7 +114,7 @@ test_that("Checking get_genes is providing the right list of genes", {
 
 
 test_that("Checking get_genes using top genes.", {
-  res <- top_genes(res, top = 20, cluster = "all")
+  res <- top_genes(res, top = 20)
   
   # =======================================================
   # Test top gene list in all cluster

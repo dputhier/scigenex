@@ -17,6 +17,8 @@ mcl_system_cmd(
 \item{inflation}{numeric. The inflation parameter used to control the granularity of the clustering.}
 
 \item{threads}{integer. The number of threads to use.}
+
+\item{mcl_dir}{The directory were mcl is installed (guessed otherwise).}
 }
 \value{
 a ClusterSet object with the updated parameters.
