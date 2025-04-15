@@ -13,3 +13,7 @@ row_names}
 \description{
 The row names of a ClusterSet object.
 }
+\examples{
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+row_names(pbmc3k_medium_clusters)
+}

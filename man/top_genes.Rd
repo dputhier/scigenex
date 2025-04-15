@@ -4,14 +4,12 @@
 \alias{top_genes}
 \title{Most co-expressed genes from each gene cluster}
 \usage{
-top_genes(object, top = 20, cluster = "all")
+top_genes(object, top = 20)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
 \item{top}{A value for the number of genes to select from each cluster.}
-
-\item{cluster}{A vector of gene cluster identity.}
 }
 \value{
 A \code{ClusterSet} object.

@@ -12,3 +12,7 @@
 \description{
 The column names of a ClusterSet object.
 }
+\examples{
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+col_names(pbmc3k_medium_clusters)
+}

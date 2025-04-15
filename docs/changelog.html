@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -55,8 +55,16 @@
 <div id="changelog" class="section level1">
 
 <div class="section level2">
+<h2 id="v160">v1.6.0<a class="anchor" aria-label="anchor" href="#v160"></a></h2>
+<ul><li>The FDR in <code><a href="reference/select_genes.html">select_genes()</a></code> is now computed differently using BH. This may impact your results.</li>
+<li>The FDR is no more a purcentage but a ratio. The fdr default value in <code><a href="reference/select_genes.html">select_genes()</a></code> has been changed accordingly.</li>
+<li>The ‘cluster’ argument has been deleted from top_genes(). The method has been refactored.</li>
+<li>The reorder_genes() has been refactored. Added argument ‘decreasing’.</li>
+</ul></div>
+<div class="section level2">
 <h2 id="v154">v1.5.4<a class="anchor" aria-label="anchor" href="#v154"></a></h2>
 <ul><li>Add write_cname and file_suffix arguments to write_clust(). Changed default behaviour.</li>
+<li>Fix #150.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="v152">v1.5.2<a class="anchor" aria-label="anchor" href="#v152"></a></h2>

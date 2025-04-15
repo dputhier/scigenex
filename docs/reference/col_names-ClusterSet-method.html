@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -72,6 +72,133 @@
 
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="col_names.html">col_names</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "GATCTACTGGTGAG-1" "ACAGTGACTCACCC-1" "AGACGTACAGAGGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4] "GACGTAACCTGTGA-1" "TATACAGATCCAGA-1" "CGGATAACAGCTCA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [7] "TTACCATGGTTGAC-1" "TCCCACGATCATTC-1" "ATAGCGTGCAGATC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [10] "TGTAGGTGTGCTGA-1" "GGGCCATGTTGACG-1" "CTCATTGACCTTAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] "TAAATCGATGAGGG-1" "GATAGAGACTGTGA-1" "CGACCTTGCTAGTG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [16] "GCAATTCTTCTCCG-1" "GTGATTCTCATTTC-1" "CATCGCTGGGATCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "AGTACGTGCTGCAA-1" "CTTTAGACGAGACG-1" "TCGACGCTTTGACG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [22] "AGTCAGACGAATAG-1" "AGCCGTCTGAGAGC-1" "ATGAGAGAAAGTGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "AACACGTGCAGAGG-1" "CACAGAACCTGATG-1" "ATACAATGTTAGGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [28] "TCCCGATGAGATCC-1" "GCACGGTGACCTCC-1" "AGTAAGGATTCTTG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "AGCATCGAGTGAGG-1" "GCTACGCTAGCTAC-1" "AGCTGCCTTTCATC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [34] "GAATTAACGATAAG-1" "GAGGGAACGAGGGT-1" "GGAAGGACGAGGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "ATAGTTGACAACTG-1" "AAATGTTGCCACAA-1" "ACTTGGGAGGTTTG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [40] "TCATCCCTTACTGG-1" "CGAGCCGAACACCA-1" "AGTCAGACTGCACA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] "CGACAAACCCATAG-1" "TGATACCTGTTGGT-1" "GAAACCTGCTTATC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [46] "CTAGATCTCTCTAT-1" "CGCAGGTGCACTGA-1" "GGGACCACGTCATG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] "CTTCATGACCGAAT-1" "GACAACACATCGTG-1" "TTCCTAGAAAGTGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [52] "AGGCCTCTAGTCGT-1" "ACAAAGGAGGGTGA-1" "TAGAATTGCGACAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "GCTAGAACTCCCGT-1" "GTAGTGACCTCATT-1" "GGGACCACTGCATG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [58] "GAGTCAACCATTCT-1" "GGGACCACTCAAGC-1" "GAAGTCTGTTCTGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "GGGACCACTCGTGA-1" "AGTTGTCTACTACG-1" "CTGCCAACTTGCAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [64] "CACACCTGCTTGAG-1" "CGAGGGCTCGAATC-1" "CTATCAACTTTGGG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] "CATTTGTGCATTGG-1" "ATGCGATGCTGAGT-1" "CAATTCACTTGTGG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [70] "ATATGCCTTGGTAC-1" "GCGCATCTTCGATG-1" "GAAGAATGCAATCG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "CCACCATGGGGAGT-1" "ATCGGTGAGTCAAC-1" "AAATTCGAGGAGTG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] "ACGGTAACGGTGGA-1" "GAACGGGATACTTC-1" "GAAGGTCTGTTGCA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] "TCGGTAGAGTAGGG-1" "CTGCGACTCCACCT-1" "GACAACACAGGCGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [82] "TACCGGCTGTTGGT-1" "CGAGAACTACGTTG-1" "TGAACCGAAAACGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "TAGCCCACCCACAA-1" "CCTCTACTGGCATT-1" "GCAACTGATTGCGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [88] "AAGCCAACGTGTTG-1" "ATGAGCACATCTTC-1" "TTAGAATGTGTAGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "GACGAACTCCCACT-1" "TGTGAGTGACCACA-1" "TATACGCTACCAAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [94] "CTATGTTGTCCTCG-1" "AAATGTTGAACGAA-1" "AGACACTGTCAAGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "GGTCTAGATAGCGT-1" "AAGACAGATTACCT-1" "CAGCACCTGTAGGG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [100] "GGAACACTCACTTT-1" "GACGTCCTCTCAAG-1" "TAGTACCTAAGAAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [103] "ACCTTTGACTCCCA-1" "ATAATGACTCGTGA-1" "ACGCCGGAAACCAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [106] "CAATAATGAACTGC-1" "TATTTCCTATTGGC-1" "AAGGTCACGGTTAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109] "AAGATTACCCGTTC-1" "GGTAGTACACTAGC-1" "AGCATCGATAACCG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [112] "ATACCACTCGTACA-1" "TGCGTAGAATAAGG-1" "GTAGTGTGAGGCGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [115] "CACAGTGATGAAGA-1" "TAGAAACTGCTTCC-1" "GCACCTTGGGGAGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [118] "TTACCATGAATCGC-1" "TGCAAGTGGGTAGG-1" "TAACTCACGTATCG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "ATTACCTGCCTTAT-1" "ACCCAGCTGTTAGC-1" "CTAATGCTTGTGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [124] "ATGTCACTAATGCC-1" "ATACGGACCTACTT-1" "ATACTCTGCTTCGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [127] "TATCCAACCAGCTA-1" "GGCTCACTACTCAG-1" "CCAGTCACACTGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [130] "CTATTGACACTGGT-1" "CCGCGAGACACACA-1" "CATAAAACGGAGCA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [133] "ATGTACCTTTATCC-1" "GAGTTGTGGCGAGA-1" "TTTAGCTGGATACC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [136] "CTCGAAGATTAGGC-1" "CGCCTAACGAATGA-1" "GGTACTGAACTCTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [139] "AGTGTTCTCACTTT-1" "TTGAGGACAGAACA-1" "TAAGCGTGAGGTTC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [142] "GATTTAGATTCGTT-1" "ATCGCCTGTGGCAT-1" "CACTAGGATGATGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [145] "CACCGTACTAAGGA-1" "CTTGTATGACACCA-1" "GAAGTCACCCTGTC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [148] "TAGAGCACCTTACT-1" "ATGAAGGACTAGTG-1" "ATCATGCTGAACCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [151] "CTAGGATGATCGTG-1" "CGAGGAGACCTCCA-1" "ATTGCTTGTTACTC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [154] "GTAGCATGCACTCC-1" "TTGACACTGATAAG-1" "GTGTATCTGTTACG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [157] "CTACTATGTAAAGG-1" "GAAATACTCTTAGG-1" "TAGATTGACTTGTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [160] "CAGTGATGTACGCA-1" "GACAGTTGAGTAGA-1" "CCCTCAGACACTTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [163] "ACATGGTGCAACCA-1" "AAGCACTGGTTCTT-1" "AGAAACGAAAGTAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [166] "TTAGGGTGCTGGAT-1" "CATCATACGGAGCA-1" "GACGTCCTGATAAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [169] "TATGGGTGCTAGCA-1" "CAGGCCGACTAGCA-1" "CATTGTACTCGATG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [172] "CTTCATGAAGCATC-1" "ATGCACGAGAACCT-1" "GTGATGACCTGAGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [175] "AACCGATGGTCATG-1" "GAGCGGCTGGGAGT-1" "GATTTAGACTAAGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [178] "TGACACGACCTTAT-1" "GAGTGACTGACTAC-1" "GTAAGCACTCATTC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [181] "AACGTGTGGCGGAA-1" "CAGTGATGGACGGA-1" "ACGGTATGGGTATC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [184] "TAAGAGGACTAAGC-1" "CCTTAATGCCCAAA-1" "CCTTCACTCAGTCA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [187] "TGCCGACTCTCCCA-1" "ATCACGGATTTCGT-1" "GTAACGTGGTTGAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [190] "CGAGGGCTACGACT-1" "ATGCAGTGTTACCT-1" "AATGGAGATCCTTA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [193] "TCTATGTGAGTCTG-1" "GTACGTGAACGTTG-1" "GTCATACTTTACCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [196] "GTTGATCTTTTCAC-1" "AGTCAGACTAGAGA-1" "ACGTCGCTCCTGAA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [199] "TCGAATCTCTGGTA-1" "CGCACTACTCGTGA-1" "TGTTACTGGCTACA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [202] "TACTTTCTTTTGGG-1" "CAGCATGAGACGTT-1" "ACTTCAACAAGCAA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [205] "TGGAACACGCTAAC-1" "GCCAAATGATCGAC-1" "GGGCAGCTTGGGAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [208] "TTCGTATGAAAAGC-1" "GGCTAATGAGCACT-1" "AATGGCTGTAAAGG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [211] "GTACTTTGTCGACA-1" "TCAAGGACATTCTC-1" "CAGCTCTGCAAGCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [214] "CCAAGAACTACTGG-1" "TCTTGATGCGGAGA-1" "GCTTAACTACTGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [217] "GTCAATCTACACCA-1" "ATCAACCTTTGTCT-1" "CGAGATTGGACACT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [220] "ATCCTAACGCTACA-1" "GGATAGCTCTGAAC-1" "GTGACCCTTAAGCC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [223] "CTCGCATGACTTTC-1" "AAGTCTCTCGGAGA-1" "CGGACTCTCCTCGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [226] "TCAATCACACTCTT-1" "TCAGCGCTCTAGTG-1" "GGCAATACGGCATT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [229] "ACGATTCTACGGGA-1" "CGAGATTGGCCATA-1" "CGTCAAGACAGGAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [232] "CGGCACGAACTCAG-1" "AAACATACAACCAC-1" "GCTATACTAGCGTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [235] "CTGACAGAATCGTG-1" "TCACTATGGGGCAA-1" "GTCATACTGCGATT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [238] "CTAGGTGATGGTTG-1" "GAAAGATGCTGATG-1" "AACCAGTGATACCG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [241] "GGGAACGAAGCTCA-1" "ACAAATTGATTCTC-1" "ACGGAACTGTCGTA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [244] "CGGCACGACTACGA-1" "GGCGCATGCCTAAG-1" "GACAGTACGAGCTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [247] "TTCGAGGATAGAAG-1" "CATTGTACTTTGCT-1" "CAGACCCTAAGGTA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [250] "TCGACCTGCCGATA-1" "CTGAAGTGAAGCCT-1" "GAACAGCTAACTGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [253] "GATCTTACACCCAA-1" "TATCGACTCGATAC-1" "TTCTTACTCTGGAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [256] "TCTAAGCTTCTAGG-1" "TGCCCAACCGCATA-1" "CAGGCCGAATCTCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [259] "GTTGGATGTTTACC-1" "CATCTCCTCGAACT-1" "TTGGTACTACTGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [262] "AGTCTACTTGCATG-1" "TCAGGATGCCTTTA-1" "TGAACCGATTCGGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [265] "AGAGTCTGGTCGTA-1" "TACATCACCTGTTT-1" "TAGGTTCTTCTTAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [268] "CAATTCTGGCGTAT-1" "AGGAACCTCTTAGG-1" "ACTTAGCTGCGTAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [271] "GATTTAGACACTCC-1" "TGGAAAGAGGTCAT-1" "ATAAGTTGGTACGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [274] "CTCATTGATGCTTT-1" "ACTGAGACCCATAG-1" "TGAGCTGAATGCTG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [277] "AACCTTTGTACGCA-1" "ATTTCTCTACTTTC-1" "GCCTACACCACTGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [280] "GAACAGCTCTCAGA-1" "CTACGCACACCTAG-1" "AAATTCGAGCTGAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [283] "GCACTAGACCTTTA-1" "ATAGTTGACCCTCA-1" "CGTGTAGAGTTACG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [286] "TCCTAAACCGCATA-1" "GGCAAGGAAAAAGC-1" "TCCCGAACACAGTC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [289] "AAGTAGGATACAGC-1" "ACTTCAACGTAGGG-1" "TGGAACACAAACAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [292] "AAATTCGATTCTCA-1" "ATGGGTACATCGGT-1" "GTTCAACTGGGACA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [295] "CAGCAATGGAGGGT-1" "GAGGTACTGACACT-1" "GGTGGAGACAGATC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [298] "ATCTTTCTTGTCCC-1" "GTTGACGATATCGG-1" "GGCTAAACACCTGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [301] "TGTAATGAGGTAAA-1" "CTACTCCTATGTCG-1" "ATTCCAACTTAGGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [304] "TAAGAGGACTTGTT-1" "ACTGCCACTCCGTC-1" "GCCGGAACGTTCTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [307] "CCTCGAACACTTTC-1" "GAATTAACGTCGTA-1" "CGGGCATGTCTCTA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [310] "GCACACCTGTGCTA-1" "ACCTGGCTAAGTAG-1" "GTAGTGTGAGCGGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [313] "ACTGGCCTTCAGTG-1" "CTAAACCTCTGACA-1" "GACGGCACACGGGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [316] "AGAACAGAAATGCC-1" "TTAGTCTGCCAACA-1" "ATGATATGGTGCTA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [319] "GTTAAAACCGAGAG-1" "CTTTAGTGACGGGA-1" "TTCTAGTGGAGAGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [322] "GTTAACCTTGCTTT-1" "AATTACGAATTCCT-1" "TGCAATCTTCAGGT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [325] "TTGAGGACTACGCA-1" "CTCCACGAGAGATA-1" "TGTAGGTGCTCTAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [328] "TTCAGTTGTCCTTA-1" "GGGCCAACCTTGGA-1" "GCGTAAACACGGTT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [331] "AGCACTGATGCTTT-1" "ATTGTAGATTCCCG-1" "GGACCGTGGGAACG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [334] "TTTAGCTGTACTCT-1" "ACTTAAGATTACTC-1" "TTACTCGACGCAAT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [337] "GAAGGTCTTAAAGG-1" "CGATCAGATGTGAC-1" "GAAAGTGAAAGTGA-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [340] "TTATGGCTTATGGC-1" "AAGATTACCGCCTT-1" "AAGCCATGAACTGC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [343] "ACGTGATGCCATGA-1" "TCTAACACGAGCAG-1" "ATGTAAACGGGATG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [346] "CATATAGACTAAGC-1" "ATACCGGAATGCTG-1" "ATTCAGCTCATTGG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [349] "GTCATACTTCGCCT-1" "ACCCACTGGTTCAG-1" "GAGTTGTGGTAGCT-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [352] "ACCTGAGATATCGG-1" "GACGCTCTCTCTCG-1" "GCGCATCTGGTTAC-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [355] "AGTCTTACTTCGGA-1" "GGCATATGGGGAGT-1" "TTACGTACGTTCAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [358] "GGAACACTTCAGAC-1" "ATCATCTGACACCA-1" "ACGAACTGGCTATG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [361] "TAACACCTTGTTTC-1"</span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.0</span>
       </span>
     </div>
 
@@ -174,17 +174,8 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 <span class="r-in"><span><span class="co"># Use plot_ggheatmap</span></span></span>
 <span class="r-in"><span><span class="va">ident_pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">new_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">new_obj</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 6. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 7. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 8. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 9. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 10. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 11. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 12. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 13. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 14. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of top genes is greater than the number of genes in cluster 15. All genes will be used. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in top_genes slot of ClusterSet object. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One our several cluster contains less than 20 genes. Retrieving all genes </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
 <span class="r-in"><span><span class="fu"><a href="plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span><span class="va">new_obj</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_ggheatmap-ClusterSet-method-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

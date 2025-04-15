@@ -10,7 +10,7 @@ select_genes(
   noise_level = 5e-05,
   k = 80,
   row_sum = 1,
-  fdr = 0.005,
+  fdr = 5e-05,
   which_slot = c("data", "sct", "counts"),
   no_dknn_filter = FALSE,
   no_anti_cor = FALSE,
@@ -31,7 +31,7 @@ with high dknn (i.e close to noise).}
 
 \item{row_sum}{A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes.}
 
-\item{fdr}{A numeric value indicating the false discovery rate threshold (range: 0 to 100).}
+\item{fdr}{A numeric value indicating the false discovery rate threshold (range: 0 to 1).}
 
 \item{which_slot}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts").}
 

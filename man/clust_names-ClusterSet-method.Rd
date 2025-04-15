@@ -12,3 +12,8 @@
 \description{
 The names of the gene clusters stored in the ClusterSet object.
 }
+\examples{
+load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+clust_names(pbmc3k_medium_clusters)
+
+}

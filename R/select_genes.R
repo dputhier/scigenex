@@ -14,7 +14,7 @@
 #' with high dknn (i.e close to noise).
 #' @param k An integer specifying the size of the neighborhood.
 #' @param row_sum A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes. 
-#' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 100).
+#' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 1).
 #' @param which_slot a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts"). 
 #' @param no_dknn_filter a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.
 #' @param no_anti_cor If TRUE, correlation below 0 are set to zero ("pearson", "cosine", "spearman" "kendall"). This may increase the 
@@ -52,6 +52,7 @@
 #' nrow(res)
 #' head(row_names(res))
 #' 
+#' @importFrom stats p.adjust
 #' @export select_genes
 
 select_genes <- function(data = NULL,
@@ -63,7 +64,7 @@ select_genes <- function(data = NULL,
                          noise_level = 0.00005,
                          k = 80,
                          row_sum = 1,
-                         fdr = 0.005,
+                         fdr = 5e-05,
                          which_slot = c("data", "sct", "counts"),
                          no_dknn_filter = FALSE,
                          no_anti_cor=FALSE,
@@ -272,15 +273,16 @@ select_genes <- function(data = NULL,
     # Compute the FDR
     for (i in 1:nb_selected_genes) {
       gene <- df_dknn$gene_id[i]
-      df_dknn[gene, "FDR"] <-
+      
+      df_dknn[gene, "pvalue"] <-
         stats::pnorm(df_dknn[gene, "dknn_values"],
                      mean = mean_sim,
                      sd = sd_sim,
-                     lower.tail = T) / (i / nb_selected_genes) * 100
+                     lower.tail = T)
+      
     }
-    
-    df_dknn$FDR[df_dknn$FDR > 100] <- 100
-    
+
+    df_dknn$FDR <- stats::p.adjust(df_dknn$pvalue, method = "BH")
 
     # ======================
     #### Select genes with a distance value under critical distance ####
@@ -325,6 +327,7 @@ select_genes <- function(data = NULL,
     obj@dbf_output <- list("dknn" = obs_dknn,
                            "simulated_dknn" = sim_dknn,
                            "critical_distance" = critical_distance,
+                           "pvalue" = df_dknn$pvalue,
                            "fdr" = df_dknn$FDR,
                            "center" = center,
                            "all_gene_expression_matrix" = data,
@@ -338,6 +341,7 @@ select_genes <- function(data = NULL,
     obj@dbf_output <- list("dknn" = obs_dknn,
                            "simulated_dknn" = sim_dknn,
                            "critical_distance" = critical_distance,
+                           "pvalue" = df_dknn$pvalue,
                            "fdr" = df_dknn$FDR,
                            "center" = NULL,
                            "all_gene_expression_matrix" = data,
