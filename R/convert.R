@@ -6,6 +6,7 @@
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
 #' @param assay_type The type of assay ("RNA" or "Spatial").
 #' @importFrom SeuratObject LayerData
+#' @importFrom Matrix Matrix
 #' @examples
 #' ## From a scRNA-seq/Seurat object
 #' library(SeuratObject)
@@ -65,7 +66,7 @@ cluster_set_from_seurat <- function(object=NULL,
   
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- gn
-  obj_out@data <- as.matrix(object)
+  obj_out@data <- Matrix::Matrix(object, sparse = TRUE)
   obj_out@gene_clusters_metadata <- list("cluster_id" = setNames(as.character(unique(clusters)), 
                                                                  as.character(unique(clusters))),
                                           "number" = length(table(clusters)),
@@ -153,7 +154,7 @@ cluster_set_from_matrix <- function(object=NULL,
   print_msg("Creating ClusterSet object.", msg_type = "INFO")
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- markers
-  obj_out@data <- as.matrix(object)
+  obj_out@data <- Matrix::Matrix(object, sparse = TRUE)
   obj_out@gene_clusters_metadata <- list("cluster_id" = setNames(as.character(unique(clusters)), 
                                                                  as.character(unique(clusters))),
                                          "number" = length(table(clusters)),

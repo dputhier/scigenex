@@ -2,6 +2,7 @@
 #' @description Compute statistics about the clusters
 #' @param object a ClusterSet object.
 #' @importFrom stats var
+#' @importFrom Matrix colSums
 #' @details
 #' For each cluster this function computes:
 #' - The sum of (normalized) counts divided by the number of genes (cluster size). 
@@ -24,6 +25,7 @@ setGeneric("cluster_stats",
 #' @description Compute statistics about the clusters
 #' @param object a ClusterSet object.
 #' @importFrom stats var
+#' @importFrom Matrix colSums
 #' @details
 #' For each cluster this function computes:
 #' - The sum of (normalized) counts divided by the number of genes (cluster size). 
@@ -37,38 +39,38 @@ setGeneric("cluster_stats",
 #' df <- cluster_stats(pbmc3k_medium_clusters)
 #' @export cluster_stats
 setMethod(
-  "cluster_stats", signature("ClusterSet"),
+  "cluster_stats", 
+  signature("ClusterSet"),
   function(object) {
     #object <- scigenex::check_format_cluster_set(object)
     
-    df <- data.frame(size=clust_size(object), 
-                     row.names = names(clust_size(object)))
+    gene_clust <- object@gene_clusters
     
-    print_msg('Splitting expression data', msg_type="DEBUG")
-    gene_clust <- as.factor(gene_cluster(object))
-    df_split <- split(as.data.frame(object@data), gene_clust)
-    
-    print_msg('Computing sum', msg_type="DEBUG")
-    tmp <- unlist(lapply(df_split, sum)) 
-    tmp_2 <-  clust_size(object)
+    print_msg('Looping over clusters', msg_type="DEBUG")
 
-
-    df$sum_by_row <- tmp[row.names(df)] / tmp_2[row.names(df)]
+    sum_clust <- vector()
+    size_clust <- vector()
+    sd_clust <- vector()
+    var_clust <- vector()
+    mean_clust <- vector()
     
-    print_msg('Computing sd.', msg_type="DEBUG")
-    df_split <- split(object@data, gene_clust)
+    print_msg('Computing stats', msg_type="DEBUG")
     
-    print_msg('Computing var.', msg_type="DEBUG")
-    tmp <- unlist(lapply(df_split, stats::var)) 
-    df$var <- tmp[row.names(df)]
+    for(pos in 1:length(gene_clust)){
+      sum_clust[pos] <- sum(object@data[gene_clust[[pos]], ])
+      sd_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ]) 
+      var_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ])^2
+      mean_clust  <- mean(object@data[gene_clust[[pos]], ])
+      size_clust[pos]  <- length(gene_clust[[pos]])
+    }
     
-
-    tmp <- unlist(lapply(df_split, stats::sd))
-    df$sd <- tmp[row.names(df)]
- 
-    print_msg('Computing cv.', msg_type="DEBUG")
-    tmp <- unlist(lapply(df_split, stats::sd)) / unlist(lapply(df_split, mean))
-    df$cv <- tmp[row.names(df)]
+    df <- data.frame(size=size_clust, 
+                     row.names = names(gene_clust))
+    
+    df$sum_by_row <- sum_clust / size_clust
+    df$sd <- sd_clust
+    df$var <- var_clust
+    df$cv <- sd_clust / mean_clust
     
     return(df)
     
@@ -101,7 +103,8 @@ setMethod(
 #' # Select the cluster of interest
 #' pbmc3k_medium_clusters_filtered <- pbmc3k_medium_clusters[df$size > 8, ] 
 #' nclust(pbmc3k_medium_clusters_filtered)          
-plot_cluster_stats <- function(x, highlight=NULL){
+plot_cluster_stats <- function(x, 
+                               highlight=NULL){
   
   if(!is.null(highlight)){
     if(length(highlight) != nrow(x))

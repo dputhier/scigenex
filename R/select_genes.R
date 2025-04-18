@@ -53,6 +53,7 @@
 #' head(row_names(res))
 #' 
 #' @importFrom stats p.adjust
+#' @importFrom Matrix Matrix
 #' @export select_genes
 
 select_genes <- function(data = NULL,
@@ -305,7 +306,7 @@ select_genes <- function(data = NULL,
   obj <- new("ClusterSet")
   
   if (length(selected_genes) > 0) {
-    obj@data <- as.matrix(data[selected_genes, ])
+    obj@data <- Matrix::Matrix(data[selected_genes, ], sparse=TRUE)
     obj@gene_clusters <- list("1" = rownames(obj@data))
     obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
                                        "number" = max(names(obj@gene_clusters)),
@@ -314,13 +315,13 @@ select_genes <- function(data = NULL,
     obs_dknn <- as.vector(df_dknn[, "dknn_values"])
     names(obs_dknn) <- df_dknn[, "gene_id"]
     if(length(selected_genes) > 1){
-      center = matrix(apply(obj@data[obj@gene_clusters$`1`, ],
+      center = Matrix::Matrix(apply(obj@data[obj@gene_clusters$`1`, ],
                             2,
                             mean,
                             na.rm = TRUE),
                       nrow = 1)
     }else{
-      center = matrix(obj@data[obj@gene_clusters$`1`, ],
+      center = Matrix::Matrix(obj@data[obj@gene_clusters$`1`, ],
                       nrow = 1)
     }
     

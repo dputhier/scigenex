@@ -179,8 +179,9 @@ gene_clustering <- function(object = NULL,
   
   print_msg("Computing centers.", msg_type = "DEBUG")
   nb_clusters = length(names(object@gene_clusters))
-  centers <- matrix(ncol = ncol(object@data),
-                    nrow = nb_clusters)
+  centers <- Matrix::Matrix(data=NA, 
+                            ncol = ncol(object@data),
+                            nrow = nb_clusters)
   colnames(centers) <- colnames(object@data)
   rownames(centers) <- names(object@gene_clusters)
   
@@ -457,7 +458,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  print_msg("Convert distances into weights.", msg_type = "INFO")
+  print_msg("Converting distances into weights.", msg_type = "INFO")
   
   min_dist <- min(mcl_out_as_df$weight)
   max_dist <- max(mcl_out_as_df$weight)

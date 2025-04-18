@@ -16,6 +16,7 @@
 #' @slot parameters A list containing the parameter used. Each element of the list correspond to a parameter.
 #'
 #' @return A ClusterSet object.
+#' @importFrom SeuratObject SparseEmptyMatrix
 #' @export
 #'
 #' @examples
@@ -60,7 +61,7 @@
 setClass(
   "ClusterSet",
   representation = list(
-    data = "matrix",
+    data = "dgCMatrix",
     gene_clusters = "list",
     top_genes = "list",
     gene_clusters_metadata = "list",
@@ -70,7 +71,7 @@ setClass(
     parameters = "list"
   ),
   prototype = list(
-    data = matrix(nr = 0, nc = 0),
+    data = SeuratObject::SparseEmptyMatrix(ncol=0, nrow=0),
     gene_clusters = list(),
     top_genes = list(),
     gene_clusters_metadata = list(),
@@ -250,6 +251,7 @@ setMethod("row_names", "ClusterSet",
 #' @param ... See ?'['. Not functionnal here.
 #' @param drop For matrices and arrays. If TRUE the result is coerced to the lowest possible dimension. Not functionnal here.
 #' @keywords internal
+#' @importFrom Matrix Matrix
 setMethod("[", signature(x = "ClusterSet"),
           function (x, i, j, ..., drop = FALSE) {
             if (is.null(names(x@gene_clusters_metadata$cluster_id)))
@@ -259,7 +261,7 @@ setMethod("[", signature(x = "ClusterSet"),
             
             if(is.null(names(x@gene_clusters_metadata$cluster_id)))
                names(x@gene_clusters_metadata$cluster_id) <-  names(x@gene_clusters)
-
+            
             
             if (missing(j)) {
               if (missing(i)) {
@@ -344,10 +346,10 @@ setMethod("[", signature(x = "ClusterSet"),
             
             cname <- clust_names(x)
             csize <- clust_size(x)
-            
+
             new(
               "ClusterSet",
-              data = n_data,
+              data = Matrix::Matrix(n_data, sparse=TRUE),
               gene_clusters = n_gene_clusters,
               top_genes = n_top_genes,
               gene_clusters_metadata = n_gene_clusters_metadata,

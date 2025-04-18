@@ -1,6 +1,8 @@
 # Changelog
 
 
+* The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix).
+
 ## v1.6.1
 
 * The top_genes() has new argument 'distance_method' to allow overridding the default distance method (which can be

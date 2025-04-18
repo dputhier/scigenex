@@ -1,4 +1,4 @@
-
+library(Matrix)
 #' To do this, the function first converts the gene expression 
 #' data for each cluster into a binary form (values greater than 
 #' 1 are set to 1). Then it calculates the dot product for this 
@@ -23,27 +23,20 @@ rownames(m3) <- paste0("m3_", 1:n_row)
 rownames(m4) <- paste0("m4_", 1:n_row)
 
 m1[, 1] <- 1
+m2[, 1:2] <- 1
+m3[, 6:8] <- 1
+m4[, c(3, 4, 9, 10)] <- 1
 
-m2[, 1] <- 1
-m2[, 2] <- 1
 
-m3[, 8] <- 1
-m3[, 7] <- 1
-m3[, 6] <- 1
-
-m4[, 3] <- 1
-m4[, 4] <- 1
-m4[, 9] <- 1
-m4[, 10] <- 1
-
-obj@data <- as.matrix(rbind(m1, m2, m3, m4))
+obj@data <- Matrix::Matrix(rbind(m1, m2, m3, m4), sparse = TRUE)
 obj@gene_clusters <- list("1" = rownames(m1), "2"=rownames(m2), "3"=rownames(m3), "4"=rownames(m4))
 obj@gene_clusters_metadata$cluster_id <- setNames(c("1", "2", "3", "4"), c("1", "2", "3", "4"))
 obj@gene_clusters_metadata$size <- setNames(c("1", "2", "3", "4"), rep(n_row, 4))
-obj@dbf_output$center <- rbind(colMeans(m1), 
-                               colMeans(m2),
-                               colMeans(m3),
-                               colMeans(m4))
+obj@dbf_output$center <- Matrix::Matrix(rbind(colMeans(m1), 
+                                               colMeans(m2),
+                                               colMeans(m3),
+                                               colMeans(m4)), 
+                                        sparse = TRUE)
 rownames(obj@dbf_output$center) <- names(obj@gene_clusters)
 
 
@@ -82,14 +75,15 @@ rownames(m2) <- paste0("m2_", 1:(n_row + 10))
 rownames(m3) <- paste0("m3_", 1:(n_row + 20))
 rownames(m4) <- paste0("m4_", 1:(n_row + 30))
 
-obj@data <- as.matrix(rbind(m1, m2, m3, m4))
+obj@data <- Matrix::Matrix(as.matrix(rbind(m1, m2, m3, m4)), sparse=TRUE)
 obj@gene_clusters <- list("1" = rownames(m1), "2"=rownames(m2), "3"=rownames(m3), "4"=rownames(m4))
 obj@gene_clusters_metadata$cluster_id <- setNames(c("1", "2", "3", "4"), c("1", "2", "3", "4"))
 obj@gene_clusters_metadata$size <- setNames(c(10, 20, 30, 40), c("1", "2", "3", "4"))
-obj@dbf_output$center <- rbind(colMeans(m1), 
-                               colMeans(m2),
-                               colMeans(m3),
-                               colMeans(m4))
+obj@dbf_output$center <- Matrix::Matrix(rbind(colMeans(m1), 
+                                 colMeans(m2),
+                                 colMeans(m3),
+                                 colMeans(m4)),
+                               sparse=TRUE)
 
 test_that("Checking filter_cluster_size() #1", {
   x <- filter_cluster_size(obj, min_cluster_size = 9)
@@ -118,27 +112,21 @@ rownames(m3) <- paste0("m3", 1:n_row)
 rownames(m4) <- paste0("m4", 1:n_row)
 
 m1[1:4, 1] <- 1
-
-m2[1:4, 1] <- 1
-m2[1:4, 2] <- 1
-
+m2[1:4, 1:2] <- 1
 m3[1:3, 8] <- 1
 m3[1:5, 7] <- 1
 m3[1:6, 6] <- 1
+m4[1:6, c(3, 4, 9, 10)] <- 1
 
-m4[1:6, 3] <- 1
-m4[1:6, 4] <- 1
-m4[1:6, 9] <- 1
-m4[1:6, 10] <- 1
 
-obj@data <- as.matrix(rbind(m1, m2, m3, m4))
+obj@data <- Matrix::Matrix(as.matrix(rbind(m1, m2, m3, m4)), sparse=TRUE)
 obj@gene_clusters <- list("1" = rownames(m1), "2"=rownames(m2), "3"=rownames(m3), "4"=rownames(m4))
 obj@gene_clusters_metadata$cluster_id <- setNames(c("1", "2", "3", "4"), c("1", "2", "3", "4"))
 obj@gene_clusters_metadata$size <- setNames(c("1", "2", "3", "4"), rep(n_row, 4))
-obj@dbf_output$center <- rbind(colMeans(m1), 
+obj@dbf_output$center <- Matrix::Matrix(rbind(colMeans(m1), 
                                   colMeans(m2),
                                   colMeans(m3),
-                                  colMeans(m4))
+                                  colMeans(m4)), sparse=TRUE)
 
 test_that("Checking filter_nb_supporting_cells(), min_nb_supporting_cell=1, min_pct_gene_expressed = 40", {
             
@@ -205,3 +193,4 @@ test_that("Checking filter_nb_supporting_cells(), min_nb_supporting_cell=10, min
   testthat::expect_true(nrow(x@dbf_output$center) == 0)
   
 })
+

@@ -28,7 +28,7 @@ filter_cluster_size <- function(object = NULL,
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
   cluster_to_keep <- lapply(object@gene_clusters, length) >= min_cluster_size
   
@@ -79,7 +79,7 @@ filter_nb_supporting_cells <- function(object = NULL,
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
   cluster_to_keep <- vector()
   
@@ -101,7 +101,7 @@ filter_nb_supporting_cells <- function(object = NULL,
   }
   
   # Print number of cluster filtered out
-  nb_cluster_out <- length(nb_clusters_before_filtering) - length(cluster_to_keep)
+  nb_cluster_out <- length(clust_names_before_filtering) - length(cluster_to_keep)
   print_msg(
     paste0(
       nb_cluster_out,
@@ -253,11 +253,18 @@ filter_cluster_sd <- function(object = NULL,
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
-  gene_clust <- as.factor(gene_cluster(object))
-  df_split <- split(object@data, gene_clust)
-  sd_total <- unlist(lapply(df_split, sd))
+  gene_clust <- object@gene_clusters
+  sd_clust <- vector()
+
+  for(pos in 1:length(gene_clust)){
+    sum_clust[pos] <- sum(object@data[gene_clust[[pos]], ])
+    sd_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ]) 
+    var_clust[pos] <- stats::var(object@data[gene_clust[[pos]], ])
+    mean_clust  <- mean(object@data[gene_clust[[pos]], ])
+    size_clust[pos]  <- length(gene_clust[[pos]])
+  }
 
   cluster_to_keep <- sd_total >= min_sd
   
