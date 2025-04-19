@@ -116,6 +116,9 @@ select_genes <- function(data = NULL,
   }
   
   select_for_correlation <- data[genes_to_keep, ]
+ 
+  print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
+            msg_type = "INFO")
   
   # Compute gene-gene correlation/distance matrix
   
@@ -126,9 +129,7 @@ select_genes <- function(data = NULL,
     ),
     msg_type = "INFO"
   )
-  print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
-            msg_type = "INFO")
-  
+
   # Compute correlations and corresponding 
   # distance matrix. Note that for pearson
   # and cosine, 0 < distance < 2.
@@ -306,7 +307,8 @@ select_genes <- function(data = NULL,
   obj <- new("ClusterSet")
   
   if (length(selected_genes) > 0) {
-    obj@data <- Matrix::Matrix(data[selected_genes, ], sparse=TRUE)
+    
+    obj@data <- Matrix::Matrix(data[selected_genes, , drop=FALSE], sparse=TRUE)
     obj@gene_clusters <- list("1" = rownames(obj@data))
     obj@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(obj@gene_clusters)),
                                        "number" = max(names(obj@gene_clusters)),
@@ -314,40 +316,24 @@ select_genes <- function(data = NULL,
     
     obs_dknn <- as.vector(df_dknn[, "dknn_values"])
     names(obs_dknn) <- df_dknn[, "gene_id"]
-    if(length(selected_genes) > 1){
-      center = Matrix::Matrix(apply(obj@data[obj@gene_clusters$`1`, ],
-                            2,
-                            mean,
-                            na.rm = TRUE),
-                      nrow = 1)
-    }else{
-      center = Matrix::Matrix(obj@data[obj@gene_clusters$`1`, ],
-                      nrow = 1)
-    }
     
-    obj@dbf_output <- list("dknn" = obs_dknn,
-                           "simulated_dknn" = sim_dknn,
-                           "critical_distance" = critical_distance,
-                           "pvalue" = df_dknn$pvalue,
-                           "fdr" = df_dknn$FDR,
-                           "center" = center,
-                           "all_gene_expression_matrix" = data,
-                           "all_neighbor_distances" = l_knn[selected_genes])
-    # obj@normal_model_mean <- mean_sim
-    # obj@normal_model_sd <- mean_sd
-  }else{
+
+    center <- Matrix::Matrix(Matrix::colMeans(obj@data[obj@gene_clusters$`1`, ],
+                                              na.rm = TRUE),
+                      nrow = 1, sparse=TRUE)
     
-    obs_dknn <- as.vector(df_dknn[, "dknn_values"])
-    names(obs_dknn) <- df_dknn[, "gene_id"]
-    obj@dbf_output <- list("dknn" = obs_dknn,
-                           "simulated_dknn" = sim_dknn,
-                           "critical_distance" = critical_distance,
-                           "pvalue" = df_dknn$pvalue,
-                           "fdr" = df_dknn$FDR,
-                           "center" = NULL,
-                           "all_gene_expression_matrix" = data,
-                           "all_neighbor_distances" = NULL)
+    rownames(center) <- "1"
   }
+  
+  obj@dbf_output <- list("dknn" = obs_dknn,
+                           "simulated_dknn" = sim_dknn,
+                           "critical_distance" = critical_distance,
+                           "pvalue" = df_dknn$pvalue,
+                           "fdr" = df_dknn$FDR,
+                           "center" = ifelse(length(selected_genes), center, NULL),
+                           "all_gene_expression_matrix" = data,
+                           "all_neighbor_distances" = ifelse(length(selected_genes), l_knn[selected_genes], NULL))
+
   
   obj@parameters <- list("distance_method" = distance_method,
                          "k" = k,
