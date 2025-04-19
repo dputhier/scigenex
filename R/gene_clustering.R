@@ -245,6 +245,7 @@ gene_clustering <- function(object = NULL,
 #' res <- do_closest_neighbor_graph(object = res, k = 5)
 #' @keywords internal
 #' @export do_closest_neighbor_graph
+#' @importFrom Matrix t
 do_closest_neighbor_graph <- function(object = NULL,
                                       k = 5,
                                       output_path = NULL,
@@ -282,7 +283,7 @@ do_closest_neighbor_graph <- function(object = NULL,
   data_selected_genes <- object@data
   
   print_msg("Computing distances between selected genes.", msg_type = "INFO")
-  dist_matrix_selected_genes <- qlcMatrix::corSparse(t(data_selected_genes))
+  dist_matrix_selected_genes <- qlcMatrix::corSparse(Matrix::t(data_selected_genes))
   dist_matrix_selected_genes <- 1 - dist_matrix_selected_genes
   rownames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
   colnames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
