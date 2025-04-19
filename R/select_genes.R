@@ -54,6 +54,7 @@
 #' 
 #' @importFrom stats p.adjust
 #' @importFrom Matrix Matrix
+#' @importFrom Matrix t
 #' @export select_genes
 
 select_genes <- function(data = NULL,
@@ -115,7 +116,7 @@ select_genes <- function(data = NULL,
     genes_to_keep <- Matrix::rowSums(data) > row_sum
   }
   
-  select_for_correlation <- data[genes_to_keep, ]
+  select_for_correlation <- data[genes_to_keep, , drop=FALSE]
  
   print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
             msg_type = "INFO")
@@ -134,7 +135,7 @@ select_genes <- function(data = NULL,
   # distance matrix. Note that for pearson
   # and cosine, 0 < distance < 2.
   if (distance_method == "pearson") {
-    dist_matrix <- qlcMatrix::corSparse(t(select_for_correlation))
+    dist_matrix <- qlcMatrix::corSparse(Matrix::t(select_for_correlation))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
