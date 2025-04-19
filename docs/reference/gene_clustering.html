@@ -193,7 +193,7 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Deleting reciprocal edges. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79/R14z6ff8TV.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpUjEhAy/R14z6ff8TV.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL algorithm has been selected. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MCL path : "</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  mcl_dir: </span>
@@ -202,7 +202,7 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-in"><span><span class="co"># Display the heatmap of gene clusters</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One or several clusters contain less than 20 genes. Retrieving all genes </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in cor(t(object@data[genes, ]), method = dist_method):</span> supply both 'x' and 'y' or a matrix-like 'x'</span>
 <span class="r-in"><span><span class="fu"><a href="plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>
@@ -226,10 +226,10 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-in"><span>                       inflation <span class="op">=</span> <span class="fl">2.2</span>,</span></span>
 <span class="r-in"><span>                       method<span class="op">=</span><span class="st">"reciprocal_neighborhood"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating the input file for MCL algorithm. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Convert distances into weights. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Selecting only reciprocal neighborhood. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79/65vDYGyn24.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpUjEhAy/65vDYGyn24.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL algorithm has been selected. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MCL path : "</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  mcl_dir: </span>
@@ -238,7 +238,7 @@ Research Institute for Mathematics and Computer Science in the 1386-3681.</p>
 <span class="r-in"><span><span class="co"># Display the heatmap of gene clusters</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One or several clusters contain less than 20 genes. Retrieving all genes </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in cor(t(object@data[genes, ]), method = dist_method):</span> supply both 'x' and 'y' or a matrix-like 'x'</span>
 <span class="r-in"><span><span class="fu"><a href="plot_heatmap.html">plot_heatmap</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  cell_clusters is not NULL. Setting show_dendro to FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Centering matrix. </span>

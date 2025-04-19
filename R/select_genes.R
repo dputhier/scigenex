@@ -11,7 +11,7 @@
 #' "euclidean", spearman or "kendall").
 #' @param noise_level This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
 #' will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
-#' with high dknn (i.e close to noise).
+#' with high dknn (i.e close to noise ).
 #' @param k An integer specifying the size of the neighborhood.
 #' @param row_sum A feature/gene whose row sum is below this threshold will be discarded. Use -Inf to keep all genes. 
 #' @param fdr A numeric value indicating the false discovery rate threshold (range: 0 to 1).

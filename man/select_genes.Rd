@@ -25,7 +25,7 @@ select_genes(
 
 \item{noise_level}{This parameter controls the fraction of genes with high dknn (ie. noise) whose neighborhood (i.e associated distances) 
 will be used to compute simulated DKNN values. A value of 0 means to use all the genes. A value close to 1 means  to use only gene 
-with high dknn (i.e close to noise).}
+with high dknn (i.e close to noise ).}
 
 \item{k}{An integer specifying the size of the neighborhood.}
 
