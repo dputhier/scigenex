@@ -127,7 +127,7 @@ select_genes <- function(data = NULL,
     msg_type = "INFO"
   )
   print_msg(paste0("Number of selected rows/genes (row_sum): ", nrow(select_for_correlation)), 
-            msg_type = "DEBUG")
+            msg_type = "INFO")
   
   # Compute correlations and corresponding 
   # distance matrix. Note that for pearson
