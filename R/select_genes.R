@@ -140,22 +140,22 @@ select_genes <- function(data = NULL,
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   }else  if (distance_method == "kendall") {
-    dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "kendall"))
+    dist_matrix <- as.matrix(cor(Matrix::t(select_for_correlation), method = "kendall"))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix  
   }else  if (distance_method == "spearman") {
-      dist_matrix <- as.matrix(cor(t(select_for_correlation), method = "spearman"))
+      dist_matrix <- as.matrix(cor(Matrix::t(select_for_correlation), method = "spearman"))
       if(no_anti_cor)
         dist_matrix[dist_matrix < 0] <- 0
       dist_matrix <- 1 - dist_matrix                      
   } else if (distance_method == "cosine") {
-    dist_matrix <- as.matrix(qlcMatrix::cosSparse(t(select_for_correlation)))
+    dist_matrix <- as.matrix(qlcMatrix::cosSparse(Matrix::t(select_for_correlation)))
     if(no_anti_cor)
       dist_matrix[dist_matrix < 0] <- 0
     dist_matrix <- 1 - dist_matrix
   } else if (distance_method == "euclidean") {
-    dist_matrix <- as.matrix(dist(select_for_correlation))
+    dist_matrix <- as.matrix(dist(as.matrix(select_for_correlation)))
   }
   
   print_stat("Distance matrix stats", 
