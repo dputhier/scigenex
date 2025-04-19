@@ -186,9 +186,8 @@ gene_clustering <- function(object = NULL,
   rownames(centers) <- names(object@gene_clusters)
   
   for (i in 1:nb_clusters) {
-
-      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], , drop=FALSE],
-                            2, mean,
+      print_msg(paste0("Computing center of cluster :", i), msg_type = "DEBUG")
+      centers[i, ] <- Matrix::colMeans(object@data[object@gene_clusters[[i]], , drop=FALSE],
                             na.rm = TRUE)
     
   }
