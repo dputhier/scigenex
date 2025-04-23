@@ -475,7 +475,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
              data = mcl_out_as_df$weight, 
              msg_type = "DEBUG")
   
-  print_msg("Selecting only reciprocal neighborhood.", msg_type = "INFO")
+  print_msg("Selecting only reciprocal neighbors.", msg_type = "INFO")
 
   mcl_out_as_df <-
     mcl_out_as_df[duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
