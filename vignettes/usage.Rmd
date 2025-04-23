@@ -107,7 +107,7 @@ Then we call successively the `select_genes()` function which will select inform
 pbmc_scigenex <- select_genes(pbmc3k,
                               k = 50,
                               distance_method = "pearson",
-                              which_slot = "data",
+                              layer = "data",
                               row_sum=5)
 
 # Run MCL

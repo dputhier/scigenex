@@ -204,10 +204,10 @@ test_that(paste("Checking SCT with pmbc_samll"), {
                   data(pbmc_small, package = "SeuratObject")
                   data_for_scigenex <- pbmc_small
                   
-                  expect_error(get_data_for_scigenex(data_for_scigenex, which_slot ="sct"))
+                  expect_error(get_data_for_scigenex(data_for_scigenex, assay ="sct"))
                   
                   data_for_scigenex <- suppressWarnings(Seurat::SCTransform(pbmc_small, verbose = FALSE))
-                  expr_matrix <- get_data_for_scigenex(data_for_scigenex, which_slot ="sct")
+                  expr_matrix <- get_data_for_scigenex(data_for_scigenex, assay ="SCT", layer = "data")
                   
                   expect_true(round(mean(as.matrix(expr_matrix)[!is.na(as.matrix(expr_matrix))]), 1) == 0.3)
                   expect_equal(ncol(expr_matrix), 80)

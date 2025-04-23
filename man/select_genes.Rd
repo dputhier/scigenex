@@ -11,7 +11,8 @@ select_genes(
   k = 80,
   row_sum = 1,
   fdr = 5e-05,
-  which_slot = c("data", "sct", "counts"),
+  assay = NULL,
+  layer = c("data", "sct", "counts"),
   no_dknn_filter = FALSE,
   no_anti_cor = FALSE,
   seed = 123
@@ -33,7 +34,9 @@ with high dknn (i.e close to noise ).}
 
 \item{fdr}{A numeric value indicating the false discovery rate threshold (range: 0 to 1).}
 
-\item{which_slot}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts").}
+\item{assay}{The assay to use in the Seurat object. If NULL, the function will try to guess.}
+
+\item{layer}{a character string indicating which slot to use from the input scRNA-seq object (one of "data", "sct" or "counts").}
 
 \item{no_dknn_filter}{a logical indicating whether to skip the k-nearest-neighbors (KNN) filter. If FALSE, all genes are kept for the next steps.}
 

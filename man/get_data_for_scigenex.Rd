@@ -4,12 +4,18 @@
 \alias{get_data_for_scigenex}
 \title{Fetch an expression matrix from a file, dataframe or Seurat object.}
 \usage{
-get_data_for_scigenex(data = NULL, which_slot = c("data", "sct", "counts"))
+get_data_for_scigenex(
+  data = NULL,
+  layer = c("data", "sct", "counts"),
+  assay = NULL
+)
 }
 \arguments{
 \item{data}{A \code{matrix}, \code{data.frame} or \code{Seurat} object.}
 
-\item{which_slot}{One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.
+\item{layer}{One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.}
+
+\item{assay}{The assay to use in the Seurat object. If NULL, the function will try to guess.
 SCT is the recommended method from Seurat package when working with spatial transcriptomics data.}
 }
 \value{

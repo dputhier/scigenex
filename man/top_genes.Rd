@@ -21,4 +21,27 @@ A \code{ClusterSet} object.
 \description{
 Extract the most highly co-expressed genes of each gene cluster.
 }
+\keyword{#}
+\keyword{1}
+\keyword{<-}
+\keyword{Load}
+\keyword{Set}
+\keyword{Store}
+\keyword{a}
+\keyword{dataset}
+\keyword{display}
+\keyword{genes}
+\keyword{in}
+\keyword{info}
 \keyword{internal}
+\keyword{load_example_dataset('7871581/files/pbmc3k_medium_clusters')}
+\keyword{messages}
+\keyword{object}
+\keyword{only.}
+\keyword{pbmc3k_medium_clusters}
+\keyword{set_verbosity(1)}
+\keyword{the}
+\keyword{to}
+\keyword{top}
+\keyword{top_genes(pbmc3k_medium_clusters)}
+\keyword{verbosity}

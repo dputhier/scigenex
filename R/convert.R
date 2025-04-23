@@ -2,9 +2,9 @@
 #' @description Transform a Seurat objects into a ClusterSet.
 #' @param object A Seurat object.
 #' @param markers A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).
-#' @param which_slot One of 'data', 'counts' or 'sct'. The slot to extract from the seurat object to perform clustering analysis.
+#' @param layer One of 'data', 'counts' or 'scale.data'. The slot to extract from the seurat object to perform clustering analysis.
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
-#' @param assay_type The type of assay ("RNA" or "Spatial").
+#' @param assay The type of assay (e.g. "RNA", "Spatial", "Sketch", "SCT"...).
 #' @importFrom SeuratObject LayerData
 #' @importFrom Matrix Matrix
 #' @examples
@@ -23,28 +23,20 @@
 #' @export cluster_set_from_seurat
 cluster_set_from_seurat <- function(object=NULL, 
                                     markers=NULL,
-                                    which_slot=c('data', 'counts', 'sct'),
-                                    assay_type=c('RNA', 'Spatial')){
+                                    layer=c('data', 'counts', 'scale.data'),
+                                    assay='RNA'){
   
-  which_slot <- match.arg(which_slot)
-  assay_type <- match.arg(assay_type)
+  layer <- match.arg(layer)
   
-  if (which_slot %in% c("data", "counts")) {
-    object <- SeuratObject::LayerData(object, assay=assay_type, layer=which_slot)
-  } else if (which_slot == "sct") {
-    if ("SCT" %in% names(object@assays)) {
-      object <- object@assays$SCT@data
-    } else{
-      print_msg("This object has no 'SCT' slot. Use SCTransform() before.",
-                msg_type = 'STOP')
-    }
-  }
+  object <- SeuratObject::LayerData(object, assay=assay, layer=layer)
   
   if(inherits(markers, "data.frame")){
+    
     gn <- markers$gene
     clusters <- markers$cluster
     names(clusters) <- gn
     object <- object[markers$gene, ]
+    
   }else if(is.vector(markers)){
     if(is.null(names(markers)))
       print_msg("The 'markers' argument should be a named vector.",

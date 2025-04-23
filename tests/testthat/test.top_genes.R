@@ -237,11 +237,13 @@ test_that("Cheking top_gene()", {
   
 })
 
-rm(pbmc3k_medium_clusters)
-load_example_dataset("7871581/files/pbmc3k_medium_clusters")
-res <- pbmc3k_medium_clusters
-
 test_that("Cheking top_gene()", {
+  
+  
+  load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+  
+  res <- pbmc3k_medium_clusters
+  
   res <- top_genes(res, distance_method = "pearson")
   v <- setNames(unlist(c(lapply(res@top_genes[c(1,15)], "[", 1), lapply(res@top_genes[c(1,15)], "tail", 1))), NULL)
   expect_equal(

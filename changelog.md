@@ -1,7 +1,9 @@
 # Changelog
 
 
-* The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix).
+* The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !
+* The 'which_slot' argument of select_genes() has been replaced by 'layer'.
+* Select_genes() function now has an 'assay' argument. 
 * Suppressed some message in vignettes.
 
 ## v1.6.1

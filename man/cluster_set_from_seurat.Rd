@@ -7,8 +7,8 @@
 cluster_set_from_seurat(
   object = NULL,
   markers = NULL,
-  which_slot = c("data", "counts", "sct"),
-  assay_type = c("RNA", "Spatial")
+  layer = c("data", "counts", "scale.data"),
+  assay_type = "RNA"
 )
 }
 \arguments{
@@ -16,10 +16,10 @@ cluster_set_from_seurat(
 
 \item{markers}{A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).}
 
-\item{which_slot}{One of 'data', 'counts' or 'sct'. The slot to extract from the seurat object to perform clustering analysis.
+\item{layer}{One of 'data', 'counts' or 'scale.data'. The slot to extract from the seurat object to perform clustering analysis.
 SCT is the recommended method from Seurat package when working with spatial transcriptomics data.}
 
-\item{assay_type}{The type of assay ("RNA" or "Spatial").}
+\item{assay_type}{The type of assay (e.g. "RNA", "Spatial", "Sketch", "SCT"...).}
 }
 \description{
 Transform a Seurat objects into a ClusterSet.

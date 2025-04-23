@@ -7,7 +7,8 @@
 ##' @description
 #' This function fetchs an expression matrix from a file, dataframe or Seurat object.
 #' @param data A \code{matrix}, \code{data.frame} or \code{Seurat} object.
-#' @param which_slot One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.
+#' @param layer One of "SCT", "data" or count. The slot to extract from the seurat object to perform clustering analysis.
+#' @param assay The assay to use in the Seurat object. If NULL, the function will try to guess.
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
 #'
 #' @return An expression matrix.
@@ -21,40 +22,42 @@
 #' 
 #'
 get_data_for_scigenex <- function(data = NULL,
-                                  which_slot = c("data", "sct", "counts")) {
-  which_slot <- match.arg(which_slot)
+                                  layer = c("data", "sct", "counts"),
+                                  assay=NULL) {
+  layer <- match.arg(layer)
   
-  # Stop the function if data not provided
+  # Stop the function if no data were provided
   if (is.null(data)) {
-    print_msg(
-      paste0(
-        "Please provide a Seurat Object, a data.frame",
-        ", a matrix or dgCMatrix.\n"
-      ),
-      msg_type = "STOP"
-    )
+    print_msg(paste0(
+                    "Please provide a Seurat Object, a data.frame",
+                    ", a matrix or dgCMatrix.\n",
+                  msg_type = "STOP"
+    ))
   }
   
   if (inherits(data, "Seurat")) {
-    print_msg(paste0("Extracting '", which_slot, "' slot from Seurat object"),
-              msg_type = "DEBUG")
     
-    if (which_slot %in% c("data", "counts")) {
-      if("Spatial" %in% names(data@assays)){
-        assay_type <- "Spatial"
-      }else{
-        assay_type <- "RNA"
-      }
-      data <- SeuratObject::LayerData(data, assay=assay_type, layer=which_slot)
-    } else if (which_slot == "sct") {
-      if ("SCT" %in% names(data@assays)) {
-        data <- data@assays$SCT@data
-      } else{
-        print_msg("This object has no 'SCT' slot. Use SCTransform() before.",
-                  msg_type = 'STOP')
-      }
+    all_assays <- names(data@assays)
+    
+    if(is.null(assay)){
+      assay <- all_assays[1]
+    }else{
+      if(!assay %in% all_assays)
+        print_msg("Assay was not found in Seurat object.", msg_type="STOP")
     }
     
+    print_msg(paste0("Extracting '", layer, "' layer from Seurat object"),
+              msg_type = "DEBUG")
+    
+    if(!layer %in% SeuratObject::Layers(data[[assay]]))
+      print_msg("Layer not found in Seurat object assay.", msg_type = "STOP")
+    
+    rn  <- rownames(data[[assay]])
+    cn <- colnames(data[[assay]])
+    data <- SeuratObject::LayerData(data, assay=assay, layer=layer)
+    colnames(data) <- cn
+    rownames(data) <- rn
+
   } else if (is.data.frame(data)) {
     print_msg("Converting dataframe to matrix", msg_type = "DEBUG")
     data <- as.matrix(data)
@@ -77,6 +80,7 @@ get_data_for_scigenex <- function(data = NULL,
     print_msg("Row names not provided. Adding.", msg_type = "DEBUG")
     rownames(data) <- paste("gene", 1:nrow(data), sep = "")
   }
+  
   if (is.null(colnames(data))) {
     print_msg("Column names not provided. Adding.", msg_type = "DEBUG")
     colnames(data) <- paste("sample", 1:ncol(data), sep = "")
