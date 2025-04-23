@@ -2,6 +2,7 @@
 
 
 * The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix).
+* Suppressed some message in vignettes.
 
 ## v1.6.1
 
