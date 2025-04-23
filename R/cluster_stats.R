@@ -60,7 +60,7 @@ setMethod(
       sum_clust[pos] <- sum(object@data[gene_clust[[pos]], ])
       sd_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ]) 
       var_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ])^2
-      mean_clust  <- mean(object@data[gene_clust[[pos]], ])
+      mean_clust[pos]  <- mean(object@data[gene_clust[[pos]], ])
       size_clust[pos]  <- length(gene_clust[[pos]])
     }
     
