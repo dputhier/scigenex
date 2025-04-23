@@ -27,6 +27,7 @@
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
+#' @importFrom sparseMatrixStats colMeans2
 #' @examples
 #' # Restrict vebosity to info messages only.
 #' library(Seurat)
@@ -186,8 +187,8 @@ gene_clustering <- function(object = NULL,
   rownames(centers) <- names(object@gene_clusters)
   
   for (i in 1:nb_clusters) {
-      print_msg(paste0("Computing center of cluster :", i), msg_type = "DEBUG")
-      centers[i, ] <- Matrix::colMeans(object@data[object@gene_clusters[[i]], , drop=FALSE],
+      print_msg(paste0("Computing cluster ", i, " center."), msg_type = "DEBUG")
+      centers[i, ] <- sparseMatrixStats::colMeans2(object@data[object@gene_clusters[[i]], , drop=FALSE],
                             na.rm = TRUE)
     
   }
