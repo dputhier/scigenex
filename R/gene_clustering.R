@@ -319,6 +319,7 @@ do_closest_neighbor_graph <- function(object = NULL,
     df_dknn_selected_genes[gene, "dknn_values"] <- gene_dist[k]
   }
   
+  
   print_msg("Creating the input file for graph partitioning.", msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
@@ -335,9 +336,11 @@ do_closest_neighbor_graph <- function(object = NULL,
   
   print_msg("Deleting reciprocal edges.", msg_type = "INFO")
   
+
   mcl_out_as_df <-
     mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
-  
+
+
   print_msg("Converting distances into weights.", msg_type = "INFO")
   
   min_dist <- min(mcl_out_as_df$weight)
@@ -443,11 +446,11 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
   
   print_msg("Extracting distances to neighbors.", msg_type = "DEBUG")
   l_knn_selected <- object@dbf_output$all_neighbor_distances
-  
+
   print_msg("Creating the input file for MCL algorithm.", msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
-  
+
   for (g in names(l_knn_selected)) {
     mcl_out_as_list_of_df[[g]] <- data.frame(
       src = g,
@@ -466,11 +469,13 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
     (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
   mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
   
+
   print_stat("Graph weights (after convertion)", 
              data = mcl_out_as_df$weight, 
              msg_type = "DEBUG")
   
   print_msg("Selecting only reciprocal neighborhood.", msg_type = "INFO")
+
   mcl_out_as_df <-
     mcl_out_as_df[duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
   
@@ -560,7 +565,7 @@ mcl_system_cmd <- function(object = NULL,
   }
   
   
-  print(paste0("MCL path : ", mcl_dir))
+  print_msg(paste0("MCL path : ", mcl_dir))
 
   name <- object@parameters$name
   input_path <- object@parameters$output_path

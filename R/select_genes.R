@@ -319,21 +319,29 @@ select_genes <- function(data = NULL,
     names(obs_dknn) <- df_dknn[, "gene_id"]
     
 
-    center <- Matrix::Matrix(Matrix::colMeans(obj@data[obj@gene_clusters$`1`, ],
+    centers <- Matrix::Matrix(Matrix::colMeans(obj@data[obj@gene_clusters$`1`, ],
                                               na.rm = TRUE),
                       nrow = 1, sparse=TRUE)
+
+    rownames(centers) <- "1"
+    colnames(centers) <- colnames(obj@data)
     
-    rownames(center) <- "1"
+    l_knn_sel <- l_knn[selected_genes]
+    
+  }else{
+    centers <- NULL
+    l_knn_sel <- NULL
   }
   
+
   obj@dbf_output <- list("dknn" = obs_dknn,
                            "simulated_dknn" = sim_dknn,
                            "critical_distance" = critical_distance,
                            "pvalue" = df_dknn$pvalue,
                            "fdr" = df_dknn$FDR,
-                           "center" = ifelse(length(selected_genes), center, NULL),
+                           "center" = centers,
                            "all_gene_expression_matrix" = data,
-                           "all_neighbor_distances" = ifelse(length(selected_genes), l_knn[selected_genes], NULL))
+                           "all_neighbor_distances" = l_knn_sel)
 
   
   obj@parameters <- list("distance_method" = distance_method,

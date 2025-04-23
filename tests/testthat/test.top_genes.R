@@ -237,4 +237,42 @@ test_that("Cheking top_gene()", {
   
 })
 
+rm(pbmc3k_medium_clusters)
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+res <- pbmc3k_medium_clusters
+
+test_that("Cheking top_gene()", {
+  res <- top_genes(res, distance_method = "pearson")
+  v <- setNames(unlist(c(lapply(res@top_genes[c(1,15)], "[", 1), lapply(res@top_genes[c(1,15)], "tail", 1))), NULL)
+  expect_equal(
+    v,
+    c("RPL11", "LINC00926", "RPL29", "PKIG")
+  )
+  
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
+  res <- top_genes(res, distance_method = "euclidean")
+  v <- setNames(unlist(c(lapply(res@top_genes[c(1,15)], "[", 1), lapply(res@top_genes[c(1,15)], "tail", 1))), NULL)
+  expect_equal(
+    v,
+    c("RPS23", "LINC00926", "RPL7A", "ISG20")
+  )
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
+  
+  res <- top_genes(res, distance_method = "spearman")
+  v <- setNames(unlist(c(lapply(res@top_genes[c(1,15)], "[", 1), lapply(res@top_genes[c(1,15)], "tail", 1))), NULL)
+  expect_equal(
+    v,
+    c("RPS12", "LINC00926", "RPL31", "ISG20")
+  )
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
+  
+  res <- top_genes(res, distance_method = "cosine")    
+  v <- setNames(unlist(c(lapply(res@top_genes[c(1,15)], "[", 1), lapply(res@top_genes[c(1,15)], "tail", 1))), NULL)
+  expect_equal(
+    v,
+    c("RPL11", "CD79B", "RPS16", "PKIG")
+  )
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
+})
+
 
