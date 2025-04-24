@@ -2,6 +2,7 @@
 
 
 * The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !
+* The cluster are no more computed by default. use compute_centers().
 * The 'which_slot' argument of select_genes() has been replaced by 'layer'.
 * Select_genes() function now has an 'assay' argument. 
 * Suppressed some message in vignettes.
