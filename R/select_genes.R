@@ -257,7 +257,7 @@ select_genes <- function(data = NULL,
     # ============================================
 
     # Order genes by DKNN values
-    print_msg(paste0("Computing threshold of distances to KNN (DKNN threshold)."),
+    print_msg(paste0("Computing distances to KNN threshold (DKNN threshold)."),
               msg_type = "INFO")
     
     # Order the dknn values from low to high
@@ -295,7 +295,7 @@ select_genes <- function(data = NULL,
   # Create the ClusterSet object
   # ============================================
 
-  print_msg(paste0("Creating the ClusterSet object."), msg_type = "INFO")
+  print_msg(paste0("Instantiating a ClusterSet object."), msg_type = "INFO")
   
   obj <- new("ClusterSet")
   
