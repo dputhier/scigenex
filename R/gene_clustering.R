@@ -167,10 +167,10 @@ gene_clustering <- function(object = NULL,
   algo_cluster <- strsplit(algo_cluster, "\t")
   names(algo_cluster) <- seq(1, length(algo_cluster))
 
-  print_msg("Adding clusters to a ClusterSet object.", msg_type = "DEBUG")
+  print_msg("Updating @gene_clusters slots.", msg_type = "DEBUG")
   object@gene_clusters <- algo_cluster
   
-  print_msg("Update gene_cluster_metadata slots.", msg_type = "DEBUG")
+  print_msg("Updating @gene_clusters_metadata slots.", msg_type = "DEBUG")
   object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
                                         "number" = max(as.numeric(names(object@gene_clusters))),
                                         "size" = unlist(lapply(object@gene_clusters, length)))
@@ -180,7 +180,6 @@ gene_clustering <- function(object = NULL,
   
   
   object@dbf_output$center <- NULL
-  rownames(object@dbf_output$center) <- names(object@gene_clusters)
   
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
                                       row.names = colnames(object@data))
