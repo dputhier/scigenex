@@ -49,6 +49,9 @@ plot_profiles <- function(data = NULL,
 
   centers <- data@dbf_output$center
   
+  if(is.null(centers))
+    print_msg("Please run compute_centers() on ClusterSet.", msg_type = "STOP")
+  
   if (is.null(ident))
     print_msg("Please provide cell identification.", msg_type = "STOP")
   
@@ -65,9 +68,8 @@ plot_profiles <- function(data = NULL,
   nb_cell_type <- length(unique(ident))
   
   
-  
   if (is.null(nb_column))
-    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
+    nb_column <- round(sqrt(nrow(centers)), 0)
   
   if (is.null(color_cell_type)){
     color_cell_type <- scales::hue_pal()(nb_cell_type)
@@ -198,13 +200,17 @@ plot_multi_profiles <- function(data = NULL,
                                 nb_column=NULL,
                                 center=FALSE) {
   
-  if (is.null(nb_column))
-    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
-  
+
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
 
   centers <- data@dbf_output$center
+  
+  if(is.null(centers))
+    print_msg("Please run compute_centers() on ClusterSet.", msg_type = "STOP")
+  
+  if (is.null(nb_column))
+    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
   
   if(center){
     centers <- sweep(centers, 1, STATS=rowMeans(centers), FUN="-")

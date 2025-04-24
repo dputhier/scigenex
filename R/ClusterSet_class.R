@@ -299,8 +299,10 @@ setMethod("[", signature(x = "ClusterSet"),
                 
                 n_cells_metadata <- x@cells_metadata
                 n_dbf_output <- x@dbf_output
-                n_dbf_output$center <-
-                  n_dbf_output$center[i, , drop = FALSE]
+                
+                if(!is.null(n_dbf_output$center))
+                  n_dbf_output$center <-
+                    n_dbf_output$center[i, , drop = FALSE]
               }
             } else {
               if (missing(i)) {
@@ -313,8 +315,11 @@ setMethod("[", signature(x = "ClusterSet"),
                 n_cells_metadata <-
                   x@cells_metadata[j, , drop = FALSE]
                 n_dbf_output <- x@dbf_output
-                n_dbf_output$center <-
-                  n_dbf_output$center[, j, drop = FALSE]
+                
+                if(!is.null(n_dbf_output$center))
+                  n_dbf_output$center <-
+                    n_dbf_output$center[, j, drop = FALSE]
+                
               } else {
                 n_data <- x@data[unlist(x@gene_clusters[i]), j, drop = FALSE]
                 n_gene_clusters <- x@gene_clusters[i]
@@ -339,8 +344,10 @@ setMethod("[", signature(x = "ClusterSet"),
                 n_cells_metadata <-
                   x@cells_metadata[j, , drop = FALSE]
                 n_dbf_output <- x@dbf_output
-                n_dbf_output$center <-
-                  n_dbf_output$center[i, j, drop = FALSE]
+                
+                if(!is.null(n_dbf_output$center))
+                  n_dbf_output$center <-
+                    n_dbf_output$center[i, j, drop = FALSE]
               }
             }
             
@@ -425,6 +432,33 @@ setMethod("clust_size", signature("ClusterSet"),
             x@gene_clusters_metadata$size
           })
 
+#' @title Extract centers from a ClusterSet object.
+#' @description
+#' Extract centers from a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @export centers
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' centers(pbmc3k_medium_clusters)
+#' @keywords internal
+setGeneric("centers",
+           function(x)
+             standardGeneric("centers"))
+
+#' @title Extract centers from a ClusterSet object.
+#' @description
+#' Extract centers from a ClusterSet object.
+#' @param x A ClusterSet object.
+#' @export centers
+#' @examples
+#' # load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' centers(pbmc3k_medium_clusters)
+setMethod("centers", signature("ClusterSet"),
+          function(x) {
+            x@dbf_output$center
+          })
 #################################################################
 ##    Define gene_cluster function for ClusterSet object
 #################################################################
@@ -691,7 +725,8 @@ setMethod("rename_clust",
             if (length(object@gene_cluster_annotations) > 0)
               names(object@gene_cluster_annotations) <- new_names
             
-            rownames(object@dbf_output$center) <- new_names
+            if(!is.null(object@dbf_output$center))
+              rownames(object@dbf_output$center) <- new_names
             
             return(object)
             
@@ -829,8 +864,9 @@ setMethod("reorder_clust",
               object@gene_cluster_annotations <-
               object@gene_cluster_annotations[new_pos]
             
-            object@dbf_output$center <-
-              object@dbf_output$center[new_pos,]
+            if(!is.null(object@dbf_output$center))
+              object@dbf_output$center <-
+                object@dbf_output$center[new_pos,]
             
             return(object)
             
@@ -1245,3 +1281,75 @@ setMethod("top_by_grep",
             
           })
 
+
+#################################################################
+##    Define compute_centers() function for a ClusterSet object
+#################################################################
+#' @title Compute centers of gene modules (e.g mean profiles)
+#' @description
+#' Compute centers of gene modules (e.g mean profiles)
+#' @param object A \code{ClusterSet} object.
+#' @export compute_centers
+#' @keywords internal
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' pbmc3k_medium_clusters <- compute_centers(pbmc3k_medium_clusters)
+#' pbmc3k_medium_clusters@dbf_output$center
+setGeneric("compute_centers", 
+           function(object)
+             standardGeneric("compute_centers")
+)
+
+#' @title Compute centers of gene modules (e.g mean profiles)
+#' @description
+#' Compute centers of gene modules (e.g mean profiles)
+#' @param object A \code{ClusterSet} object.
+#' @export compute_centers
+#' @examples
+#' # Set verbosity to 1 to display info messages only.
+#' set_verbosity(1)
+#' 
+#' # Load a dataset
+#' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
+#' pbmc3k_medium_clusters <- compute_centers(pbmc3k_medium_clusters)
+#' pbmc3k_medium_clusters@dbf_output$center
+#' @importFrom Matrix Matrix
+#' @importFrom Matrix colMeans
+setMethod("compute_centers", 
+          signature("ClusterSet"), 
+          function(object) {
+            
+            print_msg("Computing centers.", msg_type = "INFO")
+            
+            nb_clusters <- nclust(object)
+            
+            print_msg("Preparing matrix.", msg_type = "DEBUG")
+            
+            centers <- matrix(NA, 
+                              ncol = ncol(object),
+                              nrow = nb_clusters)
+            
+            print_msg("Renaming columns / rows.", msg_type = "DEBUG")
+            
+            colnames(centers) <- colnames(object@data)
+            rownames(centers) <- names(object@gene_clusters)
+            
+            print_msg("Looping over clusters...", msg_type = "DEBUG")
+            
+            for (i in 1:nb_clusters) {
+              print_msg(paste0("Computing cluster ", i, " center."), msg_type = "DEBUG")
+              tmp <- Matrix::colMeans(object@data[object@gene_clusters[[i]], , drop=FALSE],
+                                      na.rm = TRUE)
+              centers[i, ] <- setNames(tmp, NULL)
+              
+            }
+
+            centers <- Matrix::Matrix(centers)
+            object@dbf_output$center <- centers
+            
+            return(object)
+})

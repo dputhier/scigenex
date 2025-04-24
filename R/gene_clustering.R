@@ -178,22 +178,8 @@ gene_clustering <- function(object = NULL,
   print_msg("Updating @data slot.", msg_type = "DEBUG")
   object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE), ]
   
-  print_msg("Computing centers.", msg_type = "DEBUG")
-  nb_clusters = length(names(object@gene_clusters))
-  centers <- Matrix::Matrix(data=NA, 
-                            ncol = ncol(object@data),
-                            nrow = nb_clusters)
-  colnames(centers) <- colnames(object@data)
-  rownames(centers) <- names(object@gene_clusters)
   
-  for (i in 1:nb_clusters) {
-      print_msg(paste0("Computing cluster ", i, " center."), msg_type = "DEBUG")
-      centers[i, ] <- sparseMatrixStats::colMeans2(object@data[object@gene_clusters[[i]], , drop=FALSE],
-                            na.rm = TRUE)
-    
-  }
-  
-  object@dbf_output$center <- centers
+  object@dbf_output$center <- NULL
   rownames(object@dbf_output$center) <- names(object@gene_clusters)
   
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),

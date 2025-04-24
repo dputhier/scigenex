@@ -48,14 +48,7 @@ cluster_set_from_seurat <- function(object=NULL,
   }
   
   gn <- split(names(clusters), clusters)
-  centers <- split(data.frame(object[names(clusters), ]), clusters)
-  centers <- lapply(centers, apply, 2, mean)
-  name_center <- names(centers)
-  centers <- do.call("rbind", centers)
-  rownames(centers) <- name_center
-  colnames(centers) <- colnames(object)
 
-  
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- gn
   obj_out@data <- Matrix::Matrix(object, sparse = TRUE)
@@ -75,7 +68,7 @@ cluster_set_from_seurat <- function(object=NULL,
                          "simulated_dknn" = vector(),
                          "critical_distance" = vector(),
                          "fdr" = vector(),
-                         "center" = centers,
+                         "center" = NULL,
                          "all_gene_expression_matrix" = vector(),
                          "all_neighbor_distances" = vector())
   
@@ -132,17 +125,7 @@ cluster_set_from_matrix <- function(object=NULL,
                      unlist(lapply(markers, length))))
 
   print_msg("Computing centers.", msg_type = "INFO")
-  centers <- list()
-  
-  for(i in 1:length(markers)){
-    centers[[i]] <- colMeans(object[markers[[i]],])
-  }
-  
-  name_center <- names(markers)
-  centers <- do.call("rbind", centers)
-  rownames(centers) <- name_center
-  colnames(centers) <- colnames(object)
-  
+
   print_msg("Creating ClusterSet object.", msg_type = "INFO")
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- markers
@@ -164,7 +147,7 @@ cluster_set_from_matrix <- function(object=NULL,
                              "simulated_dknn" = vector(),
                              "critical_distance" = vector(),
                              "fdr" = vector(),
-                             "center" = centers,
+                             "center" = NULL,
                              "all_gene_expression_matrix" = vector(),
                              "all_neighbor_distances" = vector())
   
