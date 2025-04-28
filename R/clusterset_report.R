@@ -1,5 +1,5 @@
-#' @title Create a report from a ClusterSet and Seurat object.
-#' @description Create a report from a ClusterSet and Seurat object.
+#' @title Create a report from a ClusterSet and Seurat object. DEPRECATED
+#' @description Create a report from a ClusterSet and Seurat object. DEPRECATED. Use scigenex_report() please.
 #' @param clusterset_object The ClusterSet object.
 #' @param seurat_object The Seurat object.
 #' @param file_path A file path where to store the report (html extension).
@@ -46,6 +46,7 @@ cluster_set_report <- function(clusterset_object=NULL,
   
   # This function are used but are enclosed in the markdown
   # So I force the system to know we are using it.
+  print_msg("This function is deprecated. Use scigenex_report() please.", msg_type = "WARNING")
   
   tmp_fun <- DT::datatable
   tmp_fun <- Seurat::AddModuleScore 

@@ -1,0 +1,262 @@
+
+<!-- UPPERCASE variable are text to be replaced (see st_report() function). -->
+<!-- NB: The code contains several global variables derived from st_report() function arguments. -->
+
+
+```{r start_MODULE_NUMBER, include=FALSE, echo=FALSE, eval=TRUE}
+
+scigenex::set_verbosity(0)
+library(knitr)
+options(width=400)
+
+knitr::opts_chunk$set(
+  fig.path="FIG_PATH",
+  fig.align = "center", 
+  size = "tiny", 
+  comment = "",
+  fig.dpi=300,
+  out.width="100%"
+)
+```
+
+
+```{r, level_0_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("# Module MODULE_NUMBER ")
+``` 
+
+```{r, level_1_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Expression {.panelset}")
+``` 
+
+```{r, heatmap_2_MODULE_NUMBER, eval="module_heatmap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This section provides various information about gene module MODULE_NUMBER.")
+``` 
+
+
+```{css echo=FALSE}
+.panelset .panel-active {
+    display: block !important;
+}
+```
+
+```{r, heatmap_3_MODULE_NUMBER, eval="module_heatmap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Static heatmaps ")
+``` 
+
+```{r, heatmap_4_MODULE_NUMBER, eval="module_heatmap" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("A heatmap with cells/spots as columns and genes as rows.") 
+``` 
+
+```{r heatmap_5_MODULE_NUMBER, echo=FALSE, eval="module_heatmap" %in% section }
+
+scigenex::plot_ggheatmap(cluster_set[MODULE_NUMBER,], 
+                         use_top_genes = FALSE, 
+                         hide_gene_name = TRUE, 
+                         ident = Idents(seurat_object))
+```
+<br>
+
+
+```{r, iheatmap_2_MODULE_NUMBER, eval="module_iheatmap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Interactive heatmaps ")
+``` 
+
+```{r, iheatmap_3_MODULE_NUMBER, eval="module_iheatmap" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("An interactive heatmap with cells/spots as columns and genes as rows.") 
+``` 
+
+```{r iheatmap_4_MODULE_NUMBER, echo=FALSE, eval="module_iheatmap" %in% section }
+
+scigenex::plot_heatmap(cluster_set[MODULE_NUMBER,], 
+                       cell_clusters=Idents(seurat_object),
+                       use_top_genes=FALSE,
+                       interactive=TRUE,
+                       line_size_horizontal=1,
+                       label_size=6)
+```
+
+```{r, iumap_2_MODULE_NUMBER, eval="module_umap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### UMAP Mapping ")
+``` 
+
+```{r, iumap_3_MODULE_NUMBER, eval="module_umap" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each cell/spot.") 
+``` 
+
+```{r iumap_4_MODULE_NUMBER, echo=FALSE, eval="module_umap" %in% section }
+Seurat::FeaturePlot(seurat_object,
+                    feature="MOD_MODULE_NUMBER")
+```
+
+```{r, violin_2_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Violon plot ")
+``` 
+
+```{r, violin_3_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Display the distribution of gene module mean expression levels across cell populations.") 
+``` 
+
+```{r violin_4_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
+Seurat::VlnPlot(seurat_object, feature="MOD_MODULE_NUMBER")
+```
+
+```{r, level_2_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Cell Annotation {.panelset}")
+``` 
+
+```{r, cell_annot_IA_1_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### IA-based annotation")
+``` 
+
+```{r, cell_annot_IA_2_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("What Gemini tells us about the likely cell identity or underlying function of this signature.") 
+``` 
+
+```{r, cell_annot_IA_3_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
+prompt <- paste0("I'm working on an ",
+                  smp_stage,
+                  " ",
+                  smp_organ, 
+                  " obtained from ",
+                  ". The particular region I'm working with is ",
+                  smp_region, 
+                  "The tissue was analyzed using transcriptomic analysis.",
+                  " I have a list of co-regulated genes that contains :",
+                  paste0(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), collapse=", "),
+                                                "What could be the cells type that express theses genes ? The answer should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function' (#1, #2...) and 'rational'. If gene list is not enough specific to be associated to infer a define cell_type indicate the underlying function as 'infered cell type/function' the and 'rational'.", collapse=" ")
+
+answer <- gemini.R::gemini_chat(prompt)
+knitr::asis_output(answer$outputs )
+```
+
+```{r, level_3_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Functional Enrichment {.panelset}")
+``` 
+
+```{r, preparing_cnet1_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"}
+test_1 <- "module_term_network" %in% section
+test_2 <- "module_term_barplot_1" %in% section
+test_3 <- "module_term_barplot_2" %in% section
+test_4 <- "module_term_network_circ" %in% section
+test_5 <- "term_table" %in% section
+all_test <- test_1 | test_2 | test_3 | test_4 | test_5
+```
+
+```{r, preparing_cnet2_MODULE_NUMBER, eval=all_test, echo=FALSE, results = "asis"}
+library(enrichplot)
+library(patchwork)
+
+enrich_res <- enrich_go(cluster_set[MODULE_NUMBER,], species = )
+enrich_res <- try(edo <- enrichplot::pairwise_termsim(enrich_res@gene_cluster_annotations[[1]], 
+                                                  method = "Resnik", 
+                                                  showCategory = 20, 
+                                                  semData = sem_sim), silent = TRUE)
+```
+
+
+```{r, term_network_1_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Cnetplot")
+``` 
+
+
+
+```{r, term_network_2_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Plot linkages of genes and enriched concepts (e.g. GO BP terms).") 
+``` 
+
+```{r, term_network_3_MODULE_NUMBER, echo=FALSE, eval="BLA" %in% section }
+
+cex.params <- list(category_label = 0.6, gene_label = 0.4)
+
+if(!inherits(enrich_res, "try-error")){
+  cnet_try <- try(c1 <-cnetplot(edo, 
+                   layout = "kk", 
+                   color.params = list(edge = TRUE), 
+                   showCategory = 6, 
+                   node_label="category",
+                   shadowtext="category",
+                   cex.params = cex.params)  + Seurat::NoLegend()
+  )
+  if(!inherits(cnet_try, "try-error")){
+    c1
+  }else{
+    ggplot2::ggplot() + ggplot2::geom_blank()
+  }
+}
+```
+
+```{r, term_network_circ_1_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Cnetplot")
+``` 
+
+```{r, term_network_circ_2_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Plot linkages of genes and enriched concepts (e.g. GO BP terms).") 
+``` 
+
+```{r, term_network_circ_3_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ" %in% section }
+cex.params <- list(category_label = 0.6, gene_label = 0.4)
+
+if(!inherits(enrich_res, "try-error")){
+  cnet_try <- try(c1 <-cnetplot(edo, 
+                   circular=TRUE,
+                   color.params = list(edge = TRUE), 
+                   showCategory = 6, 
+                   node_label="category",
+                   shadowtext="category",
+                   cex.params = cex.params)  + Seurat::NoLegend()
+  )
+  if(!inherits(cnet_try, "try-error")){
+    c1
+  }else{
+    ggplot2::ggplot() + ggplot2::geom_blank()
+  }
+}
+```
+
+
+```{r, term_bp1_1_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Func. enr. barplot ")
+``` 
+
+```{r, term_bp1_2_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Bar plot of enriched terms.") 
+``` 
+
+```{r, term_bp1_3_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1" %in% section }
+if(!inherits(enrich_res, "try-error")){
+  dplyr::mutate(edo, 
+               qscore = -log(p.adjust, base=10)) %>% 
+               barplot(x="qscore", showCategory=15) + 
+    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7))
+}
+```
+
+
+```{r, term_bp2_1_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Func. enr. dotplot ")
+``` 
+
+```{r, term_bp2_2_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Dot plot of enriched terms.") 
+``` 
+
+```{r, term_bp2_3_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2" %in% section }
+if(!inherits(enrich_res, "try-error")){
+  enrichplot::dotplot(edo, showCategory=15) + ggplot2::theme(axis.text.y = ggplot2::element_text(size=7))
+}
+```
+
+```{r, term_table_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Func. enr. table ")
+``` 
+
+```{r, term_table_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("A table with various information related to enrichment.") 
+``` 
+
+```{r, term_table_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
+DT::datatable(edo@result)
+```
+
+
+
