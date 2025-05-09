@@ -26,7 +26,7 @@
 #' strat[[1]]
 #' strat[[2]] + ggplot2::coord_equal()
 #' strat[[3]] + ggplot2::coord_equal()
-#' strat[[4]] + ggplot2::coord_equal() 
+#' strat[[4]] + ggplot2::coord_equal()  + ggplot2::coord_flip()
 stratify_seurat <- function(seurat_obj, 
                         ident=NULL,
                         colours=NULL,
