@@ -1,6 +1,7 @@
 --- 
 site: bookdown::bookdown_site
-output:
+title: "`r report_title`"
+output: 
   bookdown::gitbook:
     css: style.css
     number_sections: false
@@ -23,10 +24,9 @@ params:
 <!-- There are several global variables obtained from st_report() function. -->
 
 ```{r start, include=FALSE, echo=FALSE, eval=TRUE}
-STarlight::set_verb_level(0)
 library(knitr)
 options(width=400)
-
+scigenex::set_verbosity(0)
 knitr::opts_chunk$set(
   fig.path="all_",
   fig.align = "center", 
@@ -35,7 +35,6 @@ knitr::opts_chunk$set(
   fig.dpi=300,
   out.width="100%"
 )
-library(DT)
 ```
 
 
@@ -48,15 +47,15 @@ knitr::asis_output("## Scigenex gene module report {.panelset}")
 ``` 
 
 
-```{r, section_gen_info_2, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_2, eval="exp_metadata" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Metadata ") 
 ``` 
 
-```{r, section_gen_info_3, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_3, eval="exp_metadata" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This table display metadata about the report (e.g., title, subtitle, author, and date).") 
 ``` 
 
-```{r parameters, echo=FALSE, eval="exp_info" %in% section}
+```{r parameters, echo=FALSE, eval="exp_metadata" %in% section}
 
 t1 <- rbind(c("Title: ", report_title),
             c("Subtitle: ", report_subtitle),
@@ -69,17 +68,17 @@ knitr::kable(t1) %>% kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
-```{r, section_gen_info_4, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_4, eval="exp_experimenters" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Experimenters") 
 ``` 
 
 
-```{r, section_gen_info_5, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_5, eval="exp_experimenters" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This table display metadata about the experimenters.") 
 ``` 
 
 
-```{r section_gen_info_6, echo=FALSE, eval="exp_info" %in% section,}
+```{r section_gen_info_6, echo=FALSE, eval="exp_experimenters" %in% section,}
 
 experimenters <- rbind(c("Experimenter: ", experimenters),
                        c("Lab: ", experimenter_labs)
@@ -93,15 +92,15 @@ knitr::kable(experimenters) %>%
 ```
 
 
-```{r, section_gen_info_7, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_7, eval="exp_sample" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Sample informations") 
 ``` 
   
-```{r, section_gen_info_8, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_8, eval="exp_sample" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This table display informations about the sample.") 
 ``` 
 
-```{r section_gen_info_9, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_9, echo=FALSE, eval="exp_sample" %in% section}
 
 smp_info_table <- rbind(c("Information", "Value"),
                         c("Species: ", smp_species),
@@ -114,15 +113,15 @@ knitr::kable(smp_info_table) %>% kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
-```{r, section_gen_info_10, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_10, eval="exp_params" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Workflow parameters.") 
 ``` 
   
-```{r, section_gen_info_11, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_11, eval="exp_params" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This table display informations about the worflow parameters.") 
 ``` 
 
-```{r section_gen_info_12, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_12, echo=FALSE, eval="exp_params" %in% section}
 param_table <- rbind(c("Parameter", "Value"),
                       c("Scigenex-Distance: ", cluster_set@parameters$distance_method),
                       c("Scigenex-k: ", cluster_set@parameters$k),
@@ -136,15 +135,15 @@ knitr::kable(param_table) %>% kableExtra::column_spec(1, bold = TRUE) %>%
   kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
-```{r, section_gen_info_11, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_11, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Module stats") 
 ``` 
   
-```{r, section_gen_info_11, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_11, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This section provides general statistics about modules.") 
 ``` 
 
-```{r section_gen_info_12, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_12, echo=FALSE, eval="exp_stats" %in% section}
 df <- scigenex::cluster_stats(cluster_set)
 
 knitr::kable(df) %>% kableExtra::column_spec(1, bold = TRUE) %>%
@@ -153,12 +152,12 @@ knitr::kable(df) %>% kableExtra::column_spec(1, bold = TRUE) %>%
 ```
 
 
-```{r section_gen_info_13, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_13, echo=FALSE, eval="exp_stats" %in% section}
 scigenex::plot_cluster_stats(df)
 ```
 
 
-```{r, section_gen_info_11, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_11, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Module genes") 
 ``` 
 
@@ -168,7 +167,7 @@ knitr::asis_output("### Module genes")
 }
 ```
 
-```{r, section_gen_info_14, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_14, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This section provides information about gene contained in modules.") 
 ``` 
 
@@ -179,7 +178,7 @@ knitr::asis_output("This section provides information about gene contained in mo
 }
 ```
 
-```{r section_gen_info_15, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_15, echo=FALSE, eval="exp_genes" %in% section}
 df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set), NULL),
          gene=names(scigenex::gene_cluster(cluster_set)))
 ```
@@ -188,15 +187,15 @@ df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set), NULL),
 DT::datatable(df)
 ```
 
-```{r, section_gen_info_16, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_16, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Module heatmap") 
 ``` 
 
-```{r, section_gen_info_17, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_17, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("A heatmap displaying representative genes (top genes) of each gene module.") 
 ``` 
 
-```{r section_gen_info_18, echo=FALSE, eval="exp_info" %in% section}
+```{r section_gen_info_18, echo=FALSE, eval="exp_heatmap" %in% section}
 scigenex::plot_ggheatmap(cluster_set, 
                          use_top_genes = TRUE, 
                          hide_gene_name = TRUE, 
