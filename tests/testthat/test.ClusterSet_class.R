@@ -527,3 +527,16 @@ test_that("Additional test on indexing", {
   res <- res[c(4,5), ]
   expect_equal(names(rename_clust(res)@top_genes), names(rename_clust(res)@gene_clusters))
 })
+
+test_that("test compute_centers()", { 
+  # Set verbosity to 0
+  set_verbosity(0)
+  
+  load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+  res <- pbmc3k_medium_clusters
+  res <- res[,]
+  
+  res <- compute_centers(res)
+  expect_equal(sum(res@dbf_output$center), 3217)
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
+})

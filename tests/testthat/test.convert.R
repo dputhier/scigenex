@@ -1,6 +1,7 @@
 library(testthat)
 library(Seurat)
 library(SeuratObject)
+library(scigenex)
 
 set_verbosity(0)
 
