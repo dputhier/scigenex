@@ -1,7 +1,14 @@
 
 <!-- UPPERCASE variable are text to be replaced (see st_report() function). -->
-<!-- NB: The code contains several global variables derived from st_report() function arguments. -->
+<!-- NB: The code contains several global variables derived from scigenex_report() function arguments. -->
 
+
+
+```{css echo=FALSE}
+.panelset .panel-active {
+    display: block !important;
+}
+```
 
 ```{r start_MOD_MODULE_NUMBER, include=FALSE, echo=FALSE, eval=TRUE}
 suppressWarnings(rm(enrich_res))
@@ -33,14 +40,6 @@ knitr::asis_output("## Expression {.panelset}")
 ```{r, heatmap_2_MOD_MODULE_NUMBER, eval="module_heatmap" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This section provides various information about gene module MODULE_NUMBER.")
 ``` 
-
-
-```{css echo=FALSE}
-.panelset .panel-active {
-    display: block !important;
-}
-```
-
 
 ```{r, spatial_0_MOD_MODULE_NUMBER, eval="module_spatial" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Spatial expression ")
@@ -141,7 +140,7 @@ knitr::asis_output("### IA-based annotation")
 ``` 
 
 ```{r, cell_annot_IA_2_MOD_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("What Gemini tells us about the likely cell identity or underlying function of this signature.") 
+knitr::asis_output("What Gemini tells us about the likely cell identity or underlying function of this gene module:") 
 ``` 
 
 ```{r, cell_annot_IA_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
@@ -331,12 +330,28 @@ knitr::asis_output("A table with various information related to enrichment.")
 ``` 
 
 ```{r, term_table_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
+df_edo <- edo@result
+df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+df_edo$zScore <- round(df_edo$zScore, 4)
+df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+
+rownames(edo@result) <- NULL
+font.size <- "50%"
 if(nrow(edo) > 0){
-  DT::datatable(edo@result)
+  df_edo %>% 
+    DT::datatable(
+     options=list(
+       initComplete = htmlwidgets::JS(
+          "function(settings, json) {",
+          paste0("$(this.api().table().container()).css({'font-size': '", font.size, "'});"),
+          "}")
+       ) 
+     )
 }else{
-  knitr::asis_output("No diagram available.") 
+  knitr::asis_output("No table available.") 
 }
 ```
-
-
 

@@ -54,13 +54,13 @@ setMethod(
     var_clust <- vector()
     mean_clust <- vector()
     
-    print_msg('Computing stats', msg_type="DEBUG")
+    print_msg('Preparing stats', msg_type="DEBUG")
     
     for(pos in 1:length(gene_clust)){
       sum_clust[pos] <- sum(object@data[gene_clust[[pos]], ])
       sd_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ]) 
       var_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ])^2
-      mean_clust[pos]  <- mean(object@data[gene_clust[[pos]], ])
+      mean_clust[pos]  <- Matrix::mean(object@data[gene_clust[[pos]], ])
       size_clust[pos]  <- length(gene_clust[[pos]])
     }
     

@@ -15,8 +15,8 @@
 #' @param report_author A character string corresponding to one or several authors.
 #' @param report_date A date.
 #' @param out_dir A directory where to store the bookdown output.
-#' @param experimenters Name of the experimenter.
-#' @param experimenter_labs Laboratory of the experimenter.
+#' @param experimenters A data.frame providing information about experimenters.
+#' @param workflow_params A data.frame indicating some workflow parameters.
 #' @param bioc_org_db A gene annotation database as provided by Bioconductor (e.g. org.Hs.eg.db, org.Mm.eg.db, org.Rn.eg.db, o
 #' rg.Dm.eg.db, org.Dr.eg.db, org.Sc.sgd.db, org.Ce.eg.db...). If NULL, module analysis related to functional annotation are canceled.
 #' @param api_key An API key for Gemini to perform cell type / cell function analysis. If NULL, the 'module_cell_annot_IA' section will be skipped.
@@ -29,7 +29,7 @@
 #' @param quiet Whether to run bookdown::render_book() quietly.
 #' @return No return value. A report is generated and written to the specified output directory.
 #' @examples
-#' ## TODO:  'org.Hs.eg.db' / enrich_go "Hsapiens" / library(enrichplot) / xaringanExtra / GOSemSim::godata / patchwork /xaringanExtra / "/Users/puthier/Documents/git/project_dev/scigenex"
+#' # TODO /Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown
 #' library(scigenex)
 #' library(Seurat)
 #' set_verbosity(3)
@@ -46,7 +46,7 @@
 #' set_verbosity(3)
 #' load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 #' load_example_dataset('7870305/files/lymph_node_tiny_2')
-#' scigenex_report(lymph_node_tiny_clusters_2[1:3,], 
+#' scigenex_report(lymph_node_tiny_clusters_2[1:2,], 
 #'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
@@ -56,7 +56,8 @@
 #'                 rmd_dir="/Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown", 
 #'                 api_key="AIzaSyDj2dA0w4LoXi6LhXgf62vEOkuOUnpONbY",
 #'                 is_spatial_exp=TRUE,
-#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
+#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
+#'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 #' @importFrom fs path_home
 #' @importFrom bookdown render_book
 #' @importFrom xaringanExtra use_panelset
@@ -83,19 +84,20 @@
 #' @importFrom dplyr "%>%"
 #' @importFrom pander pander
 #' @importFrom GOSemSim godata
+#' @importFrom htmlwidgets JS
 #' @export
 scigenex_report <- function(cluster_set = NULL,
                             seurat_object=NULL,
                             seurat_assay=NULL,
                             seurat_layer=NULL,
                             is_spatial_exp=FALSE,
-                            report_title = "Spatial transcriptomics report",
+                            report_title = "Scigenex gene module report",
                             report_subtitle = "An example experiment",
                             report_author = "Undefined",
                             report_date = format(Sys.time(), '%d %B %Y'),
                             out_dir = file.path(fs::path_home(), "scigenex_book"),
-                            experimenters = NULL,
-                            experimenter_labs=NULL,
+                            experimenters=data.frame(),
+                            workflow_params=data.frame(),
                             bioc_org_db=NULL,
                             api_key=NULL,
                             smp_species=NULL,
@@ -108,8 +110,9 @@ scigenex_report <- function(cluster_set = NULL,
                                                          ctrl = 100,
                                                          name = "MOD_",
                                                          slot = "data"),
-                            FeaturePlot_params=list(cols=c("lightgrey", "#ff0000", "#00ff00")),
+                            FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu")),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
+                            SpatialDimPlot_params=list(pt.size.factor = 1.7),
                             plot_ggheatmap_params=list(use_top_genes=FALSE, 
                                                        hide_gene_name=TRUE),
                             plot_heatmap_params=list(link="complete", 
@@ -130,7 +133,9 @@ scigenex_report <- function(cluster_set = NULL,
                                       "exp_stats",
                                       "exp_genes",
                                       "exp_heatmap",
-                                      "exp_spatial",
+                                      "exp_dimplot",
+                                      "exp_spatial_dist",
+                                      "exp_spatial_dimplot",
                                       "module_spatial",
                                       "module_heatmap",
                                       "module_iheatmap",
@@ -182,7 +187,7 @@ scigenex_report <- function(cluster_set = NULL,
   if(!is_spatial_exp){
     print_msg("This is not a ST experiment...", msg_type = "INFO")
     print_msg("Canceling ST reporting module.", msg_type = "INFO")
-    section <- setdiff(section, c("exp_spatial",
+    section <- setdiff(section, c("exp_spatial_dist",
                                   "module_spatial"))
   }
   
@@ -309,7 +314,7 @@ scigenex_report <- function(cluster_set = NULL,
   for(tpfile in rmd_input)
     file.copy(file.path(tmp_dir, tpfile), file.path(out_dir, "rmarkdown"), recursive=TRUE)
   
-  print_msg(paste0("Results have been copied to:", out_dir))
+  print_msg(paste0("Results have been copied to: ", out_dir))
   
   if(rm_tmpdir)
     unlink(tmp_dir, recursive=TRUE)

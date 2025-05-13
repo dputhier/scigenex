@@ -37,15 +37,19 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css echo=FALSE}
+.panelset .panel-active {
+    display: block !important;
+}
+```
 
 ```{r, section_gen_info_1, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("# All Modules ")
 ``` 
 
 ```{r, section_gen_info_1, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Scigenex gene module report {.panelset}") 
+knitr::asis_output("## Miscellaneous {.panelset}") 
 ``` 
-
 
 ```{r, section_gen_info_2, eval="exp_metadata" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Metadata ") 
@@ -72,23 +76,18 @@ knitr::kable(t1) %>% kableExtra::column_spec(1, bold = TRUE) %>%
 knitr::asis_output("### Experimenters") 
 ``` 
 
-
 ```{r, section_gen_info_5, eval="exp_experimenters" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This table display metadata about the experimenters.") 
 ``` 
 
 
 ```{r section_gen_info_6, echo=FALSE, eval="exp_experimenters" %in% section,}
-
-experimenters <- rbind(c("Experimenter: ", experimenters),
-                       c("Lab: ", experimenter_labs)
-                        )
-
-knitr::kable(experimenters) %>% 
-  kableExtra::row_spec(1, bold = TRUE) %>% 
-  kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
-  kableExtra::kable_styling() %>%
-  kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+if(nrow(experimenters) > 0)
+  knitr::kable(experimenters) %>% 
+    kableExtra::row_spec(1, bold = TRUE) %>% 
+    kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+    kableExtra::kable_styling() %>%
+    kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
 
@@ -121,19 +120,65 @@ knitr::asis_output("### Workflow parameters.")
 knitr::asis_output("This table display informations about the worflow parameters.") 
 ``` 
 
-```{r section_gen_info_12, echo=FALSE, eval="exp_params" %in% section}
-param_table <- rbind(c("Parameter", "Value"),
-                      c("Scigenex-Distance: ", cluster_set@parameters$distance_method),
-                      c("Scigenex-k: ", cluster_set@parameters$k),
-                      c("Scigenex-FDR: ", cluster_set@parameters$fdr),
-                      c("Scigenex-noise_level: ", cluster_set@parameters$noise_level),
-                      c("Scigenex-row_sum: ", cluster_set@parameters$row_sum),
-                      c("Scigenex-no_dknn_filter: ", cluster_set@parameters$no_dknn_filter))
-
-knitr::kable(param_table) %>% kableExtra::column_spec(1, bold = TRUE) %>%
-  kableExtra::kable_styling() %>%
-  kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```{r section_gen_info_11a, echo=FALSE, eval="exp_params" %in% section}
+if(nrow(workflow_params) > 0)
+  knitr::kable(workflow_params) %>% kableExtra::column_spec(1, bold = TRUE) %>%
+    kableExtra::kable_styling() %>%
+    kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
 ```
+
+
+```{r, section_gen_info_12a, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Experiment information {.panelset}") 
+``` 
+
+```{r, section_gen_info_18a, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dimplot") 
+``` 
+
+```{r, section_gen_info_18b, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A UMAP showing the cell/spot classes.") 
+``` 
+
+```{r section_gen_info_18c, echo=FALSE, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"}
+identities <- grep("seurat_clusters", 
+                      colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+if(length(identities))
+  Seurat::DimPlot(seurat_object)
+```
+
+```{r, section_gen_info_19, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Spatial distribution") 
+``` 
+
+```{r, section_gen_info_20, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The spatial distribution of counts and features.") 
+``` 
+
+```{r section_gen_info_21, echo=FALSE, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"}
+SpatialFeaturePlot_used_params <- as.list(formals(Seurat::SpatialFeaturePlot))
+for(i in names(SpatialFeaturePlot_params)){
+  SpatialFeaturePlot_used_params[[i]] <- SpatialFeaturePlot_params[[i]]}
+
+SpatialFeaturePlot_used_params$object <- seurat_object
+
+meta_data <- grep("(^nCount)|(^nFeature)", 
+                  colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+
+for(feat in meta_data){
+  SpatialFeaturePlot_used_params$features <- feat
+  print(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params))
+}
+```
+
+
+
+
+
+```{r, section_gen_info_12, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Module description {.panelset}") 
+``` 
+
 
 ```{r, section_gen_info_11, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Module stats") 
@@ -161,22 +206,12 @@ scigenex::plot_cluster_stats(df)
 knitr::asis_output("### Module genes") 
 ``` 
 
-```{css echo=FALSE}
-.panelset .panel-active {
-    display: block !important;
-}
-```
+
 
 ```{r, section_gen_info_14, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("This section provides information about gene contained in modules.") 
 ``` 
 
-
-```{css echo=FALSE}
-.panelset .panel-active {
-    display: block !important;
-}
-```
 
 ```{r section_gen_info_15, echo=FALSE, eval="exp_genes" %in% section}
 df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set), NULL),
@@ -203,3 +238,29 @@ scigenex::plot_ggheatmap(cluster_set,
 ```
 
 
+
+```{r, section_gen_info_22, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Spatial dimplot") 
+``` 
+
+```{r, section_gen_info_23, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The spatial distribution of cell/spots classes.") 
+``` 
+
+```{r section_gen_info_24, echo=FALSE, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"}
+identities <- grep("seurat_clusters", 
+                      colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+
+if(length(identities)){
+    SpatialDimPlot_used_params <- as.list(formals(Seurat::SpatialDimPlot))
+    
+  for(i in names(SpatialDimPlot_params)){
+    SpatialDimPlot_used_params[[i]] <- SpatialDimPlot_params[[i]]}
+  
+  SpatialDimPlot_used_params$object <- seurat_object
+  
+  print(base::do.call(Seurat::SpatialDimPlot, SpatialDimPlot_used_params))
+  
+}
+
+```

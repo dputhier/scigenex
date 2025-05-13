@@ -51,5 +51,5 @@ strat <- stratify_seurat(lymph_node_tiny_2, ident=classes)
 strat[[1]]
 strat[[2]] + ggplot2::coord_equal()
 strat[[3]] + ggplot2::coord_equal()
-strat[[4]] + ggplot2::coord_equal() 
+strat[[4]] + ggplot2::coord_equal()  + ggplot2::coord_flip()
 }
