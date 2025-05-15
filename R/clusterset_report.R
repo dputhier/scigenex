@@ -46,7 +46,7 @@ cluster_set_report <- function(clusterset_object=NULL,
   
   # This function are used but are enclosed in the markdown
   # So I force the system to know we are using it.
-  print_msg("This function is deprecated. Use scigenex_report() please.", msg_type = "WARNING")
+  print_msg("This function is deprecated. Use gm_report() please.", msg_type = "WARNING")
   
   tmp_fun <- DT::datatable
   tmp_fun <- Seurat::AddModuleScore 
@@ -95,7 +95,7 @@ cluster_set_report <- function(clusterset_object=NULL,
     }
     
   }else{
-    file_path <- paste0(tempfile(pattern="scigenex_report"), ".html")
+    file_path <- paste0(tempfile(pattern="gm_report"), ".html")
     dir.create(dirname(file_path), showWarnings = FALSE, recursive = TRUE)
   }
   

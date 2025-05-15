@@ -1,5 +1,5 @@
 #====================================================================
-# Create a report (v2) for scigenex::clusterSet and Seurat object 
+# Create a report (v2) for a scigenex::clusterSet and Seurat object 
 #====================================================================
 #' @title Create a report from a ClusterSet and Seurat objects
 #' @description
@@ -44,7 +44,7 @@
 #' set_verbosity(3)
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' load_example_dataset('7871581/files/pbmc3k_medium')
-#' scigenex_report(pbmc3k_medium_clusters[1:3,], 
+#' gm_report(pbmc3k_medium_clusters[1:3,], 
 #'                 pbmc3k_medium, 
 #'                 smp_species="Homo_sapiens", 
 #'                 smp_region="total", 
@@ -54,7 +54,7 @@
 #' set_verbosity(3)
 #' load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 #' load_example_dataset('7870305/files/lymph_node_tiny_2')
-#' scigenex_report(lymph_node_tiny_clusters_2[1:4,], 
+#' gm_report(lymph_node_tiny_clusters_2[1:4,], 
 #'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
@@ -93,7 +93,7 @@
 #' @importFrom GOSemSim godata
 #' @importFrom htmlwidgets JS
 #' @export
-scigenex_report <- function(cluster_set = NULL,
+gm_report <- function(cluster_set = NULL,
                             seurat_object=NULL,
                             seurat_assay=NULL,
                             seurat_layer=NULL,
@@ -102,7 +102,7 @@ scigenex_report <- function(cluster_set = NULL,
                             report_subtitle = "An example experiment",
                             report_author = "Undefined",
                             report_date = format(Sys.time(), '%d %B %Y'),
-                            out_dir = file.path(fs::path_home(), "scigenex_book"),
+                            out_dir = file.path(fs::path_home(), "gm_book"),
                             experimenters=data.frame(),
                             workflow_params=data.frame(),
                             bioc_org_db=NULL,
