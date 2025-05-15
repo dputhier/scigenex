@@ -142,7 +142,7 @@ gene_clustering <- function(object = NULL,
     
     print_msg("The walktrap algorithm has been selected.")
 
-    object <- call_walktrap_clusterset(object, step=walktrap_step)
+    object <- call_walktrap_clusterset(object, steps=walktrap_step)
     
     return(object)
     
