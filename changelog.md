@@ -1,11 +1,12 @@
 # Changelog
 
-
+* The clusterset_report() is deprecated. The gm_report() should be used instead.
 * The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !
 * The cluster are no more computed by default. use compute_centers().
 * The 'which_slot' argument of select_genes() has been replaced by 'layer'.
 * Select_genes() function now has an 'assay' argument. 
 * Suppressed some message in vignettes.
+* Add a rename argument to filter_cluster_size(), filter_nb_supporting_cells(), filter_by_dot_prod(), filter_cluster_sd().
 
 ## v1.6.1
 
