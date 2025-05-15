@@ -91,7 +91,7 @@ setClass(
 #' @description
 #' The show method of a ClusterSet.
 #' @param object A ClusterSet object.
-#' @export show
+#' @export
 #' @keywords internal
 setMethod("show", signature("ClusterSet"),
           function(object) {
@@ -150,7 +150,7 @@ nrow.ClusterSet <- function (x) {
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object.
-#' @export clust_names
+#' @export
 #' @keywords internal
 setGeneric("clust_names",
            function(x)
@@ -160,7 +160,7 @@ setGeneric("clust_names",
 #' @description
 #' The names of the gene clusters stored in the ClusterSet object.
 #' @param x The ClusterSet object
-#' @export clust_names
+#' @export
 #' @examples
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' clust_names(pbmc3k_medium_clusters)
@@ -187,7 +187,7 @@ setMethod("dim", signature(x = "ClusterSet"),
 #' @description
 #' The column names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @export col_names
+#' @export
 #' @keywords internal
 setGeneric(
   name = "col_names",
@@ -202,7 +202,7 @@ setGeneric(
 #' @examples
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' col_names(pbmc3k_medium_clusters)
-#' @export col_names
+#' @export
 setMethod(
   f = "col_names",
   signature = "ClusterSet",
@@ -216,7 +216,7 @@ setMethod(
 #' @description
 #' The row names of a ClusterSet object.
 #' @param x The ClusterSet object
-#' @export row_names
+#' @export
 #' @keywords internal
 setGeneric("row_names",
            function(x)
@@ -230,7 +230,7 @@ setGeneric("row_names",
 #' @examples
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' row_names(pbmc3k_medium_clusters)
-#' @export row_names
+#' @export
 setMethod("row_names", "ClusterSet",
           function(x)
             rownames(x@data))
@@ -377,7 +377,7 @@ setMethod("[", signature(x = "ClusterSet"),
 #' @description
 #' The number of clusters in a ClusterSet object.
 #' @param x The ClusterSet object
-#' @export nclust
+#' @export
 #' @examples
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' n_clust <- nclust(pbmc3k_medium_clusters)
@@ -392,7 +392,7 @@ setGeneric("nclust",
 #' @description
 #' The number of clusters in a ClusterSet object.
 #' @param x The ClusterSet object
-#' @export nclust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -407,7 +407,7 @@ setMethod("nclust", signature("ClusterSet"),
 #' @description
 #' The sizes of the clusters stored in a ClusterSet object.
 #' @param x A ClusterSet object.
-#' @export clust_size
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -436,7 +436,7 @@ setMethod("clust_size", signature("ClusterSet"),
 #' @description
 #' Extract centers from a ClusterSet object.
 #' @param x A ClusterSet object.
-#' @export centers
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -450,7 +450,7 @@ setGeneric("centers",
 #' @description
 #' Extract centers from a ClusterSet object.
 #' @param x A ClusterSet object.
-#' @export centers
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -475,7 +475,7 @@ setMethod("centers", signature("ClusterSet"),
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' g_clust <- gene_cluster(pbmc3k_medium_clusters)
-#' @export gene_cluster
+#' @export
 #' @keywords internal
 setGeneric("gene_cluster",
            function(object,
@@ -495,7 +495,7 @@ setGeneric("gene_cluster",
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' g_clust <- gene_cluster(pbmc3k_medium_clusters)
-#' @export gene_cluster
+#' @export
 setMethod("gene_cluster", signature("ClusterSet"),
           function(object,
                    cluster = 0,
@@ -575,7 +575,7 @@ setMethod("gene_cluster", signature("ClusterSet"),
 #' @param x The gene to be searched;
 #' @param table The ClusterSet object.
 #' @keywords internal
-#' @export `%in%`
+#' @export
 setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, table) {
   x %in% names(gene_cluster(table))
 })
@@ -585,7 +585,7 @@ setMethod("%in%", signature(x = "character", table = "ClusterSet"), function(x, 
 #' @description Which clusters contain a set of genes.
 #' @param object a ClusterSet object.
 #' @param genes The genes to be searched in the ClusterSet.
-#' @export which_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -600,7 +600,7 @@ setGeneric("which_clust",
 #' @description Which clusters contain a set of genes.
 #' @param object a ClusterSet object.
 #' @param genes The genes to be searched in the ClusterSet.
-#' @export which_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -622,7 +622,7 @@ setMethod("which_clust",
 #' @description Search gene module using a regular expression.
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
-#' @export grep_clust
+#' @export
 #' @param as_list Whether to return the result as a list.
 #' @examples
 #' # load a dataset
@@ -641,7 +641,7 @@ setGeneric("grep_clust",
 #' @param object a ClusterSet object.
 #' @param reg_exp The regular expression indicating the genes to be found.
 #' @param as_list Whether to return the result as a list.
-#' @export grep_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -675,7 +675,7 @@ setMethod("grep_clust",
 #' @description Rename the gene clusters of a ClusterSet.
 #' @param object a ClusterSet object.
 #' @param new_names The new names for the clusters.
-#' @export rename_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -689,7 +689,7 @@ setGeneric("rename_clust",
 #' @description Rename the gene clusters of a ClusterSet.
 #' @param object a ClusterSet object.
 #' @param new_names The new names for the clusters.
-#' @export rename_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -742,7 +742,7 @@ setMethod("rename_clust",
 #' @param object The ClusterSet object.
 #' @param file_path The file path.
 #' @keywords internal
-#' @export cluster_set_to_xls
+#' @export
 setGeneric("cluster_set_to_xls",
            function(object,
                     file_path = NULL)
@@ -761,7 +761,7 @@ setGeneric("cluster_set_to_xls",
 #' tp_dir <- tempdir()
 #' dir.create(tp_dir, showWarnings = FALSE)
 #' cluster_set_to_xls(pbmc3k_medium_clusters, file.path(tp_dir, "test.xls"))
-#' @export cluster_set_to_xls
+#' @export
 setMethod("cluster_set_to_xls",
           signature("ClusterSet"),
           function(object,
@@ -809,7 +809,7 @@ setMethod("cluster_set_to_xls",
 #' @description Reorder the clusters from a ClusterSet based on their names
 #' @param object a ClusterSet object.
 #' @param new_order The names from the clusterSet in an alternative order.
-#' @export reorder_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -825,7 +825,7 @@ setGeneric("reorder_clust",
 #' @description Reorder the clusters from a ClusterSet based on their names
 #' @param object a ClusterSet object.
 #' @param new_order The names from the clusterSet in an alternative order.
-#' @export reorder_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -884,7 +884,7 @@ setMethod("reorder_clust",
 #' @param val if FALSE, a vector containing the (integer) indices of the matches determined
 #' by grep is returned, and if TRUE, a vector containing the matching elements themselves
 #' is returned.
-#' @export grep_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -903,7 +903,7 @@ setGeneric("grep_clust",
 #' @param val if FALSE, a vector containing the (integer) indices of the matches determined
 #' by grep is returned, and if TRUE, a vector containing the matching elements themselves
 #' is returned.
-#' @export grep_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -938,7 +938,7 @@ setMethod("grep_clust",
 #' Typically the result of the Seurat::Ident() function.
 #' @param nbcell The number of cell to select.
 #' @param seed A seed for subsampling.
-#' @export subsample_by_ident
+#' @export
 #' @examples
 #' # load a dataset
 #' @keywords internal
@@ -957,7 +957,7 @@ setGeneric("subsample_by_ident",
 #' Typically the result of the Seurat::Ident() function.
 #' @param nbcell The number of cell to select.
 #' @param seed A seed for subsampling.
-#' @export subsample_by_ident
+#' @export
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -1034,7 +1034,7 @@ setMethod("subsample_by_ident",
 #' @param path A directory to store the files.
 #' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
 #' @param write_cname Whether to add the cluster name. The cluster name is written as a prefix of each line in file(s) and followed by two pipes ("||"). 
-#' @export write_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -1061,7 +1061,7 @@ setGeneric("write_clust",
 #' @param path A directory to store the files.
 #' @param single_file Logical. Whether to write all clusters in a single file (one cluster / line). Need to change the default separator (e.g to ","). The file_prefix is used as file name.
 #' @param write_cname Whether to add the cluster name. The cluster name is written as a prefix of each line in file(s) and followed by two pipes ("||"). 
-#' @export write_clust
+#' @export
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -1143,7 +1143,7 @@ setMethod("write_clust",
 #' @param set A list to compare clusters to.
 #' @param as_list Return a list of clusters not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_intersect
+#' @export
 #' @keywords internal
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -1174,7 +1174,7 @@ setGeneric("top_by_intersect",
 #' @param set A list to compare clusters to.
 #' @param as_list Return a list of clusters not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_intersect
+#' @export
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -1219,7 +1219,7 @@ setMethod("top_by_intersect",
 #' @param regexp A regular expression
 #' @param as_list Return a list of clusters not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_grep
+#' @export
 #' @keywords internal
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -1249,7 +1249,7 @@ setGeneric("top_by_grep",
 #' @param regexp A regular expression
 #' @param as_list Return a list of clusters not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_grep
+#' @export
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -1269,7 +1269,7 @@ setMethod("top_by_grep",
               print_msg("Please provide a regexp ('regexp' argument)", 
                         msg_type = "STOP")
             
-            fun_grep <- function(x, regexp, val=TRUE, perl=TRUE) grep(regexp, x, val=val, perl=perl)
+            fun_grep <- function(x, regexp, val=TRUE, perl=TRUE) grep(regexp, x, value=val, perl=perl)
             top_gn <- lapply(object@gene_clusters, fun_grep, regexp, val=TRUE, perl=TRUE)
             
             if(as_list){
@@ -1289,7 +1289,7 @@ setMethod("top_by_grep",
 #' @description
 #' Compute centers of gene modules (e.g mean profiles)
 #' @param object A \code{ClusterSet} object.
-#' @export compute_centers
+#' @export
 #' @keywords internal
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -1308,7 +1308,7 @@ setGeneric("compute_centers",
 #' @description
 #' Compute centers of gene modules (e.g mean profiles)
 #' @param object A \code{ClusterSet} object.
-#' @export compute_centers
+#' @export
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
