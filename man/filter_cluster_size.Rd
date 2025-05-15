@@ -4,12 +4,14 @@
 \alias{filter_cluster_size}
 \title{Filter out gene clusters containing few genes}
 \usage{
-filter_cluster_size(object = NULL, min_cluster_size = 5)
+filter_cluster_size(object = NULL, min_cluster_size = 5, rename = FALSE)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
 \item{min_cluster_size}{An integer indicating the minimum size for a clusters to be kept.}
+
+\item{rename}{Should cluster be renamed.}
 }
 \value{
 A ClusterSet object where clusters not passing the filter have been removed.
