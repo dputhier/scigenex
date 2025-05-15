@@ -10,7 +10,7 @@ plot_multi_profiles(
   color_cluster = NULL,
   size_text_y = 5,
   size_label = 2,
-  legend_name = "Cell\\ntype",
+  legend_name = "Gene\\nModule",
   nb_column = NULL,
   center = FALSE
 )

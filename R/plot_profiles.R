@@ -196,7 +196,7 @@ plot_multi_profiles <- function(data = NULL,
                                 color_cluster = NULL,
                                 size_text_y = 5,
                                 size_label = 2,
-                                legend_name="Cell\ntype",
+                                legend_name="Gene\nModule",
                                 nb_column=NULL,
                                 center=FALSE) {
   
@@ -259,7 +259,7 @@ plot_multi_profiles <- function(data = NULL,
   centers <- centers[, names(ident), drop=FALSE]
   
   centers_summarized_by_cell_type <- matrix(NA,
-                                            nr=nrow(centers),
+                                            nrow=nrow(centers),
                                             ncol=length(levels(ident)))
   for(rown in 1:nrow(centers)){
     centers_summarized_by_cell_type[rown, ] <- tapply(centers[rown,], ident, mean)
@@ -277,6 +277,7 @@ plot_multi_profiles <- function(data = NULL,
   m$Cell_type <- factor(m$Cell_type, levels=levels(ident), ordered = TRUE)
   m$Cluster <-   factor(m$Cluster, levels=unique(m$Cluster), ordered = TRUE)
   
+  Cluster <- NULL
   ggplot2::ggplot(data= m,
                   ggplot2::aes(
                     x = .data[["Cell_type"]],
