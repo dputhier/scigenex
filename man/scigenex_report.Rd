@@ -2,7 +2,7 @@
 % Please edit documentation in R/scigenex_report.R
 \name{scigenex_report}
 \alias{scigenex_report}
-\title{Create a report from a ClusterSet experiment.}
+\title{Create a report from a ClusterSet and Seurat objects}
 \usage{
 scigenex_report(
   cluster_set = NULL,
@@ -10,7 +10,7 @@ scigenex_report(
   seurat_assay = NULL,
   seurat_layer = NULL,
   is_spatial_exp = FALSE,
-  report_title = "Scigenex gene module report",
+  report_title = "Gene module report",
   report_subtitle = "An example experiment",
   report_author = "Undefined",
   report_date = format(Sys.time(), "\%d \%B \%Y"),
@@ -25,6 +25,8 @@ scigenex_report(
   smp_region = NULL,
   rmd_dir = file.path(system.file(package = "scigenex"), "rmarkdown"),
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
+  plot_profiles_params = list(),
+  plot_multi_profiles_params = list(legend_name = "Gene\\nModule"),
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
@@ -36,10 +38,11 @@ scigenex_report(
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot",
-    "exp_spatial_dist", "exp_spatial_dimplot", "module_spatial", "module_heatmap",
-    "module_iheatmap", "module_umap", "module_violin", "module_cell_annot_IA",
-    "module_term_network", "module_term_barplot_1", "module_term_barplot_2",
-    "module_term_network_circ", "term_table"),
+    "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
+    "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
+    "module_violin", "module_cell_annot_IA", "module_term_network",
+    "module_term_barplot_1", "module_term_barplot_2", "module_term_network_circ",
+    "term_table"),
   quiet = FALSE
 )
 }
@@ -83,7 +86,27 @@ rg.Dm.eg.db, org.Dr.eg.db, org.Sc.sgd.db, org.Ce.eg.db...). If NULL, module anal
 
 \item{rmd_dir}{A path where to find the templates for creating the book.}
 
+\item{add_module_score_params}{Some parameters for Seurat::add_module_score() function.}
+
+\item{plot_profiles_params}{Some parameters for plot_profiles() function}
+
+\item{plot_multi_profiles_params}{Some parameters for plot_profiles_multi() function.}
+
+\item{FeaturePlot_params}{Some parameters for Seurat::FeaturePlot() function.}
+
+\item{SpatialFeaturePlot_params}{Some parameters for Seurat::SpatialFeaturePlot() function.}
+
+\item{SpatialDimPlot_params}{Some parameters for Seurat::SpatialDimPlot() function.}
+
+\item{plot_ggheatmap_params}{Some parameters for plot_ggheatmap() function.}
+
+\item{plot_heatmap_params}{Some parameters for plot_heatmap() function.}
+
+\item{cnetplot_params}{Some parameters for enrichplot:::cnetplot.enrichResult() function.}
+
 \item{rm_tmpdir}{Whether to delete temporary directory.}
+
+\item{section}{Which section to activate/deactivate.}
 
 \item{quiet}{Whether to run bookdown::render_book() quietly.}
 }
@@ -95,7 +118,6 @@ Create a report from a ClusterSet experiment and Seurat object. If is_spatial_ex
 The function can call Gemini IA to try to guess cell type and functions associated to each gene module.
 }
 \examples{
-# TODO /Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown
 library(scigenex)
 library(Seurat)
 set_verbosity(3)
@@ -107,20 +129,18 @@ scigenex_report(pbmc3k_medium_clusters[1:3,],
                 smp_region="total", 
                 smp_organ="blood", 
                 bioc_org_db="org.Hs.eg.db",
-                smp_stage="adult", rmd_dir="/Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown", 
-                api_key="AIzaSyDj2dA0w4LoXi6LhXgf62vEOkuOUnpONbY")
+                api_key=NULL)
 set_verbosity(3)
 load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 load_example_dataset('7870305/files/lymph_node_tiny_2')
-scigenex_report(lymph_node_tiny_clusters_2[1:2,], 
+scigenex_report(lymph_node_tiny_clusters_2[1:4,], 
                 lymph_node_tiny_2, 
                 smp_species="Homo sapiens", 
                 smp_region="total", 
                 smp_organ="lymph node", 
                 smp_stage="adult", 
                 bioc_org_db="org.Hs.eg.db",
-                rmd_dir="/Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown", 
-                api_key="AIzaSyDj2dA0w4LoXi6LhXgf62vEOkuOUnpONbY",
+                api_key=NULL,
                 is_spatial_exp=TRUE,
                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version

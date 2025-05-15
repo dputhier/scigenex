@@ -1,7 +1,7 @@
-#===========================================================
-# Create a report (v2) for scigenex 
-#===========================================================
-#' @title Create a report from a ClusterSet experiment.
+#====================================================================
+# Create a report (v2) for scigenex::clusterSet and Seurat object 
+#====================================================================
+#' @title Create a report from a ClusterSet and Seurat objects
 #' @description
 #' Create a report from a ClusterSet experiment and Seurat object. If is_spatial_exp argument is set to TRUE Spatial diagram will be added. 
 #' The function can call Gemini IA to try to guess cell type and functions associated to each gene module.
@@ -25,11 +25,20 @@
 #' @param smp_organ The sample organ (free text). E.g. 'tonsil'.
 #' @param smp_region A region in the organ. E.g. 'whole' (which will merge as 'whole tonsil').
 #' @param rmd_dir A path where to find the templates for creating the book.
+#' @param add_module_score_params Some parameters for Seurat::add_module_score() function.
+#' @param plot_profiles_params Some parameters for plot_profiles() function
+#' @param plot_multi_profiles_params Some parameters for plot_profiles_multi() function.
+#' @param FeaturePlot_params Some parameters for Seurat::FeaturePlot() function.
+#' @param SpatialFeaturePlot_params Some parameters for Seurat::SpatialFeaturePlot() function.
+#' @param SpatialDimPlot_params Some parameters for Seurat::SpatialDimPlot() function.
+#' @param plot_ggheatmap_params Some parameters for plot_ggheatmap() function.
+#' @param plot_heatmap_params Some parameters for plot_heatmap() function.
+#' @param cnetplot_params Some parameters for enrichplot:::cnetplot.enrichResult() function.
 #' @param rm_tmpdir Whether to delete temporary directory.
+#' @param section Which section to activate/deactivate.
 #' @param quiet Whether to run bookdown::render_book() quietly.
 #' @return No return value. A report is generated and written to the specified output directory.
 #' @examples
-#' # TODO /Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown
 #' library(scigenex)
 #' library(Seurat)
 #' set_verbosity(3)
@@ -41,20 +50,18 @@
 #'                 smp_region="total", 
 #'                 smp_organ="blood", 
 #'                 bioc_org_db="org.Hs.eg.db",
-#'                 smp_stage="adult", rmd_dir="/Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown", 
-#'                 api_key="AIzaSyDj2dA0w4LoXi6LhXgf62vEOkuOUnpONbY")
+#'                 api_key=NULL)
 #' set_verbosity(3)
 #' load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 #' load_example_dataset('7870305/files/lymph_node_tiny_2')
-#' scigenex_report(lymph_node_tiny_clusters_2[1:2,], 
+#' scigenex_report(lymph_node_tiny_clusters_2[1:4,], 
 #'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
 #'                 smp_organ="lymph node", 
 #'                 smp_stage="adult", 
 #'                 bioc_org_db="org.Hs.eg.db",
-#'                 rmd_dir="/Users/puthier/Documents/git/project_dev/scigenex/inst/rmarkdown", 
-#'                 api_key="AIzaSyDj2dA0w4LoXi6LhXgf62vEOkuOUnpONbY",
+#'                 api_key=NULL,
 #'                 is_spatial_exp=TRUE,
 #'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
 #'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
@@ -91,7 +98,7 @@ scigenex_report <- function(cluster_set = NULL,
                             seurat_assay=NULL,
                             seurat_layer=NULL,
                             is_spatial_exp=FALSE,
-                            report_title = "Scigenex gene module report",
+                            report_title = "Gene module report",
                             report_subtitle = "An example experiment",
                             report_author = "Undefined",
                             report_date = format(Sys.time(), '%d %B %Y'),
@@ -110,6 +117,8 @@ scigenex_report <- function(cluster_set = NULL,
                                                          ctrl = 100,
                                                          name = "MOD_",
                                                          slot = "data"),
+                            plot_profiles_params=list(),
+                            plot_multi_profiles_params=list(legend_name="Gene\nModule"),
                             FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu")),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
                             SpatialDimPlot_params=list(pt.size.factor = 1.7),
@@ -136,6 +145,8 @@ scigenex_report <- function(cluster_set = NULL,
                                       "exp_dimplot",
                                       "exp_spatial_dist",
                                       "exp_spatial_dimplot",
+                                      "exp_mean_1",
+                                      "exp_mean_2",
                                       "module_spatial",
                                       "module_heatmap",
                                       "module_iheatmap",
@@ -150,8 +161,6 @@ scigenex_report <- function(cluster_set = NULL,
                             quiet=FALSE) {
   
   verb_level <- get_verbosity()
-  
-  if(!require(dplyr, quietly = TRUE)) print_msg("Dplyr is required", msg_type = "STOP")
   
   if("module_cell_annot_IA" %in% section){
     if(is.null(smp_species) | is.null(smp_stage) | is.null(smp_organ) | is.null(smp_region))
@@ -183,7 +192,7 @@ scigenex_report <- function(cluster_set = NULL,
       library(bioc_org_db, character.only = TRUE)
     }
   }
-  
+
   if(!is_spatial_exp){
     print_msg("This is not a ST experiment...", msg_type = "INFO")
     print_msg("Canceling ST reporting module.", msg_type = "INFO")
