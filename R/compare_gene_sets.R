@@ -413,6 +413,7 @@ cmp_to_a_list <- function(object=NULL,
                                                         clust_names(object))),
                               ordered = TRUE)
 
+        gene_set <- size <- source <- NULL
         p1 <- ggplot(df, aes(x=gene_set, 
                              y=size, 
                              fill = source)) +
