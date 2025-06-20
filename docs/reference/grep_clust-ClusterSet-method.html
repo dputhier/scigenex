@@ -18,7 +18,7 @@ Search genes within ClusterSet using a REGEXP."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -62,10 +62,10 @@ Search genes within ClusterSet using a REGEXP."><!-- mathjax --><script src="htt
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="grep_clust.html">grep_clust</a></span><span class="op">(</span><span class="va">object</span>, regexp <span class="op">=</span> <span class="cn">NULL</span>, val <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">grep_clust</span><span class="op">(</span><span class="va">object</span>, regexp <span class="op">=</span> <span class="cn">NULL</span>, val <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="grep_clust.html">grep_clust</a></span><span class="op">(</span><span class="va">object</span>, regexp <span class="op">=</span> <span class="cn">NULL</span>, val <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">grep_clust</span><span class="op">(</span><span class="va">object</span>, regexp <span class="op">=</span> <span class="cn">NULL</span>, val <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -100,12 +100,13 @@ is returned.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># load a dataset</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
-<span class="r-in"><span><span class="va">hit</span> <span class="op">&lt;-</span> <span class="fu"><a href="grep_clust.html">grep_clust</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, reg_exp<span class="op">=</span><span class="st">"^T.*[0-9]$"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">hit</span> <span class="op">&lt;-</span> <span class="fu">grep_clust</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, reg_exp<span class="op">=</span><span class="st">"^T.*[0-9]$"</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in grep_clust(pbmc3k_medium_clusters, reg_exp = "^T.*[0-9]$"):</span> unused argument (reg_exp = "^T.*[0-9]$")</span>
 <span class="r-in"><span><span class="co"># load a dataset</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
-<span class="r-in"><span><span class="fu"><a href="grep_clust.html">grep_clust</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, <span class="st">"^CD"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">grep_clust</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, <span class="st">"^CD"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Checking ClusterSet format. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

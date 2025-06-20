@@ -18,7 +18,7 @@ Display cluster enrichments for gene GO terms."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -62,7 +62,7 @@ Display cluster enrichments for gene GO terms."><!-- mathjax --><script src="htt
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="plot_clust_enrichments.html">plot_clust_enrichments</a></span><span class="op">(</span></span>
+<span><span class="fu">plot_clust_enrichments</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  stat_shown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"qvalue"</span>, <span class="st">"p.adjust"</span>, <span class="st">"pvalue"</span><span class="op">)</span>,</span>
 <span>  nb_go_term <span class="op">=</span> <span class="fl">6</span>,</span>
@@ -114,17 +114,20 @@ Display cluster enrichments for gene GO terms."><!-- mathjax --><script src="htt
     <h2>Value</h2>
     <p>A ggplot object displaying the cluster enrichments for the GO terms.</p>
     </div>
-    <div id="see-also">
-    <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="enrich_go.html">enrich_go</a></code>
-<code><a href="colors_for_gradient.html">colors_for_gradient</a></code></p></div>
-    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"8028226/files/pbmc3k_medium_clusters_enr_sub"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 8028226/files/pbmc3k_medium_clusters_enr_sub has been loaded. </span>
-<span class="r-in"><span><span class="fu"><a href="plot_clust_enrichments.html">plot_clust_enrichments</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_enr_sub</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_clust_enrichments</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_enr_sub</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Using qvalue as ordering statistic </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Checking object format </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Checking ClusterSet format. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Extracting and formating data </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Argument nb_go_term = 6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Merging results </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Melting... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- DEBUG :  Running ggplot... </span>
 <span class="r-plt img"><img src="plot_clust_enrichments-ClusterSet-method-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

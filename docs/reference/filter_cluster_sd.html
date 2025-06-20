@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -59,7 +59,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_cluster_sd</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span>, min_sd <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_cluster_sd</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span>, min_sd <span class="op">=</span> <span class="fl">0.2</span>, rename <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,6 +73,10 @@
 <dt id="arg-min-sd">min_sd<a class="anchor" aria-label="anchor" href="#arg-min-sd"></a></dt>
 <dd><p>An integer indicating the minimum standard deviation for a clusters to be kept.</p></dd>
 
+
+<dt id="arg-rename">rename<a class="anchor" aria-label="anchor" href="#arg-rename"></a></dt>
+<dd><p>Should cluster be renamed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -83,15 +87,16 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7871581/files/pbmc3k_medium_clusters"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
-<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span>  </span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">cluster_stats</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span>  </span></span>
 <span class="r-in"><span><span class="fu"><a href="plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="filter_cluster_sd-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu"><a href="plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="va">df</span>, highlight<span class="op">=</span><span class="va">df</span><span class="op">$</span><span class="va">sd_total</span> <span class="op">&gt;</span> <span class="fl">0.3</span><span class="op">)</span> </span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> |-- STOP : The number of clusters to highlight should have same length as nrow(x).</span>
-<span class="r-in"><span><span class="va">pbmc3k_medium_clusters_sub</span> <span class="op">&lt;-</span> <span class="fu">filter_cluster_sd</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, min_sd<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sum_clust' not found</span>
-<span class="r-in"><span><span class="fu"><a href="plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu"><a href="cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_sub</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'object' in selecting a method for function 'cluster_stats': object 'pbmc3k_medium_clusters_sub' not found</span>
+<span class="r-in"><span><span class="fu"><a href="plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="va">df</span>, highlight<span class="op">=</span><span class="va">df</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.3</span><span class="op">)</span> </span></span>
+<span class="r-plt img"><img src="filter_cluster_sd-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">pbmc3k_medium_clusters_sub</span> <span class="op">&lt;-</span> <span class="fu">filter_cluster_sd</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, min_sd<span class="op">=</span><span class="fl">0.3</span>, rename<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  2  clusters with std dev lower than 0.3  will be filtered out. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of clusters left 13 </span>
+<span class="r-in"><span><span class="fu"><a href="plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu">cluster_stats</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_sub</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="filter_cluster_sd-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

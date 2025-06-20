@@ -1,4 +1,4 @@
-DESCRIPTION Package: scigenex
+Package: scigenex
 Type: Package
 Title: The scigenex package (Single-Cell Informative GENe Explorer)
 Version: 2.0.0
@@ -12,7 +12,7 @@ Description: The scigenex package (Single-Cell Informative GENe Explorer) propos
 biocViews: Clustering, Classification, Transcriptomics, SingleCell, ReportWriting, GeneRegulation
 License: GPL (>= 3)  + file LICENSE
 VignetteBuilder: knitr
-Suggests: covr, RColorBrewer, png, RCurl, clustermole, SeuratData, tidyr, webshot, GSEABase, GSVA, singscore
+Suggests: covr, RColorBrewer, png, RCurl, clustermole, SeuratData, tidyr, webshot, GSEABase, GSVA, singscore, org.Hs.eg.db
 LazyLoad: yes
 LazyDataCompression: xz
 URL: https://github.com/dputhier/scigenex

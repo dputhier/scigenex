@@ -18,7 +18,7 @@ certain percentage of genes present in this gene cluster."><!-- mathjax --><scri
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -64,7 +64,8 @@ certain percentage of genes present in this gene cluster.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_nb_supporting_cells</span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  min_nb_supporting_cell <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  min_pct_gene_expressed <span class="op">=</span> <span class="fl">50</span></span>
+<span>  min_pct_gene_expressed <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  rename <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,6 +84,10 @@ A cell supports a cluster if it expresses at least min_pct_gene_expressed % of t
 
 <dt id="arg-min-pct-gene-expressed">min_pct_gene_expressed<a class="anchor" aria-label="anchor" href="#arg-min-pct-gene-expressed"></a></dt>
 <dd><p>See min_nb_supporting_cell argument.</p></dd>
+
+
+<dt id="arg-rename">rename<a class="anchor" aria-label="anchor" href="#arg-rename"></a></dt>
+<dd><p>Should cluster be renamed.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
                         <h4 data-toc-skip class="author">Julie Bavais
 &amp; Denis Puthier</h4>
             
-            <h4 data-toc-skip class="date">2025-04-23</h4>
+            <h4 data-toc-skip class="date">2025-06-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dputhier/scigenex/blob/HEAD/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -179,7 +179,7 @@ partition the dataset into gene modules.</p>
 <span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_genes.html">select_genes</a></span><span class="op">(</span><span class="va">pbmc3k</span>,</span>
 <span>                              k <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>                              distance_method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
-<span>                              which_slot <span class="op">=</span> <span class="st">"data"</span>,</span>
+<span>                              layer <span class="op">=</span> <span class="st">"data"</span>,</span>
 <span>                              row_sum<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run MCL</span></span>
@@ -196,7 +196,7 @@ object that is intented to store gene modules.</p>
 <code class="sourceCode R"><span><span class="va">pbmc_scigenex</span></span></code></pre></div>
 <pre><code><span><span class="co">##      An object of class ClusterSet</span></span>
 <span><span class="co">##      Name: 89MExU6mw3 </span></span>
-<span><span class="co">##      Memory used:  47365880 </span></span>
+<span><span class="co">##      Memory used:  45515040 </span></span>
 <span><span class="co">##      Number of cells:  2643 </span></span>
 <span><span class="co">##      Number of informative genes:  1793 </span></span>
 <span><span class="co">##      Number of gene clusters:  156 </span></span>
@@ -218,7 +218,7 @@ object that is intented to store gene modules.</p>
 <span><span class="co">##               *  seed  =  123 </span></span>
 <span><span class="co">##               *  keep_nn  =  FALSE </span></span>
 <span><span class="co">##               *  k_graph  =  5 </span></span>
-<span><span class="co">##               *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpw6Yzfc </span></span>
+<span><span class="co">##               *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpmKTPrP </span></span>
 <span><span class="co">##               *  name  =  89MExU6mw3 </span></span>
 <span><span class="co">##               *  inflation  =  2 </span></span>
 <span><span class="co">##               *  algorithm  =  mcl</span></span></code></pre>
@@ -227,20 +227,21 @@ objects.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/show_methods.html">show_methods</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "["                        "%in%"                    </span></span>
-<span><span class="co">##  [3] "clust_names"              "clust_size"              </span></span>
-<span><span class="co">##  [5] "cluster_set_to_xls"       "cluster_stats"           </span></span>
-<span><span class="co">##  [7] "col_names"                "dim"                     </span></span>
-<span><span class="co">##  [9] "enrich_go"                "gene_cluster"            </span></span>
-<span><span class="co">## [11] "grep_clust"               "module_quality_scores"   </span></span>
-<span><span class="co">## [13] "nclust"                   "plot_clust_enrichments"  </span></span>
-<span><span class="co">## [15] "plot_ggheatmap"           "plot_markers_to_clusters"</span></span>
-<span><span class="co">## [17] "rename_clust"             "reorder_clust"           </span></span>
-<span><span class="co">## [19] "reorder_genes"            "row_names"               </span></span>
-<span><span class="co">## [21] "show"                     "subsample_by_ident"      </span></span>
-<span><span class="co">## [23] "top_by_go"                "top_by_grep"             </span></span>
-<span><span class="co">## [25] "top_by_intersect"         "top_genes"               </span></span>
-<span><span class="co">## [27] "viz_enrich"               "which_clust"             </span></span>
-<span><span class="co">## [29] "write_clust"</span></span></code></pre>
+<span><span class="co">##  [3] "centers"                  "clust_names"             </span></span>
+<span><span class="co">##  [5] "clust_size"               "cluster_set_to_xls"      </span></span>
+<span><span class="co">##  [7] "cluster_stats"            "col_names"               </span></span>
+<span><span class="co">##  [9] "compute_centers"          "dim"                     </span></span>
+<span><span class="co">## [11] "enrich_go"                "gene_cluster"            </span></span>
+<span><span class="co">## [13] "grep_clust"               "module_quality_scores"   </span></span>
+<span><span class="co">## [15] "nclust"                   "plot_clust_enrichments"  </span></span>
+<span><span class="co">## [17] "plot_ggheatmap"           "plot_markers_to_clusters"</span></span>
+<span><span class="co">## [19] "rename_clust"             "reorder_clust"           </span></span>
+<span><span class="co">## [21] "reorder_genes"            "row_names"               </span></span>
+<span><span class="co">## [23] "show"                     "subsample_by_ident"      </span></span>
+<span><span class="co">## [25] "top_by_go"                "top_by_grep"             </span></span>
+<span><span class="co">## [27] "top_by_intersect"         "top_genes"               </span></span>
+<span><span class="co">## [29] "viz_enrich"               "which_clust"             </span></span>
+<span><span class="co">## [31] "write_clust"</span></span></code></pre>
 <p>The current object contains 1793 informative genes, 2643 samples and
 156 gene modules.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -250,7 +251,7 @@ objects.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 2643</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/nclust.html">nclust</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">nclust</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 156</span></span></code></pre>
 <p>At this stage, several modules need to be filtered, as many of them
 may be singletons. Interestingly, the <code>ClusterSet</code> class
@@ -261,196 +262,49 @@ names. As an example, we can simply store gene modules whose size
 (*i.e. number of genes) is greater than 7 using the following code. The
 result is an object containing gene modules 29.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fu"><a href="../reference/clust_size.html">clust_size</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">7</span>, <span class="op">]</span></span>
-<span><span class="fu"><a href="../reference/nclust.html">nclust</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fu">clust_size</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">7</span>, <span class="op">]</span></span>
+<span><span class="fu">nclust</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 29</span></span></code></pre>
 <p>It may also be important to filter out gene based on dispersion.
 Several parameters can be computed for each cluster using the
-<code><a href="../reference/cluster_stats.html">cluster_stats()</a></code>function.</p>
+<code>cluster_stats()</code>function.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu"><a href="../reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu">cluster_stats</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>                axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle<span class="op">=</span><span class="fl">45</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>                panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 29 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_col()`).</span></span></code></pre>
 <p><img src="usage_files/figure-html/plot_cluster_stats_1-1.png" width="700"></p>
 <p>Here we will select gene modules based on standard deviation (&gt;
 0.1) and rename the cluster (from 1 to the number of clusters):</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fu"><a href="../reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.1</span>, <span class="op">]</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rename_clust.html">rename_clust</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/nclust.html">nclust</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fu">cluster_stats</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.1</span>, <span class="op">]</span> </span>
+<span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu">rename_clust</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
+<span><span class="fu">nclust</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 13</span></span></code></pre>
 <p>Then we check the statistics again.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu"><a href="../reference/cluster_stats.html">cluster_stats</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_cluster_stats.html">plot_cluster_stats</a></span><span class="op">(</span><span class="fu">cluster_stats</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>                axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle<span class="op">=</span><span class="fl">45</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>                panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span>
-<span><span class="co">## Warning in mean.default(object@data[gene_clust[[pos]], ]): argument is not</span></span>
-<span><span class="co">## numeric or logical: returning NA</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 13 rows containing missing values or values outside the scale range</span></span>
-<span><span class="co">## (`geom_col()`).</span></span></code></pre>
 <p><img src="usage_files/figure-html/plot_cluster_stats-1.png" width="700"></p>
 <p>Clusters of genes are stored in the <code>gene_clusters</code> slot.
 One can access the gene names from a cluster using the
 <code><a href="../reference/get_genes.html">get_genes()</a></code> command. By default, all genes are
 returned.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract gene names from the 5th gene cluster</span></span>
 <span><span class="va">genes_module_5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_genes.html">get_genes</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, cluster <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">genes_module_5</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "TMEM40" "GP9"    "SDPR"   "PF4"    "GNG11"  "PPBP"</span></span></code></pre>
 <p>One can also access the gene to cluster mapping using
 <code><a href="../reference/get_genes.html">get_genes()</a></code>.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/gene_cluster.html">gene_cluster</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">gene_cluster</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   CST3 TYROBP   AIF1   LST1    LYZ    FTL </span></span>
 <span><span class="co">##      1      1      1      1      1      1</span></span></code></pre>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/gene_cluster.html">gene_cluster</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">gene_cluster</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## RP4-781K5.2        FNTB    C1orf198       SSFA2       ZGLP1        WBP5 </span></span>
 <span><span class="co">##          13          13          13          13          13          13</span></span></code></pre>
 </div>
@@ -464,17 +318,17 @@ returned.</p>
 time-consuming and require significant memory resources. A first
 alternative is to examine gene modules individually or a subset of
 modules. Gene modules can be visualized using the
-<code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> the <code><a href="../reference/plot_ggheatmap.html">plot_ggheatmap()</a></code> functions.
+<code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> the <code>plot_ggheatmap()</code> functions.
 The former is primarily intended to provide an interactive visualization
 based on the <code>iheatmapr</code> library, and allows easy browsing of
 results and zooming in on particular regions of the heatmap. This second
 solution leads to a diagram that is more easily customized, as it is
 based on the ggplot framework. Here, we use
-<code><a href="../reference/plot_ggheatmap.html">plot_ggheatmap()</a></code> to view the first 4 clusters. Note that
+<code>plot_ggheatmap()</code> to view the first 4 clusters. Note that
 here, we choose to order the columns/cells on the results of
 <code><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">Seurat::FindClusters</a></code>.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span>, </span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_ggheatmap</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span>, </span>
 <span>               use_top_genes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>               ident<span class="op">=</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cluster 1 to 4"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="usage_files/figure-html/plot_ggheatmap_1-1.png" width="700"></p>
@@ -483,23 +337,23 @@ here, we choose to order the columns/cells on the results of
 <h4 id="heatmap-of-representative-genes">Heatmap of representative genes<a class="anchor" aria-label="anchor" href="#heatmap-of-representative-genes"></a>
 </h4>
 <p>However, an alternative is to extract the most representative genes
-from each group. This can be achieved using the <code><a href="../reference/top_genes.html">top_genes()</a></code>
+from each group. This can be achieved using the <code>top_genes()</code>
 function. This function stores the identifiers of these representative
 genes in the <code>top_genes</code> slot of the <code>ClusterSet</code>
 object. The <code><a href="../reference/get_genes.html">get_genes()</a></code> function is used to access the
 <code>top_genes</code> slot.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu">top_genes</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
 <span><span class="va">genes_cl5_top</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_genes.html">get_genes</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, cluster <span class="op">=</span> <span class="fl">5</span>, top <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">genes_cl5_top</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "GP9"        "PF4"        "GNG11"      "AP001189.4" "SDPR"      </span></span>
 <span><span class="co">##  [6] "ITGA2B"     "PPBP"       "SPARC"      "TREML1"     "CLU"       </span></span>
 <span><span class="co">## [11] "LY6G6F"     "TMEM40"     "TUBB1"      "SEPT5"      "CA2"       </span></span>
 <span><span class="co">## [16] "CMTM5"      "HIST1H2AC"  "CD9"        "MYL9"       "GP1BA"</span></span></code></pre>
-<p>Both <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> and <code><a href="../reference/plot_ggheatmap.html">plot_ggheatmap()</a></code>
+<p>Both <code><a href="../reference/plot_heatmap.html">plot_heatmap()</a></code> and <code>plot_ggheatmap()</code>
 support the <code>use_top_genes</code>argument:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_ggheatmap</span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
 <span>               use_top_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>               ident<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"All clusters (top genes)"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>               <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -515,8 +369,8 @@ selected cells or groups, or over the whole dataset. However, it is
 generally advisable, when using all clusters, to restrict the analysis
 using <code>top_genes=TRUE</code>. Here we will also select a subset of
 cells from each cluster.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sub_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_by_ident.html">subsample_by_ident</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sub_clust</span> <span class="op">&lt;-</span> <span class="fu">subsample_by_ident</span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
 <span>                                        nbcell<span class="op">=</span><span class="fl">15</span>,</span>
 <span>                                        ident<span class="op">=</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span><span class="op">)</span> </span>
 <span>                                        </span>
@@ -533,9 +387,9 @@ cells from each cluster.</p>
 <p>On can use scigenex selected genes as input for PCA. One can expect
 some improvement regarding cell population resolution compare to
 original Seurat pipeline :</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Scaling data using genes from scigenex</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="../reference/row_names.html">row_names</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform principal component analysis</span></span>
 <span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -555,23 +409,23 @@ original Seurat pipeline :</p>
 <h3 id="exporting-modules">Exporting modules<a class="anchor" aria-label="anchor" href="#exporting-modules"></a>
 </h3>
 <p>Gene modules can be exported using the
-<code><a href="../reference/cluster_set_to_xls.html">cluster_set_to_xls()</a></code>. This function will create a Excel
+<code>cluster_set_to_xls()</code>. This function will create a Excel
 workbook that will contain the mapping from genes to modules. You may
-also use <code><a href="../reference/write_clust.html">write_clust()</a></code>.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+also use <code>write_clust()</code>.</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"pbmc_scigenex_out.xls"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/cluster_set_to_xls.html">cluster_set_to_xls</a></span><span class="op">(</span>object<span class="op">=</span><span class="va">pbmc_scigenex</span>, file_path<span class="op">=</span><span class="va">tmp_file</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cluster_set_to_xls</span><span class="op">(</span>object<span class="op">=</span><span class="va">pbmc_scigenex</span>, file_path<span class="op">=</span><span class="va">tmp_file</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="functional-enrichment-analysis">Functional enrichment analysis<a class="anchor" aria-label="anchor" href="#functional-enrichment-analysis"></a>
 </h3>
 <p>Functional enrichment analysis can be performed for each gene module
-using the <code><a href="../reference/enrich_go.html">enrich_go()</a></code> function. Enrichments can be
-displayed using the <code><a href="../reference/plot_clust_enrichments.html">plot_clust_enrichments()</a></code> function.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+using the <code>enrich_go()</code> function. Enrichments can be
+displayed using the <code>plot_clust_enrichments()</code> function.</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Functional enrichment analysis</span></span>
-<span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enrich_go.html">enrich_go</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, specie <span class="op">=</span> <span class="st">"Hsapiens"</span>, ontology <span class="op">=</span> <span class="st">"BP"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_clust_enrichments.html">plot_clust_enrichments</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, gradient_palette<span class="op">=</span><span class="fu"><a href="../reference/colors_for_gradient.html">colors_for_gradient</a></span><span class="op">(</span><span class="st">"Je1"</span><span class="op">)</span>, </span>
+<span><span class="va">pbmc_scigenex</span> <span class="op">&lt;-</span> <span class="fu">enrich_go</span><span class="op">(</span><span class="va">pbmc_scigenex</span>, specie <span class="op">=</span> <span class="st">"Hsapiens"</span>, ontology <span class="op">=</span> <span class="st">"BP"</span><span class="op">)</span></span>
+<span><span class="fu">plot_clust_enrichments</span><span class="op">(</span><span class="va">pbmc_scigenex</span>, gradient_palette<span class="op">=</span><span class="fu"><a href="../reference/colors_for_gradient.html">colors_for_gradient</a></span><span class="op">(</span><span class="st">"Je1"</span><span class="op">)</span>, </span>
 <span>                       floor<span class="op">=</span><span class="fl">50</span>,</span>
 <span>                       nb_go_term <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -580,14 +434,14 @@ displayed using the <code><a href="../reference/plot_clust_enrichments.html">plo
 <div class="section level3">
 <h3 id="mapping-cell-populations-markers-onto-the-gene-modules">Mapping cell populations markers onto the gene modules<a class="anchor" aria-label="anchor" href="#mapping-cell-populations-markers-onto-the-gene-modules"></a>
 </h3>
-<p>Given a set of markers, the <code><a href="../reference/plot_markers_to_clusters.html">plot_markers_to_clusters()</a></code>
+<p>Given a set of markers, the <code>plot_markers_to_clusters()</code>
 function can be used to map cell type markers to gene modules. This
 function will display jaccard and hypergeometric statistics. Here we
 will use the markers from the <a href="https://sctype.app/" class="external-link">sctype.app</a> database.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sctype</span> <span class="op">&lt;-</span> <span class="st">"https://zenodo.org/record/8269433/files/sctype.app.tsv"</span></span>
 <span><span class="va">marker_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">sctype</span>, head<span class="op">=</span><span class="cn">TRUE</span>, sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></span>
 <span><span class="va">marker_table</span> <span class="op">&lt;-</span> <span class="va">marker_table</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -597,7 +451,7 @@ will use the markers from the <a href="https://sctype.app/" class="external-link
 <span></span>
 <span><span class="va">markers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">marker_table</span><span class="op">$</span><span class="va">Marker_genes</span>, </span>
 <span>                 <span class="va">marker_table</span><span class="op">$</span><span class="va">Cell.type</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_markers_to_clusters.html">plot_markers_to_clusters</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
+<span><span class="fu">plot_markers_to_clusters</span><span class="op">(</span><span class="va">pbmc_scigenex</span>, </span>
 <span>                         markers<span class="op">=</span><span class="va">markers</span>, background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="usage_files/figure-html/plot_markers_to_clusters-1.png" width="700"></p>
 </div>
@@ -613,9 +467,9 @@ variable features for the Assay. Note that the features must be present
 in the scaled data. Any requested features that are not scaled or have 0
 variance will be dropped, and the PCA will be run using the remaining
 features.”</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Scaling data</span></span>
-<span><span class="va">feature_2_scale</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/row_names.html">row_names</a></span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
+<span><span class="va">feature_2_scale</span> <span class="op">&lt;-</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
 <span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">feature_2_scale</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform principal component analysis</span></span>
@@ -639,10 +493,10 @@ features.”</p>
 function. The arguments to this function are the processed clusterSet
 and the corresponding processed Seurat object. Ideally, the clusterSet
 object should contain functional annotations (see
-<code><a href="../reference/enrich_go.html">enrich_go()</a></code>). Currently, the process of creating a report
+<code>enrich_go()</code>). Currently, the process of creating a report
 can be quite time consuming It can also produce heavy html files which
 may take some time to load in the web browser.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Uncomment to prepare the report.</span></span>
 <span><span class="co"># gcss_brain &lt;- enrich_go(gcss_brain, species = "Mmusculus", ontology = "BP")</span></span>
 <span><span class="co"># cluster_set_report(clusterset_object = gcss_brain, seurat_object = brain1)</span></span></code></pre></div>
@@ -650,7 +504,7 @@ may take some time to load in the web browser.</p>
 <div class="section level3">
 <h3 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h3>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin20</span></span>
@@ -671,78 +525,81 @@ may take some time to load in the web browser.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">##  [1] tidyr_1.3.1               dplyr_1.1.4              </span></span>
-<span><span class="co">##  [3] scigenex_1.6.1            stxBrain.SeuratData_0.1.2</span></span>
+<span><span class="co">##  [3] scigenex_2.0.0            stxBrain.SeuratData_0.1.2</span></span>
 <span><span class="co">##  [5] pbmc3k.SeuratData_3.1.4   SeuratData_0.2.2.9001    </span></span>
-<span><span class="co">##  [7] Seurat_5.2.99.9003        SeuratObject_5.0.2       </span></span>
+<span><span class="co">##  [7] Seurat_5.3.0              SeuratObject_5.0.2       </span></span>
 <span><span class="co">##  [9] sp_2.1-4                  patchwork_1.3.0          </span></span>
 <span><span class="co">## [11] ggplot2_3.5.1            </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] fs_1.6.5                matrixStats_1.4.1       spatstat.sparse_3.1-0  </span></span>
-<span><span class="co">##   [4] enrichplot_1.24.4       httr_1.4.7              RColorBrewer_1.1-3     </span></span>
-<span><span class="co">##   [7] docopt_0.7.1            tools_4.4.1             sctransform_0.4.1      </span></span>
-<span><span class="co">##  [10] R6_2.6.1                DT_0.33                 lazyeval_0.2.2         </span></span>
-<span><span class="co">##  [13] uwot_0.2.2              withr_3.0.2             clValid_0.7            </span></span>
-<span><span class="co">##  [16] prettyunits_1.2.0       gridExtra_2.3           progressr_0.14.0       </span></span>
-<span><span class="co">##  [19] cli_3.6.4               Biobase_2.64.0          textshaping_0.4.0      </span></span>
-<span><span class="co">##  [22] spatstat.explore_3.3-2  fastDummies_1.7.4       scatterpie_0.2.4       </span></span>
-<span><span class="co">##  [25] slam_0.1-53             labeling_0.4.3          sass_0.4.9             </span></span>
-<span><span class="co">##  [28] spatstat.data_3.1-2     ggridges_0.5.6          pbapply_1.7-2          </span></span>
-<span><span class="co">##  [31] pkgdown_2.1.1           systemfonts_1.1.0       yulab.utils_0.1.7      </span></span>
-<span><span class="co">##  [34] gson_0.1.0              DOSE_3.30.5             R.utils_2.12.3         </span></span>
-<span><span class="co">##  [37] parallelly_1.38.0       WriteXLS_6.7.0          RSQLite_2.3.7          </span></span>
-<span><span class="co">##  [40] iheatmapr_0.7.1         gridGraphics_0.5-1      generics_0.1.3         </span></span>
-<span><span class="co">##  [43] ica_1.0-3               spatstat.random_3.3-2   GO.db_3.19.1           </span></span>
-<span><span class="co">##  [46] Matrix_1.7-0            S4Vectors_0.42.1        abind_1.4-8            </span></span>
-<span><span class="co">##  [49] R.methodsS3_1.8.2       lifecycle_1.0.4         yaml_2.3.10            </span></span>
-<span><span class="co">##  [52] qvalue_2.36.0           BiocFileCache_2.12.0    Rtsne_0.17             </span></span>
-<span><span class="co">##  [55] grid_4.4.1              blob_1.2.4              promises_1.3.2         </span></span>
-<span><span class="co">##  [58] crayon_1.5.3            miniUI_0.1.1.1          lattice_0.22-6         </span></span>
-<span><span class="co">##  [61] cowplot_1.1.3           KEGGREST_1.44.1         pillar_1.10.1          </span></span>
-<span><span class="co">##  [64] knitr_1.49              fgsea_1.30.0            future.apply_1.11.2    </span></span>
-<span><span class="co">##  [67] codetools_0.2-20        fastmatch_1.1-4         glue_1.8.0             </span></span>
-<span><span class="co">##  [70] ggfun_0.1.6             spatstat.univar_3.0-1   data.table_1.17.0      </span></span>
-<span><span class="co">##  [73] treeio_1.28.0           vctrs_0.6.5             png_0.1-8              </span></span>
-<span><span class="co">##  [76] spam_2.11-0             testthat_3.2.1.1        org.Mm.eg.db_3.19.1    </span></span>
-<span><span class="co">##  [79] gtable_0.3.6            amap_0.8-19.1           cachem_1.1.0           </span></span>
-<span><span class="co">##  [82] xfun_0.51               mime_0.12               tidygraph_1.3.1        </span></span>
-<span><span class="co">##  [85] qlcMatrix_0.9.8         survival_3.7-0          pheatmap_1.0.12        </span></span>
-<span><span class="co">##  [88] fitdistrplus_1.2-1      ROCR_1.0-11             nlme_3.1-166           </span></span>
-<span><span class="co">##  [91] ggtree_3.12.0           bit64_4.6.0-1           progress_1.2.3         </span></span>
-<span><span class="co">##  [94] filelock_1.0.3          RcppAnnoy_0.0.22        GenomeInfoDb_1.40.1    </span></span>
-<span><span class="co">##  [97] bslib_0.9.0             irlba_2.3.5.1           KernSmooth_2.23-24     </span></span>
-<span><span class="co">## [100] colorspace_2.1-1        BiocGenerics_0.50.0     DBI_1.2.3              </span></span>
-<span><span class="co">## [103] tidyselect_1.2.1        bit_4.5.0.1             compiler_4.4.1         </span></span>
-<span><span class="co">## [106] curl_5.2.3              httr2_1.0.5             SparseM_1.84-2         </span></span>
-<span><span class="co">## [109] xml2_1.3.6              desc_1.4.3              plotly_4.10.4          </span></span>
-<span><span class="co">## [112] shadowtext_0.1.4        scales_1.3.0            lmtest_0.9-40          </span></span>
-<span><span class="co">## [115] rappdirs_0.3.3          stringr_1.5.1           digest_0.6.37          </span></span>
-<span><span class="co">## [118] goftest_1.2-3           spatstat.utils_3.1-0    sparsesvd_0.2-2        </span></span>
-<span><span class="co">## [121] rmarkdown_2.29          XVector_0.44.0          htmltools_0.5.8.1      </span></span>
-<span><span class="co">## [124] pkgconfig_2.0.3         dbplyr_2.5.0            fastmap_1.2.0          </span></span>
-<span><span class="co">## [127] rlang_1.1.5             htmlwidgets_1.6.4       UCSC.utils_1.0.0       </span></span>
-<span><span class="co">## [130] shiny_1.10.0            ggh4x_0.2.8             farver_2.1.2           </span></span>
-<span><span class="co">## [133] jquerylib_0.1.4         zoo_1.8-12              jsonlite_1.9.0         </span></span>
-<span><span class="co">## [136] BiocParallel_1.38.0     GOSemSim_2.30.2         R.oo_1.26.0            </span></span>
-<span><span class="co">## [139] magrittr_2.0.3          ggplotify_0.1.2         GenomeInfoDbData_1.2.12</span></span>
-<span><span class="co">## [142] dotCall64_1.2           munsell_0.5.1           Rcpp_1.0.14            </span></span>
-<span><span class="co">## [145] ape_5.8-1               viridis_0.6.5           reticulate_1.39.0      </span></span>
-<span><span class="co">## [148] stringi_1.8.4           ggstar_1.0.4            ggraph_2.2.1           </span></span>
-<span><span class="co">## [151] brio_1.1.5              zlibbioc_1.50.0         MASS_7.3-61            </span></span>
-<span><span class="co">## [154] plyr_1.8.9              org.Hs.eg.db_3.19.1     parallel_4.4.1         </span></span>
-<span><span class="co">## [157] listenv_0.9.1           ggrepel_0.9.6           deldir_2.0-4           </span></span>
-<span><span class="co">## [160] Biostrings_2.72.1       graphlayouts_1.2.0      splines_4.4.1          </span></span>
-<span><span class="co">## [163] tensor_1.5              hms_1.1.3               fastcluster_1.2.6      </span></span>
-<span><span class="co">## [166] igraph_2.1.4            spatstat.geom_3.3-3     RcppHNSW_0.6.0         </span></span>
-<span><span class="co">## [169] reshape2_1.4.4          biomaRt_2.60.1          stats4_4.4.1           </span></span>
-<span><span class="co">## [172] evaluate_1.0.3          tweenr_2.0.3            httpuv_1.6.15          </span></span>
-<span><span class="co">## [175] RANN_2.6.2              purrr_1.0.4             polyclip_1.10-7        </span></span>
-<span><span class="co">## [178] future_1.34.0           scattermore_1.2         ggforce_0.4.2          </span></span>
-<span><span class="co">## [181] xtable_1.8-4            tidytree_0.4.6          RSpectra_0.16-2        </span></span>
-<span><span class="co">## [184] later_1.4.1             viridisLite_0.4.2       class_7.3-22           </span></span>
-<span><span class="co">## [187] ragg_1.3.3              tibble_3.2.1            clusterProfiler_4.12.6 </span></span>
-<span><span class="co">## [190] aplot_0.2.3             memoise_2.0.1           AnnotationDbi_1.66.0   </span></span>
-<span><span class="co">## [193] IRanges_2.38.1          cluster_2.1.6           globals_0.16.3</span></span></code></pre>
+<span><span class="co">##   [1] fs_1.6.5                 matrixStats_1.4.1        spatstat.sparse_3.1-0   </span></span>
+<span><span class="co">##   [4] enrichplot_1.24.4        httr_1.4.7               RColorBrewer_1.1-3      </span></span>
+<span><span class="co">##   [7] docopt_0.7.1             tools_4.4.1              sctransform_0.4.1       </span></span>
+<span><span class="co">##  [10] R6_2.6.1                 DT_0.33                  lazyeval_0.2.2          </span></span>
+<span><span class="co">##  [13] uwot_0.2.2               withr_3.0.2              clValid_0.7             </span></span>
+<span><span class="co">##  [16] prettyunits_1.2.0        gridExtra_2.3            progressr_0.14.0        </span></span>
+<span><span class="co">##  [19] cli_3.6.4                Biobase_2.64.0           textshaping_0.4.0       </span></span>
+<span><span class="co">##  [22] spatstat.explore_3.3-2   fastDummies_1.7.4        scatterpie_0.2.4        </span></span>
+<span><span class="co">##  [25] slam_0.1-53              labeling_0.4.3           sass_0.4.9              </span></span>
+<span><span class="co">##  [28] spatstat.data_3.1-2      ggridges_0.5.6           pbapply_1.7-2           </span></span>
+<span><span class="co">##  [31] pkgdown_2.1.1            systemfonts_1.1.0        yulab.utils_0.1.7       </span></span>
+<span><span class="co">##  [34] gemini.R_0.13.1          gson_0.1.0               DOSE_3.30.5             </span></span>
+<span><span class="co">##  [37] R.utils_2.12.3           parallelly_1.38.0        WriteXLS_6.7.0          </span></span>
+<span><span class="co">##  [40] rstudioapi_0.16.0        RSQLite_2.3.7            iheatmapr_0.7.1         </span></span>
+<span><span class="co">##  [43] gridGraphics_0.5-1       generics_0.1.3           ica_1.0-3               </span></span>
+<span><span class="co">##  [46] spatstat.random_3.3-2    GO.db_3.19.1             Matrix_1.7-0            </span></span>
+<span><span class="co">##  [49] S4Vectors_0.42.1         abind_1.4-8              R.methodsS3_1.8.2       </span></span>
+<span><span class="co">##  [52] lifecycle_1.0.4          yaml_2.3.10              qvalue_2.36.0           </span></span>
+<span><span class="co">##  [55] BiocFileCache_2.12.0     Rtsne_0.17               grid_4.4.1              </span></span>
+<span><span class="co">##  [58] blob_1.2.4               promises_1.3.2           crayon_1.5.3            </span></span>
+<span><span class="co">##  [61] miniUI_0.1.1.1           lattice_0.22-6           cowplot_1.1.3           </span></span>
+<span><span class="co">##  [64] KEGGREST_1.44.1          pillar_1.10.1            knitr_1.49              </span></span>
+<span><span class="co">##  [67] fgsea_1.30.0             future.apply_1.11.2      codetools_0.2-20        </span></span>
+<span><span class="co">##  [70] fastmatch_1.1-4          glue_1.8.0               ggfun_0.1.6             </span></span>
+<span><span class="co">##  [73] spatstat.univar_3.0-1    data.table_1.17.0        treeio_1.28.0           </span></span>
+<span><span class="co">##  [76] vctrs_0.6.5              png_0.1-8                spam_2.11-0             </span></span>
+<span><span class="co">##  [79] testthat_3.2.1.1         org.Mm.eg.db_3.19.1      gtable_0.3.6            </span></span>
+<span><span class="co">##  [82] amap_0.8-19.1            cachem_1.1.0             xfun_0.51               </span></span>
+<span><span class="co">##  [85] mime_0.12                tidygraph_1.3.1          qlcMatrix_0.9.8         </span></span>
+<span><span class="co">##  [88] survival_3.7-0           pheatmap_1.0.12          fitdistrplus_1.2-1      </span></span>
+<span><span class="co">##  [91] ROCR_1.0-11              nlme_3.1-166             ggtree_3.12.0           </span></span>
+<span><span class="co">##  [94] bit64_4.6.0-1            progress_1.2.3           filelock_1.0.3          </span></span>
+<span><span class="co">##  [97] RcppAnnoy_0.0.22         GenomeInfoDb_1.40.1      bslib_0.9.0             </span></span>
+<span><span class="co">## [100] irlba_2.3.5.1            KernSmooth_2.23-24       colorspace_2.1-1        </span></span>
+<span><span class="co">## [103] BiocGenerics_0.50.0      DBI_1.2.3                tidyselect_1.2.1        </span></span>
+<span><span class="co">## [106] bit_4.5.0.1              compiler_4.4.1           curl_5.2.3              </span></span>
+<span><span class="co">## [109] httr2_1.0.5              SparseM_1.84-2           xml2_1.3.6              </span></span>
+<span><span class="co">## [112] desc_1.4.3               plotly_4.10.4            shadowtext_0.1.4        </span></span>
+<span><span class="co">## [115] bookdown_0.41            scales_1.3.0             lmtest_0.9-40           </span></span>
+<span><span class="co">## [118] rappdirs_0.3.3           stringr_1.5.1            digest_0.6.37           </span></span>
+<span><span class="co">## [121] goftest_1.2-3            spatstat.utils_3.1-0     sparsesvd_0.2-2         </span></span>
+<span><span class="co">## [124] rmarkdown_2.29           XVector_0.44.0           base64enc_0.1-3         </span></span>
+<span><span class="co">## [127] htmltools_0.5.8.1        pkgconfig_2.0.3          MatrixGenerics_1.16.0   </span></span>
+<span><span class="co">## [130] sparseMatrixStats_1.16.0 dbplyr_2.5.0             fastmap_1.2.0           </span></span>
+<span><span class="co">## [133] rlang_1.1.5              htmlwidgets_1.6.4        UCSC.utils_1.0.0        </span></span>
+<span><span class="co">## [136] shiny_1.10.0             ggh4x_0.2.8              farver_2.1.2            </span></span>
+<span><span class="co">## [139] jquerylib_0.1.4          zoo_1.8-12               jsonlite_1.9.0          </span></span>
+<span><span class="co">## [142] BiocParallel_1.38.0      GOSemSim_2.30.2          R.oo_1.26.0             </span></span>
+<span><span class="co">## [145] magrittr_2.0.3           ggplotify_0.1.2          GenomeInfoDbData_1.2.12 </span></span>
+<span><span class="co">## [148] dotCall64_1.2            munsell_0.5.1            Rcpp_1.0.14             </span></span>
+<span><span class="co">## [151] ape_5.8-1                viridis_0.6.5            reticulate_1.39.0       </span></span>
+<span><span class="co">## [154] stringi_1.8.4            ggstar_1.0.4             ggraph_2.2.1            </span></span>
+<span><span class="co">## [157] brio_1.1.5               zlibbioc_1.50.0          MASS_7.3-61             </span></span>
+<span><span class="co">## [160] plyr_1.8.9               org.Hs.eg.db_3.19.1      parallel_4.4.1          </span></span>
+<span><span class="co">## [163] listenv_0.9.1            ggrepel_0.9.6            deldir_2.0-4            </span></span>
+<span><span class="co">## [166] Biostrings_2.72.1        graphlayouts_1.2.0       splines_4.4.1           </span></span>
+<span><span class="co">## [169] pander_0.6.6             tensor_1.5               hms_1.1.3               </span></span>
+<span><span class="co">## [172] fastcluster_1.2.6        igraph_2.1.4             spatstat.geom_3.3-3     </span></span>
+<span><span class="co">## [175] RcppHNSW_0.6.0           reshape2_1.4.4           biomaRt_2.60.1          </span></span>
+<span><span class="co">## [178] stats4_4.4.1             evaluate_1.0.3           BiocManager_1.30.25     </span></span>
+<span><span class="co">## [181] tweenr_2.0.3             httpuv_1.6.15            RANN_2.6.2              </span></span>
+<span><span class="co">## [184] purrr_1.0.4              polyclip_1.10-7          future_1.34.0           </span></span>
+<span><span class="co">## [187] scattermore_1.2          ggforce_0.4.2            xtable_1.8-4            </span></span>
+<span><span class="co">## [190] tidytree_0.4.6           RSpectra_0.16-2          later_1.4.1             </span></span>
+<span><span class="co">## [193] viridisLite_0.4.2        class_7.3-22             ragg_1.3.3              </span></span>
+<span><span class="co">## [196] tibble_3.2.1             clusterProfiler_4.12.6   aplot_0.2.3             </span></span>
+<span><span class="co">## [199] memoise_2.0.1            AnnotationDbi_1.66.0     IRanges_2.38.1          </span></span>
+<span><span class="co">## [202] cluster_2.1.6            globals_0.16.3           xaringanExtra_0.8.0</span></span></code></pre>
 </div>
 </div>
   </div>
