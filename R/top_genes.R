@@ -9,8 +9,6 @@
 #' @param fast Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.
 #' @param distance_method Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.
 #' @return A \code{ClusterSet} object.
-#' @export top_genes
-#' @keywords internal
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
 #' 
@@ -19,7 +17,8 @@
 #' 
 #' # Store top genes in the object
 #' pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters)
-#'
+#' @export
+#' @noRd
 setGeneric("top_genes", 
            function(object,
                     top = 20,

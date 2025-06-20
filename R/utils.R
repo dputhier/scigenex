@@ -13,7 +13,6 @@
 #'
 #' @return NULL
 #'
-#' @export
 #'
 #' @examples
 #' # Set verbosity level to 2
@@ -21,11 +20,10 @@
 #'
 #' # Set verbosity level to 0
 #' set_verbosity(0)
-
 # 0 : No message
 # 1 : Display only INFO type message
 # 2 : Display both INFO and DEBUG type message
-
+#' @export
 set_verbosity <- function(verbosity_value) {
   if (!is.null(verbosity_value) &
       verbosity_value >= 0 & is.numeric(verbosity_value)) {
@@ -68,7 +66,6 @@ get_verbosity <- function() {
 #'
 #' @return None
 #'
-#' @export
 #' @examples
 #' opt_warn <- options()$warn
 #' set_verbosity(1)
@@ -81,7 +78,7 @@ get_verbosity <- function() {
 #' options(warn=-1)
 #' print_msg("A warning message not displayed", "WARNING")
 #' options(warn=opt_warn)
-#' @keywords internal
+#' @export
 print_msg <-
   function(msg,
            msg_type = c("INFO", "DEBUG", "WARNING", "STOP")) {
@@ -124,7 +121,6 @@ print_msg <-
 #'  of decimal. Set argument to -1 for no rounding
 #' @return None
 #'
-#' @export
 #' @examples
 #' opt_warn <- options()$warn
 #' print_stat("My data", 1:10, msg_type="INFO")
@@ -132,7 +128,7 @@ print_msg <-
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
 #' set_verbosity(0)
 #' print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
-#' @keywords internal
+#' @export
 print_stat <-
   function(msg,
            data,
@@ -259,11 +255,10 @@ create_4_rnd_clust <- function(){
 #' "Seurat_like", "Ju1", "De1",  "De2", "De3", "De4", "De5", "De6", "De7", "De8", "De9", 
 #' "Magma", "viridis", "magma2", "plasma"
 #' @return A character vector of color codes.
-#' @export colors_for_gradient
 #' @examples
 #' colors_for_gradient()
 #' colors_for_gradient(palette = "Ju1")
-#' 
+#' @export
 colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1", 
                                           "De2", "De3", "De4", "De5",
                                           "De6", "De7", "De8", "De9", "Magma", 
@@ -318,12 +313,11 @@ colors_for_gradient <- function(palette=c("Je1", "Seurat_Like", "Ju1", "De1",
 #' @param n An integer specifying the number of colors to generate. 
 #' @param palette A character vector specifying the palette to use. 
 #' @return A character vector of color codes.
-#' @export discrete_palette
 #' @importFrom grDevices hcl
 #' @examples
 #' discrete_palette()
 #' discrete_palette(n=20, palette = "ggplot")
-#' 
+#' @export
 discrete_palette <- function(n=10, palette=c("Ju1", "De1", "ggplot")){
   
   palette <- match.arg(palette)
@@ -367,8 +361,7 @@ discrete_palette <- function(n=10, palette=c("Ju1", "De1", "ggplot")){
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' check_format_cluster_set(pbmc3k_medium_clusters)
-#' @export check_format_cluster_set
-#' @keywords internal
+#' @export
 check_format_cluster_set <- function(object) {
   
   print_msg("Checking ClusterSet format.", msg_type = "DEBUG")
@@ -404,7 +397,7 @@ check_format_cluster_set <- function(object) {
 #' @examples
 #' # Install MCL
 #' install_mcl()
-#' @export install_mcl
+#' @export
 install_mcl <- function(){
   
   
@@ -449,7 +442,7 @@ install_mcl <- function(){
 #' @importFrom utils capture.output
 #' @examples
 #' show_methods()
-#' @export show_methods
+#' @export
 show_methods <- function(class="ClusterSet",
                          where="scigenex"){
   class_method <- utils::capture.output(methods::showMethods(class="ClusterSet", 
@@ -478,7 +471,7 @@ show_methods <- function(class="ClusterSet",
 #' # An example clusterSet dataset
 #' load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 #' lymph_node_tiny_clusters_2
-#' @export load_example_dataset
+#' @export
 load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
                                            "7871581/files/pbmc3k_medium_clusters",
                                            "8028126/files/pbmc3k_medium_clusters_enr",
@@ -541,7 +534,7 @@ load_example_dataset <- function(dataset=c("7871581/files/pbmc3k_medium",
 #' @returns NULL
 #' @examples
 #' reload_pac()
-#' @export reload_pac
+#' @export
 reload_pac <- function(){
   tryCatch(detach("package:scigenex", unload = TRUE))
   library(scigenex)

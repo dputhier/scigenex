@@ -12,7 +12,6 @@
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
 #'
 #' @return An expression matrix.
-#' @export get_data_for_scigenex
 #'
 #' @examples
 #' ## with an artificial dataset
@@ -20,7 +19,7 @@
 #'
 #' res <- get_data_for_scigenex(data=m)
 #' 
-#'
+#' @export
 get_data_for_scigenex <- function(data = NULL,
                                   layer = c("data", "sct", "counts"),
                                   assay=NULL) {

@@ -55,6 +55,7 @@ test_that("Check cluster_set_from_seurat is working.", {
     testthat::expect_error(print(p), NA)
     p <- plot_heatmap(cs, cell_clusters = Idents(pbmc_small))
     testthat::expect_error(print(p), NA)
+    cs <- compute_centers(cs)
     p <- plot_profiles(cs, ident = Idents(pbmc_small))
     testthat::expect_error(print(p), NA) 
 })

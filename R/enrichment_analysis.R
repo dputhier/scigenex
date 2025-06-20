@@ -15,8 +15,8 @@
 #'
 #' @return A \code{ClusterSet} object
 #' @method enrich_go ClusterSet
-#' @export enrich_go
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("enrich_go",
            function(object,
                     species="Hsapiens",
@@ -37,7 +37,6 @@ setGeneric("enrich_go",
 #'
 #' @return A \code{ClusterSet} object
 #' @method enrich_go ClusterSet
-#' @export enrich_go
 #'
 #' @examples
 #' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
@@ -45,6 +44,7 @@ setGeneric("enrich_go",
 #' # pbmc3k_medium_clusters_enr <- enrich_go(pbmc3k_medium_clusters)
 #' pbmc3k_medium_clusters_enr
 #' is(pbmc3k_medium_clusters_enr@gene_cluster_annotations)
+#' @export
 setMethod("enrich_go",
           signature(object = "ClusterSet"),
           function(object,
@@ -131,8 +131,8 @@ setMethod("enrich_go",
 #'
 #' @return A \code{ClusterSet} object
 #' @method viz_enrich ClusterSet
-#' @export viz_enrich
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("viz_enrich",
            function(object,
                     clusters = "all",
@@ -157,11 +157,11 @@ setGeneric("viz_enrich",
 #'
 #' @return A \code{ClusterSet} object
 #' @method viz_enrich ClusterSet
-#' @export viz_enrich
 #'
 #' @examples
 #' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
 #' viz_enrich(pbmc3k_medium_clusters_enr_sub, cluster = 1, nb_terms = 5)
+#' @export
 setMethod("viz_enrich",
           signature(object = "ClusterSet"),
           function(object,
@@ -267,9 +267,6 @@ setMethod("viz_enrich",
 #' 
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
-#' @seealso
-#' \code{\link{enrich_go}}
-#' \code{\link{colors_for_gradient}}
 #'  
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 theme_bw
@@ -285,11 +282,11 @@ setMethod("viz_enrich",
 #' @importFrom ggplot2 facet_grid
 #' @importFrom reshape2 melt
 #' @importFrom grid unit
-#' @export plot_clust_enrichments
 #' @examples
 #' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
 #' plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("plot_clust_enrichments",
            function(object,
                     stat_shown=c("qvalue", "p.adjust", 
@@ -319,9 +316,6 @@ setGeneric("plot_clust_enrichments",
 #' 
 #' @return A ggplot object displaying the cluster enrichments for the GO terms.
 #' 
-#' @seealso
-#' \code{\link{enrich_go}}
-#' \code{\link{colors_for_gradient}}
 #'  
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 theme_bw
@@ -337,10 +331,10 @@ setGeneric("plot_clust_enrichments",
 #' @importFrom ggplot2 facet_grid
 #' @importFrom reshape2 melt
 #' @importFrom grid unit
-#' @export plot_clust_enrichments
 #' @examples
 #' load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
 #' plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
+#' @export
 setMethod("plot_clust_enrichments",
           signature(object = "ClusterSet"),
           function(object,
@@ -495,7 +489,7 @@ setMethod("plot_clust_enrichments",
 #' markers <- split(m$gene[m$organ == "Blood" & m$species == "Human"], 
 #'                  m$celltype[m$organ == "Blood" & m$species == "Human"])
 #' plot_markers_to_clusters(pbmc3k_medium_clusters_enr, markers=markers)
-#' @keywords internal
+#' @noRd
 setGeneric("plot_markers_to_clusters",
            function(object, 
                     markers=NULL,

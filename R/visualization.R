@@ -29,7 +29,6 @@
 #' @param link The aggloremative criterion for hierarchical clustering. One of "average", "complete" or "single". 
 #' Default to average.
 #' @return Iheatmap-class object.
-#' @export plot_heatmap
 #' @importFrom iheatmapr main_heatmap modify_layout add_row_labels add_col_labels add_col_annotation add_col_dendro add_row_title add_col_title
 #' @importFrom pheatmap pheatmap
 #' @examples
@@ -62,6 +61,7 @@
 #'              cell_clusters=Seurat::Idents(pbmc3k_medium),
 #'              interactive=FALSE, label_size = 2)
 #' @rdname plot_heatmap
+#' @export
 plot_heatmap <- function(object,
                          center = TRUE,
                          ceil = 1,
@@ -420,8 +420,7 @@ plot_heatmap <- function(object,
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' plot_dist(pbmc3k_medium_clusters)
 #' 
-#' @export plot_dist
-#' 
+#' @export
 plot_dist <- function(object,
                       bins=150,
                       alpha=0.5,
@@ -503,7 +502,6 @@ plot_dist <- function(object,
 #' @param pseudocount A value for the pseudocount added before log transformation.
 #' @param coord_flip Whether to flip the coordinates.
 #' @return A ggplot diagram.
-#' @export plot_ggheatmap
 #'
 #' @examples
 #' library(Seurat)
@@ -518,7 +516,8 @@ plot_dist <- function(object,
 #' ident_pbmc3k <- sort(Seurat::Idents(pbmc3k_medium))
 #' new_obj <- top_genes(new_obj)
 #' plot_ggheatmap(new_obj[,names(ident_pbmc3k)], ident=ident_pbmc3k)
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("plot_ggheatmap",
            
            function(object,
@@ -565,7 +564,6 @@ setGeneric("plot_ggheatmap",
 #' @param pseudocount A value for the pseudocount added before log transformation.
 #' @param coord_flip Whether to flip the coordinates.
 #' @return A ggplot diagram.
-#' @export plot_ggheatmap
 #' @importFrom reshape2 melt
 #' @importFrom ggh4x facet_grid2 strip_themed elem_list_rect
 #' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid element_blank element_rect element_text
@@ -587,6 +585,7 @@ setGeneric("plot_ggheatmap",
 #' # to get balanced classes
 #' sub_obj <- subsample_by_ident(new_obj, nbcell=10, ident=ident_pbmc3k)
 #' plot_ggheatmap(sub_obj, ident=ident_pbmc3k)
+#' @export
 setMethod(
   "plot_ggheatmap",
   signature(object = "ClusterSet"),

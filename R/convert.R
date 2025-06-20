@@ -20,7 +20,7 @@
 #' plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
 #'              cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
 #' plot_profiles(cs, ident = Seurat::Idents(pbmc_small))
-#' @export cluster_set_from_seurat
+#' @export
 cluster_set_from_seurat <- function(object=NULL, 
                                     markers=NULL,
                                     layer=c('data', 'counts', 'scale.data'),
@@ -92,7 +92,7 @@ cluster_set_from_seurat <- function(object=NULL,
 #' cs <- cluster_set_from_matrix(m, markers)
 #' plot_heatmap(cs, interactive = FALSE)
 #' 
-#' @export cluster_set_from_matrix
+#' @export
 cluster_set_from_matrix <- function(object=NULL, 
                                     markers=NULL){
   

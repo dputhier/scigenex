@@ -21,5 +21,4 @@ given a specified palette name.
 \examples{
 discrete_palette()
 discrete_palette(n=20, palette = "ggplot")
-
 }

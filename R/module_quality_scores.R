@@ -13,7 +13,8 @@
 #' # Compute quality scores of gene modules
 #' quality_scores <- module_quality_scores(pbmc3k_medium_clusters)
 #' quality_scores
-#' @export module_quality_scores
+#' @export
+#' @noRd
 setGeneric("module_quality_scores", 
            function(object)
              standardGeneric("module_quality_scores")
@@ -35,7 +36,7 @@ setGeneric("module_quality_scores",
 #' # Compute quality scores of gene modules
 #' quality_scores <- module_quality_scores(pbmc3k_medium_clusters)
 #' quality_scores
-#' @export module_quality_scores
+#' @export
 setMethod(
   "module_quality_scores", signature("ClusterSet"),
   function(object){

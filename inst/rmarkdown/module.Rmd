@@ -321,26 +321,28 @@ if(nrow(enrich_res) > 0){
 }
 ```
 
-```{r, term_table_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_table_1_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. table ")
 ``` 
 
-```{r, term_table_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
+```{r, term_table_2_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("A table with various information related to enrichment.") 
 ``` 
 
-```{r, term_table_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
-df_edo <- edo@result
-df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-df_edo$zScore <- round(df_edo$zScore, 4)
-df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
-df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+```{r, term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
 
-rownames(edo@result) <- NULL
 font.size <- "50%"
 if(nrow(edo) > 0){
+
+  df_edo <- edo@result
+  df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+  df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+  df_edo$zScore <- round(df_edo$zScore, 4)
+  df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+  df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+  rownames(edo@result) <- NULL
+
   df_edo %>% 
     DT::datatable(
      options=list(
@@ -353,5 +355,6 @@ if(nrow(edo) > 0){
 }else{
   knitr::asis_output("No table available.") 
 }
+
 ```
 

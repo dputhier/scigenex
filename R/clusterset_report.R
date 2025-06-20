@@ -28,7 +28,7 @@
 #' @importFrom DT datatable
 #' @importFrom Seurat AddModuleScore DimPlot SpatialDimPlot
 #' @importFrom rlang hash  
-#' @export cluster_set_report
+#' @export
 cluster_set_report <- function(clusterset_object=NULL,
                                seurat_object=NULL,
                                file_path = NULL,

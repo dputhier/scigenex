@@ -65,7 +65,7 @@
 #' plot_heatmap(res)
 #' plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 #' 
-#' @export gene_clustering
+#' @export
 gene_clustering <- function(object = NULL,
                             s = 5,
                             inflation = 2,
@@ -229,9 +229,8 @@ gene_clustering <- function(object = NULL,
 #'                     
 #' # Construct a new graph based on genes selected with select_genes()
 #' res <- do_closest_neighbor_graph(object = res, k = 5)
-#' @keywords internal
-#' @export do_closest_neighbor_graph
 #' @importFrom Matrix t
+#' @export
 do_closest_neighbor_graph <- function(object = NULL,
                                       k = 5,
                                       output_path = NULL,
@@ -398,8 +397,7 @@ do_closest_neighbor_graph <- function(object = NULL,
 #' # Construct a graph based on genes selected with select_genes() and their neighbors
 #' do_reciprocal_neighbor_graph(object = res)
 #'
-#' @keywords internal
-#' @export do_reciprocal_neighbor_graph
+#' @export
 do_reciprocal_neighbor_graph <- function(object = NULL,
                                          output_path = NULL,
                                          name = NULL) {
@@ -514,7 +512,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
 #'
 #' @return a ClusterSet object with the updated parameters.
 #' 
-#' @export mcl_system_cmd
+#' @export
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,
                            threads = 1,

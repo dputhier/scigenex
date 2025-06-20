@@ -25,7 +25,7 @@ gm_report(
   smp_region = NULL,
   rmd_dir = file.path(system.file(package = "scigenex"), "rmarkdown"),
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
-  plot_profiles_params = list(),
+  plot_profiles_params = list(to_lin = TRUE),
   plot_multi_profiles_params = list(legend_name = "Gene\\nModule"),
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),

@@ -20,8 +20,7 @@
 #'                                  min_cluster_size = 20)
 #' clust_size(clust_set)
 #' 
-#' @export filter_cluster_size
-
+#' @export
 filter_cluster_size <- function(object = NULL,
                                 min_cluster_size = 5,
                                 rename=FALSE) {
@@ -71,8 +70,7 @@ filter_cluster_size <- function(object = NULL,
 #' 
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'
-#' @export filter_nb_supporting_cells
-
+#' @export
 filter_nb_supporting_cells <- function(object = NULL,
                                        min_nb_supporting_cell = 3,
                                        min_pct_gene_expressed = 50,
@@ -176,7 +174,7 @@ median_of_max_dot_prod <- function(cur_clust){
 #' nclust(pbmc3k_medium_clusters)
 #' obj <- filter_by_dot_prod(pbmc3k_medium_clusters, av_dot_prod_min=5)
 #' nclust(obj) 
-#' @export filter_by_dot_prod
+#' @export
 filter_by_dot_prod <- function(object = NULL, 
                                av_dot_prod_min = 2,
                                rename=TRUE) {
@@ -255,7 +253,7 @@ filter_by_dot_prod <- function(object = NULL,
 #' plot_cluster_stats(df, highlight=df$sd > 0.3) 
 #' pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3, rename=FALSE)
 #' plot_cluster_stats(cluster_stats(pbmc3k_medium_clusters_sub))
-#' @export filter_cluster_sd
+#' @export
 filter_cluster_sd <- function(object = NULL,
                               min_sd = 0.2,
                               rename=TRUE) {

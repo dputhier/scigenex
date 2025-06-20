@@ -8,7 +8,6 @@
 #' @param breaks Either a numeric vector of two or more unique cut points or a single number (greater than or equal to 2) giving the number of stratums in which spot are to be cut.
 #' @param labels Labels for the levels of the stratum. By default, labels are constructed using "(a,b]" interval notation. If labels = FALSE, simple integer codes are returned instead of a factor.
 #' @param diagnostic_plot Whether to produce a diagnostic diagram. Highly recommanded to visually inspect the results.
-#' @export stratify_seurat
 #' @importFrom ggplot2 aes element_blank element_rect facet_wrap geom_col geom_text scale_color_manual theme theme_minimal
 #' @importFrom reshape2 melt
 #' @importFrom scales hue_pal
@@ -27,6 +26,7 @@
 #' strat[[2]] + ggplot2::coord_equal()
 #' strat[[3]] + ggplot2::coord_equal()
 #' strat[[4]] + ggplot2::coord_equal()  + ggplot2::coord_flip()
+#' @export
 stratify_seurat <- function(seurat_obj, 
                         ident=NULL,
                         colours=NULL,
@@ -196,7 +196,6 @@ stratify_seurat <- function(seurat_obj,
 #'        Must be one of "sct", "counts", or "data". Default is "sct".
 #' @param colours_stratum A set of colors for the stratum.
 #' @param polar Whter to use polar coordinates.
-#' @export plot_stratum
 #' @importFrom ggplot2 aes element_blank element_rect facet_wrap geom_col geom_text scale_color_manual theme theme_minimal
 #' @importFrom reshape2 melt
 #' @examples
@@ -214,6 +213,7 @@ stratify_seurat <- function(seurat_obj,
 #'  p <- plot_stratum(strats[[1]], gene_name="CCL19", polar = TRUE, 
 #'                    colours_stratum = rev(discrete_palette(5, "De1")))
 #' p + strats[[3]] + ggplot2::coord_equal()  + Seurat::NoLegend()
+#' @export
 plot_stratum <- function(seurat_obj=NULL,
                          gene_name=NULL,
                          metadata=NULL,

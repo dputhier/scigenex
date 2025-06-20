@@ -56,8 +56,7 @@
 #' @importFrom stats p.adjust
 #' @importFrom Matrix Matrix
 #' @importFrom Matrix t
-#' @export select_genes
-
+#' @export
 select_genes <- function(data = NULL,
                          distance_method = c("pearson",
                                              "cosine",

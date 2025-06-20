@@ -32,5 +32,5 @@ plot_cluster_stats(df, highlight=df$size > 8)
 
 # Select the cluster of interest
 pbmc3k_medium_clusters_filtered <- pbmc3k_medium_clusters[df$size > 8, ] 
-nclust(pbmc3k_medium_clusters_filtered)          
+nclust(pbmc3k_medium_clusters_filtered)  
 }

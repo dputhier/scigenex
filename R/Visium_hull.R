@@ -16,7 +16,7 @@
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")
 #' lymph_node_tiny <- getFlippedTissueCoordinates(lymph_node_tiny_2)
 #' df <- getFlippedTissueCoordinates(lymph_node_tiny_2, as_data_frame=TRUE)
-#' @export getFlippedTissueCoordinates
+#' @export
 getFlippedTissueCoordinates <- function(seurat_obj, 
                                         as_data_frame=FALSE){
   # Get coord and flip
@@ -410,7 +410,7 @@ visium_hull <- function(data,
 #' @param size The line width.
 #' @keywords hull, spatial transcriptomics, visium
 #' @return A ggplot object (with segments).
-#' @export display_hull
+#' @export
 #' @examples 
 #' library(Seurat)
 #' load_example_dataset("7870305/files/lymph_node_tiny_2")

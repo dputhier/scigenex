@@ -17,9 +17,9 @@
 #' @param nb_proc The number of processor to be used if order_by=='hclust'.
 #'
 #' @return ClusterSet-class object
-#' @export reorder_genes
 #' @importFrom Matrix Matrix
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("reorder_genes", 
            function(object=NULL, 
                     order_by = NULL,
@@ -47,7 +47,6 @@ setGeneric("reorder_genes",
 #'
 #' @return ClusterSet-class object
 #' @importFrom amap hcluster
-#' @export reorder_genes
 #'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -66,6 +65,7 @@ setGeneric("reorder_genes",
 #'                            order_by = "gene_names"), 
 #'              label_size = 5)
 #' 
+#' @export
 setMethod("reorder_genes", 
           signature("ClusterSet"), 
           function(object, 

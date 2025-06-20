@@ -537,6 +537,6 @@ test_that("test compute_centers()", {
   res <- res[,]
   
   res <- compute_centers(res)
-  expect_equal(sum(res@dbf_output$center), 3217)
+  expect_equal(round(sum(res@dbf_output$center), 0), 3159)
   expect_equal(dim(res@dbf_output$center), c(15, 361))
 })

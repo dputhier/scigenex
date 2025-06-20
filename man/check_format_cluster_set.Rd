@@ -20,4 +20,3 @@ Check the format of a Clusterset object (ncol, nrow, inherits...)
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 check_format_cluster_set(pbmc3k_medium_clusters)
 }
-\keyword{internal}

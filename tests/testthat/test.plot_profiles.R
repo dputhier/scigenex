@@ -21,6 +21,7 @@ testthat::test_that("Check if plot_profile is working properly", {
                                s = 5,
                                threads = 1)
   
+  clust_set <- compute_centers(clust_set)
   p <- plot_profiles(clust_set, ident=Seurat::Idents(pbmc_small), size_text_y=5)
   testthat::expect_error(print(p), NA)
   

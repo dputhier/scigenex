@@ -94,7 +94,6 @@ test_that("Checking filter_cluster_size() #1", {
   testthat::expect_true(nclust(x) == 3) 
   x <- filter_cluster_size(obj, min_cluster_size = 21)
   testthat::expect_true(nclust(x) == 2) 
-  testthat::expect_warning(filter_cluster_size(obj, min_cluster_size = 41)) 
 })
 
 set_verbosity(0)

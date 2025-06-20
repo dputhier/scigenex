@@ -30,5 +30,4 @@ m <- create_3_rnd_clust()
 
 res <- get_data_for_scigenex(data=m)
 
-
 }

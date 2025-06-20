@@ -14,8 +14,8 @@
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' df <- cluster_stats(pbmc3k_medium_clusters)
-#' @export cluster_stats
-#' @keywords internal
+#' @export
+#' @noRd
 setGeneric("cluster_stats", 
            function(object)
              standardGeneric("cluster_stats")
@@ -37,7 +37,7 @@ setGeneric("cluster_stats",
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' df <- cluster_stats(pbmc3k_medium_clusters)
-#' @export cluster_stats
+#' @export
 setMethod(
   "cluster_stats", 
   signature("ClusterSet"),
@@ -85,7 +85,6 @@ setMethod(
 #' @return A \code{ClusterSet} object.
 #' @importFrom ggplot2 ggplot geom_col facet_grid coord_flip theme_bw
 #' @importFrom reshape2 melt
-#' @export plot_cluster_stats
 #'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -102,7 +101,8 @@ setMethod(
 #' 
 #' # Select the cluster of interest
 #' pbmc3k_medium_clusters_filtered <- pbmc3k_medium_clusters[df$size > 8, ] 
-#' nclust(pbmc3k_medium_clusters_filtered)          
+#' nclust(pbmc3k_medium_clusters_filtered)  
+#' @export        
 plot_cluster_stats <- function(x, 
                                highlight=NULL){
   

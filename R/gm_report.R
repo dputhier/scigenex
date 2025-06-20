@@ -117,7 +117,7 @@ gm_report <- function(cluster_set = NULL,
                                                          ctrl = 100,
                                                          name = "MOD_",
                                                          slot = "data"),
-                            plot_profiles_params=list(),
+                            plot_profiles_params=list(to_lin=TRUE),
                             plot_multi_profiles_params=list(legend_name="Gene\nModule"),
                             FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu")),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
@@ -170,7 +170,7 @@ gm_report <- function(cluster_set = NULL,
   print_msg("Checking seurat object.", msg_type="DEBUG") 
   
   if (!inherits(seurat_object, "Seurat"))
-    print_msg("Please provide a valid Seurat object.", msg="STOP") 
+    print_msg("Please provide a valid Seurat object.", msg_type="STOP") 
   
   check_format_cluster_set(cluster_set)
   
@@ -197,16 +197,16 @@ gm_report <- function(cluster_set = NULL,
     print_msg("This is not a ST experiment...", msg_type = "INFO")
     print_msg("Canceling ST reporting module.", msg_type = "INFO")
     section <- setdiff(section, c("exp_spatial_dist",
+                                  "exp_spatial_dimplot",
                                   "module_spatial"))
   }
   
   if(is.null(api_key)){
-    print_msg("Non Gemini key provided...", msg_type = "INFO")
+    print_msg("No Gemini key provided...", msg_type = "INFO")
     print_msg("Canceling IA-based cell type annotation.", msg_type = "INFO")
     section <- setdiff(section, c("exp_spatial",
                                   "module_cell_annot_IA"))
   }
-  
   
   if(length(Idents(seurat_object)) == 0 )
     print_msg("Seurat object needs to contain all identities (check with Idents()).", msg="STOP")
@@ -232,8 +232,11 @@ gm_report <- function(cluster_set = NULL,
   
   tmp_dir <- file.path(tmp_dir, "rmarkdown")
   
-  # Compute top genes
+  print_msg("Computing top genes.", msg_type = "DEBUG")
   cluster_set <- top_genes(cluster_set)
+  
+  print_msg("Computing centers.", msg_type = "DEBUG")
+  cluster_set <- compute_centers(cluster_set)
   
   if(any(c("module_term_network",
            "module_term_barplot_1",
@@ -276,7 +279,7 @@ gm_report <- function(cluster_set = NULL,
     
     writeLines(code_rmd, con = cur_rmd)
     
-    print_msg(paste0("Preparation of rmd files for objects", n, "finished."), msg_type = "DEBUG")
+    print_msg(paste0("Preparation of rmd files for objects ", n, " finished."), msg_type = "DEBUG")
     
     all_knited_files[n] <- basename(cur_rmd)
     

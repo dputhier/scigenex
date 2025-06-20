@@ -1,5 +1,5 @@
 # Changelog
-
+  
 * The clusterset_report() is deprecated. The gm_report() should be used instead.
 * The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !
 * The cluster are no more computed by default. use compute_centers().
@@ -7,9 +7,10 @@
 * Select_genes() function now has an 'assay' argument. 
 * Suppressed some message in vignettes.
 * Add a rename argument to filter_cluster_size(), filter_nb_supporting_cells(), filter_by_dot_prod(), filter_cluster_sd().
+* In plot_profiles() argument color_cell_type has been renamed color_cluster.
+* Fix 'Functions or methods with usage in Rd file  but not in code' using @noRd (instead of @keyword internal).
 
 ## v1.6.1
-
 * The top_genes() has new argument 'distance_method' to allow overridding the default distance method (which can be
 unknown when object is obtained using cluster_set_from_matrix()).
 * The top_genes() has a new argument 'fast' to allow fast computation of Pearson-based distances.

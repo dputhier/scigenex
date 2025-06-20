@@ -30,4 +30,3 @@ options(warn=-1)
 print_msg("A warning message not displayed", "WARNING")
 options(warn=opt_warn)
 }
-\keyword{internal}
