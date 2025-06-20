@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=2.0.0
+VERSION=2.0.2
 
 .PHONY: help
 
