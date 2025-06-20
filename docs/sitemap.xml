@@ -14,6 +14,7 @@
 <url><loc>https://github.com/dputhier/scigenex/reference/call_infomap_clusterset.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/call_louvain_clusterset.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/call_walktrap_clusterset.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/centers-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/check_format_cluster_set.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/clust_names-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/clust_names.html</loc></url>
@@ -33,6 +34,7 @@
 <url><loc>https://github.com/dputhier/scigenex/reference/compare_genesets.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/complex9.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/complex9Noisy.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/compute_centers-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/construct_new_graph.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/create_3_rnd_clust.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/create_4_rnd_clust.html</loc></url>
@@ -55,6 +57,7 @@
 <url><loc>https://github.com/dputhier/scigenex/reference/get_data_for_scigenex.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/get_genes.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/get_verbosity.html</loc></url>
+<url><loc>https://github.com/dputhier/scigenex/reference/gm_report.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/grapes-in-grapes-character-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/grep_clust-ClusterSet-method.html</loc></url>
 <url><loc>https://github.com/dputhier/scigenex/reference/grep_clust.html</loc></url>

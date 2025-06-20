@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="viz_enrich.html">viz_enrich</a></span><span class="op">(</span></span>
+<span><span class="fu">viz_enrich</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  clusters <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotplot"</span>, <span class="st">"barplot"</span><span class="op">)</span>,</span>
@@ -107,7 +107,7 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"8028226/files/pbmc3k_medium_clusters_enr_sub"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 8028226/files/pbmc3k_medium_clusters_enr_sub was already loaded. </span>
-<span class="r-in"><span><span class="fu"><a href="viz_enrich.html">viz_enrich</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_enr_sub</span>, cluster <span class="op">=</span> <span class="fl">1</span>, nb_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">viz_enrich</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters_enr_sub</span>, cluster <span class="op">=</span> <span class="fl">1</span>, nb_terms <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot enrichment analysis results for cluster 1 </span>
 <span class="r-plt img"><img src="viz_enrich-ClusterSet-method-1.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="viz_enrich-ClusterSet-method-2.png" alt="" width="700" height="433"></span>

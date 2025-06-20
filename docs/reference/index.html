@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -73,6 +73,14 @@
         </td>
         <td><p>Perform Community Detection Using the Walktrap Algorithm (internal function)</p></td>
       </tr><tr><td>
+          <p><code><a href="centers-ClusterSet-method.html">centers(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract centers from a ClusterSet object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="check_format_cluster_set.html">check_format_cluster_set()</a></code> </p>
+        </td>
+        <td><p>Check the format of a Clusterset object</p></td>
+      </tr><tr><td>
           <p><code><a href="clust_names-ClusterSet-method.html">clust_names(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
         <td><p>The names of the gene clusters stored in the ClusterSet object</p></td>
@@ -91,7 +99,7 @@
       </tr><tr><td>
           <p><code><a href="cluster_set_report.html">cluster_set_report()</a></code> </p>
         </td>
-        <td><p>Create a report from a ClusterSet and Seurat object.</p></td>
+        <td><p>Create a report from a ClusterSet and Seurat object. DEPRECATED</p></td>
       </tr><tr><td>
           <p><code><a href="cluster_set_to_xls-ClusterSet-method.html">cluster_set_to_xls(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
@@ -125,6 +133,10 @@
         </td>
         <td><p>The complex9Noisy dataset A noisy version of the complex9 dataset. A set of 2D points corresponding to 9 shapes embedded in a noisy environment. A uniform noise was added to the dataset.</p></td>
       </tr><tr><td>
+          <p><code><a href="compute_centers-ClusterSet-method.html">compute_centers(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Compute centers of gene modules (e.g mean profiles)</p></td>
+      </tr><tr><td>
           <p><code><a href="create_3_rnd_clust.html">create_3_rnd_clust()</a></code> </p>
         </td>
         <td><p>Generate an example dataset with three clusters of profiles</p></td>
@@ -144,6 +156,14 @@
           <p><code><a href="display_hull.html">display_hull()</a></code> </p>
         </td>
         <td><p>Draw a hull around a region of interest of Visium data.</p></td>
+      </tr><tr><td>
+          <p><code><a href="do_closest_neighbor_graph.html">do_closest_neighbor_graph()</a></code> </p>
+        </td>
+        <td><p>Construct a new graph for a ClusterSet object (internal)</p></td>
+      </tr><tr><td>
+          <p><code><a href="do_reciprocal_neighbor_graph.html">do_reciprocal_neighbor_graph()</a></code> </p>
+        </td>
+        <td><p>Construct a graph based on selected genes in a ClusterSet object and their neighbors</p></td>
       </tr><tr><td>
           <p><code><a href="enrich_go-ClusterSet-method.html">enrich_go(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
@@ -189,6 +209,10 @@
         </td>
         <td><p>Get the current verbosity level.</p></td>
       </tr><tr><td>
+          <p><code><a href="gm_report.html">gm_report()</a></code> </p>
+        </td>
+        <td><p>Create a report from a ClusterSet and Seurat objects</p></td>
+      </tr><tr><td>
           <p><code><a href="grep_clust-ClusterSet-method.html">grep_clust(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
         </td>
         <td><p>Search gene module using a regular expression.</p></td>
@@ -214,10 +238,6 @@
         <td><p>Call MCL program for graph partitioning (internal).</p></td>
       </tr><tr><td>
           <p><code><a href="module_quality_scores-ClusterSet-method.html">module_quality_scores(<i>&lt;ClusterSet&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Compute Gene Module Quality Scores</p></td>
-      </tr><tr><td>
-          <p><code><a href="module_quality_scores.html">module_quality_scores()</a></code> </p>
         </td>
         <td><p>Compute Gene Module Quality Scores</p></td>
       </tr><tr><td>
@@ -272,6 +292,14 @@
           <p><code><a href="plot_stratum.html">plot_stratum()</a></code> </p>
         </td>
         <td><p>Display the results of stratify_seurat</p></td>
+      </tr><tr><td>
+          <p><code><a href="print_msg.html">print_msg()</a></code> </p>
+        </td>
+        <td><p>Print a message based on the level of verbosity</p></td>
+      </tr><tr><td>
+          <p><code><a href="print_stat.html">print_stat()</a></code> </p>
+        </td>
+        <td><p>Debugging statistics (vector, matrix or dataframe)</p></td>
       </tr><tr><td>
           <p><code><a href="reload_pac.html">reload_pac()</a></code> </p>
         </td>

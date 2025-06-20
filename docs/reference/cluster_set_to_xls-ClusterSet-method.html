@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="cluster_set_to_xls.html">cluster_set_to_xls</a></span><span class="op">(</span><span class="va">object</span>, file_path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cluster_set_to_xls</span><span class="op">(</span><span class="va">object</span>, file_path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,7 +84,7 @@
 <span class="r-in"><span><span class="co"># Write gene lists to file</span></span></span>
 <span class="r-in"><span><span class="va">tp_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">tp_dir</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="cluster_set_to_xls.html">cluster_set_to_xls</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tp_dir</span>, <span class="st">"test.xls"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">cluster_set_to_xls</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tp_dir</span>, <span class="st">"test.xls"</span><span class="op">)</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
