@@ -270,7 +270,7 @@ knitr::asis_output("Mean expression of gene across cell/spot populations for eac
 ``` 
 
 ```{r section_gen_info_38, echo=FALSE, eval="exp_mean_1" %in% section}
-cluster_set <- compute_centers(cluster_set)
+
 plot_multi_profiles_used_params <- as.list(formals(plot_multi_profiles))
 for(i in names(plot_multi_profiles_params))
   plot_multi_profiles_used_params[[i]] <- plot_multi_profiles_params[[i]]

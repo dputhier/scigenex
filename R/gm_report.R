@@ -211,8 +211,12 @@ gm_report <- function(cluster_set = NULL,
   if(length(Idents(seurat_object)) == 0 )
     print_msg("Seurat object needs to contain all identities (check with Idents()).", msg="STOP")
   
+  print_msg("Computing module scores...", msg_type = "INFO")
   add_module_score_used_params <- as.list(formals(Seurat:::AddModuleScore.Seurat))
-  for(i in names(add_module_score_params)){add_module_score_used_params[[i]] <- add_module_score_params[[i]]}
+  for(i in names(add_module_score_params)){
+    print_msg(paste0("Computing module ", i,  " score..."), msg_type = "DEBUG")
+    add_module_score_used_params[[i]] <- add_module_score_params[[i]]
+  }
   
   add_module_score_used_params$object <- seurat_object
   add_module_score_used_params$features <- cluster_set@gene_clusters
@@ -221,6 +225,7 @@ gm_report <- function(cluster_set = NULL,
   
   tmp_dir <- tempdir(check = FALSE)
   tmp_dir <- paste0(tmp_dir, format(Sys.time(), "%a-%b-%e-%H-%M-%S-%Y"))
+  
   dir.create(tmp_dir, showWarnings = FALSE, recursive = TRUE)
   
   print_msg("Created temporary directory:", msg_type = "DEBUG")
@@ -261,7 +266,7 @@ gm_report <- function(cluster_set = NULL,
   
   for(n in 1:nclust(cluster_set)){
     
-    print_msg(paste0("Preparing rmd files for modules", n), msg_type = "DEBUG")
+    print_msg(paste0("Preparing rmd files for modules ", n), msg_type = "DEBUG")
     fig_path <- paste0("figure_", n, "_")
     
     cur_rmd <- gsub(".rmd$" , paste0("_", sprintf("%04d", n), ".rmd"), module_rmd)
