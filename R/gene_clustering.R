@@ -27,6 +27,7 @@
 #' @references
 #' - Van Dongen S. (2000) A cluster algorithm for graphs. National
 #' Research Institute for Mathematics and Computer Science in the 1386-3681.
+#' @importFrom sparseMatrixStats colMeans2
 #' @examples
 #' # Restrict vebosity to info messages only.
 #' library(Seurat)
@@ -64,7 +65,7 @@
 #' plot_heatmap(res)
 #' plot_heatmap(res, cell_clusters = Seurat::Idents(pbmc3k_medium))
 #' 
-#' @export gene_clustering
+#' @export
 gene_clustering <- function(object = NULL,
                             s = 5,
                             inflation = 2,
@@ -141,7 +142,7 @@ gene_clustering <- function(object = NULL,
     
     print_msg("The walktrap algorithm has been selected.")
 
-    object <- call_walktrap_clusterset(object, step=walktrap_step)
+    object <- call_walktrap_clusterset(object, steps=walktrap_step)
     
     return(object)
     
@@ -166,10 +167,10 @@ gene_clustering <- function(object = NULL,
   algo_cluster <- strsplit(algo_cluster, "\t")
   names(algo_cluster) <- seq(1, length(algo_cluster))
 
-  print_msg("Adding clusters to a ClusterSet object.", msg_type = "DEBUG")
+  print_msg("Updating @gene_clusters slots.", msg_type = "DEBUG")
   object@gene_clusters <- algo_cluster
   
-  print_msg("Update gene_cluster_metadata slots.", msg_type = "DEBUG")
+  print_msg("Updating @gene_clusters_metadata slots.", msg_type = "DEBUG")
   object@gene_clusters_metadata <- list("cluster_id" = as.numeric(names(object@gene_clusters)),
                                         "number" = max(as.numeric(names(object@gene_clusters))),
                                         "size" = unlist(lapply(object@gene_clusters, length)))
@@ -177,23 +178,8 @@ gene_clustering <- function(object = NULL,
   print_msg("Updating @data slot.", msg_type = "DEBUG")
   object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE), ]
   
-  print_msg("Computing centers.", msg_type = "DEBUG")
-  nb_clusters = length(names(object@gene_clusters))
-  centers <- matrix(ncol = ncol(object@data),
-                    nrow = nb_clusters)
-  colnames(centers) <- colnames(object@data)
-  rownames(centers) <- names(object@gene_clusters)
   
-  for (i in 1:nb_clusters) {
-
-      centers[i, ] <- apply(object@data[object@gene_clusters[[i]], , drop=FALSE],
-                            2, mean,
-                            na.rm = TRUE)
-    
-  }
-  
-  object@dbf_output$center <- centers
-  rownames(object@dbf_output$center) <- names(object@gene_clusters)
+  object@dbf_output$center <- NULL
   
   object@cells_metadata <- data.frame("cells_barcode" = colnames(object@data),
                                       row.names = colnames(object@data))
@@ -243,8 +229,8 @@ gene_clustering <- function(object = NULL,
 #'                     
 #' # Construct a new graph based on genes selected with select_genes()
 #' res <- do_closest_neighbor_graph(object = res, k = 5)
-#' @keywords internal
-#' @export do_closest_neighbor_graph
+#' @importFrom Matrix t
+#' @export
 do_closest_neighbor_graph <- function(object = NULL,
                                       k = 5,
                                       output_path = NULL,
@@ -282,7 +268,7 @@ do_closest_neighbor_graph <- function(object = NULL,
   data_selected_genes <- object@data
   
   print_msg("Computing distances between selected genes.", msg_type = "INFO")
-  dist_matrix_selected_genes <- qlcMatrix::corSparse(t(data_selected_genes))
+  dist_matrix_selected_genes <- qlcMatrix::corSparse(Matrix::t(data_selected_genes))
   dist_matrix_selected_genes <- 1 - dist_matrix_selected_genes
   rownames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
   colnames(dist_matrix_selected_genes) <- rownames(data_selected_genes)
@@ -318,6 +304,7 @@ do_closest_neighbor_graph <- function(object = NULL,
     df_dknn_selected_genes[gene, "dknn_values"] <- gene_dist[k]
   }
   
+  
   print_msg("Creating the input file for graph partitioning.", msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
@@ -334,9 +321,11 @@ do_closest_neighbor_graph <- function(object = NULL,
   
   print_msg("Deleting reciprocal edges.", msg_type = "INFO")
   
+
   mcl_out_as_df <-
     mcl_out_as_df[!duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
-  
+
+
   print_msg("Converting distances into weights.", msg_type = "INFO")
   
   min_dist <- min(mcl_out_as_df$weight)
@@ -408,8 +397,7 @@ do_closest_neighbor_graph <- function(object = NULL,
 #' # Construct a graph based on genes selected with select_genes() and their neighbors
 #' do_reciprocal_neighbor_graph(object = res)
 #'
-#' @keywords internal
-#' @export do_reciprocal_neighbor_graph
+#' @export
 do_reciprocal_neighbor_graph <- function(object = NULL,
                                          output_path = NULL,
                                          name = NULL) {
@@ -442,11 +430,11 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
   
   print_msg("Extracting distances to neighbors.", msg_type = "DEBUG")
   l_knn_selected <- object@dbf_output$all_neighbor_distances
-  
+
   print_msg("Creating the input file for MCL algorithm.", msg_type = "INFO")
   
   mcl_out_as_list_of_df <- list()
-  
+
   for (g in names(l_knn_selected)) {
     mcl_out_as_list_of_df[[g]] <- data.frame(
       src = g,
@@ -457,7 +445,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
   
   mcl_out_as_df <- do.call(rbind, mcl_out_as_list_of_df)
   
-  print_msg("Convert distances into weights.", msg_type = "INFO")
+  print_msg("Converting distances into weights.", msg_type = "INFO")
   
   min_dist <- min(mcl_out_as_df$weight)
   max_dist <- max(mcl_out_as_df$weight)
@@ -465,11 +453,13 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
     (mcl_out_as_df$weight - min_dist) / (max_dist - min_dist)
   mcl_out_as_df$weight <- abs(mcl_out_as_df$weight - 1)
   
+
   print_stat("Graph weights (after convertion)", 
              data = mcl_out_as_df$weight, 
              msg_type = "DEBUG")
   
-  print_msg("Selecting only reciprocal neighborhood.", msg_type = "INFO")
+  print_msg("Selecting only reciprocal neighbors.", msg_type = "INFO")
+
   mcl_out_as_df <-
     mcl_out_as_df[duplicated(t(apply(mcl_out_as_df[, c("src", "dest")], 1, sort))), ]
   
@@ -522,7 +512,7 @@ do_reciprocal_neighbor_graph <- function(object = NULL,
 #'
 #' @return a ClusterSet object with the updated parameters.
 #' 
-#' @export mcl_system_cmd
+#' @export
 mcl_system_cmd <- function(object = NULL,
                            inflation = inflation,
                            threads = 1,
@@ -559,7 +549,7 @@ mcl_system_cmd <- function(object = NULL,
   }
   
   
-  print(paste0("MCL path : ", mcl_dir))
+  print_msg(paste0("MCL path : ", mcl_dir))
 
   name <- object@parameters$name
   input_path <- object@parameters$output_path

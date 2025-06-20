@@ -1,5 +1,5 @@
-#' @title Create a report from a ClusterSet and Seurat object.
-#' @description Create a report from a ClusterSet and Seurat object.
+#' @title Create a report from a ClusterSet and Seurat object. DEPRECATED
+#' @description Create a report from a ClusterSet and Seurat object. DEPRECATED. Use scigenex_report() please.
 #' @param clusterset_object The ClusterSet object.
 #' @param seurat_object The Seurat object.
 #' @param file_path A file path where to store the report (html extension).
@@ -28,7 +28,7 @@
 #' @importFrom DT datatable
 #' @importFrom Seurat AddModuleScore DimPlot SpatialDimPlot
 #' @importFrom rlang hash  
-#' @export cluster_set_report
+#' @export
 cluster_set_report <- function(clusterset_object=NULL,
                                seurat_object=NULL,
                                file_path = NULL,
@@ -46,6 +46,7 @@ cluster_set_report <- function(clusterset_object=NULL,
   
   # This function are used but are enclosed in the markdown
   # So I force the system to know we are using it.
+  print_msg("This function is deprecated. Use gm_report() please.", msg_type = "WARNING")
   
   tmp_fun <- DT::datatable
   tmp_fun <- Seurat::AddModuleScore 
@@ -94,7 +95,7 @@ cluster_set_report <- function(clusterset_object=NULL,
     }
     
   }else{
-    file_path <- paste0(tempfile(pattern="scigenex_report"), ".html")
+    file_path <- paste0(tempfile(pattern="gm_report"), ".html")
     dir.create(dirname(file_path), showWarnings = FALSE, recursive = TRUE)
   }
   

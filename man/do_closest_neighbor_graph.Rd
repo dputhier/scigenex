@@ -45,4 +45,3 @@ res <- select_genes(m[1:600,],
 # Construct a new graph based on genes selected with select_genes()
 res <- do_closest_neighbor_graph(object = res, k = 5)
 }
-\keyword{internal}

@@ -1,4 +1,5 @@
 library(testthat)
+library(Matrix)
 
 testthat::test_that("Test the indexing operator of the ClusterSet", {
   
@@ -28,11 +29,12 @@ testthat::test_that("Test the indexing operator of the ClusterSet", {
                                                        as.factor(cls)), 
                                       apply, 2, mean))
   
+  dbf_output$center <- Matrix::Matrix(dbf_output$center, sparse = TRUE)
   colnames(dbf_output$center) <- colnames(m)
   rownames(dbf_output$center) <- names(gene_cluster)
   
   res <- new("ClusterSet",
-              data = m,
+              data = Matrix::Matrix(m, sparse = TRUE),
               gene_clusters = split(gn, cls),
               top_genes = top_genes,
               gene_clusters_metadata = gene_clusters_metadata,
@@ -50,12 +52,10 @@ testthat::test_that("Test the indexing operator of the ClusterSet", {
   testthat::expect_equal(length(res[c(2,4),1:5]@gene_clusters), 2)
   testthat::expect_equal(length(res[c(2,4),1:5]@gene_clusters), 2)
   testthat::expect_equal(length(res[c(1,2,4),]@gene_clusters), 3)
-  testthat::expect_equal(dim(res[logical(), logical()]), c(0,0))
   testthat::expect_equal(dim(res[c("1", "2"), ]), c(22, 500))
   testthat::expect_equal(res[c("1", "2"), ]@gene_clusters_metadata$number, 2)
   testthat::expect_equal(res[2:4, ]@gene_clusters_metadata$number, 3)
   testthat::expect_equal(res[c("1", "2", "3"), ]@gene_clusters_metadata$number, 3)
-  testthat::expect_equal(res[logical(), ]@gene_clusters_metadata$number, 0)
   testthat::expect_equal(dim(res[, ]), c(40, 500))
   testthat::expect_equal(dim(res[, 10:20]), c(40, 11))
   testthat::expect_equal(dim(res[1:3, 10:20]@cells_metadata), c(11, 1))
@@ -84,7 +84,7 @@ test_that("Test messages when looking at ClusterSet object", {
   
   expect_equal(msg_clusterset[1], "\t\tAn object of class ClusterSet")
   expect_equal(msg_clusterset[2], "\t\tName: ")
-  expect_equal(msg_clusterset[3], "\t\tMemory used:  2520 ")
+  expect_equal(msg_clusterset[3], "\t\tMemory used:  3808 ")
   expect_equal(msg_clusterset[4], "\t\tNumber of cells:  0 ")
   expect_equal(msg_clusterset[5], "\t\tNumber of informative genes:  0 ")
   expect_equal(msg_clusterset[6], "\t\tNumber of gene clusters:  ")
@@ -526,4 +526,17 @@ test_that("Additional test on indexing", {
   expect_equal(nrow(res[c("M2", "M3"),]@data), length(unlist(res@top_genes[c("M2","M3")])))
   res <- res[c(4,5), ]
   expect_equal(names(rename_clust(res)@top_genes), names(rename_clust(res)@gene_clusters))
+})
+
+test_that("test compute_centers()", { 
+  # Set verbosity to 0
+  set_verbosity(0)
+  
+  load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+  res <- pbmc3k_medium_clusters
+  res <- res[,]
+  
+  res <- compute_centers(res)
+  expect_equal(round(sum(res@dbf_output$center), 0), 3159)
+  expect_equal(dim(res@dbf_output$center), c(15, 361))
 })

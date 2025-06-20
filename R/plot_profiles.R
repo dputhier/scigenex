@@ -8,7 +8,7 @@
 #' Typically the result from the Idents() function on a Seurat object (see Seurat library).
 #' @param nb_column The number of columns in the facet grid of the plot. If not provided,
 #' it is automatically computed as the square root of the number of cell types.
-#' @param color_cell_type A named vector of colors (with cell type as names) used to 
+#' @param color_cluster A named vector of colors (with cell type as names) used to 
 #' distinguish between different cell types in the plot. If not provided, the default 
 #' hue color palette is used.
 #' @param size_text_y The font size of the y-axis tick labels.
@@ -27,18 +27,18 @@
 #' lv <- levels(Seurat::Idents(lymph_node_tiny_2))
 #' pal <- discrete_palette(n=length(lv))
 #' names(pal) <- lv
-#' plot_profiles(lymph_node_tiny_clusters_2, ident=Seurat::Idents(lymph_node_tiny_2), color_cell_type = pal)
-#' plot_profiles(lymph_node_tiny_clusters_2[2:4,], ident=Seurat::Idents(lymph_node_tiny_2), color_cell_type = pal)
+#' plot_profiles(lymph_node_tiny_clusters_2, ident=Seurat::Idents(lymph_node_tiny_2), color_cluster = pal)
+#' plot_profiles(lymph_node_tiny_clusters_2[2:4,], ident=Seurat::Idents(lymph_node_tiny_2), color_cluster = pal)
 #' 
 #' @importFrom ggplot2 geom_col facet_wrap theme_minimal geom_text scale_color_manual
 #' @importFrom scales hue_pal
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 .data
-#' @export plot_profiles
+#' @export
 plot_profiles <- function(data = NULL,
                           ident = NULL,
                           nb_column = NULL,
-                          color_cell_type = NULL,
+                          color_cluster = NULL,
                           size_text_y = 5,
                           size_label = 2,
                           legend_name="Cell\ntype",
@@ -48,6 +48,9 @@ plot_profiles <- function(data = NULL,
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
 
   centers <- data@dbf_output$center
+  
+  if(is.null(centers))
+    print_msg("Please run compute_centers() on ClusterSet.", msg_type = "STOP")
   
   if (is.null(ident))
     print_msg("Please provide cell identification.", msg_type = "STOP")
@@ -65,23 +68,22 @@ plot_profiles <- function(data = NULL,
   nb_cell_type <- length(unique(ident))
   
   
-  
   if (is.null(nb_column))
-    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
+    nb_column <- round(sqrt(nrow(centers)), 0)
   
-  if (is.null(color_cell_type)){
-    color_cell_type <- scales::hue_pal()(nb_cell_type)
+  if (is.null(color_cluster)){
+    color_cluster <- scales::hue_pal()(nb_cell_type)
   }else{
-    if(nb_cell_type != length(color_cell_type))
+    if(nb_cell_type != length(color_cluster))
       print_msg("The number of colors should be the same as the number of cell types.", 
                 msg_type = "STOP")
     
-    if(is.null(names(color_cell_type)))
-      print_msg("The color_cell_type argument should be a named vector.", 
+    if(is.null(names(color_cluster)))
+      print_msg("The color_cluster argument should be a named vector.", 
                 msg_type = "STOP")
     
-    if(!all(names(color_cell_type) %in% unique(ident)))
-      print_msg("The color_cell_type argument contains unknown cell type.", 
+    if(!all(names(color_cluster) %in% unique(ident)))
+      print_msg("The color_cluster argument contains unknown cell type.", 
                 msg_type = "STOP")
   }
     
@@ -148,7 +150,7 @@ plot_profiles <- function(data = NULL,
       axis.text.y = ggplot2::element_text(size = size_text_y),
       strip.text = ggplot2::element_blank()
     ) +
-    ggplot2::scale_fill_manual(values=color_cell_type, name=legend_name)
+    ggplot2::scale_fill_manual(values=color_cluster, name=legend_name)
   
 }
 
@@ -160,11 +162,13 @@ plot_profiles <- function(data = NULL,
 #' @param data A ClusterSet object.
 #' @param ident A named vector containing the cell type identities for each cell.
 #' Typically the result from the Idents() function on a Seurat object (see Seurat library).
-#' @param color_cell_type A named vector of colors (with cell type as names) used to 
+#' @param color_cluster A named vector of colors (with cell type as names) used to 
 #' distinguish between different clusters.
 #' @param size_text_y The font size of the y-axis tick labels.
 #' @param size_label The font size of the cluster labels.
 #' @param legend_name A name for the legend.
+#' @param nb_column The number of columns in the facet grid of the plot. If not provided,
+#' it is automatically computed as the square root of the number of cell types.
 #' @param center Whether to center (substract mean) each row.
 #' @return A ggplot object showing the expression profiles of cell type-specific genes.
 #'
@@ -188,23 +192,27 @@ plot_profiles <- function(data = NULL,
 #' @importFrom scales hue_pal
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 .data
-#' @export plot_multi_profiles
+#' @export
 plot_multi_profiles <- function(data = NULL,
                                 ident = NULL,
                                 color_cluster = NULL,
                                 size_text_y = 5,
                                 size_label = 2,
-                                legend_name="Cell\ntype",
+                                legend_name="Gene\nModule",
                                 nb_column=NULL,
                                 center=FALSE) {
   
-  if (is.null(nb_column))
-    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
-  
+
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
 
   centers <- data@dbf_output$center
+  
+  if(is.null(centers))
+    print_msg("Please run compute_centers() on ClusterSet.", msg_type = "STOP")
+  
+  if (is.null(nb_column))
+    nb_column <- round(sqrt(nrow(data@dbf_output$center)), 0)
   
   if(center){
     centers <- sweep(centers, 1, STATS=rowMeans(centers), FUN="-")
@@ -253,7 +261,7 @@ plot_multi_profiles <- function(data = NULL,
   centers <- centers[, names(ident), drop=FALSE]
   
   centers_summarized_by_cell_type <- matrix(NA,
-                                            nr=nrow(centers),
+                                            nrow=nrow(centers),
                                             ncol=length(levels(ident)))
   for(rown in 1:nrow(centers)){
     centers_summarized_by_cell_type[rown, ] <- tapply(centers[rown,], ident, mean)
@@ -271,6 +279,7 @@ plot_multi_profiles <- function(data = NULL,
   m$Cell_type <- factor(m$Cell_type, levels=levels(ident), ordered = TRUE)
   m$Cluster <-   factor(m$Cluster, levels=unique(m$Cluster), ordered = TRUE)
   
+  Cluster <- NULL
   ggplot2::ggplot(data= m,
                   ggplot2::aes(
                     x = .data[["Cell_type"]],

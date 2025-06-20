@@ -10,7 +10,7 @@ plot_multi_profiles(
   color_cluster = NULL,
   size_text_y = 5,
   size_label = 2,
-  legend_name = "Cell\\ntype",
+  legend_name = "Gene\\nModule",
   nb_column = NULL,
   center = FALSE
 )
@@ -21,16 +21,19 @@ plot_multi_profiles(
 \item{ident}{A named vector containing the cell type identities for each cell.
 Typically the result from the Idents() function on a Seurat object (see Seurat library).}
 
+\item{color_cluster}{A named vector of colors (with cell type as names) used to 
+distinguish between different clusters.}
+
 \item{size_text_y}{The font size of the y-axis tick labels.}
 
 \item{size_label}{The font size of the cluster labels.}
 
 \item{legend_name}{A name for the legend.}
 
-\item{center}{Whether to center (substract mean) each row.}
+\item{nb_column}{The number of columns in the facet grid of the plot. If not provided,
+it is automatically computed as the square root of the number of cell types.}
 
-\item{color_cell_type}{A named vector of colors (with cell type as names) used to 
-distinguish between different clusters.}
+\item{center}{Whether to center (substract mean) each row.}
 }
 \value{
 A ggplot object showing the expression profiles of cell type-specific genes.

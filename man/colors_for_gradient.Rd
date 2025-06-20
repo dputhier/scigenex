@@ -24,5 +24,4 @@ a specified palette name.
 \examples{
 colors_for_gradient()
 colors_for_gradient(palette = "Ju1")
-
 }

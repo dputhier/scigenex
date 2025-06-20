@@ -27,7 +27,7 @@ For this tutorial, we'll be using a peripheral blood mononuclear cell (PBMC) scR
 
 In this step, we'll carry out the classic pre-processing steps of the tutorial. Please refer to [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html) for more information. If you have already pre-processed your data with Seurat, or if you have a normalized count matrix as input, you can skip this step.
 
-```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide'}
+```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide', message=FALSE}
 suppressMessages(suppressWarnings(library(ggplot2, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(patchwork, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
@@ -107,7 +107,7 @@ Then we call successively the `select_genes()` function which will select inform
 pbmc_scigenex <- select_genes(pbmc3k,
                               k = 50,
                               distance_method = "pearson",
-                              which_slot = "data",
+                              layer = "data",
                               row_sum=5)
 
 # Run MCL

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -119,12 +119,13 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select informative genes</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_genes.html">select_genes</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of selected rows/genes (row_sum): 1531 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances using selected method: pearson </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing simulated distances to KNN. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing threshold of distances to KNN (DKNN threshold). </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN threshold (DKNN threshold). </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Selecting informative genes. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating the ClusterSet object. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Instantiating a ClusterSet object. </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cluster informative features</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="gene_clustering.html">gene_clustering</a></span><span class="op">(</span><span class="va">res</span>, inflation<span class="op">=</span><span class="fl">1.6</span><span class="op">)</span></span></span>
@@ -135,9 +136,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Deleting reciprocal edges. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79/4qPd5kES06.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpuh9nlZ/4qPd5kES06.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL algorithm has been selected. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MCL path : "</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  MCL path :  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  mcl_dir: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of clusters found: 13 </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
@@ -178,35 +179,33 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Plot is interactive... </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the profiles</span></span></span>
-<span class="r-in"><span><span class="va">idents</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">idents</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot_profiles.html">plot_profiles</a></span><span class="op">(</span><span class="va">res</span>,</span></span>
 <span class="r-in"><span>              ident <span class="op">=</span> <span class="va">idents</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of cells types: 9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of cells: 361 </span>
-<span class="r-plt img"><img src="ClusterSet-class-1.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> |-- STOP : Please run compute_centers() on ClusterSet.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Some methods of the ClusterSet object</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="col_names.html">col_names</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="row_names.html">row_names</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">col_names</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_genes.html">get_genes</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">x</span><span class="op">&lt;-</span>  <span class="fu"><a href="clust_size.html">clust_size</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">&lt;-</span>  <span class="fu">clust_size</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IL32"</span>, <span class="st">"CCL5"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">res</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="which_clust.html">which_clust</a></span><span class="op">(</span><span class="va">res</span>, genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IL32"</span>, <span class="st">"CCL5"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">res</span>, top<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">which_clust</span><span class="op">(</span><span class="va">res</span>, genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IL32"</span>, <span class="st">"CCL5"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">top_genes</span><span class="op">(</span><span class="va">res</span>, top<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One or several clusters contain less than 5 genes. Retrieving all genes </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, <span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="rename_clust.html">rename_clust</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="clust_names.html">clust_names</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">rename_clust</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">clust_names</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1" "2"</span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[</span>, <span class="fu"><a href="col_names.html">col_names</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[</span>, <span class="fu">col_names</span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/methods/show.html" class="external-link">show</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		An object of class ClusterSet</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		Name: 4qPd5kES06 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		Memory used:  2990600 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 		Memory used:  2989008 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		Number of cells:  10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		Number of informative genes:  74 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		Number of gene clusters:  2 </span>
@@ -228,26 +227,27 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  seed  =  123 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  keep_nn  =  FALSE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  k_graph  =  5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpuh9nlZ </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  name  =  4qPd5kES06 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  inflation  =  1.6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 				 *  algorithm  =  mcl </span>
 <span class="r-in"><span><span class="fu"><a href="show_methods.html">show_methods</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "%in%"                     "["                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "clust_names"              "clust_size"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "cluster_set_to_xls"       "cluster_stats"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "col_names"                "dim"                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "enrich_go"                "gene_cluster"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "grep_clust"               "module_quality_scores"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "nclust"                   "plot_clust_enrichments"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "plot_ggheatmap"           "plot_markers_to_clusters"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "rename_clust"             "reorder_clust"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "reorder_genes"            "row_names"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "show"                     "subsample_by_ident"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [23] "top_by_go"                "top_by_grep"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "top_by_intersect"         "top_genes"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [27] "viz_enrich"               "which_clust"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [29] "write_clust"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "centers"                  "clust_names"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "clust_size"               "cluster_set_to_xls"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "cluster_stats"            "col_names"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "compute_centers"          "dim"                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "enrich_go"                "gene_cluster"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "grep_clust"               "module_quality_scores"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "nclust"                   "plot_clust_enrichments"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "plot_ggheatmap"           "plot_markers_to_clusters"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "rename_clust"             "reorder_clust"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "reorder_genes"            "row_names"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [23] "show"                     "subsample_by_ident"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "top_by_go"                "top_by_grep"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [27] "top_by_intersect"         "top_genes"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [29] "viz_enrich"               "which_clust"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "write_clust"             </span>
 </code></pre></div>
     </div>
   </div>

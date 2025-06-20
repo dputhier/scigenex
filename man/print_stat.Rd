@@ -32,4 +32,3 @@ print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
 set_verbosity(0)
 print_stat("My data", matrix(rnorm(10), nc=2), msg_type="DEBUG")
 }
-\keyword{internal}

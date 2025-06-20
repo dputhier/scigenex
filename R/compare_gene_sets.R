@@ -94,7 +94,6 @@ vcheck_inter <- Vectorize(check_inter)
 #' "size_set_1", "size_set_2", "diff_set_1" and "diff_set_2" compute the union of the two sets, the size 
 #' of gene sets from set_1, the size of gene sets from set_2, the gene that are specific to set_1,  the 
 #' gene that are specific to set_2, respectively. 
-#' @export compare_genesets
 #' @examples
 #' set.seed(123)
 #' set_1 <- list(letters[1:10], letters[11:20])
@@ -102,7 +101,7 @@ vcheck_inter <- Vectorize(check_inter)
 #' set_2 <- list(x[1:5], x[6:20])
 #' comp <- compare_genesets(set_1, set_2, stat = "jaccard")
 #' comp <- compare_genesets(set_1, set_2, stat = "hypergeom")
-#' 
+#' @export
 compare_genesets <- function(set_1=NULL, 
                              set_2=NULL,
                              stat=c("jaccard",
@@ -197,7 +196,6 @@ compare_genesets <- function(set_1=NULL,
 #' @importFrom ggplot2 geom_hline scale_x_continuous expansion scale_y_continuous scale_size_area coord_equal
 #' @return A ggplot object representing the comparison results.
 #'
-#' @export plot_cmp_genesets
 #'
 #' @examples
 #' set.seed(123)
@@ -208,7 +206,7 @@ compare_genesets <- function(set_1=NULL,
 #' plot_cmp_genesets(set_1, set_2, stat = "jaccard")
 #' plot_cmp_genesets(set_1, set_2, stat = "hypergeom", transform = "log10")
 #' plot_cmp_genesets(set_1, set_2, layout="square", transform = "-log10")
-#'
+#' @export
 plot_cmp_genesets <- function(set_1=NULL, 
                               set_2=NULL,
                               stat=c("jaccard",
@@ -361,13 +359,13 @@ plot_cmp_genesets <- function(set_1=NULL,
 #' @importFrom ggplot2 theme_minimal theme element_blank geom_col aes coord_flip 
 #' @importFrom ggplot2 scale_fill_manual scale_y_continuous geom_bar ggtitle coord_polar
 #' @importFrom scales percent
-#' @export cmp_to_a_list
 #'
 #' @examples
 #' set.seed(124)
 #' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 #' user_list <- sample(row_names(pbmc3k_medium_clusters), 100)
 #' cmp_to_a_list(pbmc3k_medium_clusters, user_list, background=user_list)
+#' @export
 cmp_to_a_list <- function(object=NULL, 
                           user_list=NULL,
                           name_user_list="user list",
@@ -413,6 +411,7 @@ cmp_to_a_list <- function(object=NULL,
                                                         clust_names(object))),
                               ordered = TRUE)
 
+        gene_set <- size <- source <- NULL
         p1 <- ggplot(df, aes(x=gene_set, 
                              y=size, 
                              fill = source)) +

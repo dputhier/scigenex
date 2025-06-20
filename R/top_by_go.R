@@ -15,8 +15,7 @@
 #' @param host Host to connect to. Defaults to www.ensembl.org.
 #' @param as_list Return a list not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_go
-#' @keywords internal
+#' @noRd
 #' @examples
 #'\dontrun{
 #' # Set verbosity to 1 to display info messages only.
@@ -30,6 +29,8 @@
 #' pbmc3k_medium_clusters <- top_by_go(pbmc3k_medium_clusters[1:2, ], go_id = "GO:0003677")
 #' pbmc3k_medium_clusters@top_genes
 #' }
+#' @export
+#' @noRd
 setGeneric("top_by_go", 
            function(object,
                     go_id = "GO:0003677",
@@ -54,7 +55,6 @@ setGeneric("top_by_go",
 #' @param host Host to connect to. Defaults to www.ensembl.org.
 #' @param as_list Return a list not a ClusterSet object.
 #' @return A \code{ClusterSet} object or a list (see as_list).
-#' @export top_by_go
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
 #' set_verbosity(1)
@@ -68,6 +68,7 @@ setGeneric("top_by_go",
 #' pbmc3k_medium_clusters@top_genes
 #' 
 #' @importFrom biomaRt listDatasets useMart getBM
+#' @export
 setMethod("top_by_go", 
           signature("ClusterSet"), 
           function(object,

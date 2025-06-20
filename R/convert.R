@@ -2,10 +2,11 @@
 #' @description Transform a Seurat objects into a ClusterSet.
 #' @param object A Seurat object.
 #' @param markers A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).
-#' @param which_slot One of 'data', 'counts' or 'sct'. The slot to extract from the seurat object to perform clustering analysis.
+#' @param layer One of 'data', 'counts' or 'scale.data'. The slot to extract from the seurat object to perform clustering analysis.
 #' SCT is the recommended method from Seurat package when working with spatial transcriptomics data.
-#' @param assay_type The type of assay ("RNA" or "Spatial").
+#' @param assay The type of assay (e.g. "RNA", "Spatial", "Sketch", "SCT"...).
 #' @importFrom SeuratObject LayerData
+#' @importFrom Matrix Matrix
 #' @examples
 #' ## From a scRNA-seq/Seurat object
 #' library(SeuratObject)
@@ -19,31 +20,23 @@
 #' plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
 #'              cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
 #' plot_profiles(cs, ident = Seurat::Idents(pbmc_small))
-#' @export cluster_set_from_seurat
+#' @export
 cluster_set_from_seurat <- function(object=NULL, 
                                     markers=NULL,
-                                    which_slot=c('data', 'counts', 'sct'),
-                                    assay_type=c('RNA', 'Spatial')){
+                                    layer=c('data', 'counts', 'scale.data'),
+                                    assay='RNA'){
   
-  which_slot <- match.arg(which_slot)
-  assay_type <- match.arg(assay_type)
+  layer <- match.arg(layer)
   
-  if (which_slot %in% c("data", "counts")) {
-    object <- SeuratObject::LayerData(object, assay=assay_type, layer=which_slot)
-  } else if (which_slot == "sct") {
-    if ("SCT" %in% names(object@assays)) {
-      object <- object@assays$SCT@data
-    } else{
-      print_msg("This object has no 'SCT' slot. Use SCTransform() before.",
-                msg_type = 'STOP')
-    }
-  }
+  object <- SeuratObject::LayerData(object, assay=assay, layer=layer)
   
   if(inherits(markers, "data.frame")){
+    
     gn <- markers$gene
     clusters <- markers$cluster
     names(clusters) <- gn
     object <- object[markers$gene, ]
+    
   }else if(is.vector(markers)){
     if(is.null(names(markers)))
       print_msg("The 'markers' argument should be a named vector.",
@@ -55,17 +48,10 @@ cluster_set_from_seurat <- function(object=NULL,
   }
   
   gn <- split(names(clusters), clusters)
-  centers <- split(data.frame(object[names(clusters), ]), clusters)
-  centers <- lapply(centers, apply, 2, mean)
-  name_center <- names(centers)
-  centers <- do.call("rbind", centers)
-  rownames(centers) <- name_center
-  colnames(centers) <- colnames(object)
 
-  
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- gn
-  obj_out@data <- as.matrix(object)
+  obj_out@data <- Matrix::Matrix(object, sparse = TRUE)
   obj_out@gene_clusters_metadata <- list("cluster_id" = setNames(as.character(unique(clusters)), 
                                                                  as.character(unique(clusters))),
                                           "number" = length(table(clusters)),
@@ -82,7 +68,7 @@ cluster_set_from_seurat <- function(object=NULL,
                          "simulated_dknn" = vector(),
                          "critical_distance" = vector(),
                          "fdr" = vector(),
-                         "center" = centers,
+                         "center" = NULL,
                          "all_gene_expression_matrix" = vector(),
                          "all_neighbor_distances" = vector())
   
@@ -106,7 +92,7 @@ cluster_set_from_seurat <- function(object=NULL,
 #' cs <- cluster_set_from_matrix(m, markers)
 #' plot_heatmap(cs, interactive = FALSE)
 #' 
-#' @export cluster_set_from_matrix
+#' @export
 cluster_set_from_matrix <- function(object=NULL, 
                                     markers=NULL){
   
@@ -139,21 +125,11 @@ cluster_set_from_matrix <- function(object=NULL,
                      unlist(lapply(markers, length))))
 
   print_msg("Computing centers.", msg_type = "INFO")
-  centers <- list()
-  
-  for(i in 1:length(markers)){
-    centers[[i]] <- colMeans(object[markers[[i]],])
-  }
-  
-  name_center <- names(markers)
-  centers <- do.call("rbind", centers)
-  rownames(centers) <- name_center
-  colnames(centers) <- colnames(object)
-  
+
   print_msg("Creating ClusterSet object.", msg_type = "INFO")
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- markers
-  obj_out@data <- as.matrix(object)
+  obj_out@data <- Matrix::Matrix(object, sparse = TRUE)
   obj_out@gene_clusters_metadata <- list("cluster_id" = setNames(as.character(unique(clusters)), 
                                                                  as.character(unique(clusters))),
                                          "number" = length(table(clusters)),
@@ -171,7 +147,7 @@ cluster_set_from_matrix <- function(object=NULL,
                              "simulated_dknn" = vector(),
                              "critical_distance" = vector(),
                              "fdr" = vector(),
-                             "center" = centers,
+                             "center" = NULL,
                              "all_gene_expression_matrix" = vector(),
                              "all_neighbor_distances" = vector())
   

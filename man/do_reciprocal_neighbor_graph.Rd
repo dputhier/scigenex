@@ -39,4 +39,3 @@ res <- select_genes(m[1:600,],
 do_reciprocal_neighbor_graph(object = res)
 
 }
-\keyword{internal}

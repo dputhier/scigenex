@@ -30,5 +30,4 @@ x<- get_genes(pbmc3k_medium_clusters, cluster = 1)
 # Get top 5 genes from cluster 1
 pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters, top = 5)
 x <- get_genes(pbmc3k_medium_clusters, cluster = 1, top = TRUE)
-
 }

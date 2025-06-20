@@ -17,8 +17,9 @@
 #' @param nb_proc The number of processor to be used if order_by=='hclust'.
 #'
 #' @return ClusterSet-class object
-#' @export reorder_genes
-#' @keywords internal
+#' @importFrom Matrix Matrix
+#' @export
+#' @noRd
 setGeneric("reorder_genes", 
            function(object=NULL, 
                     order_by = NULL,
@@ -46,7 +47,6 @@ setGeneric("reorder_genes",
 #'
 #' @return ClusterSet-class object
 #' @importFrom amap hcluster
-#' @export reorder_genes
 #'
 #' @examples
 #' # Set verbosity to 1 to display info messages only.
@@ -65,6 +65,7 @@ setGeneric("reorder_genes",
 #'                            order_by = "gene_names"), 
 #'              label_size = 5)
 #' 
+#' @export
 setMethod("reorder_genes", 
           signature("ClusterSet"), 
           function(object, 
@@ -99,10 +100,9 @@ setMethod("reorder_genes",
     for (cur_clust in names(object@gene_clusters)) {
       
     gene_cluster_names <- object@gene_clusters[[cur_clust]]
-    expression_matrix <- object@data[gene_cluster_names,]
-    
+
     set.seed(123)
-    hclust_res <- amap::hcluster(expression_matrix,
+    hclust_res <- amap::hcluster(object@data[gene_cluster_names,],
                                  method = method,
                                  diag = FALSE,
                                  upper = FALSE,
@@ -120,7 +120,7 @@ setMethod("reorder_genes",
   }
   
   # Reorder genes in data slot
-  object@data <- object@data[unlist(object@gene_clusters, use.names = FALSE),]
+  object@data <- Matrix::Matrix(object@data[unlist(object@gene_clusters, use.names = FALSE),], sparse=TRUE)
   
   return(object)
 })

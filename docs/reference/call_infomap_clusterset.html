@@ -19,7 +19,7 @@ to a specified file and updates the parameters in the `ClusterSet` object."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -105,12 +105,13 @@ to a specified file and updates the parameters in the `ClusterSet` object.</p>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_genes.html">select_genes</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span>,</span></span>
 <span class="r-in"><span>                    distance <span class="op">=</span> <span class="st">"pearson"</span>,</span></span>
 <span class="r-in"><span>                    row_sum<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of selected rows/genes (row_sum): 1164 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances using selected method: pearson </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing simulated distances to KNN. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing threshold of distances to KNN (DKNN threshold). </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN threshold (DKNN threshold). </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Selecting informative genes. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating the ClusterSet object. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Instantiating a ClusterSet object. </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cluster informative features</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="gene_clustering.html">gene_clustering</a></span><span class="op">(</span><span class="va">res</span>, method<span class="op">=</span><span class="st">"closest_neighborhood"</span>,</span></span>
@@ -122,7 +123,7 @@ to a specified file and updates the parameters in the `ClusterSet` object.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Deleting reciprocal edges. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79/R14z6ff8TV.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpuh9nlZ/R14z6ff8TV.graph_input.txt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  The infomap algorithm has been selected. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Calling infomap algorithm. </span>
 <span class="r-in"><span></span></span>

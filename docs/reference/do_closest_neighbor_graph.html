@@ -18,7 +18,7 @@ The graph is constructed using the Density K-Nearest Neighbor (DKNN) method."><!
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -109,12 +109,13 @@ The graph is constructed using the Density K-Nearest Neighbor (DKNN) method.</p>
 <span class="r-in"><span>                    noise_level <span class="op">=</span> <span class="fl">0.3</span>,</span></span>
 <span class="r-in"><span>                    fdr <span class="op">=</span> <span class="fl">1e-8</span>,</span></span>
 <span class="r-in"><span>                    row_sum <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of selected rows/genes (row_sum): 600 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances using selected method: pearson </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing simulated distances to KNN. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing threshold of distances to KNN (DKNN threshold). </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Computing distances to KNN threshold (DKNN threshold). </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Selecting informative genes. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Creating the ClusterSet object. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Instantiating a ClusterSet object. </span>
 <span class="r-in"><span>                    </span></span>
 <span class="r-in"><span><span class="co"># Construct a new graph based on genes selected with select_genes()</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">do_closest_neighbor_graph</span><span class="op">(</span>object <span class="op">=</span> <span class="va">res</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
@@ -125,7 +126,7 @@ The graph is constructed using the Density K-Nearest Neighbor (DKNN) method.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Deleting reciprocal edges. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Converting distances into weights. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Writing the input file. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpsVLw79/06oFCM0di0.graph_input.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Input file saved in :/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//Rtmpuh9nlZ/06oFCM0di0.graph_input.txt </span>
 </code></pre></div>
     </div>
   </div>

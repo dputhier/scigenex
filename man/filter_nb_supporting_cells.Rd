@@ -7,7 +7,8 @@
 filter_nb_supporting_cells(
   object = NULL,
   min_nb_supporting_cell = 3,
-  min_pct_gene_expressed = 50
+  min_pct_gene_expressed = 50,
+  rename = TRUE
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ filter_nb_supporting_cells(
 A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.}
 
 \item{min_pct_gene_expressed}{See min_nb_supporting_cell argument.}
+
+\item{rename}{Should cluster be renamed.}
 }
 \value{
 A ClusterSet object where clusters that did not pass the filter have been removed.

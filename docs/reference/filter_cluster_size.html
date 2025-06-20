@@ -18,7 +18,7 @@ based on their size."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -61,7 +61,7 @@ based on their size.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_cluster_size</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span>, min_cluster_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_cluster_size</span><span class="op">(</span>object <span class="op">=</span> <span class="cn">NULL</span>, min_cluster_size <span class="op">=</span> <span class="fl">5</span>, rename <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -74,6 +74,10 @@ based on their size.</p>
 
 <dt id="arg-min-cluster-size">min_cluster_size<a class="anchor" aria-label="anchor" href="#arg-min-cluster-size"></a></dt>
 <dd><p>An integer indicating the minimum size for a clusters to be kept.</p></dd>
+
+
+<dt id="arg-rename">rename<a class="anchor" aria-label="anchor" href="#arg-rename"></a></dt>
+<dd><p>Should cluster be renamed.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -89,7 +93,7 @@ based on their size.</p>
 <span class="r-in"><span><span class="co"># Load a dataset</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">'7871581/files/pbmc3k_medium_clusters'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters was already loaded. </span>
-<span class="r-in"><span><span class="fu"><a href="clust_size.html">clust_size</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">clust_size</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 51 49 45 24 20 18 14 14 14 12  7  7  6  5  5 </span>
 <span class="r-in"><span><span class="co"># Remove the cluster with less than 20 genes</span></span></span>
@@ -97,7 +101,7 @@ based on their size.</p>
 <span class="r-in"><span>                                 min_cluster_size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  10  clusters with less than 20 were filtered out. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Number of clusters left 5 </span>
-<span class="r-in"><span><span class="fu"><a href="clust_size.html">clust_size</a></span><span class="op">(</span><span class="va">clust_set</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">clust_size</span><span class="op">(</span><span class="va">clust_set</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1  2  3  4  5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 51 49 45 24 20 </span>
 <span class="r-in"><span></span></span>

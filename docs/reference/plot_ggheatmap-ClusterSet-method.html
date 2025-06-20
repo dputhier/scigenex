@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu"><a href="plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span></span>
+<span><span class="fu">plot_ggheatmap</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_top_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -169,20 +169,20 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Dataset 7871581/files/pbmc3k_medium was already loaded. </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename clusters</span></span></span>
-<span class="r-in"><span><span class="va">new_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="rename_clust.html">rename_clust</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, new_name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"M%02d"</span>, <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="clust_names.html">clust_names</a></span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">new_obj</span> <span class="op">&lt;-</span> <span class="fu">rename_clust</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span>, new_name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"M%02d"</span>, <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">clust_names</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use plot_ggheatmap</span></span></span>
-<span class="r-in"><span><span class="va">ident_pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">new_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="top_genes.html">top_genes</a></span><span class="op">(</span><span class="va">new_obj</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ident_pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">pbmc3k_medium</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">new_obj</span> <span class="op">&lt;-</span> <span class="fu">top_genes</span><span class="op">(</span><span class="va">new_obj</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  One or several clusters contain less than 20 genes. Retrieving all genes </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Results are stored in 'top_genes' slot of the object. </span>
-<span class="r-in"><span><span class="fu"><a href="plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span><span class="va">new_obj</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_ggheatmap</span><span class="op">(</span><span class="va">new_obj</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_ggheatmap-ClusterSet-method-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Only show a set of randomly selected cells from each class</span></span></span>
 <span class="r-in"><span><span class="co"># to get balanced classes</span></span></span>
-<span class="r-in"><span><span class="va">sub_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="subsample_by_ident.html">subsample_by_ident</a></span><span class="op">(</span><span class="va">new_obj</span>, nbcell<span class="op">=</span><span class="fl">10</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="plot_ggheatmap.html">plot_ggheatmap</a></span><span class="op">(</span><span class="va">sub_obj</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sub_obj</span> <span class="op">&lt;-</span> <span class="fu">subsample_by_ident</span><span class="op">(</span><span class="va">new_obj</span>, nbcell<span class="op">=</span><span class="fl">10</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_ggheatmap</span><span class="op">(</span><span class="va">sub_obj</span>, ident<span class="op">=</span><span class="va">ident_pbmc3k</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_ggheatmap-ClusterSet-method-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

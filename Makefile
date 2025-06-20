@@ -1,5 +1,5 @@
 MAKEFILE=Makefile
-VERSION=1.6.1
+VERSION=2.0.0
 
 .PHONY: help
 
@@ -49,7 +49,7 @@ test:
 	@echo "devtools::test()" | R --slave
 
 test_by_file:
-	@echo 'library(scigenex); for(i in dir("./tests/testthat/", pattern = ".R$$")){devtools::test_active_file(file.path("./tests/testthat/", i))}' | R --slave
+	@echo 'library(scigenex); for(i in dir("./tests/testthat/", pattern = ".R$$")){devtools::test_active_file(file.path("./tests/testthat/", i))}; warnings()' | R --slave
 
 coverage:
 	@echo "Checking coverage"

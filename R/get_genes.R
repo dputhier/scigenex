@@ -11,7 +11,6 @@
 #' @param top A logical to indicate whether to provide top genes.
 #'
 #' @return A character vector.
-#' @export get_genes
 #'
 #' @examples
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -24,7 +23,7 @@
 #' # Get top 5 genes from cluster 1
 #' pbmc3k_medium_clusters <- top_genes(pbmc3k_medium_clusters, top = 5)
 #' x <- get_genes(pbmc3k_medium_clusters, cluster = 1, top = TRUE)
-#' 
+#' @export
 get_genes <- function(object,
                       cluster = "all",
                       top = FALSE) {

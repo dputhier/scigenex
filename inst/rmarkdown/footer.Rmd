@@ -1,0 +1,12 @@
+# Session information
+
+
+```{r, session_info, eval=TRUE, echo=FALSE, results = "asis"} 
+pander::pander(sessionInfo())
+``` 
+
+```{r panel_setup_final, include = FALSE}
+xaringanExtra::use_panelset(in_xaringan=FALSE)
+xaringanExtra::style_panelset(font_family = "inherit")
+xaringanExtra::style_panelset_tabs(foreground = "honeydew", background = "seagreen")
+```

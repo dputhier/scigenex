@@ -2,7 +2,7 @@
 % Please edit documentation in R/clusterset_report.R
 \name{cluster_set_report}
 \alias{cluster_set_report}
-\title{Create a report from a ClusterSet and Seurat object.}
+\title{Create a report from a ClusterSet and Seurat object. DEPRECATED}
 \usage{
 cluster_set_report(
   clusterset_object = NULL,
@@ -52,7 +52,7 @@ cluster_set_report(
 \item{report_id}{Used to label code chunks.}
 }
 \description{
-Create a report from a ClusterSet and Seurat object.
+Create a report from a ClusterSet and Seurat object. DEPRECATED. Use scigenex_report() please.
 }
 \examples{
 # Load datasets

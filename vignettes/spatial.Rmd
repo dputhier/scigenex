@@ -20,7 +20,7 @@ The scigenex package offers a certain number of functions dedicated to spatial t
 
 Here we will use the *stxBrain* dataset as example. This dataset is available from SeuratData library and contains mouse brain spatial expression over in several datasets. Two datasets are for the posterior region, two for the anterior. We will use the *anterior1* dataset that we will first pre-process using Seurat. 
 
-```{r spt}
+```{r spt, message=FALSE}
 library(Seurat)
 library(SeuratData)
 library(scigenex)
@@ -52,6 +52,7 @@ set_verbosity(0)
 res_brain <- select_genes(data=brain1,
                     k=80,
                     distance_method="pearson",
+                    assay="Spatial",
                     row_sum = 5)
 
 gc_brain <- gene_clustering(res_brain, 

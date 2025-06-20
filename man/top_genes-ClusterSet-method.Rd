@@ -4,16 +4,21 @@
 \alias{top_genes,ClusterSet-method}
 \title{Most co-expressed genes from each gene cluster}
 \usage{
-\S4method{top_genes}{ClusterSet}(object, top = 20, fast = FALSE, distance_method = NULL)
+\S4method{top_genes}{ClusterSet}(
+  object,
+  top = 20,
+  fast = TRUE,
+  distance_method = c(NULL, "pearson", "kendall", "spearman", "cosine", "euclidean")
+)
 }
 \arguments{
 \item{object}{A \code{ClusterSet} object.}
 
 \item{top}{A value for the number of genes to select from each cluster.}
 
-\item{fast}{Use qlcMatrix::corSparse for pearson computation. Default to cor(). Default to FALSE for retro-compatibility.}
+\item{fast}{This argument is no more functional. Fast computation is used by default now.}
 
-\item{distance_method}{Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance. One of c("kendall", "spearman", "cosine", "euclidean", "pearson") or NULL.}
+\item{distance_method}{Overright the object distance_method (slot parameters$distance_method). Useful when object was created using cluster_set_from_matrix() for instance.}
 }
 \value{
 A \code{ClusterSet} object.

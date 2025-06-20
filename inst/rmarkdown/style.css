@@ -1,0 +1,9 @@
+.panelset .panel-active {
+    display: block !important;
+}
+
+img {vertical-align: top;}
+
+.topalign img {
+  vertical-align: top;
+}

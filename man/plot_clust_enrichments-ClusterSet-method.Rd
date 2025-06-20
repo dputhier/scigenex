@@ -44,7 +44,3 @@ Display cluster enrichments for gene GO terms.
 load_example_dataset("8028226/files/pbmc3k_medium_clusters_enr_sub")
 plot_clust_enrichments(pbmc3k_medium_clusters_enr_sub)
 }
-\seealso{
-\code{\link{enrich_go}}
-\code{\link{colors_for_gradient}}
-}

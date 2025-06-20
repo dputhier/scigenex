@@ -4,12 +4,14 @@
 \alias{filter_cluster_sd}
 \title{Filter out gene clusters with small standard deviation.}
 \usage{
-filter_cluster_sd(object = NULL, min_sd = 0.2)
+filter_cluster_sd(object = NULL, min_sd = 0.2, rename = TRUE)
 }
 \arguments{
 \item{object}{A ClusterSet object.}
 
 \item{min_sd}{An integer indicating the minimum standard deviation for a clusters to be kept.}
+
+\item{rename}{Should cluster be renamed.}
 }
 \value{
 A ClusterSet object where clusters not passing the filter have been removed.
@@ -21,7 +23,7 @@ Filter out gene clusters with small standard deviation.
 load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 df <- cluster_stats(pbmc3k_medium_clusters)  
 plot_cluster_stats(df)
-plot_cluster_stats(df, highlight=df$sd_total > 0.3) 
-pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3)
+plot_cluster_stats(df, highlight=df$sd > 0.3) 
+pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3, rename=FALSE)
 plot_cluster_stats(cluster_stats(pbmc3k_medium_clusters_sub))
 }

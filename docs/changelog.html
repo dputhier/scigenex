@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -54,7 +54,16 @@
 
 <div id="changelog" class="section level1">
 
-<div class="section level2">
+<ul><li>The clusterset_report() is deprecated. The gm_report() should be used instead.</li>
+<li>The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !</li>
+<li>The cluster are no more computed by default. use compute_centers().</li>
+<li>The ‘which_slot’ argument of select_genes() has been replaced by ‘layer’.</li>
+<li>Select_genes() function now has an ‘assay’ argument.</li>
+<li>Suppressed some message in vignettes.</li>
+<li>Add a rename argument to filter_cluster_size(), filter_nb_supporting_cells(), filter_by_dot_prod(), filter_cluster_sd().</li>
+<li>In plot_profiles() argument color_cell_type has been renamed color_cluster.</li>
+<li>Fix ‘Functions or methods with usage in Rd file but not in code’ using @noRd (instead of @keyword internal).</li>
+</ul><div class="section level2">
 <h2 id="v161">v1.6.1<a class="anchor" aria-label="anchor" href="#v161"></a></h2>
 <ul><li>The top_genes() has new argument ‘distance_method’ to allow overridding the default distance method (which can be unknown when object is obtained using cluster_set_from_matrix()).</li>
 <li>The top_genes() has a new argument ‘fast’ to allow fast computation of Pearson-based distances.</li>
@@ -88,7 +97,7 @@
 <div class="section level2">
 <h2 id="v151">v1.5.1<a class="anchor" aria-label="anchor" href="#v151"></a></h2>
 <ul><li>Fix gene_clustering() and mcl_install(). Added ‘mcl_dir’ argument to <code><a href="reference/gene_clustering.html">gene_clustering()</a></code> (in case automated installation in difficult, e.g., when running in a proprietary environnement).</li>
-<li>Fix <code><a href="reference/top_by_go.html">top_by_go()</a></code>. Added argument ‘as_list’.</li>
+<li>Fix <code>top_by_go()</code>. Added argument ‘as_list’.</li>
 <li>Documentation has been splitted in two part (scRNA-seq and ST).</li>
 </ul></div>
 <div class="section level2">
@@ -142,7 +151,7 @@
 </ul></div>
 <div class="section level2">
 <h2 id="v142">v1.4.2<a class="anchor" aria-label="anchor" href="#v142"></a></h2>
-<ul><li><p>Added color for cell cluster in <code><a href="reference/plot_ggheatmap.html">plot_ggheatmap()</a></code>.</p></li>
+<ul><li><p>Added color for cell cluster in <code>plot_ggheatmap()</code>.</p></li>
 <li><p>Updated doc.</p></li>
 </ul></div>
 <div class="section level2">
@@ -155,13 +164,13 @@
 <ul><li>Update of the documentation</li>
 <li>Added support for spatial transcriptomics: <code><a href="reference/getFlippedTissueCoordinates.html">getFlippedTissueCoordinates()</a></code>, <code><a href="reference/plot_spatial.html">plot_spatial()</a></code>, <code><a href="reference/plot_spatial_panel.html">plot_spatial_panel()</a></code>.</li>
 <li>Added import from matrix and Seurat object: <code><a href="reference/cluster_set_from_matrix.html">cluster_set_from_matrix()</a></code>, <code><a href="reference/cluster_set_from_seurat.html">cluster_set_from_seurat()</a></code>.</li>
-<li>Added <code><a href="reference/cluster_stats.html">cluster_stats()</a></code> and <code><a href="reference/plot_cluster_stats.html">plot_cluster_stats()</a></code> to perform statistics on clusters.</li>
-<li>Added export: <code><a href="reference/cluster_set_to_xls.html">cluster_set_to_xls()</a></code>.</li>
+<li>Added <code>cluster_stats()</code> and <code><a href="reference/plot_cluster_stats.html">plot_cluster_stats()</a></code> to perform statistics on clusters.</li>
+<li>Added export: <code>cluster_set_to_xls()</code>.</li>
 <li>Added <code><a href="reference/compare_genesets.html">compare_genesets()</a></code> and <code><a href="reference/plot_cmp_genesets.html">plot_cmp_genesets()</a></code> to compare gene lists with various statistics.</li>
-<li>Added <code><a href="reference/plot_clust_enrichments.html">plot_clust_enrichments()</a></code> to compare functional enrichment over clusters.</li>
-<li>Added <code><a href="reference/plot_ggheatmap.html">plot_ggheatmap()</a></code> for statically display heatmaps.</li>
-<li>Added <code><a href="reference/plot_markers_to_clusters.html">plot_markers_to_clusters()</a></code> to map markers onto clusters.</li>
-<li>Added <code><a href="reference/top_by_go.html">top_by_go()</a></code> to select top genes by GO terms.</li>
+<li>Added <code>plot_clust_enrichments()</code> to compare functional enrichment over clusters.</li>
+<li>Added <code>plot_ggheatmap()</code> for statically display heatmaps.</li>
+<li>Added <code>plot_markers_to_clusters()</code> to map markers onto clusters.</li>
+<li>Added <code>top_by_go()</code> to select top genes by GO terms.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="v131">v1.3.1<a class="anchor" aria-label="anchor" href="#v131"></a></h2>

@@ -1,0 +1,299 @@
+--- 
+site: bookdown::bookdown_site
+title: "`r report_title`"
+output: 
+  bookdown::gitbook:
+    css: style.css
+    number_sections: false
+    toc_depth: 2
+    config:
+      toc:
+        collapse: section
+    sharing:
+        github: no
+        facebook: no
+        twitter: no
+        all: no
+documentclass: book
+params:
+  fig_path: "all_"
+---
+
+
+<!-- UPPERCASE variable are text to be replaced. -->
+<!-- There are several global variables obtained from st_report() function. -->
+
+```{r start, include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+options(width=400)
+scigenex::set_verbosity(0)
+knitr::opts_chunk$set(
+  fig.path="all_",
+  fig.align = "center", 
+  size = "tiny", 
+  comment = "",
+  fig.dpi=300,
+  out.width="100%"
+)
+```
+
+```{css echo=FALSE}
+.panelset .panel-active {
+    display: block !important;
+}
+```
+
+```{r, section_gen_info_1, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("# All Modules ")
+``` 
+
+```{r, section_gen_info_2, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Miscellaneous {.panelset}") 
+``` 
+
+```{r, section_gen_info_3, eval="exp_metadata" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Metadata ") 
+``` 
+
+```{r, section_gen_info_4, eval="exp_metadata" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This table display metadata about the report (e.g., title, subtitle, author, and date).") 
+``` 
+
+```{r parameters, echo=FALSE, eval="exp_metadata" %in% section}
+
+t1 <- rbind(c("Title: ", report_title),
+            c("Subtitle: ", report_subtitle),
+            c("Author", report_author),
+            c("Date", report_date)
+            )
+
+knitr::kable(t1) %>% kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::kable_styling() %>%
+  kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+```{r, section_gen_info_5, eval="exp_experimenters" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Experimenters") 
+``` 
+
+```{r, section_gen_info_6, eval="exp_experimenters" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This table display metadata about the experimenters.") 
+``` 
+
+
+```{r section_gen_info_7, echo=FALSE, eval="exp_experimenters" %in% section,}
+if(nrow(experimenters) > 0)
+  knitr::kable(experimenters) %>% 
+    kableExtra::row_spec(1, bold = TRUE) %>% 
+    kableExtra::kable_styling(full_width = FALSE, position = "left") %>%
+    kableExtra::kable_styling() %>%
+    kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+
+```{r, section_gen_info_8, eval="exp_sample" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Sample informations") 
+``` 
+  
+```{r, section_gen_info_9, eval="exp_sample" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This table display informations about the sample.") 
+``` 
+
+```{r section_gen_info_10, echo=FALSE, eval="exp_sample" %in% section}
+
+smp_info_table <- rbind(c("Information", "Value"),
+                        c("Species: ", smp_species),
+                        c("Stage: ", smp_stage),
+                        c("Organ: ", smp_organ),
+                        c("Region: ", smp_region))
+
+knitr::kable(smp_info_table) %>% kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::kable_styling() %>%
+  kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+```{r, section_gen_info_11, eval="exp_params" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Workflow parameters.") 
+``` 
+  
+```{r, section_gen_info_12, eval="exp_params" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This table display informations about the worflow parameters.") 
+``` 
+
+```{r section_gen_info_13, echo=FALSE, eval="exp_params" %in% section}
+if(nrow(workflow_params) > 0)
+  knitr::kable(workflow_params) %>% kableExtra::column_spec(1, bold = TRUE) %>%
+    kableExtra::kable_styling() %>%
+    kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+
+```{r, section_gen_info_14, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Experiment information {.panelset}") 
+``` 
+
+```{r, section_gen_info_15, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dimplot") 
+``` 
+
+```{r, section_gen_info_16, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A UMAP showing the cell/spot classes.") 
+``` 
+
+```{r section_gen_info_17, echo=FALSE, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"}
+identities <- grep("seurat_clusters", 
+                      colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+if(length(identities))
+  Seurat::DimPlot(seurat_object)
+```
+
+```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Spatial distribution") 
+``` 
+
+```{r, section_gen_info_19, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The spatial distribution of counts and features.") 
+``` 
+
+```{r section_gen_info_20, echo=FALSE, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"}
+SpatialFeaturePlot_used_params <- as.list(formals(Seurat::SpatialFeaturePlot))
+for(i in names(SpatialFeaturePlot_params)){
+  SpatialFeaturePlot_used_params[[i]] <- SpatialFeaturePlot_params[[i]]}
+
+SpatialFeaturePlot_used_params$object <- seurat_object
+
+meta_data <- grep("(^nCount)|(^nFeature)", 
+                  colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+
+for(feat in meta_data){
+  SpatialFeaturePlot_used_params$features <- feat
+  print(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params))
+}
+```
+
+```{r, section_gen_info_21, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Spatial dimplot") 
+``` 
+
+```{r, section_gen_info_22, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The spatial distribution of cell/spots classes.") 
+``` 
+
+```{r section_gen_info_23, echo=FALSE, eval="exp_spatial_dimplot" %in% section, echo=FALSE, results = "asis"}
+identities <- grep("seurat_clusters", 
+                      colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+
+if(length(identities)){
+    SpatialDimPlot_used_params <- as.list(formals(Seurat::SpatialDimPlot))
+    
+  for(i in names(SpatialDimPlot_params)){
+    SpatialDimPlot_used_params[[i]] <- SpatialDimPlot_params[[i]]
+  }
+  
+  SpatialDimPlot_used_params$object <- seurat_object
+  
+  print(base::do.call(Seurat::SpatialDimPlot, SpatialDimPlot_used_params))
+  
+}
+
+```
+
+```{r, section_gen_info_24, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Module description {.panelset}") 
+``` 
+
+
+```{r, section_gen_info_25, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Module stats") 
+``` 
+  
+```{r, section_gen_info_26, eval="exp_stats" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This section provides general statistics about modules.") 
+``` 
+
+```{r section_gen_info_27, echo=FALSE, eval="exp_stats" %in% section}
+df <- scigenex::cluster_stats(cluster_set)
+
+knitr::kable(df) %>% kableExtra::column_spec(1, bold = TRUE) %>%
+  kableExtra::kable_styling() %>%
+  kableExtra::scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+
+```{r section_gen_info_28, echo=FALSE, eval="exp_stats" %in% section}
+scigenex::plot_cluster_stats(df)
+```
+
+
+```{r, section_gen_info_29, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Module genes") 
+``` 
+
+
+
+```{r, section_gen_info_30, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("This section provides information about gene contained in modules.") 
+``` 
+
+
+```{r section_gen_info_31, echo=FALSE, eval="exp_genes" %in% section}
+df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set), NULL),
+         gene=names(scigenex::gene_cluster(cluster_set)))
+```
+
+```{r section_gen_info_32_table, echo=FALSE, eval="exp_info" %in% section}
+DT::datatable(df)
+```
+
+```{r, section_gen_info_33, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Module heatmap") 
+``` 
+
+```{r, section_gen_info_34, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A heatmap displaying representative genes (top genes) of each gene module.") 
+``` 
+
+```{r section_gen_info_35, echo=FALSE, eval="exp_heatmap" %in% section}
+scigenex::plot_ggheatmap(cluster_set, 
+                         use_top_genes = TRUE, 
+                         hide_gene_name = TRUE, 
+                         ident = Idents(seurat_object))
+```
+
+
+```{r, section_gen_info_36, eval="exp_mean_1" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Module mean exp. (1)") 
+``` 
+
+```{r, section_gen_info_37, eval="exp_mean_1" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("Mean expression of gene across cell/spot populations for each gene module.") 
+``` 
+
+```{r section_gen_info_38, echo=FALSE, eval="exp_mean_1" %in% section}
+
+plot_multi_profiles_used_params <- as.list(formals(plot_multi_profiles))
+for(i in names(plot_multi_profiles_params))
+  plot_multi_profiles_used_params[[i]] <- plot_multi_profiles_params[[i]]
+
+plot_multi_profiles_used_params$data <- cluster_set
+plot_multi_profiles_used_params$ident <- Idents(seurat_object)
+
+print(base::do.call(plot_multi_profiles, plot_multi_profiles_used_params))
+```
+
+```{r, section_gen_info_39, eval="exp_mean_2" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Module mean exp. (2)") 
+``` 
+
+```{r, section_gen_info_40, eval="exp_mean_2" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("Mean expression of gene across cell/spot populations for each gene module.") 
+``` 
+
+```{r section_gen_info_41, echo=FALSE, eval="exp_mean_2" %in% section}
+plot_profiles_used_params <- as.list(formals(plot_profiles))
+for(i in names(plot_profiles_params))
+  plot_profiles_used_params[[i]] <- plot_profiles_params[[i]]
+plot_profiles_used_params$data <- cluster_set
+plot_profiles_used_params$ident <- Idents(seurat_object)
+print(base::do.call(plot_profiles, plot_profiles_used_params))
+```

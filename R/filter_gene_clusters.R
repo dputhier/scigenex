@@ -4,6 +4,7 @@
 #' based on their size.
 #' @param object A ClusterSet object.
 #' @param min_cluster_size An integer indicating the minimum size for a clusters to be kept.
+#' @param rename Should cluster be renamed.
 #'
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
 #' 
@@ -19,16 +20,16 @@
 #'                                  min_cluster_size = 20)
 #' clust_size(clust_set)
 #' 
-#' @export filter_cluster_size
-
+#' @export
 filter_cluster_size <- function(object = NULL,
-                                min_cluster_size = 5) {
+                                min_cluster_size = 5,
+                                rename=FALSE) {
   
   ## Check format object arg
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
   cluster_to_keep <- lapply(object@gene_clusters, length) >= min_cluster_size
   
@@ -41,7 +42,9 @@ filter_cluster_size <- function(object = NULL,
   )
   
   object <- object[cluster_to_keep, ]
-  c <- rename_clust(object)
+  
+  if(rename)
+    object <- rename_clust(object)
 
   print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
   
@@ -59,6 +62,7 @@ filter_cluster_size <- function(object = NULL,
 #' @param min_nb_supporting_cell An integer indicating the minimum number of cell supporting a cluster.
 #' A cell supports a cluster if it expresses at least min_pct_gene_expressed \% of the genes from the cluster.
 #' @param min_pct_gene_expressed See min_nb_supporting_cell argument.
+#' @param rename Should cluster be renamed.
 #' 
 #' @examples
 #' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
@@ -66,11 +70,11 @@ filter_cluster_size <- function(object = NULL,
 #' 
 #' @return A ClusterSet object where clusters that did not pass the filter have been removed.
 #'
-#' @export filter_nb_supporting_cells
-
+#' @export
 filter_nb_supporting_cells <- function(object = NULL,
                                        min_nb_supporting_cell = 3,
-                                       min_pct_gene_expressed = 50) {
+                                       min_pct_gene_expressed = 50,
+                                       rename=TRUE) {
   
   if(is.null(object))
     print_msg('Please provide a valid object.')
@@ -79,7 +83,7 @@ filter_nb_supporting_cells <- function(object = NULL,
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
   cluster_to_keep <- vector()
   
@@ -101,7 +105,7 @@ filter_nb_supporting_cells <- function(object = NULL,
   }
   
   # Print number of cluster filtered out
-  nb_cluster_out <- length(nb_clusters_before_filtering) - length(cluster_to_keep)
+  nb_cluster_out <- length(clust_names_before_filtering) - length(cluster_to_keep)
   print_msg(
     paste0(
       nb_cluster_out,
@@ -115,15 +119,14 @@ filter_nb_supporting_cells <- function(object = NULL,
     object <- object[-c(1:nclust(object)),]
   }else{
     object <- object[cluster_to_keep, ]
-    object <- rename_clust(object)
+    if(rename)
+      object <- rename_clust(object)
   }
   
   print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
   
   return(object)
 }
-
-
 
 
 ############################## filter_by_dot_prod ##############################
@@ -162,6 +165,7 @@ median_of_max_dot_prod <- function(cur_clust){
 #' 
 #' @param object A ClusterSet object.
 #' @param av_dot_prod_min Any cluster with average dot product below this value is discarded. This allow to delete
+#' @param rename Should cluster be renamed.
 #' clusters in which correlation is influenced/supported by very few samples (typically 1).
 #' 
 #' @examples
@@ -170,8 +174,10 @@ median_of_max_dot_prod <- function(cur_clust){
 #' nclust(pbmc3k_medium_clusters)
 #' obj <- filter_by_dot_prod(pbmc3k_medium_clusters, av_dot_prod_min=5)
 #' nclust(obj) 
-#' @export filter_by_dot_prod
-filter_by_dot_prod <- function(object = NULL, av_dot_prod_min = 2) {
+#' @export
+filter_by_dot_prod <- function(object = NULL, 
+                               av_dot_prod_min = 2,
+                               rename=TRUE) {
 
   ## Check format object arg
   check_format_cluster_set(object)
@@ -225,7 +231,8 @@ filter_by_dot_prod <- function(object = NULL, av_dot_prod_min = 2) {
     object <- object[selected_cluster, ]
     
     print_msg("Renaming.", msg_type = "DEBUG")
-    object <- rename_clust(object)
+    if(rename)
+      object <- rename_clust(object)
     return(object)
   }
 
@@ -236,30 +243,35 @@ filter_by_dot_prod <- function(object = NULL, av_dot_prod_min = 2) {
 #' @description Filter out gene clusters with small standard deviation.
 #' @param object A ClusterSet object.
 #' @param min_sd An integer indicating the minimum standard deviation for a clusters to be kept.
+#' @param rename Should cluster be renamed.
 #'
 #' @return A ClusterSet object where clusters not passing the filter have been removed.
 #' @examples 
 #' load_example_dataset("7871581/files/pbmc3k_medium_clusters")
 #' df <- cluster_stats(pbmc3k_medium_clusters)  
 #' plot_cluster_stats(df)
-#' plot_cluster_stats(df, highlight=df$sd_total > 0.3) 
-#' pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3)
+#' plot_cluster_stats(df, highlight=df$sd > 0.3) 
+#' pbmc3k_medium_clusters_sub <- filter_cluster_sd(pbmc3k_medium_clusters, min_sd=0.3, rename=FALSE)
 #' plot_cluster_stats(cluster_stats(pbmc3k_medium_clusters_sub))
-#' @export filter_cluster_sd
+#' @export
 filter_cluster_sd <- function(object = NULL,
-                              min_sd = 0.2) {
+                              min_sd = 0.2,
+                              rename=TRUE) {
   
   ## Check format object arg
   check_format_cluster_set(object)
   
   # Store the initial number of clusters (used to compute the number of cluster filtered out)
-  nb_clusters_before_filtering <- names(object@gene_clusters)
+  clust_names_before_filtering <- names(object@gene_clusters)
   
-  gene_clust <- as.factor(gene_cluster(object))
-  df_split <- split(object@data, gene_clust)
-  sd_total <- unlist(lapply(df_split, sd))
+  gene_clust <- object@gene_clusters
+  sd_clust <- vector()
 
-  cluster_to_keep <- sd_total >= min_sd
+  for(pos in 1:length(gene_clust)){
+    sd_clust[pos] <- stats::sd(object@data[gene_clust[[pos]], ]) 
+  }
+
+  cluster_to_keep <- sd_clust >= min_sd
   
   print_msg(
     paste(
@@ -273,7 +285,8 @@ filter_cluster_sd <- function(object = NULL,
     object <- object[-c(1:nclust(object)),]
   }else{
     object <- object[cluster_to_keep, ]
-    object <- rename_clust(object)
+    if(rename)
+      object <- rename_clust(object)
   }
   
   print_msg(paste0("Number of clusters left ", nclust(object)), msg_type = "INFO")
