@@ -213,8 +213,8 @@ gm_report <- function(cluster_set = NULL,
   
   print_msg("Computing module scores...", msg_type = "INFO")
   add_module_score_used_params <- as.list(formals(Seurat:::AddModuleScore.Seurat))
+  
   for(i in names(add_module_score_params)){
-    print_msg(paste0("Computing module ", i,  " score..."), msg_type = "DEBUG")
     add_module_score_used_params[[i]] <- add_module_score_params[[i]]
   }
   
@@ -237,6 +237,11 @@ gm_report <- function(cluster_set = NULL,
   
   tmp_dir <- file.path(tmp_dir, "rmarkdown")
   
+  for(tpfile in list.files(tmp_dir)){
+    print_msg(paste0("The temporary dir contains file: ", tpfile))
+  }
+   
+  
   print_msg("Computing top genes.", msg_type = "DEBUG")
   cluster_set <- top_genes(cluster_set)
   
@@ -254,7 +259,7 @@ gm_report <- function(cluster_set = NULL,
   }
   
   
-  module_rmd <- file.path(tmp_dir, "module.rmd")
+  module_rmd <- file.path(tmp_dir, "module.Rmd")
   
   print_msg("Preparing parameters for the report.")
   
@@ -266,10 +271,10 @@ gm_report <- function(cluster_set = NULL,
   
   for(n in 1:nclust(cluster_set)){
     
-    print_msg(paste0("Preparing rmd files for modules ", n), msg_type = "DEBUG")
+    print_msg(paste0("Preparing Rmd files for modules ", n), msg_type = "DEBUG")
     fig_path <- paste0("figure_", n, "_")
     
-    cur_rmd <- gsub(".rmd$" , paste0("_", sprintf("%04d", n), ".rmd"), module_rmd)
+    cur_rmd <- gsub(".Rmd$" , paste0("_", sprintf("%04d", n), ".Rmd"), module_rmd)
     
     print_msg(paste0("file : ", cur_rmd), msg_type = "DEBUG")
     
@@ -284,7 +289,7 @@ gm_report <- function(cluster_set = NULL,
     
     writeLines(code_rmd, con = cur_rmd)
     
-    print_msg(paste0("Preparation of rmd files for objects ", n, " finished."), msg_type = "DEBUG")
+    print_msg(paste0("Preparation of Rmd files for objects ", n, " finished."), msg_type = "DEBUG")
     
     all_knited_files[n] <- basename(cur_rmd)
     
