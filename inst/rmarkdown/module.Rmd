@@ -335,11 +335,17 @@ font.size <- "50%"
 if(nrow(edo) > 0){
 
   df_edo <- edo@result
-  df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  df_edo$zScore <- round(df_edo$zScore, 4)
-  df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$RichFactor)))
+    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+  if(all(is.numeric(df_edo$FoldEnrichment)))
+    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+  if(all(is.numeric(df_edo$zScore)))
+    df_edo$zScore <- round(df_edo$zScore, 4)
+  if(all(is.numeric(df_edo$pvalue)))  
+    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$p.adjust)))  
+    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$qvalue)))   
   df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
   rownames(edo@result) <- NULL
 
@@ -534,11 +540,17 @@ font.size <- "50%"
 if(nrow(edo) > 0){
 
   df_edo <- edo@result
-  df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  df_edo$zScore <- round(df_edo$zScore, 4)
-  df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$RichFactor)))
+    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+  if(all(is.numeric(df_edo$FoldEnrichment)))
+    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+  if(all(is.numeric(df_edo$zScore)))
+    df_edo$zScore <- round(df_edo$zScore, 4)
+  if(all(is.numeric(df_edo$pvalue)))  
+    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$p.adjust)))  
+    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$qvalue)))   
   df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
   rownames(edo@result) <- NULL
 
@@ -556,18 +568,6 @@ if(nrow(edo) > 0){
 }
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -747,11 +747,17 @@ font.size <- "50%"
 if(nrow(edo) > 0){
 
   df_edo <- edo@result
-  df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  df_edo$zScore <- round(df_edo$zScore, 4)
-  df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$RichFactor)))
+    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+  if(all(is.numeric(df_edo$FoldEnrichment)))
+    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+  if(all(is.numeric(df_edo$zScore)))
+    df_edo$zScore <- round(df_edo$zScore, 4)
+  if(all(is.numeric(df_edo$pvalue)))  
+    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$p.adjust)))  
+    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+  if(all(is.numeric(df_edo$qvalue)))   
   df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
   rownames(edo@result) <- NULL
 
