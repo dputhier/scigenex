@@ -190,16 +190,16 @@ if(!"edo" %in% ls()){edo <- data.frame()}
 ```
 
 
-```{r, term_network_1_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_bp" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
 
-```{r, term_network_2_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"}
+```{r, term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_bp" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
 ``` 
 
-```{r, term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network" %in% section }
+```{r, term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_bp" %in% section }
 
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
@@ -231,15 +231,15 @@ if(nrow(edo) > 0){
 
 ```
 
-```{r, term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_bp" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
-```{r, term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"}
+```{r, term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_bp" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() with circular layout.") 
 ``` 
 
-```{r, term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ" %in% section }
+```{r, term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_bp" %in% section }
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
 # These guys are deprecated...
@@ -271,15 +271,15 @@ if(nrow(edo) > 0){
 ```
 
 
-```{r, term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_bp" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. barplot ")
 ``` 
 
-```{r, term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"}
+```{r, term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_bp" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Bar plot of enriched terms.") 
 ``` 
 
-```{r, term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1" %in% section }
+```{r, term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_bp" %in% section }
 
 if(nrow(enrich_res) > 0){
   try_err <- try(dplyr::mutate(enrich_res, 
@@ -298,15 +298,15 @@ if(nrow(enrich_res) > 0){
 ```
 
 
-```{r, term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_bp" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. dotplot ")
 ``` 
 
-```{r, term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"}
+```{r, term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_bp" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Dot plot of enriched terms.") 
 ``` 
 
-```{r, term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2" %in% section }
+```{r, term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_bp" %in% section }
 if(nrow(enrich_res) > 0){
   try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
@@ -321,11 +321,11 @@ if(nrow(enrich_res) > 0){
 }
 ```
 
-```{r, term_table_1_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
+```{r, term_table_1_MOD_MODULE_NUMBER, eval="term_table_bp" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. table ")
 ``` 
 
-```{r, term_table_2_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
+```{r, term_table_2_MOD_MODULE_NUMBER, eval="term_table_bp" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("A table with various information related to enrichment.") 
 ``` 
 
@@ -395,16 +395,16 @@ if(!"edo" %in% ls()){edo <- data.frame()}
 ```
 
 
-```{r, cc_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"} 
+```{r, cc_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_cc" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
 
-```{r, cc_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"}
+```{r, cc_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_cc" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
 ``` 
 
-```{r, cc_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network" %in% section }
+```{r, cc_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_cc" %in% section }
 
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
@@ -436,15 +436,15 @@ if(nrow(edo) > 0){
 
 ```
 
-```{r, cc_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"} 
+```{r, cc_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_cc" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
-```{r, cc_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"}
+```{r, cc_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_cc" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() with circular layout.") 
 ``` 
 
-```{r, cc_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ" %in% section }
+```{r, cc_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_cc" %in% section }
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
 # These guys are deprecated...
@@ -476,15 +476,15 @@ if(nrow(edo) > 0){
 ```
 
 
-```{r, cc_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"} 
+```{r, cc_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_cc" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. barplot ")
 ``` 
 
-```{r, cc_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"}
+```{r, cc_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_cc" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Bar plot of enriched terms.") 
 ``` 
 
-```{r, cc_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1" %in% section }
+```{r, cc_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_cc" %in% section }
 
 if(nrow(enrich_res) > 0){
   try_err <- try(dplyr::mutate(enrich_res, 
@@ -503,15 +503,15 @@ if(nrow(enrich_res) > 0){
 ```
 
 
-```{r, cc_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"} 
+```{r, cc_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_cc" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. dotplot ")
 ``` 
 
-```{r, cc_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"}
+```{r, cc_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_cc" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Dot plot of enriched terms.") 
 ``` 
 
-```{r, cc_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2" %in% section }
+```{r, cc_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_cc" %in% section }
 if(nrow(enrich_res) > 0){
   try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
@@ -526,11 +526,11 @@ if(nrow(enrich_res) > 0){
 }
 ```
 
-```{r, cc_term_table_1_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
+```{r, cc_term_table_1_MOD_MODULE_NUMBER, eval="term_table_cc" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. table ")
 ``` 
 
-```{r, cc_term_table_2_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
+```{r, cc_term_table_2_MOD_MODULE_NUMBER, eval="term_table_cc" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("A table with various information related to enrichment.") 
 ``` 
 
@@ -602,16 +602,16 @@ if(!"edo" %in% ls()){edo <- data.frame()}
 ```
 
 
-```{r, mf_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"} 
+```{r, mf_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_mf" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
 
-```{r, mf_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network" %in% section, echo=FALSE, results = "asis"}
+```{r, mf_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_mf" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
 ``` 
 
-```{r, mf_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network" %in% section }
+```{r, mf_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_mf" %in% section }
 
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
@@ -643,15 +643,15 @@ if(nrow(edo) > 0){
 
 ```
 
-```{r, mf_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"} 
+```{r, mf_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_mf" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Cnetplot")
 ``` 
 
-```{r, mf_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ" %in% section, echo=FALSE, results = "asis"}
+```{r, mf_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_mf" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The cnetplot() with circular layout.") 
 ``` 
 
-```{r, mf_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ" %in% section }
+```{r, mf_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_mf" %in% section }
 cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
 for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
 # These guys are deprecated...
@@ -683,15 +683,15 @@ if(nrow(edo) > 0){
 ```
 
 
-```{r, mf_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"} 
+```{r, mf_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_mf" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. barplot ")
 ``` 
 
-```{r, mf_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1" %in% section, echo=FALSE, results = "asis"}
+```{r, mf_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_mf" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Bar plot of enriched terms.") 
 ``` 
 
-```{r, mf_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1" %in% section }
+```{r, mf_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_mf" %in% section }
 
 if(nrow(enrich_res) > 0){
   try_err <- try(dplyr::mutate(enrich_res, 
@@ -710,15 +710,15 @@ if(nrow(enrich_res) > 0){
 ```
 
 
-```{r, mf_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"} 
+```{r, mf_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_mf" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. dotplot ")
 ``` 
 
-```{r, mf_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2" %in% section, echo=FALSE, results = "asis"}
+```{r, mf_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_mf" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("Dot plot of enriched terms.") 
 ``` 
 
-```{r, mf_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2" %in% section }
+```{r, mf_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_mf" %in% section }
 if(nrow(enrich_res) > 0){
   try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
@@ -733,15 +733,15 @@ if(nrow(enrich_res) > 0){
 }
 ```
 
-```{r, mf_term_table_1_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"} 
+```{r, mf_term_table_1_MOD_MODULE_NUMBER, eval="term_table_mf" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Func. enr. table ")
 ``` 
 
-```{r, mf_term_table_2_MOD_MODULE_NUMBER, eval="term_table" %in% section, echo=FALSE, results = "asis"}
+```{r, mf_term_table_2_MOD_MODULE_NUMBER, eval="term_table_mf" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("A table with various information related to enrichment.") 
 ``` 
 
-```{r, mf_term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
+```{r, mf_term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table_mf" %in% section }
 
 font.size <- "50%"
 if(nrow(edo) > 0){
