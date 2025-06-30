@@ -153,11 +153,21 @@ gm_report <- function(cluster_set = NULL,
                                       "module_umap",
                                       "module_violin",
                                       "module_cell_annot_IA",
-                                      "module_term_network",
-                                      "module_term_barplot_1",
-                                      "module_term_barplot_2",
-                                      "module_term_network_circ",
-                                      "term_table"),
+                                      "module_term_network_bp",
+                                      "module_term_barplot_1_bp",
+                                      "module_term_barplot_2_bp",
+                                      "module_term_network_circ_bp",
+                                      "term_table_bp",
+                                      "module_term_network_cc",
+                                      "module_term_barplot_1_cc",
+                                      "module_term_barplot_2_cc",
+                                      "module_term_network_circ_cc",
+                                      "term_table_cc",
+                                      "module_term_network_mf",
+                                      "module_term_barplot_1_mf",
+                                      "module_term_barplot_2_mf",
+                                      "module_term_network_circ_mf",
+                                      "term_table_cc"),
                             quiet=FALSE) {
   
   verb_level <- get_verbosity()
@@ -248,11 +258,21 @@ gm_report <- function(cluster_set = NULL,
   print_msg("Computing centers.", msg_type = "DEBUG")
   cluster_set <- compute_centers(cluster_set)
   
-  if(any(c("module_term_network",
-           "module_term_barplot_1",
-           "module_term_barplot_2",
-           "module_term_network_circ",
-           "term_table") %in% section)){
+  if(any(c("module_term_network_cc",
+           "module_term_barplot_1_cc",
+           "module_term_barplot_2_cc",
+           "module_term_network_circ_cc",
+           "term_table_cc", 
+           "module_term_network_bp",
+           "module_term_barplot_1_bp",
+           "module_term_barplot_2_bp",
+           "module_term_network_circ_bp",
+           "term_table_bp",
+           "module_term_network_mf",
+           "module_term_barplot_1_mf",
+           "module_term_barplot_2_mf",
+           "module_term_network_circ_mf",
+           "term_table_mf") %in% section)){
     print_msg("Computing semantic similarity for cnet_plot.", msg_type="INFO") 
     suppressMessages(sem_sim <- GOSemSim::godata(annoDb=eval(bioc_org_db),
                                                  ont="BP"))
