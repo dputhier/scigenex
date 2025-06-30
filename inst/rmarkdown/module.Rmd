@@ -144,20 +144,19 @@ knitr::asis_output("What Gemini tells us about the likely cell identity or under
 ``` 
 
 ```{r, cell_annot_IA_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
-prompt <- paste0("I'm working on an ",
-                  smp_stage,
-                  " ",
-                  smp_organ, 
-                  " obtained from ",
-                  ". The particular region I'm working with is ",
-                  smp_region, 
-                  "The tissue was analyzed using transcriptomic analysis.",
-                  " I have a list of co-regulated genes that contains :",
+prompt <- paste0("Given that we are working with ", smp_region, " from ", smp_organ, " at",  smp_stage , " stage. ",
+                  "The biological sample was analyzed using transcriptomic analysis.",
+                  " We found a list of co-regulated genes that contains :",
                   paste0(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), collapse=", "),
-                                                "What could be the cells type that express theses genes ? The answer should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function' (#1, #2...) and 'rational'. If gene list is not enough specific to be associated to infer a define cell_type indicate the underlying function as 'infered cell type/function' the and 'rational'.", collapse=" ")
+                                                ". What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3) and 'rational'.", collapse=" ")
 suppressMessages(gemini.R::setAPI("APIKEY"))
 answer <- suppressMessages(gemini.R::gemini_chat(prompt))
+knitr::asis_output("#### Prompt")
+knitr::asis_output(prompt)
+knitr::asis_output("#### IA Answer")
 knitr::asis_output(answer$outputs )
+prompt
+
 ```
 
 ```{r, level_3_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
@@ -333,7 +332,7 @@ knitr::asis_output("A table with various information related to enrichment.")
 
 font.size <- "50%"
 if(nrow(edo) > 0){
-
+  
   df_edo <- edo@result
   if(all(is.numeric(df_edo$RichFactor)))
     df_edo$RichFactor <- round(df_edo$RichFactor, 4)
@@ -540,6 +539,7 @@ font.size <- "50%"
 if(nrow(edo) > 0){
 
   df_edo <- edo@result
+
   if(all(is.numeric(df_edo$RichFactor)))
     df_edo$RichFactor <- round(df_edo$RichFactor, 4)
   if(all(is.numeric(df_edo$FoldEnrichment)))
@@ -551,7 +551,7 @@ if(nrow(edo) > 0){
   if(all(is.numeric(df_edo$p.adjust)))  
     df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
   if(all(is.numeric(df_edo$qvalue)))   
-  df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+    df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
   rownames(edo@result) <- NULL
 
   df_edo %>% 
@@ -747,6 +747,7 @@ font.size <- "50%"
 if(nrow(edo) > 0){
 
   df_edo <- edo@result
+
   if(all(is.numeric(df_edo$RichFactor)))
     df_edo$RichFactor <- round(df_edo$RichFactor, 4)
   if(all(is.numeric(df_edo$FoldEnrichment)))
@@ -758,7 +759,7 @@ if(nrow(edo) > 0){
   if(all(is.numeric(df_edo$p.adjust)))  
     df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
   if(all(is.numeric(df_edo$qvalue)))   
-  df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+    df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
   rownames(edo@result) <- NULL
 
   df_edo %>% 
