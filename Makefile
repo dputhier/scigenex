@@ -99,6 +99,14 @@ doc_html:
 	@ git add -u
 	@ git commit -m "Updated html doc to $(VERSION)."
 
+doc_html_lazy:
+	@ echo "#-----------------------------------------------#"
+	@ echo "# Building doc                                  #"
+	@ echo "#-----------------------------------------------#"
+	@ echo "Sys.setenv(RSTUDIO_PANDOC='/Applications/RStudio.app/Contents/Resources/app/quarto/bin/toolslibrary'); library(knitr); pkgdown::build_site(devel=TRUE, lazy=TRUE)" | R --slave
+	@ git add -u
+	@ git commit -m "Updated html doc to $(VERSION)."
+
 all: doc install check test
 
 
