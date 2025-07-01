@@ -15,6 +15,7 @@
 #' @param size_label The font size of the cluster labels.
 #' @param legend_name A name for the legend.
 #' @param to_lin Transform in linear scale (i.e. 2^x).
+#' @param averaged Display the mean expression averaged across cells.
 #' @return A ggplot object showing the expression profiles of cell type-specific genes.
 #'
 #' @examples
@@ -42,7 +43,8 @@ plot_profiles <- function(data = NULL,
                           size_text_y = 5,
                           size_label = 2,
                           legend_name="Cell\ntype",
-                          to_lin=FALSE) {
+                          to_lin=FALSE,
+                          averaged=FALSE) {
   
   if (is.null(data) | !inherits(data, "ClusterSet"))
     print_msg("Please provide a ClusterSet objet.", msg_type = "STOP")
@@ -108,6 +110,15 @@ plot_profiles <- function(data = NULL,
   
   m$Ident <- ident[m$Cell]
   
+  nb_idents <- length(levels(ident[m$Cell]))
+    
+  if(averaged){
+    m <- m %>% 
+      group_by(Ident, Cluster) %>% 
+      dplyr::summarize(Intensity = mean(Intensity, na.rm=TRUE))
+    m$Cell <- m$Ident
+  }
+  
   if(to_lin)
     m$Intensity <- 2^m$Intensity 
   
@@ -116,13 +127,24 @@ plot_profiles <- function(data = NULL,
   
   y_text <- apply(centers, 1, max)
   
+  if(to_lin)
+    y_text <- 2^y_text
+  
   y_text <- y_text + 0.1 * y_text
-  df_text <- data.frame(x = colnames(centers)[round(nb_cells / 3, 0)], 
-               y = y_text)
+  
+  if(!averaged){
+    df_text <- data.frame(x = colnames(centers)[round(nb_cells / 3, 0)], 
+                          y = y_text)
+  }else{
+    df_text <- data.frame(x = unique(m$Cell)[round(nb_idents / 2, 0)], 
+                          y = y_text)
+  }
+
+  
   df_text$Cluster <- factor(paste0("Cluster: ", 
                                    rownames(centers)),
                             ordered = T)
-  
+
   ggplot2::ggplot(data= m,
                   ggplot2::aes(
                     x = .data[["Cell"]],
