@@ -5,11 +5,13 @@
 #' @description
 #' Create a report from a ClusterSet experiment and Seurat object. If is_spatial_exp argument is set to TRUE Spatial diagram will be added. 
 #' The function can call Gemini IA to try to guess cell type and functions associated to each gene module.
+#' NB: When dealing with large dataset (large number of cells/spots), it is advisable not activate interactive heatmap by deleting "module_iheatmap" from the 'section' argument.
 #' @param cluster_set A clusterSet object.
 #' @param seurat_object Seurat object.
 #' @param seurat_assay Which assay should be used in the Seurat object.
 #' @param seurat_layer Which layer should be used in the Seurat object.
 #' @param is_spatial_exp Whether there are some spatial information in the ClusterSet object.
+#' @param annotation_src The sources of functional annotation (currently a vector taken from "BP", "CC", "MF").
 #' @param report_title A title for the report.
 #' @param report_subtitle A subtitle for the report.
 #' @param report_author A character string corresponding to one or several authors.
@@ -44,9 +46,10 @@
 #' set_verbosity(3)
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 #' load_example_dataset('7871581/files/pbmc3k_medium')
-#' gm_report(pbmc3k_medium_clusters[1:3,], 
+#' gm_report(pbmc3k_medium_clusters[1:2,], 
 #'                 pbmc3k_medium, 
 #'                 smp_species="Homo_sapiens", 
+#'                 annotation_src="CC",
 #'                 smp_region="total", 
 #'                 smp_organ="blood", 
 #'                 bioc_org_db="org.Hs.eg.db",
@@ -60,6 +63,7 @@
 #'                 smp_region="total", 
 #'                 smp_organ="lymph node", 
 #'                 smp_stage="adult", 
+#'                 annotation_src="CC",
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL,
 #'                 is_spatial_exp=TRUE,
@@ -98,6 +102,7 @@ gm_report <- function(cluster_set = NULL,
                             seurat_assay=NULL,
                             seurat_layer=NULL,
                             is_spatial_exp=FALSE,
+                            annotation_src=c("BP", "CC", "MF"),
                             report_title = "Gene module report",
                             report_subtitle = "An example experiment",
                             report_author = "Undefined",
@@ -152,24 +157,18 @@ gm_report <- function(cluster_set = NULL,
                                       "module_iheatmap",
                                       "module_umap",
                                       "module_violin",
+                                      "module_genes",
                                       "module_cell_annot_IA",
-                                      "module_term_network_bp",
-                                      "module_term_barplot_1_bp",
-                                      "module_term_barplot_2_bp",
-                                      "module_term_network_circ_bp",
-                                      "term_table_bp",
-                                      "module_term_network_cc",
-                                      "module_term_barplot_1_cc",
-                                      "module_term_barplot_2_cc",
-                                      "module_term_network_circ_cc",
-                                      "term_table_cc",
-                                      "module_term_network_mf",
-                                      "module_term_barplot_1_mf",
-                                      "module_term_barplot_2_mf",
-                                      "module_term_network_circ_mf",
-                                      "term_table_cc"),
+                                      "module_term_network",
+                                      "module_term_barplot_1",
+                                      "module_term_barplot_2",
+                                      "module_term_network_circ",
+                                      "term_table"),
                             quiet=FALSE) {
   
+  if(!all(annotation_src %in% c("BP", "CC", "MF")))
+    print_msg("Unknow annotation source.", msg_type="STOP") 
+    
   verb_level <- get_verbosity()
   
   if("module_cell_annot_IA" %in% section){
@@ -191,10 +190,11 @@ gm_report <- function(cluster_set = NULL,
   if(is.null(bioc_org_db)){
     print_msg("No annotation database found for organism...", msg_type = "WARNING")
     print_msg("Canceling functional annotation", msg_type = "WARNING")
-    section <- setdiff(section, c("cmp_term_network",
-                                  "cmp_term_barplot_1",
-                                  "cmp_term_barplot_2",
-                                  "cmp_term_network_circ"))
+    section <- setdiff(section, c("module_term_network",
+                                  "module_term_barplot_1",
+                                  "module_term_barplot_2",
+                                  "module_term_network_circ",
+                                  "term_table"))
   }else{
     if(!require(bioc_org_db, character.only = TRUE, quietly=TRUE)){
       print_msg("The annotation library (see 'bioc_org_db') was not found. Please install it.", msg_type = "STOP")
@@ -258,27 +258,23 @@ gm_report <- function(cluster_set = NULL,
   print_msg("Computing centers.", msg_type = "DEBUG")
   cluster_set <- compute_centers(cluster_set)
   
-  if(any(c("module_term_network_cc",
-           "module_term_barplot_1_cc",
-           "module_term_barplot_2_cc",
-           "module_term_network_circ_cc",
-           "term_table_cc", 
-           "module_term_network_bp",
-           "module_term_barplot_1_bp",
-           "module_term_barplot_2_bp",
-           "module_term_network_circ_bp",
-           "term_table_bp",
-           "module_term_network_mf",
-           "module_term_barplot_1_mf",
-           "module_term_barplot_2_mf",
-           "module_term_network_circ_mf",
-           "term_table_mf") %in% section)){
-    print_msg("Computing semantic similarity for cnet_plot.", msg_type="INFO") 
-    suppressMessages(sem_sim <- GOSemSim::godata(annoDb=eval(bioc_org_db),
-                                                 ont="BP"))
+
+  sem_sim <- list()
+  
+  if(any(c("module_term_network",
+             "module_term_barplot_1",
+             "module_term_barplot_2",
+             "module_term_network_circ",
+             "term_table") %in% section)){
+      for(ann in annotation_src){
+        print_msg(paste0("Computing semantic similarity (", ann ,") for cnet_plot."), msg_type="INFO") 
+        suppressMessages(sem_sim[[ann]] <- GOSemSim::godata(annoDb=eval(bioc_org_db),
+                                                   ont=ann))
+      }
   }
   
   
+ 
   module_rmd <- file.path(tmp_dir, "module.Rmd")
   
   print_msg("Preparing parameters for the report.")

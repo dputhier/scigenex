@@ -18,3 +18,5 @@ navbar:
       href: articles/usage.html
     - text: "2 - Spatial transcriptomics guided tutorial"
       href: articles/spatial.html
+    - text: "3 - Creating a bookdown report"
+      href: articles/report.html

@@ -1,0 +1,118 @@
+---
+author: "Denis Puthier"
+date: "`r Sys.Date()`"
+title: "Creating a report"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Creating a report}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+
+## Writing report about ClusterSet Objects
+
+This vignette illustrates how to use the `gm_report()` function from the scigenex R package to create a comprehensive gene module analysis report in Bookdown format. This function integrates cluster information, functional annotation, and visualization, optionally supporting spatial transcriptomics (ST) data.
+
+
+
+## Prerequisites
+
+We will use a tiny built-in examples from the Scigenex library.
+
+```{r}
+library(scigenex)
+library(Seurat)
+library(org.Hs.eg.db)
+
+# Set verbosity for debugging
+set_verbosity(2)
+
+# Load example gene module clusters and Seurat object
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+load_example_dataset("7871581/files/pbmc3k_medium")
+```
+
+## Running the gm_report() function
+
+
+The gm_report() function requires a ClusterSet and a Seurat object. It will:
+
+- Compute module scores (*i.e* Using Seurat `AddModuleScore()`).
+- Perform functional enrichment (GO).
+- Generate various diagnosis diagrams.
+- Optionally perform cell-type annotation via Gemini AI
+- Render the report using Bookdown.
+
+
+```{r spt, message=FALSE}
+tmp_dir <- tempdir()
+gm_report(
+  cluster_set = pbmc3k_medium_clusters[1:3,],
+  seurat_object = pbmc3k_medium,
+  smp_species = "Homo sapiens",
+  smp_region = "total",
+  smp_organ = "blood",
+  smp_stage = "adult",
+  annotation_src = "CC",
+  bioc_org_db = "org.Hs.eg.db",
+  api_key = NULL,  # Optional: Gemini API key for IA-based annotation
+  report_title = "PBMC Gene Module Report",
+  report_subtitle = "PBMC 3k Medium Dataset",
+  report_author = "scigenex Vignette",
+  out_dir = file.path(tmp_dir, "pbmc_report"),
+  quiet = FALSE
+)
+```
+
+## Viewing the output
+
+The output will be stored in the out_dir specified. You can view the report by opening index.html in your browser.
+
+
+## Customization Options
+
+You can tailor the gm_report() using optional parameters:
+
+- plot_profiles_params, FeaturePlot_params, SpatialDimPlot_params
+- add_module_score_params to adjust Seurat's AddModuleScore
+- Toggle report sections with section argument
+- Supply an api_key for cell-type guessing via Gemini AI
+- Use is_spatial_exp=TRUE for spatial transcriptomics data
+
+## Spatial Experiment
+
+Here we will use a subset of the 10X genomics lymph_node VISIUM (V1) dataset.
+
+```{r}
+tmp_dir <- tempdir()
+
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+
+gm_report(
+  cluster_set = lymph_node_tiny_clusters_2[1:2,],
+  seurat_object = lymph_node_tiny_2,
+  smp_species = "Homo sapiens",
+  smp_region = "total",
+  smp_organ = "lymph node",
+  smp_stage = "adult",
+  annotation_src = "CC",
+  bioc_org_db = "org.Hs.eg.db",
+  is_spatial_exp = TRUE,
+  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
+  SpatialDimPlot_params = list(pt.size.factor = 3000),
+  out_dir = file.path(tmp_dir, "spatial_report")
+)
+```
+
+
+## Conclusion
+
+The `gm_report()` function in Scigenex offers a powerful way to analyze and document gene modules using Seurat and clusterSet objects. It supports spatial transcriptomics, functional annotation, and AI-based interpretation.
+
+For advanced use, explore:
+
+- ?gm_report in R
+- Scigenex documentation
+- Customizing Bookdown templates via `rmd_dir` argument.
