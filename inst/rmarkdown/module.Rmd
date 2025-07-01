@@ -137,13 +137,21 @@ Seurat::VlnPlot(seurat_object, feature="MOD_MODULE_NUMBER")
 ```
 
 
+```{r, gene_info_1_MOD_MODULE_NUMBER, eval="module_genes" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Gene list ")
+``` 
 
-```{r gene_info_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
+```{r, gene_info_2_MOD_MODULE_NUMBER, eval="module_genes" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("The genes related to that module.") 
+``` 
+
+
+```{r gene_info_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
 df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,]), NULL),
          gene=names(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,])))
 ```
 
-```{r gene_info_2_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
+```{r gene_info_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
 DT::datatable(df)
 ```
 

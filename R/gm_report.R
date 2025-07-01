@@ -5,6 +5,7 @@
 #' @description
 #' Create a report from a ClusterSet experiment and Seurat object. If is_spatial_exp argument is set to TRUE Spatial diagram will be added. 
 #' The function can call Gemini IA to try to guess cell type and functions associated to each gene module.
+#' NB: When dealing with large dataset (large number of cells/spots), it is advisable not activate interactive heatmap by deleting "module_iheatmap" from the 'section' argument.
 #' @param cluster_set A clusterSet object.
 #' @param seurat_object Seurat object.
 #' @param seurat_assay Which assay should be used in the Seurat object.

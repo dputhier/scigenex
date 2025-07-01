@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.5</span>
       </span>
     </div>
 
@@ -54,6 +54,21 @@
 
 <div id="changelog" class="section level1">
 
+<div class="section level2">
+<h2 id="v205">v2.0.5<a class="anchor" aria-label="anchor" href="#v205"></a></h2>
+<ul><li>Refactored module.Rmd file called by gm_report().</li>
+<li>Added a vignette about gm_report().</li>
+</ul></div>
+<div class="section level2">
+<h2 id="v204">v2.0.4<a class="anchor" aria-label="anchor" href="#v204"></a></h2>
+<ul><li>Fi gm_report() (AI prompt).</li>
+</ul></div>
+<div class="section level2">
+<h2 id="v201-3">v2.0.1-3<a class="anchor" aria-label="anchor" href="#v201-3"></a></h2>
+<ul><li>Fi gm_report() (Added MF and CC as enrichment analyses).</li>
+</ul></div>
+<div class="section level2">
+<h2 id="v200">v2.0.0<a class="anchor" aria-label="anchor" href="#v200"></a></h2>
 <ul><li>The clusterset_report() is deprecated. The gm_report() should be used instead.</li>
 <li>The @data slot in ClusterSet object is now a dcgMatrix (i.e. sparse matrix) !</li>
 <li>The cluster are no more computed by default. use compute_centers().</li>
@@ -63,7 +78,8 @@
 <li>Add a rename argument to filter_cluster_size(), filter_nb_supporting_cells(), filter_by_dot_prod(), filter_cluster_sd().</li>
 <li>In plot_profiles() argument color_cell_type has been renamed color_cluster.</li>
 <li>Fix ‘Functions or methods with usage in Rd file but not in code’ using @noRd (instead of @keyword internal).</li>
-</ul><div class="section level2">
+</ul></div>
+<div class="section level2">
 <h2 id="v161">v1.6.1<a class="anchor" aria-label="anchor" href="#v161"></a></h2>
 <ul><li>The top_genes() has new argument ‘distance_method’ to allow overridding the default distance method (which can be unknown when object is obtained using cluster_set_from_matrix()).</li>
 <li>The top_genes() has a new argument ‘fast’ to allow fast computation of Pearson-based distances.</li>
