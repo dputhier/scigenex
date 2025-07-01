@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.0.5
+
+* Refactored module.Rmd file called by gm_report().
+* Added a vignette about gm_report().
+
 ## v2.0.4
 
 * Fi gm_report() (AI prompt).

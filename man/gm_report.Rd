@@ -10,6 +10,7 @@ gm_report(
   seurat_assay = NULL,
   seurat_layer = NULL,
   is_spatial_exp = FALSE,
+  annotation_src = c("BP", "CC", "MF"),
   report_title = "Gene module report",
   report_subtitle = "An example experiment",
   report_author = "Undefined",
@@ -40,7 +41,7 @@ gm_report(
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot",
     "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
     "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
-    "module_violin", "module_cell_annot_IA", "module_term_network",
+    "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
     "module_term_barplot_1", "module_term_barplot_2", "module_term_network_circ",
     "term_table"),
   quiet = FALSE
@@ -56,6 +57,8 @@ gm_report(
 \item{seurat_layer}{Which layer should be used in the Seurat object.}
 
 \item{is_spatial_exp}{Whether there are some spatial information in the ClusterSet object.}
+
+\item{annotation_src}{The sources of functional annotation (currently a vector taken from "BP", "CC", "MF").}
 
 \item{report_title}{A title for the report.}
 
@@ -123,9 +126,10 @@ library(Seurat)
 set_verbosity(3)
 load_example_dataset('7871581/files/pbmc3k_medium_clusters')
 load_example_dataset('7871581/files/pbmc3k_medium')
-gm_report(pbmc3k_medium_clusters[1:3,], 
+gm_report(pbmc3k_medium_clusters[1:2,], 
                 pbmc3k_medium, 
                 smp_species="Homo_sapiens", 
+                annotation_src="CC",
                 smp_region="total", 
                 smp_organ="blood", 
                 bioc_org_db="org.Hs.eg.db",
@@ -139,6 +143,7 @@ gm_report(lymph_node_tiny_clusters_2[1:4,],
                 smp_region="total", 
                 smp_organ="lymph node", 
                 smp_stage="adult", 
+                annotation_src="CC",
                 bioc_org_db="org.Hs.eg.db",
                 api_key=NULL,
                 is_spatial_exp=TRUE,

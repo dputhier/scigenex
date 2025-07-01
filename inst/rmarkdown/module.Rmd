@@ -10,6 +10,11 @@
 }
 ```
 
+```{r include = FALSE}
+# from https://tinyurl.com/mwxj7544
+DT::datatable(NULL)
+```
+
 ```{r start_MOD_MODULE_NUMBER, include=FALSE, echo=FALSE, eval=TRUE}
 suppressWarnings(rm(enrich_res))
 suppressWarnings(rm(edo))
@@ -131,6 +136,20 @@ knitr::asis_output("Display the distribution of gene module mean expression leve
 Seurat::VlnPlot(seurat_object, feature="MOD_MODULE_NUMBER")
 ```
 
+
+
+```{r gene_info_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
+df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,]), NULL),
+         gene=names(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,])))
+```
+
+```{r gene_info_2_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
+DT::datatable(df)
+```
+
+
+
+
 ```{r, level_2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output("## Cell Annotation {.panelset}")
 ``` 
@@ -148,631 +167,194 @@ prompt <- paste0("Given that we are working with ", smp_region, " from ", smp_or
                   "The biological sample was analyzed using transcriptomic analysis.",
                   " We found a list of co-regulated genes that contains :",
                   paste0(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), collapse=", "),
-                                                ". What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3) and 'rational'.", collapse=" ")
+                  ". What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3) and 'rational'.", collapse=" ")
 suppressMessages(gemini.R::setAPI("APIKEY"))
 answer <- suppressMessages(gemini.R::gemini_chat(prompt))
 knitr::asis_output("#### Prompt")
 knitr::asis_output(prompt)
 knitr::asis_output("#### IA Answer")
-knitr::asis_output(answer$outputs )
-prompt
-
-```
-
-```{r, level_3_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Functional Enrichment BP {.panelset}")
-``` 
-
-
-```{r, preparing_cnet2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"}
-
-gene_set <- setNames(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), NULL)
-try(suppressMessages(query_entrezid <- AnnotationDbi::select(get(bioc_org_db), 
-                                                             keys = gene_set,
-                                                             columns = c("ENTREZID", "SYMBOL"),
-                                                             keytype = "SYMBOL")))
-
-try(enrich_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
-                                           OrgDb = bioc_org_db,
-                                           ont = "BP",
-                                           readable = TRUE), silent = TRUE)
-
-if(!"enrich_res" %in% ls()){enrich_res <- data.frame()}
-
-try(edo <- enrichplot::pairwise_termsim(enrich_res, 
-                                        method = "Resnik", 
-                                        showCategory = 20, 
-                                        semData = sem_sim), silent = TRUE)
-
-if(!"edo" %in% ls()){edo <- data.frame()}
-
+if(!is.null(answer))
+  knitr::asis_output(answer$outputs )
 ```
 
 
-```{r, term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_bp" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
-``` 
 
+```{r, func_anno_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"}
 
-```{r, term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_bp" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
-``` 
-
-```{r, term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_bp" %in% section }
-
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- FALSE
-
-if(nrow(edo) > 0){
+for(ann in annotation_src){
+ 
+  cat(paste0("\n\n## Functional Enrichment (", ann ,") {.panelset}\n\n"))
   
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
+  if("edo" %in% ls()){rm(edo)}
   
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
+  gene_set <- setNames(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), NULL)
+  try(suppressMessages(query_entrezid <- AnnotationDbi::select(get(bioc_org_db), 
+                                                               keys = gene_set,
+                                                               columns = c("ENTREZID", "SYMBOL"),
+                                                               keytype = "SYMBOL")))
+  
+  try(enrich_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
+                                             OrgDb = bioc_org_db,
+                                             ont = ann,
+                                             readable = TRUE), silent = TRUE)
+  
+  if(!"enrich_res" %in% ls()){enrich_res <- data.frame()}
+  
+  try(edo <- enrichplot::pairwise_termsim(enrich_res, 
+                                          method = "Resnik", 
+                                          showCategory = 20, 
+                                          semData = sem_sim[[ann]]), silent = TRUE)
+  
+  if(!"edo" %in% ls()){edo <- data.frame()}
+
+  
+  if("module_term_network" %in% section){
+    cat("\n\n### Cnetplot (fdp)\n\n")
+    cat("\n\nThe cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.\n\n") 
+    
+    cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
+  for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
+  # These guys are deprecated...
+  cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
+                                                                                   "colorEdge",
+                                                                                   "color_category",
+                                                                                   "color_gene",
+                                                                                   "cex_category",
+                                                                                   "cex_gene",
+                                                                                   "cex_label_category",
+                                                                                   "cex_label_gene")]
+  cnetplot_used_params$x <- edo
+  cnetplot_used_params$circular <- FALSE
+  
+  if(nrow(edo) > 0){
+    
+    try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
+                     Seurat::NoLegend(), silent = TRUE)
+    
+    if(inherits(try_err, "try-error")){
+       cat("\n\nError when creating diagram.\n\n") 
+    }else{
+      print(try_err)
+    }
   }else{
-    try_err
+    cat("\n\nNo diagram available.\n\n") 
   }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-
-```
-
-```{r, term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_bp" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
-``` 
-
-```{r, term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_bp" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() with circular layout.") 
-``` 
-
-```{r, term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_bp" %in% section }
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- TRUE
-
-if(nrow(edo) > 0){
   
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
   }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-
-```
-
-
-```{r, term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_bp" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. barplot ")
-``` 
-
-```{r, term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_bp" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Bar plot of enriched terms.") 
-``` 
-
-```{r, term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_bp" %in% section }
-
-if(nrow(enrich_res) > 0){
-  try_err <- try(dplyr::mutate(enrich_res, 
-                               qscore = -log(p.adjust, base=10)) %>% 
-                               barplot(x="qscore", showCategory=15) + 
-                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
   
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
+    if("module_term_network_circ" %in% section){
+    cat("\n\n### Cnetplot (circular)\n\n")
+    cat("\n\nThe cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.\n\n") 
+  
+    cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
+    for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
+    # These guys are deprecated...
+    cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
+                                                                                     "colorEdge",
+                                                                                     "color_category",
+                                                                                     "color_gene",
+                                                                                     "cex_category",
+                                                                                     "cex_gene",
+                                                                                     "cex_label_category",
+                                                                                     "cex_label_gene")]
+    cnetplot_used_params$x <- edo
+    cnetplot_used_params$circular <- TRUE
+    
+    if(nrow(edo) > 0){
+      
+      try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
+                       Seurat::NoLegend(), silent = TRUE)
+      
+      if(inherits(try_err, "try-error")){
+         cat("\n\nError when creating diagram.\n\n") 
+      }else{
+        print(try_err)
+      }
+    }else{
+      cat("\n\nNo diagram available.\n\n") 
+    }
+    
+    }
+  
+  
+  if("module_term_barplot_1" %in% section){
+    cat("\n\n### Func. enr. barplot \n\n")
+    cat("\n\nBar plot of enriched terms.\n\n") 
+    if(nrow(enrich_res) > 0){
+      try_err <- try(dplyr::mutate(enrich_res, 
+                                   qscore = -log(p.adjust, base=10)) %>% 
+                                   barplot(x="qscore", showCategory=15) + 
+                        ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
+      
+      if(inherits(try_err, "try-error")){
+         cat("\n\nError when creating diagram.\n\n") 
+      }else{
+        print(try_err)
+      }
+    }else{
+      cat("\n\nNo diagram available.\n\n") 
+    }
   }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-
-```{r, term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_bp" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. dotplot ")
-``` 
-
-```{r, term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_bp" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Dot plot of enriched terms.") 
-``` 
-
-```{r, term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_bp" %in% section }
-if(nrow(enrich_res) > 0){
-  try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
+  
+    if("module_term_barplot_2" %in% section){
+      cat("\n\n### Func. enr. dotplot \n\n")
+      cat("\n\nDotplot of enriched terms.\n\n") 
+    if(nrow(enrich_res) > 0){
+      try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
+      
+      if(inherits(try_err, "try-error")){
+         cat("\n\nError when creating diagram.\n\n") 
+      }else{
+        print(try_err)
+      }
+    }else{
+      cat("\n\nNo diagram available.\n\n") 
+    }
   }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-```{r, term_table_1_MOD_MODULE_NUMBER, eval="term_table_bp" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. table ")
-``` 
-
-```{r, term_table_2_MOD_MODULE_NUMBER, eval="term_table_bp" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("A table with various information related to enrichment.") 
-``` 
-
-```{r, term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
-
-font.size <- "50%"
-if(nrow(edo) > 0){
   
-  df_edo <- edo@result
-  if(all(is.numeric(df_edo$RichFactor)))
-    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  if(all(is.numeric(df_edo$FoldEnrichment)))
-    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  if(all(is.numeric(df_edo$zScore)))
-    df_edo$zScore <- round(df_edo$zScore, 4)
-  if(all(is.numeric(df_edo$pvalue)))  
-    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$p.adjust)))  
-    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$qvalue)))   
-  df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
-  rownames(edo@result) <- NULL
-
-  df_edo %>% 
-    DT::datatable(
-     options=list(
-       initComplete = htmlwidgets::JS(
-          "function(settings, json) {",
-          paste0("$(this.api().table().container()).css({'font-size': '", font.size, "'});"),
-          "}")
-       ) 
-     )
-}else{
-  knitr::asis_output("No table available.") 
-}
-
-```
-
-
-```{r, cc_level_3_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Functional Enrichment CC {.panelset}")
-``` 
-
-
-```{r, cc_preparing_cnet2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"}
-
-gene_set <- setNames(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), NULL)
-try(suppressMessages(query_entrezid <- AnnotationDbi::select(get(bioc_org_db), 
-                                                             keys = gene_set,
-                                                             columns = c("ENTREZID", "SYMBOL"),
-                                                             keytype = "SYMBOL")))
-
-try(enrich_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
-                                           OrgDb = bioc_org_db,
-                                           ont = "CC",
-                                           readable = TRUE), silent = TRUE)
-
-if(!"enrich_res" %in% ls()){enrich_res <- data.frame()}
-
-try(edo <- enrichplot::pairwise_termsim(enrich_res, 
-                                        method = "Resnik", 
-                                        showCategory = 20, 
-                                        semData = sem_sim), silent = TRUE)
-
-if(!"edo" %in% ls()){edo <- data.frame()}
-
-```
-
-
-```{r, cc_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_cc" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
-``` 
-
-
-```{r, cc_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_cc" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
-``` 
-
-```{r, cc_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_cc" %in% section }
-
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- FALSE
-
-if(nrow(edo) > 0){
   
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
+  if("term_table" %in% section){
+    cat("\n\n### Func. enr. table \n\n")
+    cat("\n\nA table with various information related to enrichment.\n\n") 
+   
+    font.size <- "50%"
+    if(nrow(edo) > 0){
+      
+      df_edo <- edo@result
+      if(all(is.numeric(df_edo$RichFactor)))
+        df_edo$RichFactor <- round(df_edo$RichFactor, 4)
+      if(all(is.numeric(df_edo$FoldEnrichment)))
+        df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
+      if(all(is.numeric(df_edo$zScore)))
+        df_edo$zScore <- round(df_edo$zScore, 4)
+      if(all(is.numeric(df_edo$pvalue)))  
+        df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
+      if(all(is.numeric(df_edo$p.adjust)))  
+        df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
+      if(all(is.numeric(df_edo$qvalue)))   
+      df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
+      rownames(edo@result) <- NULL
+    
+
+      # from https://tinyurl.com/mwxj7544
+      print(htmltools::tagList(DT::datatable(df_edo, 
+                                             options=list(
+                                                     initComplete = htmlwidgets::JS(
+                                                        "function(settings, json) {",
+                                                        paste0("$(this.api().table().container()).css({'font-size': '", 
+                                                               font.size, "'});"),
+                                                        "}")
+                       ))))
+    
+    }else{
+      cat("\n\nNo table available.\n\n") 
+    }
+        
   }
-}else{
-  knitr::asis_output("No diagram available.") 
 }
 
-```
 
-```{r, cc_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_cc" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
+
 ``` 
 
-```{r, cc_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_cc" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() with circular layout.") 
-``` 
-
-```{r, cc_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_cc" %in% section }
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- TRUE
-
-if(nrow(edo) > 0){
-  
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-
-```
-
-
-```{r, cc_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_cc" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. barplot ")
-``` 
-
-```{r, cc_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_cc" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Bar plot of enriched terms.") 
-``` 
-
-```{r, cc_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_cc" %in% section }
-
-if(nrow(enrich_res) > 0){
-  try_err <- try(dplyr::mutate(enrich_res, 
-                               qscore = -log(p.adjust, base=10)) %>% 
-                               barplot(x="qscore", showCategory=15) + 
-                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-
-```{r, cc_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_cc" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. dotplot ")
-``` 
-
-```{r, cc_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_cc" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Dot plot of enriched terms.") 
-``` 
-
-```{r, cc_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_cc" %in% section }
-if(nrow(enrich_res) > 0){
-  try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
-                   ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-```{r, cc_term_table_1_MOD_MODULE_NUMBER, eval="term_table_cc" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. table ")
-``` 
-
-```{r, cc_term_table_2_MOD_MODULE_NUMBER, eval="term_table_cc" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("A table with various information related to enrichment.") 
-``` 
-
-```{r, cc_term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table" %in% section }
-
-font.size <- "50%"
-if(nrow(edo) > 0){
-
-  df_edo <- edo@result
-
-  if(all(is.numeric(df_edo$RichFactor)))
-    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  if(all(is.numeric(df_edo$FoldEnrichment)))
-    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  if(all(is.numeric(df_edo$zScore)))
-    df_edo$zScore <- round(df_edo$zScore, 4)
-  if(all(is.numeric(df_edo$pvalue)))  
-    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$p.adjust)))  
-    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$qvalue)))   
-    df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
-  rownames(edo@result) <- NULL
-
-  df_edo %>% 
-    DT::datatable(
-     options=list(
-       initComplete = htmlwidgets::JS(
-          "function(settings, json) {",
-          paste0("$(this.api().table().container()).css({'font-size': '", font.size, "'});"),
-          "}")
-       ) 
-     )
-}else{
-  knitr::asis_output("No table available.") 
-}
-
-```
-
-
-
-
-```{r, mf_level_3_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Functional Enrichment MF {.panelset}")
-``` 
-
-
-```{r, mf_preparing_cnet2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"}
-
-gene_set <- setNames(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), NULL)
-try(suppressMessages(query_entrezid <- AnnotationDbi::select(get(bioc_org_db), 
-                                                             keys = gene_set,
-                                                             columns = c("ENTREZID", "SYMBOL"),
-                                                             keytype = "SYMBOL")))
-
-try(enrich_res <- clusterProfiler::enrichGO(query_entrezid[,"ENTREZID"],
-                                           OrgDb = bioc_org_db,
-                                           ont = "MF",
-                                           readable = TRUE), silent = TRUE)
-
-if(!"enrich_res" %in% ls()){enrich_res <- data.frame()}
-
-try(edo <- enrichplot::pairwise_termsim(enrich_res, 
-                                        method = "Resnik", 
-                                        showCategory = 20, 
-                                        semData = sem_sim), silent = TRUE)
-
-if(!"edo" %in% ls()){edo <- data.frame()}
-
-```
-
-
-```{r, mf_term_network_1_MOD_MODULE_NUMBER, eval="module_term_network_mf" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
-``` 
-
-
-```{r, mf_term_network_2_MOD_MODULE_NUMBER, eval="module_term_network_mf" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.") 
-``` 
-
-```{r, mf_term_network_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_mf" %in% section }
-
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- FALSE
-
-if(nrow(edo) > 0){
-  
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-
-```
-
-```{r, mf_term_network_circ_1_MOD_MODULE_NUMBER, eval="module_term_network_circ_mf" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Cnetplot")
-``` 
-
-```{r, mf_term_network_circ_2_MOD_MODULE_NUMBER, eval="module_term_network_circ_mf" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("The cnetplot() with circular layout.") 
-``` 
-
-```{r, mf_term_network_circ_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_network_circ_mf" %in% section }
-cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-# These guys are deprecated...
-cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                 "colorEdge",
-                                                                                 "color_category",
-                                                                                 "color_gene",
-                                                                                 "cex_category",
-                                                                                 "cex_gene",
-                                                                                 "cex_label_category",
-                                                                                 "cex_label_gene")]
-cnetplot_used_params$x <- edo
-cnetplot_used_params$circular <- TRUE
-
-if(nrow(edo) > 0){
-  
-  try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
-                   Seurat::NoLegend(), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-
-```
-
-
-```{r, mf_term_bp1_1_MOD_MODULE_NUMBER, eval="module_term_barplot_1_mf" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. barplot ")
-``` 
-
-```{r, mf_term_bp1_2_MOD_MODULE_NUMBER, eval="module_term_barplot_1_mf" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Bar plot of enriched terms.") 
-``` 
-
-```{r, mf_term_bp1_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_1_mf" %in% section }
-
-if(nrow(enrich_res) > 0){
-  try_err <- try(dplyr::mutate(enrich_res, 
-                               qscore = -log(p.adjust, base=10)) %>% 
-                               barplot(x="qscore", showCategory=15) + 
-                    ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-
-```{r, mf_term_bp2_1_MOD_MODULE_NUMBER, eval="module_term_barplot_2_mf" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. dotplot ")
-``` 
-
-```{r, mf_term_bp2_2_MOD_MODULE_NUMBER, eval="module_term_barplot_2_mf" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Dot plot of enriched terms.") 
-``` 
-
-```{r, mf_term_bp2_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_term_barplot_2_mf" %in% section }
-if(nrow(enrich_res) > 0){
-  try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
-                   ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-  
-  if(inherits(try_err, "try-error")){
-     knitr::asis_output("Error when creating diagram.") 
-  }else{
-    try_err
-  }
-}else{
-  knitr::asis_output("No diagram available.") 
-}
-```
-
-```{r, mf_term_table_1_MOD_MODULE_NUMBER, eval="term_table_mf" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Func. enr. table ")
-``` 
-
-```{r, mf_term_table_2_MOD_MODULE_NUMBER, eval="term_table_mf" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("A table with various information related to enrichment.") 
-``` 
-
-```{r, mf_term_table_3_MOD_MODULE_NUMBER, echo=FALSE, eval="term_table_mf" %in% section }
-
-font.size <- "50%"
-if(nrow(edo) > 0){
-
-  df_edo <- edo@result
-
-  if(all(is.numeric(df_edo$RichFactor)))
-    df_edo$RichFactor <- round(df_edo$RichFactor, 4)
-  if(all(is.numeric(df_edo$FoldEnrichment)))
-    df_edo$FoldEnrichment <- round(df_edo$FoldEnrichment, 4)
-  if(all(is.numeric(df_edo$zScore)))
-    df_edo$zScore <- round(df_edo$zScore, 4)
-  if(all(is.numeric(df_edo$pvalue)))  
-    df_edo$pvalue <- formatC(df_edo$pvalue, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$p.adjust)))  
-    df_edo$p.adjust <- formatC(df_edo$p.adjust, format = "e", digits = 2)
-  if(all(is.numeric(df_edo$qvalue)))   
-    df_edo$qvalue <- formatC(df_edo$qvalue, format = "e", digits = 2)
-  rownames(edo@result) <- NULL
-
-  df_edo %>% 
-    DT::datatable(
-     options=list(
-       initComplete = htmlwidgets::JS(
-          "function(settings, json) {",
-          paste0("$(this.api().table().container()).css({'font-size': '", font.size, "'});"),
-          "}")
-       ) 
-     )
-}else{
-  knitr::asis_output("No table available.") 
-}
-
-```
