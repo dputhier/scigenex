@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.6</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
                         <h4 data-toc-skip class="author">Denis
 Puthier</h4>
             
-            <h4 data-toc-skip class="date">2025-07-01</h4>
+            <h4 data-toc-skip class="date">2025-07-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dputhier/scigenex/blob/HEAD/vignettes/report.Rmd"><code>vignettes/report.Rmd</code></a></small>
       <div class="hidden name"><code>report.Rmd</code></div>
@@ -101,76 +101,16 @@ optionally supporting spatial transcriptomics (ST) data.</p>
 </h2>
 <p>We will use a tiny built-in examples from the Scigenex library.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dputhier/scigenex">scigenex</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'SeuratObject::JS' by 'htmlwidgets::JS' when</span></span>
-<span><span class="co">## loading 'scigenex'</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required package: SeuratObject</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: sp</span></span></code></pre>
-<pre><code><span><span class="co">## 'SeuratObject' was built under R 4.4.0 but the current version is</span></span>
-<span><span class="co">## 4.4.1; it is recomended that you reinstall 'SeuratObject' as the ABI</span></span>
-<span><span class="co">## for R may have changed</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Attaching package: 'SeuratObject'</span></span></code></pre>
-<pre><code><span><span class="co">## The following objects are masked from 'package:base':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     intersect, t</span></span></code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required package: AnnotationDbi</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: stats4</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: BiocGenerics</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Attaching package: 'BiocGenerics'</span></span></code></pre>
-<pre><code><span><span class="co">## The following object is masked from 'package:SeuratObject':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     intersect</span></span></code></pre>
-<pre><code><span><span class="co">## The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     IQR, mad, sd, var, xtabs</span></span></code></pre>
-<pre><code><span><span class="co">## The following objects are masked from 'package:base':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
-<span><span class="co">##     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
-<span><span class="co">##     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,</span></span>
-<span><span class="co">##     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,</span></span>
-<span><span class="co">##     Position, rank, rbind, Reduce, rownames, sapply, setdiff, table,</span></span>
-<span><span class="co">##     tapply, union, unique, unsplit, which.max, which.min</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: Biobase</span></span></code></pre>
-<pre><code><span><span class="co">## Welcome to Bioconductor</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     Vignettes contain introductory material; view with</span></span>
-<span><span class="co">##     'browseVignettes()'. To cite Bioconductor, see</span></span>
-<span><span class="co">##     'citation("Biobase")', and for packages 'citation("pkgname")'.</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: IRanges</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: S4Vectors</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Attaching package: 'S4Vectors'</span></span></code></pre>
-<pre><code><span><span class="co">## The following object is masked from 'package:utils':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     findMatches</span></span></code></pre>
-<pre><code><span><span class="co">## The following objects are masked from 'package:base':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     expand.grid, I, unname</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Attaching package: 'IRanges'</span></span></code></pre>
-<pre><code><span><span class="co">## The following object is masked from 'package:sp':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     %over%</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set verbosity for debugging</span></span>
-<span><span class="fu"><a href="../reference/set_verbosity.html">set_verbosity</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dputhier/scigenex">scigenex</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Unset verbosity to avoid cluttering the output</span></span>
+<span><span class="fu"><a href="../reference/set_verbosity.html">set_verbosity</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load example gene module clusters and Seurat object</span></span>
-<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7871581/files/pbmc3k_medium_clusters"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- INFO :  Dataset 7871581/files/pbmc3k_medium_clusters has been loaded.</span></span></code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7871581/files/pbmc3k_medium"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- INFO :  Dataset 7871581/files/pbmc3k_medium has been loaded.</span></span></code></pre>
+<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7871581/files/pbmc3k_medium_clusters"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7871581/files/pbmc3k_medium"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="running-the-gm_report-function">Running the gm_report() function<a class="anchor" aria-label="anchor" href="#running-the-gm_report-function"></a>
@@ -185,7 +125,7 @@ It will:</p>
 <li>Optionally perform cell-type annotation via Gemini AI</li>
 <li>Render the report using Bookdown.</li>
 </ul>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/gm_report.html">gm_report</a></span><span class="op">(</span></span>
 <span>  cluster_set <span class="op">=</span> <span class="va">pbmc3k_medium_clusters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span>,</span>
@@ -203,51 +143,7 @@ It will:</p>
 <span>  out_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp_dir</span>, <span class="st">"pbmc_report"</span><span class="op">)</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- DEBUG :  Checking seurat object. </span></span>
-<span><span class="co">## |-- DEBUG :  Checking ClusterSet format. </span></span>
-<span><span class="co">## |-- INFO :  This is not a ST experiment... </span></span>
-<span><span class="co">## |-- INFO :  Canceling ST reporting module. </span></span>
-<span><span class="co">## |-- INFO :  No Gemini key provided... </span></span>
-<span><span class="co">## |-- INFO :  Canceling IA-based cell type annotation. </span></span>
-<span><span class="co">## |-- INFO :  Computing module scores... </span></span>
-<span><span class="co">## |-- DEBUG :  Created temporary directory: </span></span>
-<span><span class="co">## |-- INFO :  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-47-12-2025 </span></span>
-<span><span class="co">## |-- DEBUG :  Copying file in temporary directory. </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: _bookdown.yml </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: footer.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: index.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: module.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: style.css </span></span>
-<span><span class="co">## |-- DEBUG :  Computing top genes. </span></span>
-<span><span class="co">## |-- DEBUG :  Checking ClusterSet format. </span></span>
-<span><span class="co">## |-- DEBUG :  Using fast computation of pearson correlations. </span></span>
-<span><span class="co">## |-- DEBUG :  Using fast computation of pearson correlations. </span></span>
-<span><span class="co">## |-- DEBUG :  Using fast computation of pearson correlations. </span></span>
-<span><span class="co">## |-- INFO :  Results are stored in 'top_genes' slot of the object. </span></span>
-<span><span class="co">## |-- DEBUG :  Computing centers. </span></span>
-<span><span class="co">## |-- INFO :  Computing centers. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing matrix. </span></span>
-<span><span class="co">## |-- DEBUG :  Renaming columns / rows. </span></span>
-<span><span class="co">## |-- DEBUG :  Looping over clusters... </span></span>
-<span><span class="co">## |-- DEBUG :  Computing cluster 1 center. </span></span>
-<span><span class="co">## |-- DEBUG :  Computing cluster 2 center. </span></span>
-<span><span class="co">## |-- DEBUG :  Computing cluster 3 center. </span></span>
-<span><span class="co">## |-- INFO :  Computing semantic similarity (CC) for cnet_plot. </span></span>
-<span><span class="co">## |-- INFO :  Preparing parameters for the report. </span></span>
-<span><span class="co">## |-- INFO :  Looping through parameterised Reports. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing Rmd files for modules 1 </span></span>
-<span><span class="co">## |-- DEBUG :  file : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-47-12-2025/rmarkdown/module_0001.Rmd </span></span>
-<span><span class="co">## |-- DEBUG :  Preparation of Rmd files for objects 1 finished. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing Rmd files for modules 2 </span></span>
-<span><span class="co">## |-- DEBUG :  file : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-47-12-2025/rmarkdown/module_0002.Rmd </span></span>
-<span><span class="co">## |-- DEBUG :  Preparation of Rmd files for objects 2 finished. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing Rmd files for modules 3 </span></span>
-<span><span class="co">## |-- DEBUG :  file : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-47-12-2025/rmarkdown/module_0003.Rmd </span></span>
-<span><span class="co">## |-- DEBUG :  Preparation of Rmd files for objects 3 finished. </span></span>
-<span><span class="co">## |-- INFO :  Deleting sample.Rmd. </span></span>
-<span><span class="co">## |-- INFO :  preparing _bookdown.yml</span></span></code></pre>
-<pre><code><span><span class="co">## /usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/filed8b910d58acd --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 2 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --css style.css --mathjax --include-in-header /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/rmarkdown-strd8b945887f72.html</span></span></code></pre>
-<pre><code><span><span class="co">## |-- INFO :  Results have been copied to: /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/pbmc_report</span></span></code></pre>
+<pre><code><span><span class="co">## /usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpoEFb9e/file1094e685dd6b7 --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 2 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --css style.css --mathjax --include-in-header /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpoEFb9e/rmarkdown-str1094e7c051e07.html</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="viewing-the-output">Viewing the output<a class="anchor" aria-label="anchor" href="#viewing-the-output"></a>
@@ -272,16 +168,13 @@ report by opening index.html in your browser.</p>
 </h2>
 <p>Here we will use a subset of the 10X genomics lymph_node VISIUM (V1)
 dataset.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7870305/files/lymph_node_tiny_clusters_2"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- INFO :  Dataset 7870305/files/lymph_node_tiny_clusters_2 has been loaded.</span></span></code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7870305/files/lymph_node_tiny_2"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- INFO :  Dataset 7870305/files/lymph_node_tiny_2 has been loaded.</span></span></code></pre>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/gm_report.html">gm_report</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7870305/files/lymph_node_tiny_clusters_2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/load_example_dataset.html">load_example_dataset</a></span><span class="op">(</span><span class="st">"7870305/files/lymph_node_tiny_2"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/gm_report.html">gm_report</a></span><span class="op">(</span></span>
 <span>  cluster_set <span class="op">=</span> <span class="va">lymph_node_tiny_clusters_2</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,<span class="op">]</span>,</span>
 <span>  seurat_object <span class="op">=</span> <span class="va">lymph_node_tiny_2</span>,</span>
 <span>  smp_species <span class="op">=</span> <span class="st">"Homo sapiens"</span>,</span>
@@ -295,49 +188,12 @@ dataset.</p>
 <span>  SpatialDimPlot_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pt.size.factor <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>,</span>
 <span>  out_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp_dir</span>, <span class="st">"spatial_report"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## |-- DEBUG :  Checking seurat object. </span></span>
-<span><span class="co">## |-- DEBUG :  Checking ClusterSet format. </span></span>
-<span><span class="co">## |-- INFO :  No Gemini key provided... </span></span>
-<span><span class="co">## |-- INFO :  Canceling IA-based cell type annotation. </span></span>
-<span><span class="co">## |-- INFO :  Computing module scores... </span></span>
-<span><span class="co">## |-- DEBUG :  Created temporary directory: </span></span>
-<span><span class="co">## |-- INFO :  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-50-34-2025 </span></span>
-<span><span class="co">## |-- DEBUG :  Copying file in temporary directory. </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: _bookdown.yml </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: footer.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: index.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: module.Rmd </span></span>
-<span><span class="co">## |-- INFO :  The temporary dir contains file: style.css </span></span>
-<span><span class="co">## |-- DEBUG :  Computing top genes. </span></span>
-<span><span class="co">## |-- DEBUG :  Checking ClusterSet format. </span></span>
-<span><span class="co">## |-- DEBUG :  Using fast computation of pearson correlations. </span></span>
-<span><span class="co">## |-- DEBUG :  Using fast computation of pearson correlations. </span></span>
-<span><span class="co">## |-- INFO :  Results are stored in 'top_genes' slot of the object. </span></span>
-<span><span class="co">## |-- DEBUG :  Computing centers. </span></span>
-<span><span class="co">## |-- INFO :  Computing centers. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing matrix. </span></span>
-<span><span class="co">## |-- DEBUG :  Renaming columns / rows. </span></span>
-<span><span class="co">## |-- DEBUG :  Looping over clusters... </span></span>
-<span><span class="co">## |-- DEBUG :  Computing cluster 1 center. </span></span>
-<span><span class="co">## |-- DEBUG :  Computing cluster 2 center. </span></span>
-<span><span class="co">## |-- INFO :  Computing semantic similarity (CC) for cnet_plot. </span></span>
-<span><span class="co">## |-- INFO :  Preparing parameters for the report. </span></span>
-<span><span class="co">## |-- INFO :  Looping through parameterised Reports. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing Rmd files for modules 1 </span></span>
-<span><span class="co">## |-- DEBUG :  file : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-50-34-2025/rmarkdown/module_0001.Rmd </span></span>
-<span><span class="co">## |-- DEBUG :  Preparation of Rmd files for objects 1 finished. </span></span>
-<span><span class="co">## |-- DEBUG :  Preparing Rmd files for modules 2 </span></span>
-<span><span class="co">## |-- DEBUG :  file : /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-50-34-2025/rmarkdown/module_0002.Rmd </span></span>
-<span><span class="co">## |-- DEBUG :  Preparation of Rmd files for objects 2 finished. </span></span>
-<span><span class="co">## |-- INFO :  Deleting sample.Rmd. </span></span>
-<span><span class="co">## |-- INFO :  preparing _bookdown.yml</span></span></code></pre>
-<pre><code><span><span class="co">## Rendering book in directory '/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrlTue-Jul- 1-18-50-34-2025/rmarkdown'</span></span></code></pre>
+<pre><code><span><span class="co">## Rendering book in directory '/var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpoEFb9eWed-Jul- 2-07-42-18-2025/rmarkdown'</span></span></code></pre>
 <pre><code><span><span class="co">## processing file: _main.Rmd</span></span></code></pre>
 <pre><code><span><span class="co">## output file: _main.knit.md</span></span></code></pre>
-<pre><code><span><span class="co">## /usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/filed8b9355cc643 --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 2 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --css style.css --mathjax --include-in-header /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/rmarkdown-strd8b916c76ad1.html</span></span></code></pre>
+<pre><code><span><span class="co">## /usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpoEFb9e/file1094e539f53f --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 2 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --css style.css --mathjax --include-in-header /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpoEFb9e/rmarkdown-str1094e27f83c0c.html</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Output created: _book/index.html</span></span></code></pre>
-<pre><code><span><span class="co">## |-- INFO :  Results have been copied to: /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpF8EZrl/spatial_report</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

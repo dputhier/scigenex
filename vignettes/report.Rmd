@@ -20,13 +20,27 @@ This vignette illustrates how to use the `gm_report()` function from the scigene
 
 We will use a tiny built-in examples from the Scigenex library.
 
-```{r}
+
+```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide', message=FALSE}
+suppressMessages(suppressWarnings(library(scigenex, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(org.Hs.eg.db, quietly = TRUE)))
+suppressMessages(suppressWarnings(library(SeuratData, quietly = TRUE)))
+# Unset verbosity to avoid cluttering the output
+set_verbosity(0)
+
+# Load example gene module clusters and Seurat object
+load_example_dataset("7871581/files/pbmc3k_medium_clusters")
+load_example_dataset("7871581/files/pbmc3k_medium")
+```
+
+```{r loading2, echo=TRUE, eval=FALSE}
 library(scigenex)
 library(Seurat)
 library(org.Hs.eg.db)
 
-# Set verbosity for debugging
-set_verbosity(2)
+# Unset verbosity to avoid cluttering the output
+set_verbosity(0)
 
 # Load example gene module clusters and Seurat object
 load_example_dataset("7871581/files/pbmc3k_medium_clusters")
