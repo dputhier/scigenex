@@ -52,6 +52,7 @@
 #'                 annotation_src="CC",
 #'                 smp_region="total", 
 #'                 smp_organ="blood", 
+#'                 smp_stage="adult", 
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL)
 #' set_verbosity(3)

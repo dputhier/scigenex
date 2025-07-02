@@ -9,11 +9,9 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-
 ## Writing report about ClusterSet Objects
 
 This vignette illustrates how to use the `gm_report()` function from the scigenex R package to create a comprehensive gene module analysis report in Bookdown format. This function integrates cluster information, functional annotation, and visualization, optionally supporting spatial transcriptomics (ST) data.
-
 
 
 ## Prerequisites
@@ -48,7 +46,6 @@ load_example_dataset("7871581/files/pbmc3k_medium")
 ```
 
 ## Running the gm_report() function
-
 
 The gm_report() function requires a ClusterSet and a Seurat object. It will:
 
@@ -119,7 +116,6 @@ gm_report(
   out_dir = file.path(tmp_dir, "spatial_report")
 )
 ```
-
 
 ## Conclusion
 
