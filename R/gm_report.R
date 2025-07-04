@@ -58,7 +58,7 @@
 #' set_verbosity(3)
 #' load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 #' load_example_dataset('7870305/files/lymph_node_tiny_2')
-#' gm_report(lymph_node_tiny_clusters_2[1:4,], 
+#' gm_report(lymph_node_tiny_clusters_2[1:2,], 
 #'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
@@ -71,7 +71,7 @@
 #'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
 #'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 #' set_verbosity(3)
-#' markers <- Seurat::FindAllMarkers(pbmc3k_medium)
+#' markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
 #' cs <- cluster_set_from_seurat(pbmc3k_medium, markers)
 #' gm_report(cs[1:2,], 
 #'                 pbmc3k_medium, 
@@ -141,7 +141,9 @@ gm_report <- function(cluster_set = NULL,
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
                             SpatialDimPlot_params=list(pt.size.factor = 1.7),
                             plot_ggheatmap_params=list(use_top_genes=FALSE, 
-                                                       hide_gene_name=TRUE),
+                                                       hide_gene_name=TRUE,
+                                                       xlab = "Cells/Spots",
+                                                       ylab="Genes"),
                             plot_heatmap_params=list(link="complete", 
                                                      use_top_genes=FALSE,
                                                      interactive=TRUE,

@@ -14,13 +14,15 @@
 #' library(SeuratObject)
 #' library(Seurat)
 #' data("pbmc_small", package="SeuratObject")
-#' cs <- cluster_set_from_seurat(pbmc_small, Seurat::FindAllMarkers(pbmc_small))
+#' markers <- Seurat::FindAllMarkers(pbmc_small, only.pos = TRUE)
+#' cs <- cluster_set_from_seurat(pbmc_small, markers)
+#' cs <- top_genes(cs)
 #' plot_heatmap(cs)
 #' plot_heatmap(cs)
 #' plot_heatmap(cs[2, ])
 #' plot_heatmap(cs, cell_clusters = Seurat::Idents(pbmc_small))
 #' plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
-#'              cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
+#' cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
 #' plot_profiles(cs, ident = Seurat::Idents(pbmc_small))
 #' @export
 cluster_set_from_seurat <- function(object=NULL, 
@@ -39,10 +41,9 @@ cluster_set_from_seurat <- function(object=NULL,
     
     print_msg("Selecting  markers based on p_val_adj...", msg_type = "DEBUG")
     markers <- markers[markers$p_val_adj <= p_val_adj, ]
-    
+    object <- object[markers$gene, , drop = FALSE]
     print_msg("Disambiguating gene duplicates using '~' separator", msg_type = "DEBUG")
     gn <- make.unique(markers$gene, sep = "~")
-    
   
     clusters <- markers$cluster
     names(clusters) <- gn
@@ -52,24 +53,7 @@ cluster_set_from_seurat <- function(object=NULL,
       print_msg("The 'markers' argument should be a named vector.",
                 msg_type="STOP")
     names(clusters) <- make.unique(names(clusters), sep = "~")
-    clusters <- markers
-    gn <- make.unique(markers$gene, sep = "~")
-    
-  }else if(inherits(markers, "list")){
-    # Check if markers is a list of vectors
-    if(!all(sapply(markers, is.character)))
-      print_msg("The 'markers' argument should be a list of character vectors.",
-                msg_type="STOP")
-    
-    
-    # Create a named vector with the cluster as names
-    print_msg("Converting list to a vector.", msg_type = "DEBUG")
-    clusters <- unlist(mapply(FUN = "rep", 1:length(markers), 
-                              unlist(lapply(markers, length))))
-    
-    print_msg("Disambiguating gene duplicates using '~' separator", msg_type = "DEBUG")
-    gn <- make.unique(unlist(markers), sep = "~")
-    names(clusters) <- gn
+    gn <- names(clusters)
   
   }else{
     print_msg("The 'markers' argument should be a data.frame or named vector.",
@@ -79,6 +63,7 @@ cluster_set_from_seurat <- function(object=NULL,
   if(length(grep("~", gn))){
     print_msg("There are duplicated gene names, handling them...", msg_type = "DEBUG")
     gn_non_dup <- gn[-grep("~[0-9]+$", gn)]
+    
     tmp_mat <-  object[gn_non_dup, ]
     
     gn_dup <- gn[grep("~[0-9]+$", gn)]
@@ -106,6 +91,7 @@ cluster_set_from_seurat <- function(object=NULL,
   }
   
   gn <- split(names(clusters), clusters)
+
   obj_out <- new(Class = "ClusterSet")
   obj_out@gene_clusters <- gn
   

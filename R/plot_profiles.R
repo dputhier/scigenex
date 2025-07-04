@@ -172,7 +172,8 @@ plot_profiles <- function(data = NULL,
       axis.text.y = ggplot2::element_text(size = size_text_y),
       strip.text = ggplot2::element_blank()
     ) +
-    ggplot2::scale_fill_manual(values=color_cluster, name=legend_name)
+    ggplot2::scale_fill_manual(values=color_cluster, name=legend_name) +
+    ggplot2::xlab("Cell Indentity") 
   
 }
 
@@ -297,14 +298,14 @@ plot_multi_profiles <- function(data = NULL,
   
   m <- reshape2::melt(centers_summarized_by_cell_type)
 
-  colnames(m) <- c("Cluster", "Cell_type", "Intensity")
-  m$Cell_type <- factor(m$Cell_type, levels=levels(ident), ordered = TRUE)
+  colnames(m) <- c("Cluster", "Cell_Indentity", "Intensity")
+  m$Cell_Indentity <- factor(m$Cell_Indentity, levels=levels(ident), ordered = TRUE)
   m$Cluster <-   factor(m$Cluster, levels=unique(m$Cluster), ordered = TRUE)
   
   Cluster <- NULL
   ggplot2::ggplot(data= m,
                   ggplot2::aes(
-                    x = .data[["Cell_type"]],
+                    x = .data[["Cell_Indentity"]],
                     y = .data[["Intensity"]],
                     group = Cluster,
                     color = .data[["Cluster"]]

@@ -151,7 +151,7 @@ if(length(identities))
 
 
 
-```{r, section_gen_info_17a, eval=""exp_metrics" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_17a, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### QC Metrics") 
 ``` 
 
