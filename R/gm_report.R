@@ -243,7 +243,7 @@ gm_report <- function(cluster_set = NULL,
   }
   
   add_module_score_used_params$object <- seurat_object
-  add_module_score_used_params$features <- cluster_set@gene_clusters
+  add_module_score_used_params$features <- lapply(cluster_set@gene_clusters, gsub, pattern = "~[0-9]+$", replacement = "_")
   add_module_score_used_params$name <- "MOD_"
   seurat_object <- do.call(Seurat::AddModuleScore, add_module_score_used_params)
   
@@ -265,7 +265,6 @@ gm_report <- function(cluster_set = NULL,
     print_msg(paste0("The temporary dir contains file: ", tpfile))
   }
    
-  
   print_msg("Computing top genes.", msg_type = "DEBUG")
   cluster_set <- top_genes(cluster_set)
   
@@ -288,7 +287,6 @@ gm_report <- function(cluster_set = NULL,
   }
   
   
- 
   module_rmd <- file.path(tmp_dir, "module.Rmd")
   
   print_msg("Preparing parameters for the report.")

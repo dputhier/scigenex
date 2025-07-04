@@ -164,7 +164,6 @@ VlnPlot(seurat_object, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"),
 ```
 
 
-
 ```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Spatial distribution") 
 ``` 
