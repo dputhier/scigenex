@@ -33,6 +33,15 @@ cluster_set_from_seurat <- function(object=NULL,
   
   print_msg("Converting a Seurat object from cluster_set...", msg_type = "DEBUG")
   
+  if(is.null(object) | !inherits(object, "Seurat"))
+    print_msg("The 'object' argument should be a Seurat object.", msg_type="STOP")
+  
+  if(is.null(markers))
+    print_msg("Please provide a set of markers/clusters...", msg_type="STOP")
+  
+  if(is.factor(markers))
+    markers <- as.character(markers)
+    
   layer <- match.arg(layer)
   
   object <- SeuratObject::LayerData(object, assay=assay, layer=layer)
@@ -52,9 +61,11 @@ cluster_set_from_seurat <- function(object=NULL,
     if(is.null(names(markers)))
       print_msg("The 'markers' argument should be a named vector.",
                 msg_type="STOP")
+    object <- object[names(markers), , drop = FALSE]
+    clusters <- markers
     names(clusters) <- make.unique(names(clusters), sep = "~")
     gn <- names(clusters)
-  
+    
   }else{
     print_msg("The 'markers' argument should be a data.frame or named vector.",
               msg_type="STOP")
