@@ -192,10 +192,11 @@ The SciGeneX package propose several functions to evaluate to compare gene sets.
 
 It may be interesting to compare the clusters obtained using an unsupervised approach (SciGeneX) with those obtained from `Seurat::FindAllMarkers()`, which searches for genes differentially expressed between cell populations deduced by `Seurat::FindClusters()`.
 
-As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers are shared between gene modules. The size of the square is related to the Jaccard index.
+As shown using the `plot_cmp_genesets()` function, `Seurat::FindAllMarkers()` tends to find markers that are not so specific to cell populations. Thus this markers may be shared between gene modules. The size of the square is related to the Jaccard index.
 
 ```{r seurat_classes, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE, results='hide'}
 seurat_brain_mk <- Seurat::FindAllMarkers(brain1, only.pos = TRUE)
+seurat_brain_mk <- seurat_brain_mk[seurat_brain_mk$p_val_adj <= 0.01, ]
 seurat_brain_mk<- split(seurat_brain_mk$gene, seurat_brain_mk$cluster)
 plot_cmp_genesets(seurat_brain_mk, seurat_brain_mk, layout = "square", transform="-log10" ) + 
   xlab("Seurat::FindAllMarkers()") + 
