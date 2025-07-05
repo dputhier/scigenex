@@ -72,7 +72,7 @@
 #'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 #' set_verbosity(3)
 #' markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
-#' cs <- cluster_set_from_seurat(pbmc3k_medium, markers)
+#' cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.05)
 #' gm_report(cs[1:2,], 
 #'                 pbmc3k_medium, 
 #'                 smp_species="Homo sapiens", 

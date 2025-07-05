@@ -8,18 +8,22 @@ cluster_set_from_seurat(
   object = NULL,
   markers = NULL,
   layer = c("data", "counts", "scale.data"),
-  assay = "RNA"
+  assay = "RNA",
+  p_val_adj = 0.001
 )
 }
 \arguments{
 \item{object}{A Seurat object.}
 
-\item{markers}{A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named).}
+\item{markers}{A Seurat::FindAllMarkers() result or a named vector (clusters with gene_names as named). 
+Named vectors can contains several position with the same gene name (overlapping clusters).}
 
 \item{layer}{One of 'data', 'counts' or 'scale.data'. The slot to extract from the seurat object to perform clustering analysis.
 SCT is the recommended method from Seurat package when working with spatial transcriptomics data.}
 
 \item{assay}{The type of assay (e.g. "RNA", "Spatial", "Sketch", "SCT"...).}
+
+\item{p_val_adj}{If markers is the output from Seurat::FindAllMarkers(), the adjusted p-value threshold.}
 }
 \description{
 Transform a Seurat objects into a ClusterSet.
@@ -29,12 +33,14 @@ Transform a Seurat objects into a ClusterSet.
 library(SeuratObject)
 library(Seurat)
 data("pbmc_small", package="SeuratObject")
-cs <- cluster_set_from_seurat(pbmc_small, Seurat::FindAllMarkers(pbmc_small))
+markers <- Seurat::FindAllMarkers(pbmc_small, only.pos = TRUE)
+cs <- cluster_set_from_seurat(pbmc_small, markers)
+cs <- top_genes(cs)
 plot_heatmap(cs)
 plot_heatmap(cs)
-plot_heatmap(cs[1,])
+plot_heatmap(cs[2, ])
 plot_heatmap(cs, cell_clusters = Seurat::Idents(pbmc_small))
 plot_heatmap(cs[1,Idents(pbmc_small) == "0"], 
-             cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
+cell_clusters = Seurat::Idents(pbmc_small), label_size = 6)
 plot_profiles(cs, ident = Seurat::Idents(pbmc_small))
 }

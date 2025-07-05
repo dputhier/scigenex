@@ -26,19 +26,20 @@ gm_report(
   smp_region = NULL,
   rmd_dir = file.path(system.file(package = "scigenex"), "rmarkdown"),
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
-  plot_profiles_params = list(to_lin = TRUE),
+  plot_profiles_params = list(to_lin = TRUE, averaged = TRUE),
   plot_multi_profiles_params = list(legend_name = "Gene\\nModule"),
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
-  plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE),
+  plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
+    "Cells/Spots", ylab = "Genes"),
   plot_heatmap_params = list(link = "complete", use_top_genes = FALSE, interactive =
     TRUE, line_size_horizontal = 1, label_size = 7),
   cnetplot_params = list(color.params = list(edge = TRUE), showCategory = 6, cex.params =
     list(category_label = 0.6, gene_label = 0.7)),
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
-    "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot",
+    "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot", "exp_metrics",
     "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
     "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
     "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
@@ -119,6 +120,7 @@ No return value. A report is generated and written to the specified output direc
 \description{
 Create a report from a ClusterSet experiment and Seurat object. If is_spatial_exp argument is set to TRUE Spatial diagram will be added. 
 The function can call Gemini IA to try to guess cell type and functions associated to each gene module.
+NB: When dealing with large dataset (large number of cells/spots), it is advisable not activate interactive heatmap by deleting "module_iheatmap" from the 'section' argument.
 }
 \examples{
 library(scigenex)
@@ -132,12 +134,13 @@ gm_report(pbmc3k_medium_clusters[1:2,],
                 annotation_src="CC",
                 smp_region="total", 
                 smp_organ="blood", 
+                smp_stage="adult", 
                 bioc_org_db="org.Hs.eg.db",
                 api_key=NULL)
 set_verbosity(3)
 load_example_dataset('7870305/files/lymph_node_tiny_clusters_2')
 load_example_dataset('7870305/files/lymph_node_tiny_2')
-gm_report(lymph_node_tiny_clusters_2[1:4,], 
+gm_report(lymph_node_tiny_clusters_2[1:2,], 
                 lymph_node_tiny_2, 
                 smp_species="Homo sapiens", 
                 smp_region="total", 
@@ -149,4 +152,16 @@ gm_report(lymph_node_tiny_clusters_2[1:4,],
                 is_spatial_exp=TRUE,
                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
+set_verbosity(3)
+markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
+cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.05)
+gm_report(cs[1:2,], 
+                pbmc3k_medium, 
+                smp_species="Homo sapiens", 
+                smp_region="total", 
+                smp_organ="lymph node", 
+                smp_stage="adult", 
+                annotation_src="CC",
+                bioc_org_db="org.Hs.eg.db",
+                api_key=NULL) # Object was created with an older seurat version
 }
