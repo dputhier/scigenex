@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.7</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
                         <h4 data-toc-skip class="author">Julie Bavais
 &amp; Denis Puthier</h4>
             
-            <h4 data-toc-skip class="date">2025-07-01</h4>
+            <h4 data-toc-skip class="date">2025-07-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/dputhier/scigenex/blob/HEAD/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -130,28 +130,28 @@ input, you can skip this step.</p>
 information, you can check Seurat website <a href="https://satijalab.org/seurat/articles/pbmc3k_tutorial.html" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Quality control</span></span>
-<span><span class="va">pbmc3k</span><span class="op">[[</span><span class="st">"percent.mt"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/PercentageFeatureSet.html" class="external-link">PercentageFeatureSet</a></span><span class="op">(</span><span class="va">pbmc3k</span>, pattern <span class="op">=</span> <span class="st">"^MT-"</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span><span class="op">[[</span><span class="st">"percent.mt"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/PercentageFeatureSet.html" class="external-link">PercentageFeatureSet</a></span><span class="op">(</span><span class="va">pbmc3k</span>, pattern <span class="op">=</span> <span class="st">"^MT-"</span><span class="op">)</span></span>
 <span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">pbmc3k</span>, subset <span class="op">=</span> <span class="va">percent.mt</span> <span class="op">&lt;</span> <span class="fl">5</span> <span class="op">&amp;</span> <span class="va">nFeature_RNA</span> <span class="op">&gt;</span> <span class="fl">200</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Normalizing</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Identification of highly variable genes</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">pbmc3k</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">pbmc3k</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Scaling data</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform principal component analysis</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cell clustering</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Dimension reduction</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">dim_plot_orig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dim_plot_orig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span>
 <span><span class="va">dim_plot_orig</span></span></code></pre></div>
 <p><img src="usage_files/figure-html/classicalsteps-1.png" width="700"></p>
 </div>
@@ -221,7 +221,7 @@ object that is intented to store gene modules.</p>
 <span><span class="co">##               *  seed  =  123 </span></span>
 <span><span class="co">##               *  keep_nn  =  FALSE </span></span>
 <span><span class="co">##               *  k_graph  =  5 </span></span>
-<span><span class="co">##               *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpcALEZU </span></span>
+<span><span class="co">##               *  output_path  =  /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpUeRUnI </span></span>
 <span><span class="co">##               *  name  =  89MExU6mw3 </span></span>
 <span><span class="co">##               *  inflation  =  2 </span></span>
 <span><span class="co">##               *  algorithm  =  mcl</span></span></code></pre>
@@ -329,7 +329,7 @@ solution leads to a diagram that is more easily customized, as it is
 based on the ggplot framework. Here, we use
 <code>plot_ggheatmap()</code> to view the first 4 clusters. Note that
 here, we choose to order the columns/cells on the results of
-<code><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">Seurat::FindClusters</a></code>.</p>
+<code><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html" class="external-link">Seurat::FindClusters</a></code>.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_ggheatmap</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span>, </span>
 <span>               use_top_genes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -392,18 +392,18 @@ some improvement regarding cell population resolution compare to
 original Seurat pipeline :</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Scaling data using genes from scigenex</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform principal component analysis</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cell clustering</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Dimension reduction</span></span>
-<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">dim_plot_sci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dim_plot_sci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dim_plot_orig</span> <span class="op">+</span> <span class="va">dim_plot_sci</span></span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
@@ -464,7 +464,7 @@ will use the markers from the <a href="https://sctype.app/" class="external-link
 <p>One can restrict PCA computation to the subset of genes selected by
 Scigenex. One can expected a significant improvement of segregation of
 cell populations. To do so one needs to provide the list of genes
-selected by scigenex to the <code><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData()</a></code> function of Seurat.
+selected by scigenex to the <code><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData()</a></code> function of Seurat.
 A indicated in the RunPCA() help function : “PCA will be run using the
 variable features for the Assay. Note that the features must be present
 in the scaled data. Any requested features that are not scaled or have 0
@@ -473,20 +473,20 @@ features.”</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Scaling data</span></span>
 <span><span class="va">feature_2_scale</span> <span class="op">&lt;-</span> <span class="fu">row_names</span><span class="op">(</span><span class="va">pbmc_scigenex</span><span class="op">)</span></span>
-<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">feature_2_scale</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">pbmc3k</span>, features <span class="op">=</span> <span class="va">feature_2_scale</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform principal component analysis</span></span>
-<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k_alt</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc3k_alt</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cell clustering</span></span>
-<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Dimension reduction</span></span>
-<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pbmc3k_alt</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html" class="external-link">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare alternative projection (pbmc3k_alt) to original (pbmc3k)</span></span>
-<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span>  <span class="op">+</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span>  <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k_alt</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="usage_files/figure-html/improve_umap-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -528,7 +528,7 @@ may take some time to load in the web browser.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">##  [1] tidyr_1.3.1               dplyr_1.1.4              </span></span>
-<span><span class="co">##  [3] scigenex_2.0.5            stxBrain.SeuratData_0.1.2</span></span>
+<span><span class="co">##  [3] scigenex_2.0.7            stxBrain.SeuratData_0.1.2</span></span>
 <span><span class="co">##  [5] pbmc3k.SeuratData_3.1.4   SeuratData_0.2.2.9001    </span></span>
 <span><span class="co">##  [7] Seurat_5.3.0              SeuratObject_5.0.2       </span></span>
 <span><span class="co">##  [9] sp_2.1-4                  patchwork_1.3.0          </span></span>

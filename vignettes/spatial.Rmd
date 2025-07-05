@@ -9,7 +9,6 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-
 ## Working with spatial transcriptomics datasets
 
 The scigenex package offers a certain number of functions dedicated to spatial transcriptomic data analysis. At the moment these functions have been mainly developed to analyse VISIUM technology (10X Genomics).

@@ -19,7 +19,7 @@ top_genes based on GO terms."><!-- mathjax --><script src="https://cdnjs.cloudfl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.7</span>
       </span>
     </div>
 
@@ -126,11 +126,16 @@ use biomaRt::listFilters() to get the vailable list.</p></dd>
 <span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span> <span class="op">&lt;-</span> <span class="fu">top_by_go</span><span class="op">(</span><span class="va">pbmc3k_medium_clusters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span>, go_id <span class="op">=</span> <span class="st">"GO:0003677"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Invalid mirror. Select a mirror from [www, useast, asia].</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Default when no mirror is specified is to use www.ensembl.org which may be automatically redirected.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ensembl site unresponsive, trying asia mirror</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ensembl site unresponsive, trying useast mirror</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .chooseEnsemblMirror(mirror = mirror, http_config = http_config):</span> Unable to query any Ensembl site</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Connecting to Biomart... </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |-- INFO :  Processing cluster 2 </span>
 <span class="r-in"><span><span class="va">pbmc3k_medium_clusters</span><span class="op">@</span><span class="va">top_genes</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "NACA" "RPL6" "RPS3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "APP"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

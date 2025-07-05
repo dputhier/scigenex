@@ -110,6 +110,39 @@ gm_report(
 ```
 
 
+### Running gm_report() from a Seurat spatial experiment and corresponding Seurat markers
+
+As indicated previously, `gm_report()`can be run from a Seurat object together with on cell-specific marker genes obtained from `Seurat::FindAllMarkers()`. This represent a convenient way to create a Seurat analysis report. In this case we need first to run the `cluster_set_from_seurat()` function.
+
+```{r , eval=FALSE}
+# Unset verbosity to avoid cluttering the output
+set_verbosity(0)
+
+markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
+cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj = 0.001)
+
+# Create a temporary directory for the report output
+tmp_dir <- tempdir()
+
+# Run gm_report() to generate the report
+gm_report(
+  cluster_set = pbmc3k_medium_clusters[1:3,],
+  seurat_object = pbmc3k_medium,
+  smp_species = "Homo sapiens",
+  smp_region = "total",
+  smp_organ = "blood",
+  smp_stage = "adult",
+  annotation_src = "CC",
+  bioc_org_db = "org.Hs.eg.db",
+  api_key = NULL,  # Optional: Gemini API key for IA-based annotation
+  report_title = "PBMC Gene Module Report",
+  report_subtitle = "PBMC 3k Medium Dataset",
+  report_author = "scigenex Vignette",
+  out_dir = file.path(tmp_dir, "pbmc_report"),
+  quiet = FALSE
+)
+```
+
 ### Running gm_report() from a Seurat spatial experiment and corresponding Scigenex modules
 
 When running the `gm_report()` function on spatial transcriptomics data, you can visualize gene modules in the context of tissue architecture. The function supports Seurat objects with spatial data and can generate spatial plots.  Here we will use a tiny subset of the 10X genomics lymph_node VISIUM (V1) dataset.
@@ -141,7 +174,7 @@ gm_report(
 
 ### Running gm_report() from a Seurat spatial experiment and corresponding Seurat markers
 
-As indicated previously, `gm_report()`can be run from a Seurat object together with on cell-specific marker genes obtained from `Seurat::FindAllMarkers()`. This represent a convenient way to create a Seurat analysis report. In this case we need first to run the `cluster_set_from_seurat()` function.
+In the same way, we can apply `gm_report()`with spatial transcriptomics data and markers identified using the `Seurat::FindAllMarkers()` function.
 
 ```{r , eval=FALSE}
 # Create a temporary directory for the report output
@@ -167,7 +200,6 @@ gm_report(
   out_dir = file.path(tmp_dir, "spatial_report")
 )
 ```
-
 
 ## Customizing Your Report
 
