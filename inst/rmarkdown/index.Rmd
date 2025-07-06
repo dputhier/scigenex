@@ -160,9 +160,33 @@ knitr::asis_output("Seurat provides a convenient framework for exploring quality
 ``` 
 
 ```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"}
-VlnPlot(seurat_object, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+var_qc <- grep("(^nFeature)|(nCount)|(percent)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
+for(qc in var_qc){
+  VlnPlot(seurat_object, features = qc, ncol = 1)
+}
+
 ```
 
+```{r, section_gen_info_17d, eval="exp_pop" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Population size") 
+``` 
+
+```{r, section_gen_info_17e, eval="exp_pop" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The size of each cell population.") 
+``` 
+
+```{r section_gen_info_17f, echo=FALSE, eval="exp_pop" %in% section, echo=FALSE, results = "asis"}
+df <- as.data.frame(table(Seurat::Idents(seurat_object)))
+colnames(df) <- c("Cell_Identity", "Count")
+df$Cell_Identity <- factor(df$Cell_Identity, levels=df$Cell_Identity[order(df$Count, decreasing = FALSE)])
+Cell_Identity <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, y=Count, fill=Cell_Identity)) +
+              ggplot2::geom_col() +
+              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::theme_minimal() +
+              ggplot2::coord_flip() +
+              ggplot2::theme(legend.position = "none")
+```
 
 ```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Spatial distribution") 
@@ -181,10 +205,9 @@ SpatialFeaturePlot_used_params$object <- seurat_object
 
 seurat_object[["percent.mt"]] <- PercentageFeatureSet(seurat_object, pattern = "^MT-")
 
-meta_data <- grep("(^nCount)|(^nFeature)|(percent.mt)", 
-                  colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
+var_qc <- grep("(^nFeature)|(nCount)|(percent)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 
-for(feat in meta_data){
+for(feat in var_qc){
   SpatialFeaturePlot_used_params$features <- feat
   print(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params))
 }
