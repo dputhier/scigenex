@@ -40,7 +40,7 @@ gm_report(
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot", "exp_metrics",
-    "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
+    "exp_pop", "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
     "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
     "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
     "module_term_barplot_1", "module_term_barplot_2", "module_term_network_circ",
@@ -154,7 +154,7 @@ gm_report(lymph_node_tiny_clusters_2[1:2,],
                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 set_verbosity(3)
 markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
-cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.05)
+cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.001)
 gm_report(cs[1:2,], 
                 pbmc3k_medium, 
                 smp_species="Homo sapiens", 
