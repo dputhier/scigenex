@@ -1,7 +1,7 @@
 ---
 author: "Denis Puthier"
 date: "`r Sys.Date()`"
-title: "Creating Gene Module Reports with SciGeneX"
+title: "Creating a report"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
