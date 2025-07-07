@@ -255,7 +255,7 @@ gm_report <- function(cluster_set = NULL,
   seurat_object <- do.call(Seurat::AddModuleScore, add_module_score_used_params)
   
   tmp_dir <- tempdir(check = FALSE)
-  tmp_dir <- paste0(tmp_dir, format(Sys.time(), "%a-%b-%e-%H-%M-%S-%Y"))
+  tmp_dir <- paste0(tmp_dir, gsub(" ", "", format(Sys.time(), "%a-%b-%H-%M-%S-%Y")))
   
   dir.create(tmp_dir, showWarnings = FALSE, recursive = TRUE)
   

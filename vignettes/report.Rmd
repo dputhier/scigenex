@@ -105,7 +105,7 @@ gm_report(
 ```
 
 
-### Running gm_report() from a Seurat spatial experiment and corresponding Seurat markers
+### Running gm_report() from a Seurat single-cell experiment and corresponding Seurat markers
 
 As indicated previously, `gm_report()`can be run from a Seurat object together with on cell-specific marker genes obtained from `Seurat::FindAllMarkers()`. This represent a convenient way to create a Seurat analysis report. In this case we need first to run the `cluster_set_from_seurat()` function.
 
@@ -183,6 +183,7 @@ gm_report(
   smp_stage = "adult",
   annotation_src = "CC",
   bioc_org_db = "org.Hs.eg.db",
+  subsample_by_ident_params = list(nbcell=10),
   is_spatial_exp = TRUE,
   SpatialFeaturePlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
   SpatialDimPlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
