@@ -216,8 +216,8 @@ var_qc <- grep("(^nFeature)|(^nCount)|(^pctMito)|(^pctRibo)", colnames(seurat_ob
 for(feat in var_qc){
   SpatialFeaturePlot_used_params$features <- feat
   tryerror <- try(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params)) # got some Error in `FetchData()`...
-  if(!inherits(tryerror, "try-error")){
-    print(tryerror)
+    if(!inherits(tryerror, "try-error")){
+      print(tryerror)
   }
 }
 ```

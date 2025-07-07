@@ -71,15 +71,16 @@
 #'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
 #'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 #' set_verbosity(3)
-#' markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
-#' cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.001)
+#' markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
+#' cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj=0.001, assay="Spatial")
 #' gm_report(cs[1:2,], 
-#'                 pbmc3k_medium, 
+#'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
 #'                 smp_organ="lymph node", 
 #'                 smp_stage="adult", 
 #'                 annotation_src="CC",
+#'                 is_spatial_exp=TRUE,
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL) # Object was created with an older seurat version
 #' @importFrom fs path_home
