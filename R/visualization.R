@@ -633,7 +633,7 @@ setMethod(
     if(use_top_genes){
       if(length(object@top_genes) == 0)
         print_msg("Please use top_gene() methods onto ClusterSet object.", msg_type = "STOP")
-      m <- object@data[unlist(object@top_genes), ]
+      m <- object@data[unlist(object@top_genes), , drop=FALSE]
     }else{
       m <- object@data
     }
