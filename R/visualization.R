@@ -288,7 +288,7 @@ plot_heatmap <- function(object,
   if(interactive){
     
     #Flip rows
-    m <- m[order(nrow(m):1),]
+    m <- m[order(nrow(m):1), , drop=FALSE]
     
     print_msg("Plot is interactive...")
     

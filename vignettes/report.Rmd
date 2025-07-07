@@ -53,13 +53,12 @@ A `ClusterSet` can be built in several ways:
     
 ## Loading libraries
 
-To use the `gm_report()` function, you need to load the **scigenex**, **Seurat**, and **org.Hs.eg.db** packages. The following code snippet demonstrates how to load these libraries.
+To use the `gm_report()` function, you need to load the **scigenex**, **Seurat**, an organism-related packages (here the **org.Hs.eg.db** packages). 
 
 ```{r loading1, echo=FALSE, eval=FALSE, warning=FALSE, results='hide', message=FALSE}
 suppressMessages(suppressWarnings(library(scigenex, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(org.Hs.eg.db, quietly = TRUE)))
-
 ```
 
 ```{r loading2, echo=FALSE, eval=FALSE}
@@ -169,12 +168,14 @@ In the same way, we can apply `gm_report()`with spatial transcriptomics data and
 tmp_dir <- tempdir()
 
 # Load example gene module clusters and Seurat object for spatial data
-load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
 load_example_dataset("7870305/files/lymph_node_tiny_2")
+
+markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
+cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj = 0.001, assay = "Spatial")
 
 # Run gm_report() for spatial transcriptomics data
 gm_report(
-  cluster_set = lymph_node_tiny_clusters_2[1:2,],
+  cluster_set = cs[1:2,],
   seurat_object = lymph_node_tiny_2,
   smp_species = "Homo sapiens",
   smp_region = "total",
@@ -183,8 +184,8 @@ gm_report(
   annotation_src = "CC",
   bioc_org_db = "org.Hs.eg.db",
   is_spatial_exp = TRUE,
-  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
-  SpatialDimPlot_params = list(pt.size.factor = 3000),
+  SpatialFeaturePlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
+  SpatialDimPlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
   out_dir = file.path(tmp_dir, "spatial_report")
 )
 ```

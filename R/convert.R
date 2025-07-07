@@ -49,12 +49,12 @@ cluster_set_from_seurat <- function(object=NULL,
   if(inherits(markers, "data.frame")){
     
     print_msg("Selecting  markers based on p_val_adj...", msg_type = "DEBUG")
-    markers <- markers[markers$p_val_adj <= p_val_adj, ]
+    markers <- markers[markers$p_val_adj <= p_val_adj, , drop=FALSE]
     object <- object[markers$gene, , drop = FALSE]
     print_msg("Disambiguating gene duplicates using '~' separator", msg_type = "DEBUG")
     gn <- make.unique(markers$gene, sep = "~")
   
-    clusters <- markers$cluster
+    clusters <- as.character(markers$cluster)
     names(clusters) <- gn
 
   }else if(is.vector(markers)){

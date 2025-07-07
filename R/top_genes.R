@@ -78,60 +78,63 @@ setMethod("top_genes",
       # Extract gene names in cluster i
       genes <- clusters[[cl_name]]
       
-      # Compute distances between genes in cluster i
-      # Use the same distance used by SciGeneX
-      if(is.null(distance_method)){
-        dist_method <- object@parameters$distance_method
-      }else{
-        dist_method <- distance_method
-      }
+      if(length(genes) > 1 ){
+    
+        # Compute distances between genes in cluster i
+        # Use the same distance used by SciGeneX
+        if(is.null(distance_method)){
+          dist_method <- object@parameters$distance_method
+        }else{
+          dist_method <- distance_method
+        }
+          
         
-      
-      if (dist_method == "unknown") {
-        print_msg("Distance type is unknown", msg_type = "INFO")
-        print_msg("Using Pearson", msg_type = "INFO")
-        dist_method<- "pearson"
-      }
-      
-      if (dist_method == "pearson"){
-        print_msg("Using fast computation of pearson correlations.", msg_type="DEBUG")
-        dist <- as.matrix(qlcMatrix::corSparse(Matrix::t(object@data[genes, ])))
-        colnames(dist) <- genes
-        rownames(dist) <- genes
-        dist <- 1 - dist
-      }
-      
-      if(dist_method %in% c("kendall", "spearman")) {
-        dist <- cor(t(as.matrix(object@data[genes, ])), method = dist_method)
-        dist <- 1 - dist
-      }
-      
-      if (dist_method == "cosine") {
-        dist <- as.matrix(qlcMatrix::cosSparse(Matrix::t(object@data[genes, ])))
-        dist <- 1 - dist
-        colnames(dist) <- genes
-        rownames(dist) <- genes
-      }
-      
-      if (dist_method == "euclidean") {
-        dist <- as.matrix(stats::dist(as.matrix(object@data[genes, ]),
-                               method = "euclidean",
-                               upper = TRUE,
-                               diag = TRUE
-        ))
-        diag(dist) <- NA
+        if (dist_method == "unknown") {
+          print_msg("Distance type is unknown", msg_type = "INFO")
+          print_msg("Using Pearson", msg_type = "INFO")
+          dist_method<- "pearson"
+        }
         
-      }
-      
-      
-      dist_means <- colMeans(dist, na.rm = TRUE)
-      dist_means <- dist_means[order(dist_means, decreasing = FALSE)]  
-
-
-      
-      # Extract top genes with the highest correlation mean
-      max_g <- ifelse(top > length(dist_means), length(dist_means), top) 
-      genes_top[[cl_name]] <- names(dist_means[1:max_g])
+        if (dist_method == "pearson"){
+          print_msg("Using fast computation of pearson correlations.", msg_type="DEBUG")
+          dist <- as.matrix(qlcMatrix::corSparse(Matrix::t(object@data[genes, ])))
+          colnames(dist) <- genes
+          rownames(dist) <- genes
+          dist <- 1 - dist
+        }
+        
+        if(dist_method %in% c("kendall", "spearman")) {
+          dist <- cor(t(as.matrix(object@data[genes, ])), method = dist_method)
+          dist <- 1 - dist
+        }
+        
+        if (dist_method == "cosine") {
+          dist <- as.matrix(qlcMatrix::cosSparse(Matrix::t(object@data[genes, ])))
+          dist <- 1 - dist
+          colnames(dist) <- genes
+          rownames(dist) <- genes
+        }
+        
+        if (dist_method == "euclidean") {
+          dist <- as.matrix(stats::dist(as.matrix(object@data[genes, ]),
+                                 method = "euclidean",
+                                 upper = TRUE,
+                                 diag = TRUE
+          ))
+          diag(dist) <- NA
+          
+        }
+        
+        dist_means <- colMeans(dist, na.rm = TRUE)
+        dist_means <- dist_means[order(dist_means, decreasing = FALSE)]  
+  
+        print_msg("Extracting genes with the highest mean correlation to the others...", msg_type = "INFO")
+        max_g <- ifelse(top > length(dist_means), length(dist_means), top) 
+        genes_top[[cl_name]] <- names(dist_means[1:max_g])
+        
+        }else{
+          genes_top[[cl_name]] <- genes
+        }
     }
     
     
