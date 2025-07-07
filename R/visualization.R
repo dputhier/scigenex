@@ -626,7 +626,7 @@ setMethod(
     
     print_msg("Subsetting the object with cells from 'Ident'.", msg_type = "DEBUG")
     name_idents <- intersect(name_idents, col_names(object))
-    object <- object[, name_idents]
+    object <- object[, name_idents, drop=FALSE]
     ident <- ident[name_idents]
     nb <- nclust(object)
     

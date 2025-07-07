@@ -93,10 +93,14 @@ knitr::asis_output("An interactive heatmap with cells/spots as columns and genes
 ``` 
 
 ```{r iheatmap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_iheatmap" %in% section }
+subsample_by_ident_used_params <- as.list(formals(scigenex::subsample_by_ident))
+for(i in names(subsample_by_ident_params)){subsample_by_ident_used_params[[i]] <- subsample_by_ident_params[[i]]}
+subsample_by_ident_used_params$object <- cluster_set[MODULE_NUMBER,]
+
 plot_heatmap_used_params <- as.list(formals(scigenex::plot_heatmap))
 for(i in names(plot_heatmap_params)){plot_heatmap_used_params[[i]] <- plot_heatmap_params[[i]]}
 
-plot_heatmap_used_params$object <- cluster_set[MODULE_NUMBER,]
+plot_heatmap_used_params$object <- base::do.call(scigenex::subsample_by_ident, subsample_by_ident_used_params)
 plot_heatmap_used_params$cell_clusters <- Idents(seurat_object)
 base::do.call(scigenex::plot_heatmap, plot_heatmap_used_params)
 

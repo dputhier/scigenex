@@ -33,6 +33,7 @@ gm_report(
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
   plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
     "Cells/Spots", ylab = "Genes"),
+  subsample_by_ident_params = list(nbcell = 200),
   plot_heatmap_params = list(link = "complete", use_top_genes = FALSE, interactive =
     TRUE, line_size_horizontal = 1, label_size = 7),
   cnetplot_params = list(color.params = list(edge = TRUE), showCategory = 6, cex.params =
@@ -103,6 +104,9 @@ rg.Dm.eg.db, org.Dr.eg.db, org.Sc.sgd.db, org.Ce.eg.db...). If NULL, module anal
 \item{SpatialDimPlot_params}{Some parameters for Seurat::SpatialDimPlot() function.}
 
 \item{plot_ggheatmap_params}{Some parameters for plot_ggheatmap() function.}
+
+\item{subsample_by_ident_params}{The number of cell to take per cell type when subsampling the data for plotting interactive heatmap.
+Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.}
 
 \item{plot_heatmap_params}{Some parameters for plot_heatmap() function.}
 

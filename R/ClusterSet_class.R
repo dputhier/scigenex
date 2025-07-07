@@ -909,7 +909,7 @@ setGeneric("subsample_by_ident",
 #' @param object a ClusterSet object.
 #' @param ident A named vector. Names are cell/column names, values are classes/identity. 
 #' Typically the result of the Seurat::Ident() function.
-#' @param nbcell The number of cell to select.
+#' @param nbcell The number of cell to select per population (cell identity).
 #' @param seed A seed for subsampling.
 #' @export
 #' @examples
@@ -927,7 +927,7 @@ setMethod("subsample_by_ident",
           signature("ClusterSet"), 
           function(object, 
                    ident=NULL, 
-                   nbcell=TRUE,
+                   nbcell=1e6,
                    seed=123) {
             
             

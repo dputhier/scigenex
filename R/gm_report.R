@@ -34,6 +34,8 @@
 #' @param SpatialFeaturePlot_params Some parameters for Seurat::SpatialFeaturePlot() function.
 #' @param SpatialDimPlot_params Some parameters for Seurat::SpatialDimPlot() function.
 #' @param plot_ggheatmap_params Some parameters for plot_ggheatmap() function.
+#' @param subsample_by_ident_params The number of cell to take per cell type when subsampling the data for plotting interactive heatmap.
+#' Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.
 #' @param plot_heatmap_params Some parameters for plot_heatmap() function.
 #' @param cnetplot_params Some parameters for enrichplot:::cnetplot.enrichResult() function.
 #' @param rm_tmpdir Whether to delete temporary directory.
@@ -145,6 +147,7 @@ gm_report <- function(cluster_set = NULL,
                                                        hide_gene_name=TRUE,
                                                        xlab = "Cells/Spots",
                                                        ylab="Genes"),
+                            subsample_by_ident_params=list(nbcell=200),
                             plot_heatmap_params=list(link="complete", 
                                                      use_top_genes=FALSE,
                                                      interactive=TRUE,

@@ -4,6 +4,8 @@
 
 * Various fix for gm_report()
 * Fix only_pos=TRUE in Spatial vignette.
+* Added subsampling for interactive heatmap.
+* Fix default value of nb_cells of subsampling_by_ident (now 1e6 by default).
 
 ## v2.0.7
 
