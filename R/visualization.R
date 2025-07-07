@@ -288,7 +288,7 @@ plot_heatmap <- function(object,
   if(interactive){
     
     #Flip rows
-    m <- m[order(nrow(m):1),]
+    m <- m[order(nrow(m):1), , drop=FALSE]
     
     print_msg("Plot is interactive...")
     
@@ -531,8 +531,8 @@ setGeneric("plot_ggheatmap",
                     ceil=1,
                     floor=-1,
                     centering = TRUE,
-                    xlab="Genes",
-                    ylab="Spots",
+                    xlab="Spots",
+                    ylab="Genes",
                     hide_gene_name=TRUE,
                     hide_col_name=TRUE,
                     pseudocount=0.1,
@@ -626,14 +626,14 @@ setMethod(
     
     print_msg("Subsetting the object with cells from 'Ident'.", msg_type = "DEBUG")
     name_idents <- intersect(name_idents, col_names(object))
-    object <- object[, name_idents]
+    object <- object[, name_idents, drop=FALSE]
     ident <- ident[name_idents]
     nb <- nclust(object)
     
     if(use_top_genes){
       if(length(object@top_genes) == 0)
         print_msg("Please use top_gene() methods onto ClusterSet object.", msg_type = "STOP")
-      m <- object@data[unlist(object@top_genes), ]
+      m <- object@data[unlist(object@top_genes), , drop=FALSE]
     }else{
       m <- object@data
     }

@@ -12,7 +12,8 @@ plot_profiles(
   size_text_y = 5,
   size_label = 2,
   legend_name = "Cell\\ntype",
-  to_lin = FALSE
+  to_lin = FALSE,
+  averaged = FALSE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ hue color palette is used.}
 \item{legend_name}{A name for the legend.}
 
 \item{to_lin}{Transform in linear scale (i.e. 2^x).}
+
+\item{averaged}{Display the mean expression averaged across cells.}
 }
 \value{
 A ggplot object showing the expression profiles of cell type-specific genes.

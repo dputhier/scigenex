@@ -35,11 +35,15 @@ test_that("Checking cluster_set_from_matrix() #1", {
 
 test_that("Check cluster_set_from_seurat is working.", {
     data("pbmc_small", package="SeuratObject")
-    markers <- Seurat::FindAllMarkers(pbmc_small)
-    cs <- cluster_set_from_seurat(pbmc_small, markers)
-    expect_true(all(cs@gene_clusters[[1]] == markers$gene[markers$cluster == "0"]))
-    expect_true(all(cs@gene_clusters[[2]] == markers$gene[markers$cluster == "1"]))
-    expect_true(all(cs@gene_clusters[[3]] == markers$gene[markers$cluster == "2"]))
+    markers <- Seurat::FindAllMarkers(pbmc_small, 
+                                       only.pos = TRUE)
+    markers <- markers[markers$p_val_adj <= 0.01, ]
+    cs <- cluster_set_from_seurat(pbmc_small, markers, p_val_adj = 0.01)
+    expect_true(nrow(markers) == nrow(cs))
+    
+    expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[1]]) == gsub("~[0-9]+$", "", markers$gene[markers$cluster == "0"], )))
+    expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[2]]) == gsub("~[0-9]+$", "", markers$gene[markers$cluster == "1"], )))
+    expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[3]]) == gsub("~[0-9]+$", "", markers$gene[markers$cluster == "2"], )))
     expect_true(nrow(cs[1,]@data) == nrow(pbmc_small[["RNA"]]$data[markers$gene[markers$cluster == "0"],]))
     expect_true(nrow(cs["0",]@data) == nrow(pbmc_small[["RNA"]]$data[markers$gene[markers$cluster == "0"],]))
     expect_true(sum(cs[1,]@data) == sum(pbmc_small[["RNA"]]$data[markers$gene[markers$cluster == "0"],]))
@@ -51,7 +55,7 @@ test_that("Check cluster_set_from_seurat is working.", {
     expect_true(cs@gene_clusters_metadata$number == 3)
     expect_true(all(cs@gene_clusters_metadata$cluster_id == setNames(c("0","1","2"), c("0","1","2"))))
     expect_true(all(cs@gene_clusters_metadata$cluster_id == setNames(c("0","1","2"), c("0","1","2"))))
-    p <- plot_heatmap(cs[1,])
+    p <- plot_heatmap(cs[2,])
     testthat::expect_error(print(p), NA)
     p <- plot_heatmap(cs, cell_clusters = Idents(pbmc_small))
     testthat::expect_error(print(p), NA)
@@ -60,3 +64,32 @@ test_that("Check cluster_set_from_seurat is working.", {
     testthat::expect_error(print(p), NA) 
 })
 
+test_that("Check cluster_set_from_seurat is working with vector.", {
+  
+  data("pbmc_small", package="SeuratObject")
+  markers <- Seurat::FindAllMarkers(pbmc_small, 
+                                    only.pos = TRUE)
+  markers <- markers[markers$p_val_adj <= 0.01, ]
+  markers <- setNames(as.character(markers$cluster), markers$gene)
+  cs <- cluster_set_from_seurat(pbmc_small, markers)
+  expect_true(length(markers) == nrow(cs))
+  expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[1]]) == names(gsub("~[0-9]+$", "", names(markers)[markers == "0"]))))
+  expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[2]]) == names(gsub("~[0-9]+$", "", names(markers)[markers == "1"]))))
+  expect_true(all(gsub("\\.[0-9]+$", "", cs@gene_clusters[[3]]) == names(gsub("~[0-9]+$", "", names(markers)[markers == "2"]))))
+  
+  expect_true(nrow(cs[1,]@data) == nrow(pbmc_small[["RNA"]]$data[names(markers)[markers == "0"],]))
+  expect_true(nrow(cs["0",]@data) == nrow(pbmc_small[["RNA"]]$data[names(markers)[markers == "0"],]))
+  expect_true(nrow(cs[2,]@data) == nrow(pbmc_small[["RNA"]]$data[names(markers)[markers == "1"],]))
+  expect_true(nrow(cs["1",]@data) == nrow(pbmc_small[["RNA"]]$data[names(markers)[markers == "1"],]))  
+  expect_true(nrow(cs[2,]@data) == nrow(pbmc_small[["RNA"]]$data[names(markers)[markers == "1"],]))  
+  expect_true(cs@gene_clusters_metadata$number == 3)
+  expect_true(all(cs@gene_clusters_metadata$cluster_id == setNames(c("0","1","2"), c("0","1","2"))))
+  expect_true(all(cs@gene_clusters_metadata$cluster_id == setNames(c("0","1","2"), c("0","1","2"))))
+  p <- plot_heatmap(cs[2,])
+  testthat::expect_error(print(p), NA)
+  p <- plot_heatmap(cs, cell_clusters = Idents(pbmc_small))
+  testthat::expect_error(print(p), NA)
+  cs <- compute_centers(cs)
+  p <- plot_profiles(cs, ident = Idents(pbmc_small))
+  testthat::expect_error(print(p), NA) 
+})

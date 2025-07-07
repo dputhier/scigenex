@@ -89,14 +89,19 @@ knitr::asis_output("### Interactive heatmaps ")
 ``` 
 
 ```{r, iheatmap_3_MOD_MODULE_NUMBER, eval="module_iheatmap" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("An interactive heatmap with cells/spots as columns and genes as rows.") 
+knitr::asis_output(paste0("An interactive heatmap with cells/spots as columns and genes as rows. To limit the number of cells/spots displayed (which may  saturate the browser), the `subsample_by_ident()` function is used to randomly select a subset of cells/spots from each cluster. Here the maximum number of cells per population was : ", subsample_by_ident_params$nbcell, ".")) 
 ``` 
 
 ```{r iheatmap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_iheatmap" %in% section }
+subsample_by_ident_used_params <- as.list(formals(scigenex::subsample_by_ident))
+for(i in names(subsample_by_ident_params)){subsample_by_ident_used_params[[i]] <- subsample_by_ident_params[[i]]}
+subsample_by_ident_used_params$object <- cluster_set[MODULE_NUMBER,]
+subsample_by_ident_used_params$ident <- Seurat::Idents(seurat_object)
+
 plot_heatmap_used_params <- as.list(formals(scigenex::plot_heatmap))
 for(i in names(plot_heatmap_params)){plot_heatmap_used_params[[i]] <- plot_heatmap_params[[i]]}
 
-plot_heatmap_used_params$object <- cluster_set[MODULE_NUMBER,]
+plot_heatmap_used_params$object <- base::do.call(scigenex::subsample_by_ident, subsample_by_ident_used_params)
 plot_heatmap_used_params$cell_clusters <- Idents(seurat_object)
 base::do.call(scigenex::plot_heatmap, plot_heatmap_used_params)
 
@@ -129,7 +134,7 @@ knitr::asis_output("### Violon plot ")
 ``` 
 
 ```{r, violin_3_MOD_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Display the distribution of gene module mean expression levels across cell populations.") 
+knitr::asis_output("Display the distribution of gene module mean expression levels across cell/spot populations.") 
 ``` 
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
@@ -154,9 +159,6 @@ df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set[MODULE_NUMBE
 DT::datatable(df)
 ```
 
-
-
-
 ```{r, level_2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output("## Cell Annotation {.panelset}")
 ``` 
@@ -180,7 +182,7 @@ knitr::asis_output("#### Prompt")
 
 knitr::asis_output(prompt)
 
-knitr::asis_output("#### #### IA Answer")
+knitr::asis_output("#### IA Answer")
 
 suppressMessages(gemini.R::setAPI("APIKEY"))
 answer <- NULL
@@ -207,6 +209,10 @@ for(ann in annotation_src){
   if("edo" %in% ls()){rm(edo)}
   
   gene_set <- setNames(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), NULL)
+  
+  # Some gene may have a version number at the end, e.g. "gene1~2" (e.g. in the case
+  # of a clusterSet created from Seurat::FindAllMarkers() output).
+  gene_set <- gsub(gene_set, pattern = "~[0-9]+$", replacement = "")
   try(suppressMessages(query_entrezid <- AnnotationDbi::select(get(bioc_org_db), 
                                                                keys = gene_set,
                                                                columns = c("ENTREZID", "SYMBOL"),
@@ -296,37 +302,50 @@ for(ann in annotation_src){
     }
   
   
-  if("module_term_barplot_1" %in% section){
-    cat("\n\n### Func. enr. barplot \n\n")
-    cat("\n\nBar plot of enriched terms.\n\n") 
-    if(nrow(enrich_res) > 0){
-      try_err <- try(dplyr::mutate(enrich_res, 
+    if("module_term_barplot_1" %in% section){
+      
+      cat("\n\n### Func. enr. barplot \n\n")
+      cat("\n\nDotplot of enriched terms.\n\n") 
+      
+    if(!is.null(enrich_res)){
+      if(nrow(enrich_res) > 0){
+        try_err <- try(dplyr::mutate(enrich_res, 
                                    qscore = -log(p.adjust, base=10)) %>% 
                                    barplot(x="qscore", showCategory=15) + 
                         ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-      
-      if(inherits(try_err, "try-error")){
-         cat("\n\nError when creating diagram.\n\n") 
+  
+        
+        if(inherits(try_err, "try-error")){
+           cat("\n\nError when creating diagram.\n\n") 
+        }else{
+          print(try_err)
+        }
       }else{
-        print(try_err)
-      }
+      cat("\n\nNo diagram available.\n\n") 
+     }
     }else{
       cat("\n\nNo diagram available.\n\n") 
     }
   }
-  
-    if("module_term_barplot_2" %in% section){
-      cat("\n\n### Func. enr. dotplot \n\n")
-      cat("\n\nDotplot of enriched terms.\n\n") 
-    if(nrow(enrich_res) > 0){
-      try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
-                   ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-      
-      if(inherits(try_err, "try-error")){
-         cat("\n\nError when creating diagram.\n\n") 
+
+  if("module_term_barplot_2" %in% section){
+    
+    cat("\n\n### Func. enr. dotplot \n\n")
+    cat("\n\nDotplot of enriched terms.\n\n") 
+    
+    if(!is.null(enrich_res)){
+      if(nrow(enrich_res) > 0){
+                try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
+                     ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
+        
+        if(inherits(try_err, "try-error")){
+           cat("\n\nError when creating diagram.\n\n") 
+        }else{
+          print(try_err)
+        }
       }else{
-        print(try_err)
-      }
+      cat("\n\nNo diagram available.\n\n") 
+     }
     }else{
       cat("\n\nNo diagram available.\n\n") 
     }
