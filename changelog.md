@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.0.8
+
+* Various fix for gm_report()
+* Fix only_pos=TRUE in Spatial vignette.
+
+## v2.0.7
+
+* Various improvement including better support for SeuratFindAllMarkers() in gm_report()
+
+## v2.0.6
+
+* Improved vignette 'report.Rmd'.
+
 ## v2.0.5
 
 * Refactored module.Rmd file called by gm_report().
