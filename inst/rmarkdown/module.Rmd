@@ -297,37 +297,50 @@ for(ann in annotation_src){
     }
   
   
-  if("module_term_barplot_1" %in% section){
-    cat("\n\n### Func. enr. barplot \n\n")
-    cat("\n\nBar plot of enriched terms.\n\n") 
-    if(nrow(enrich_res) > 0){
-      try_err <- try(dplyr::mutate(enrich_res, 
+    if("module_term_barplot_1" %in% section){
+      
+      cat("\n\n### Func. enr. barplot \n\n")
+      cat("\n\nDotplot of enriched terms.\n\n") 
+      
+    if(!is.null(enrich_res)){
+      if(nrow(enrich_res) > 0){
+        try_err <- try(dplyr::mutate(enrich_res, 
                                    qscore = -log(p.adjust, base=10)) %>% 
                                    barplot(x="qscore", showCategory=15) + 
                         ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-      
-      if(inherits(try_err, "try-error")){
-         cat("\n\nError when creating diagram.\n\n") 
+  
+        
+        if(inherits(try_err, "try-error")){
+           cat("\n\nError when creating diagram.\n\n") 
+        }else{
+          print(try_err)
+        }
       }else{
-        print(try_err)
-      }
+      cat("\n\nNo diagram available.\n\n") 
+     }
     }else{
       cat("\n\nNo diagram available.\n\n") 
     }
   }
-  
-    if("module_term_barplot_2" %in% section){
-      cat("\n\n### Func. enr. dotplot \n\n")
-      cat("\n\nDotplot of enriched terms.\n\n") 
-    if(nrow(enrich_res) > 0){
-      try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
-                   ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
-      
-      if(inherits(try_err, "try-error")){
-         cat("\n\nError when creating diagram.\n\n") 
+
+  if("module_term_barplot_2" %in% section){
+    
+    cat("\n\n### Func. enr. dotplot \n\n")
+    cat("\n\nDotplot of enriched terms.\n\n") 
+    
+    if(!is.null(enrich_res)){
+      if(nrow(enrich_res) > 0){
+                try_err <- try(enrichplot::dotplot(enrich_res, showCategory=15) + 
+                     ggplot2::theme(axis.text.y = ggplot2::element_text(size=7)), silent = TRUE)
+        
+        if(inherits(try_err, "try-error")){
+           cat("\n\nError when creating diagram.\n\n") 
+        }else{
+          print(try_err)
+        }
       }else{
-        print(try_err)
-      }
+      cat("\n\nNo diagram available.\n\n") 
+     }
     }else{
       cat("\n\nNo diagram available.\n\n") 
     }
