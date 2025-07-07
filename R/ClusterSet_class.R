@@ -306,7 +306,7 @@ setMethod("[", signature(x = "ClusterSet"),
               }
             } else {
               if (missing(i)) {
-                n_data <- x@data[, j]
+                n_data <- x@data[, j, drop = FALSE]
                 n_gene_clusters <- x@gene_clusters
                 n_top_genes <- x@top_genes
                 n_gene_clusters_metadata <- x@gene_clusters_metadata
