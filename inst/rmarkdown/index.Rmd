@@ -156,11 +156,13 @@ knitr::asis_output("### QC Metrics")
 ``` 
 
 ```{r, section_gen_info_17b, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("Seurat provides a convenient framework for exploring quality control (QC) metrics and filtering cells based on user-defined criteria. Commonly used QC metrics include the number of unique genes detected per cell—low-quality cells or empty droplets typically show very few genes, while doublets or multiplets may display abnormally high gene counts. Another key metric is the total number of molecules detected per cell, which strongly correlates with the number of unique genes. Additionally, the proportion of reads mapping to the mitochondrial genome is often used, as low-quality or dying cells tend to exhibit elevated mitochondrial content. To compute this, Seurat’s PercentageFeatureSet function can be used to calculate the percentage of counts originating from a specified set of features, typically using all genes that begin with 'MT-' to represent mitochondrial genes.") 
+knitr::asis_output("Seurat provides a convenient framework for exploring quality control (QC) metrics and filtering cells based on user-defined criteria. A commonly used QC metrics is the the number of unique genes detected per cell. Low-quality cells or empty droplets typically show very few genes, while doublets or multiplets may display abnormally high gene counts (but also proliferating cells !!). Another key metric is the total number of molecules detected per cell, which strongly correlates with the number of unique genes. The proportion of reads mapping to the mitochondrial genome is also often used, as low-quality or dying cells tend to exhibit elevated mitochondrial content. To compute this, Seurat’s PercentageFeatureSet() function can be used to calculate the percentage of counts originating from a specified set of features, typically using all genes that begin with 'MT-' (or 'mt-') to represent mitochondrial genes. An interesting control is also provided by ribosomal protein genes that are expected to be expressed in all cells. The percentage of counts from ribosomal genes can be calculated similarly to mitochondrial genes, using the pattern '^[Rr][Pp][LlSs]'. These QC metrics can be visualized using the VlnPlot() function, which generates violin plots for each metric, allowing for easy comparison across cell populations.") 
 ``` 
 
 ```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"}
-var_qc <- grep("(^nFeature)|(nCount)|(percent)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
+seurat_object[["percent.mt"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
+seurat_object[["percent.ribo"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][Ll]")
+var_qc <- grep("(^nFeature)|(nCount)|(percent.mt)(percent.ribo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 for(qc in var_qc){
   VlnPlot(seurat_object, features = qc, ncol = 1)
 }
@@ -203,13 +205,20 @@ for(i in names(SpatialFeaturePlot_params)){
 
 SpatialFeaturePlot_used_params$object <- seurat_object
 
-seurat_object[["percent.mt"]] <- PercentageFeatureSet(seurat_object, pattern = "^MT-")
+if(length(grep("^[Mm][Tt]-", rownames(seurat_object))) > 0 )
+  seurat_object[["pctMito"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
 
-var_qc <- grep("(^nFeature)|(nCount)|(percent)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
+if(length(grep("^[Rr][Pp][Ll]", rownames(seurat_object))) > 0)
+  seurat_object[["pctRibo"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][Ll]")
+
+var_qc <- grep("(^nFeature)|(^nCount)|(^pctMito)|(^pctRibo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 
 for(feat in var_qc){
   SpatialFeaturePlot_used_params$features <- feat
-  print(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params))
+  tryerror <- try(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params)) # got some Error in `FetchData()`...
+    if(!inherits(tryerror, "try-error")){
+      print(tryerror)
+  }
 }
 ```
 

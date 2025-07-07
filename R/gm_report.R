@@ -34,6 +34,8 @@
 #' @param SpatialFeaturePlot_params Some parameters for Seurat::SpatialFeaturePlot() function.
 #' @param SpatialDimPlot_params Some parameters for Seurat::SpatialDimPlot() function.
 #' @param plot_ggheatmap_params Some parameters for plot_ggheatmap() function.
+#' @param subsample_by_ident_params The number of cell to take per cell type when subsampling the data for plotting interactive heatmap.
+#' Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.
 #' @param plot_heatmap_params Some parameters for plot_heatmap() function.
 #' @param cnetplot_params Some parameters for enrichplot:::cnetplot.enrichResult() function.
 #' @param rm_tmpdir Whether to delete temporary directory.
@@ -71,15 +73,16 @@
 #'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
 #'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 #' set_verbosity(3)
-#' markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
-#' cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.001)
+#' markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
+#' cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj=0.001, assay="Spatial")
 #' gm_report(cs[1:2,], 
-#'                 pbmc3k_medium, 
+#'                 lymph_node_tiny_2, 
 #'                 smp_species="Homo sapiens", 
 #'                 smp_region="total", 
 #'                 smp_organ="lymph node", 
 #'                 smp_stage="adult", 
 #'                 annotation_src="CC",
+#'                 is_spatial_exp=TRUE,
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL) # Object was created with an older seurat version
 #' @importFrom fs path_home
@@ -144,6 +147,7 @@ gm_report <- function(cluster_set = NULL,
                                                        hide_gene_name=TRUE,
                                                        xlab = "Cells/Spots",
                                                        ylab="Genes"),
+                            subsample_by_ident_params=list(nbcell=200),
                             plot_heatmap_params=list(link="complete", 
                                                      use_top_genes=FALSE,
                                                      interactive=TRUE,
@@ -251,7 +255,7 @@ gm_report <- function(cluster_set = NULL,
   seurat_object <- do.call(Seurat::AddModuleScore, add_module_score_used_params)
   
   tmp_dir <- tempdir(check = FALSE)
-  tmp_dir <- paste0(tmp_dir, format(Sys.time(), "%a-%b-%e-%H-%M-%S-%Y"))
+  tmp_dir <- paste0(tmp_dir, gsub(" ", "", format(Sys.time(), "%a-%b-%H-%M-%S-%Y")))
   
   dir.create(tmp_dir, showWarnings = FALSE, recursive = TRUE)
   

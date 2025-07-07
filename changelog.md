@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.8
+
+* Various fix for gm_report()
+* Fix only_pos=TRUE in Spatial vignette.
+* Added subsampling for interactive heatmap.
+* Fix default value of nb_cells of subsampling_by_ident (now 1e6 by default).
+
+## v2.0.7
+
+* Various improvement including better support for SeuratFindAllMarkers() in gm_report()
+
+## v2.0.6
+
+* Improved vignette 'report.Rmd'.
+
 ## v2.0.5
 
 * Refactored module.Rmd file called by gm_report().

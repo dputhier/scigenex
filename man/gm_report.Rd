@@ -33,6 +33,7 @@ gm_report(
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
   plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
     "Cells/Spots", ylab = "Genes"),
+  subsample_by_ident_params = list(nbcell = 200),
   plot_heatmap_params = list(link = "complete", use_top_genes = FALSE, interactive =
     TRUE, line_size_horizontal = 1, label_size = 7),
   cnetplot_params = list(color.params = list(edge = TRUE), showCategory = 6, cex.params =
@@ -40,7 +41,7 @@ gm_report(
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot", "exp_metrics",
-    "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
+    "exp_pop", "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
     "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
     "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
     "module_term_barplot_1", "module_term_barplot_2", "module_term_network_circ",
@@ -104,6 +105,9 @@ rg.Dm.eg.db, org.Dr.eg.db, org.Sc.sgd.db, org.Ce.eg.db...). If NULL, module anal
 
 \item{plot_ggheatmap_params}{Some parameters for plot_ggheatmap() function.}
 
+\item{subsample_by_ident_params}{The number of cell to take per cell type when subsampling the data for plotting interactive heatmap.
+Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.}
+
 \item{plot_heatmap_params}{Some parameters for plot_heatmap() function.}
 
 \item{cnetplot_params}{Some parameters for enrichplot:::cnetplot.enrichResult() function.}
@@ -153,15 +157,16 @@ gm_report(lymph_node_tiny_clusters_2[1:2,],
                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
 set_verbosity(3)
-markers <- Seurat::FindAllMarkers(pbmc3k_medium, only.pos = TRUE)
-cs <- cluster_set_from_seurat(pbmc3k_medium, markers, p_val_adj=0.05)
+markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
+cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj=0.001, assay="Spatial")
 gm_report(cs[1:2,], 
-                pbmc3k_medium, 
+                lymph_node_tiny_2, 
                 smp_species="Homo sapiens", 
                 smp_region="total", 
                 smp_organ="lymph node", 
                 smp_stage="adult", 
                 annotation_src="CC",
+                is_spatial_exp=TRUE,
                 bioc_org_db="org.Hs.eg.db",
                 api_key=NULL) # Object was created with an older seurat version
 }

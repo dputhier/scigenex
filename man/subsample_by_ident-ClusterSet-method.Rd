@@ -4,7 +4,7 @@
 \alias{subsample_by_ident,ClusterSet-method}
 \title{Given ncell, a target number, select ncell from each class of cell/column.}
 \usage{
-\S4method{subsample_by_ident}{ClusterSet}(object, ident = NULL, nbcell = TRUE, seed = 123)
+\S4method{subsample_by_ident}{ClusterSet}(object, ident = NULL, nbcell = 1e+06, seed = 123)
 }
 \arguments{
 \item{object}{a ClusterSet object.}
@@ -12,7 +12,7 @@
 \item{ident}{A named vector. Names are cell/column names, values are classes/identity. 
 Typically the result of the Seurat::Ident() function.}
 
-\item{nbcell}{The number of cell to select.}
+\item{nbcell}{The number of cell to select per population (cell identity).}
 
 \item{seed}{A seed for subsampling.}
 }

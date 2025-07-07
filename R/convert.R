@@ -9,6 +9,7 @@
 #' @param p_val_adj If markers is the output from Seurat::FindAllMarkers(), the adjusted p-value threshold. 
 #' @importFrom SeuratObject LayerData
 #' @importFrom Matrix Matrix
+#' @importFrom Seurat Assays
 #' @examples
 #' ## From a scRNA-seq/Seurat object
 #' library(SeuratObject)
@@ -42,6 +43,13 @@ cluster_set_from_seurat <- function(object=NULL,
   if(is.factor(markers))
     markers <- as.character(markers)
     
+  print_msg(paste0("This seurat object contains the following assay : ", 
+                   Seurat::Assays(object), ".")  , msg_type = "INFO")
+
+  if(!assay %in% Seurat::Assays(object)){
+    print_msg("The selected assay is not available. See 'assay' argument...", msg_type="STOP")
+  }
+   
   layer <- match.arg(layer)
   
   object <- SeuratObject::LayerData(object, assay=assay, layer=layer)
@@ -49,12 +57,12 @@ cluster_set_from_seurat <- function(object=NULL,
   if(inherits(markers, "data.frame")){
     
     print_msg("Selecting  markers based on p_val_adj...", msg_type = "DEBUG")
-    markers <- markers[markers$p_val_adj <= p_val_adj, ]
+    markers <- markers[markers$p_val_adj <= p_val_adj, , drop=FALSE]
     object <- object[markers$gene, , drop = FALSE]
     print_msg("Disambiguating gene duplicates using '~' separator", msg_type = "DEBUG")
     gn <- make.unique(markers$gene, sep = "~")
   
-    clusters <- markers$cluster
+    clusters <- as.character(markers$cluster)
     names(clusters) <- gn
 
   }else if(is.vector(markers)){
