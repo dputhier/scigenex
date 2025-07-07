@@ -213,9 +213,5 @@ The `gm_report()`function accepts many parameters to tailor the analysis and app
 ## Conclusion
 
 The `gm_report()` function in Scigenex offers a powerful way to analyze and document gene modules using Seurat and clusterSet objects. It supports spatial transcriptomics, functional annotation, and AI-based interpretation.  
+For more information, please refer to the [Scigenex documentation](https://scigenex.github.io/scigenex/).
 
-For advanced use, explore:
-
-- `help(gm_report)` in R
-- Scigenex documentation
-- Customizing Bookdown templates via `rmd_dir` argument.
