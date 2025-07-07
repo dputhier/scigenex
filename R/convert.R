@@ -9,6 +9,7 @@
 #' @param p_val_adj If markers is the output from Seurat::FindAllMarkers(), the adjusted p-value threshold. 
 #' @importFrom SeuratObject LayerData
 #' @importFrom Matrix Matrix
+#' @importFrom Seurat Assays
 #' @examples
 #' ## From a scRNA-seq/Seurat object
 #' library(SeuratObject)
@@ -42,6 +43,13 @@ cluster_set_from_seurat <- function(object=NULL,
   if(is.factor(markers))
     markers <- as.character(markers)
     
+  print_msg(paste0("This seurat object contains the following assay : ", 
+                   Seurat::Assays(object), ".")  , msg_type = "INFO")
+
+  if(!assay %in% Seurat::Assays(object)){
+    print_msg("The selected assay is not available. See 'assay' argument...", msg_type="STOP")
+  }
+   
   layer <- match.arg(layer)
   
   object <- SeuratObject::LayerData(object, assay=assay, layer=layer)
