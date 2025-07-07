@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
       </span>
     </div>
 
@@ -226,8 +226,8 @@ view it.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers">Running gm_report() from a Seurat spatial experiment and
-corresponding Seurat markers<a class="anchor" aria-label="anchor" href="#running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers"></a>
+<h3 id="running-gm_report-from-a-seurat-single-cell-experiment-and-corresponding-seurat-markers">Running gm_report() from a Seurat single-cell experiment and
+corresponding Seurat markers<a class="anchor" aria-label="anchor" href="#running-gm_report-from-a-seurat-single-cell-experiment-and-corresponding-seurat-markers"></a>
 </h3>
 <p>As indicated previously, <code><a href="../reference/gm_report.html">gm_report()</a></code>can be run from a
 Seurat object together with on cell-specific marker genes obtained from
@@ -288,8 +288,8 @@ the 10X genomics lymph_node VISIUM (V1) dataset.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers-1">Running gm_report() from a Seurat spatial experiment and
-corresponding Seurat markers<a class="anchor" aria-label="anchor" href="#running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers-1"></a>
+<h3 id="running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers">Running gm_report() from a Seurat spatial experiment and
+corresponding Seurat markers<a class="anchor" aria-label="anchor" href="#running-gm_report-from-a-seurat-spatial-experiment-and-corresponding-seurat-markers"></a>
 </h3>
 <p>In the same way, we can apply <code><a href="../reference/gm_report.html">gm_report()</a></code>with spatial
 transcriptomics data and markers identified using the
@@ -314,6 +314,7 @@ transcriptomics data and markers identified using the
 <span>  smp_stage <span class="op">=</span> <span class="st">"adult"</span>,</span>
 <span>  annotation_src <span class="op">=</span> <span class="st">"CC"</span>,</span>
 <span>  bioc_org_db <span class="op">=</span> <span class="st">"org.Hs.eg.db"</span>,</span>
+<span>  subsample_by_ident_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nbcell<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>  is_spatial_exp <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  SpatialFeaturePlot_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pt.size.factor <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>,  <span class="co"># Object was created with an older seurat version</span></span>
 <span>  SpatialDimPlot_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pt.size.factor <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span>,  <span class="co"># Object was created with an older seurat version</span></span>
