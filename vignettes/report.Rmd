@@ -65,6 +65,25 @@ suppressMessages(suppressWarnings(library(org.Hs.eg.db, quietly = TRUE)))
 library(scigenex)
 library(Seurat)
 library(org.Hs.eg.db)
+
+# Create a temporary directory for the report output
+tmp_dir <- tempdir()
+
+# Load example gene module clusters and Seurat object for spatial data
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+
+# Run gm_report() for spatial transcriptomics data
+gm_report(
+  cluster_set = lymph_node_tiny_clusters_2[1:2,],
+  seurat_object = lymph_node_tiny_2,
+  annotation_src = "CC",
+  bioc_org_db = "org.Hs.eg.db",
+  is_spatial_exp = TRUE,
+  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
+  SpatialDimPlot_params = list(pt.size.factor = 3000),
+  out_dir = file.path(tmp_dir, "spatial_report")
+)
 ```
 
 ## Some examples
