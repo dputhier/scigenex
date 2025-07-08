@@ -1,6 +1,6 @@
 
-<!-- UPPERCASE variable are text to be replaced (see st_report() function). -->
-<!-- NB: The code contains several global variables derived from gm_report() function arguments. -->
+<!-- Some UPPERCASE (e.g FIG_PATH, and MODULE_NUMBER) variables are text to be replaced (see st_report() function). -->
+<!-- NB: This code contains several global variables derived from gm_report() function arguments. -->
 
 
 

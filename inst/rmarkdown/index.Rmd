@@ -20,8 +20,9 @@ params:
 ---
 
 
-<!-- UPPERCASE variable are text to be replaced. -->
-<!-- There are several global variables obtained from st_report() function. -->
+<!-- Some UPPERCASE (e.g MODULE_NUMBER) variables are text to be replaced (see st_report() function). -->
+<!-- NB: This code contains several global variables derived from gm_report() function arguments. -->
+
 
 ```{r start, include=FALSE, echo=FALSE, eval=TRUE}
 library(knitr)
@@ -184,8 +185,14 @@ knitr::asis_output("Seurat provides a convenient framework for exploring quality
 ``` 
 
 ```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"}
-seurat_object[["percent.mt"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
-seurat_object[["percent.ribo"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][LlSs][0-9]+")
+if(length(grep("^[Mm][Tt]-", rownames(seurat_object))) > 0 ){
+    seurat_object[["percent.mt"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
+}
+
+if(length(grep("^[Rr][Pp][LlSs][0-9]+", rownames(seurat_object))) > 0 ){
+  seurat_object[["percent.ribo"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][LlSs][0-9]+")
+}
+
 var_qc <- grep("(^nFeature)|(nCount)|(percent.mt)|(percent.ribo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 for(qc in var_qc){
   print(Seurat::VlnPlot(seurat_object, features = qc, ncol = 1))
