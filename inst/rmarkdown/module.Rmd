@@ -83,7 +83,7 @@ for(i in names(plot_ggheatmap_params)){plot_ggheatmap_used_params[[i]] <- plot_g
 plot_ggheatmap_used_params$object <- cluster_set[MODULE_NUMBER,]
 plot_ggheatmap_used_params$ident <- Idents(seurat_object)
 base::do.call(scigenex::plot_ggheatmap, plot_ggheatmap_used_params)
-saveRDS(plot_ggheatmap_used_params, file=paste0("/Users/puthier/Documents/git/project_dev/scigenex/plot_ggheatmap_used_params_MOD_MODULE_NUMBER.rds"))
+
 ```
 <br>
 
