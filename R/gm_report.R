@@ -91,6 +91,7 @@
 #' @importFrom xaringanExtra style_panelset
 #' @importFrom xaringanExtra style_panelset_tabs
 #' @importFrom BiocManager install
+#' @importFrom DT datatable
 #' @importFrom knitr opts_chunk
 #' @importFrom knitr asis_output
 #' @importFrom Seurat VlnPlot
@@ -166,9 +167,12 @@ gm_report <- function(cluster_set = NULL,
                                       "exp_stats",
                                       "exp_genes",
                                       "exp_heatmap",
-                                      "exp_dimplot",
+                                      "exp_pca",
+                                      "exp_elbow",
+                                      "exp_umap",
                                       "exp_metrics",
                                       "exp_pop",
+                                      "exp_pop_table",
                                       "exp_spatial_dist",
                                       "exp_spatial_dimplot",
                                       "exp_mean_1",

@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.9
+
+* Various improvement for gm_report(): pca, elbow plot, table format...
+
 ## v2.0.8
 
 * Various fix for gm_report()

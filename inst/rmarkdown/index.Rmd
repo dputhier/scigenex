@@ -43,6 +43,11 @@ knitr::opts_chunk$set(
 }
 ```
 
+```{r include = FALSE}
+# from https://tinyurl.com/mwxj7544
+DT::datatable(NULL)
+```
+
 ```{r, section_gen_info_1, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("# All Modules ")
 ``` 
@@ -132,22 +137,41 @@ if(nrow(workflow_params) > 0)
 knitr::asis_output("## Experiment information {.panelset}") 
 ``` 
 
-```{r, section_gen_info_15, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_14a, eval="exp_pca" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### PCA") 
+``` 
+
+```{r, section_gen_info_14b, eval="exp_pca" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A 2D plot showing the first and second components of the PCA.") 
+``` 
+
+```{r section_gen_info_14c, echo=FALSE, eval="exp_pca" %in% section, echo=FALSE, results = "asis"}
+Seurat::DimPlot(seurat_object, reduction = "pca")
+```
+
+```{r, section_gen_info_14d, eval="exp_elbow" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### ElbowPlot") 
+``` 
+
+```{r, section_gen_info_14e, eval="exp_elbow" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The *Seurat::ElbowPlot()* function is used in the context of dimensionality reduction, specifically Principal Component Analysis (PCA). It helps determine the optimal number of principal components (PCs) to use for downstream analyses like clustering, UMAP, or t-SNE. ElbowPlot helps you visualize which PCs carry meaningful biological signal versus noise.") 
+``` 
+
+```{r section_gen_info_14f, echo=FALSE, eval="exp_elbow" %in% section, echo=FALSE, results = "asis"}
+Seurat::ElbowPlot(seurat_object, reduction = "pca")
+```
+
+```{r, section_gen_info_15, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Dimplot") 
 ``` 
 
-```{r, section_gen_info_16, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_16, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("A UMAP showing the cell/spot classes.") 
 ``` 
 
-```{r section_gen_info_17, echo=FALSE, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"}
-identities <- grep("seurat_clusters", 
-                      colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
-if(length(identities))
-  Seurat::DimPlot(seurat_object)
+```{r section_gen_info_17, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
+Seurat::DimPlot(seurat_object)
 ```
-
-
 
 
 
@@ -155,18 +179,17 @@ if(length(identities))
 knitr::asis_output("### QC Metrics") 
 ``` 
 
-```{r, section_gen_info_17b, eval="exp_dimplot" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("Seurat provides a convenient framework for exploring quality control (QC) metrics and filtering cells based on user-defined criteria. A commonly used QC metrics is the the number of unique genes detected per cell. Low-quality cells or empty droplets typically show very few genes, while doublets or multiplets may display abnormally high gene counts (but also proliferating cells !!). Another key metric is the total number of molecules detected per cell, which strongly correlates with the number of unique genes. The proportion of reads mapping to the mitochondrial genome is also often used, as low-quality or dying cells tend to exhibit elevated mitochondrial content. To compute this, Seurat’s PercentageFeatureSet() function can be used to calculate the percentage of counts originating from a specified set of features, typically using all genes that begin with 'MT-' (or 'mt-') to represent mitochondrial genes. An interesting control is also provided by ribosomal protein genes that are expected to be expressed in all cells. The percentage of counts from ribosomal genes can be calculated similarly to mitochondrial genes, using the pattern '^[Rr][Pp][LlSs]'. These QC metrics can be visualized using the VlnPlot() function, which generates violin plots for each metric, allowing for easy comparison across cell populations.") 
+```{r, section_gen_info_17b, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("Seurat provides a convenient framework for exploring quality control (QC) metrics and filtering cells based on user-defined criteria. A commonly used QC metrics is the the number of unique genes detected per cell. Low-quality cells or empty droplets typically show very few genes, while doublets or multiplets may display abnormally high gene counts (but also proliferating cells !!). Another key metric is the total number of molecules detected per cell, which strongly correlates with the number of unique genes. The proportion of reads mapping to the mitochondrial genome is also often used, as low-quality or dying cells tend to exhibit elevated mitochondrial content. To compute this, Seurat’s PercentageFeatureSet() function can be used to calculate the percentage of counts originating from a specified set of features, typically using all genes that begin with 'MT-' (or 'mt-') to represent mitochondrial genes. An interesting control is also provided by ribosomal protein genes that are expected to be expressed in all cells. The percentage of counts from ribosomal genes can be calculated similarly to mitochondrial genes, using the pattern '[Rr][Pp][LlSs][0-9]+'. These QC metrics can be visualized using the VlnPlot() function, which generates violin plots for each metric, allowing for easy comparison across cell populations.") 
 ``` 
 
 ```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"}
-seurat_object[["percent.mt"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
-seurat_object[["percent.ribo"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][Ll]")
-var_qc <- grep("(^nFeature)|(nCount)|(percent.mt)(percent.ribo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
+seurat_object[["percent.mt"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
+seurat_object[["percent.ribo"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Rr][Pp][LlSs][0-9]+")
+var_qc <- grep("(^nFeature)|(nCount)|(percent.mt)|(percent.ribo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 for(qc in var_qc){
-  VlnPlot(seurat_object, features = qc, ncol = 1)
+  print(Seurat::VlnPlot(seurat_object, features = qc, ncol = 1))
 }
-
 ```
 
 ```{r, section_gen_info_17d, eval="exp_pop" %in% section, echo=FALSE, results = "asis"} 
@@ -189,6 +212,30 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, y=Count, fill=Cell_I
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none")
 ```
+
+```{r, section_gen_info_17d, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Population table") 
+``` 
+
+```{r, section_gen_info_17e, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The size of each cell population as a table.") 
+``` 
+
+```{r section_gen_info_17f, echo=FALSE, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"}
+df <- as.data.frame(table(Seurat::Idents(seurat_object)))
+colnames(df) <- c("Cell_Identity", "Count")
+df$Cell_Identity <- factor(df$Cell_Identity, levels=df$Cell_Identity[order(df$Count, decreasing = FALSE)])
+DT::datatable(
+    df,
+    extensions = 'Buttons', 
+    options = list(
+        dom = 'Bfrtip',
+        buttons =
+            list(list(
+                extend = 'csv',
+                title = "cell_population_size"))))
+```
+
 
 ```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Spatial distribution") 
@@ -293,7 +340,15 @@ df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set), NULL),
 ```
 
 ```{r section_gen_info_32_table, echo=FALSE, eval="exp_info" %in% section}
-DT::datatable(df)
+DT::datatable(
+    df,
+    extensions = 'Buttons', 
+    options = list(
+        dom = 'Bfrtip',
+        buttons =
+            list(list(
+                extend = 'csv',
+                title = "gene_list_MOD_MODULE_NUMBER"))))
 ```
 
 ```{r, section_gen_info_33, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 

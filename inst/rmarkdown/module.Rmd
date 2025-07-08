@@ -38,6 +38,10 @@ knitr::opts_chunk$set(
 knitr::asis_output("# Module MODULE_NUMBER ")
 ``` 
 
+```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
+``` 
+
 ```{r, level_1_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output("## Expression {.panelset}")
 ``` 
@@ -156,7 +160,15 @@ df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set[MODULE_NUMBE
 ```
 
 ```{r gene_info_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
-DT::datatable(df)
+DT::datatable(
+    df,
+    extensions = 'Buttons', 
+    options = list(
+        dom = 'Bfrtip',
+        buttons =
+            list(list(
+                extend = 'csv',
+                title = "gene_list_MOD_MODULE_NUMBER"))))
 ```
 
 ```{r, level_2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
@@ -197,7 +209,6 @@ if(inherits(try_err, "try-error")){
 
 cat("\n\n")
 ```
-
 
 
 ```{r, func_anno_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"}
@@ -376,13 +387,16 @@ for(ann in annotation_src){
     
 
       # from https://tinyurl.com/mwxj7544
-      print(htmltools::tagList(DT::datatable(df_edo, 
+      print(htmltools::tagList(DT::datatable(df_edo,
                                              options=list(
-                                                     initComplete = htmlwidgets::JS(
+                                             initComplete = htmlwidgets::JS(
                                                         "function(settings, json) {",
                                                         paste0("$(this.api().table().container()).css({'font-size': '", 
                                                                font.size, "'});"),
-                                                        "}")
+                                                        "}"),
+                                             dom = 'Bfrtip',
+                                             buttons = list(list(extend = 'csv',
+                                                             title = "gene_list_MOD_MODULE_NUMBER"))
                        ))))
     
     }else{
