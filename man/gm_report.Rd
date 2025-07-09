@@ -24,13 +24,15 @@ gm_report(
   smp_stage = NULL,
   smp_organ = NULL,
   smp_region = NULL,
+  sample_gg_heatmap = TRUE,
   rmd_dir = file.path(system.file(package = "scigenex"), "rmarkdown"),
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
   plot_profiles_params = list(to_lin = TRUE, averaged = TRUE),
   plot_multi_profiles_params = list(legend_name = "Gene\\nModule"),
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
-  SpatialDimPlot_params = list(pt.size.factor = 1.7),
+  SpatialDimPlot_params = list(pt.size.factor = 1.7, label = T, repel = T, label.size =
+    4),
   plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
     "Cells/Spots", ylab = "Genes"),
   subsample_by_ident_params = list(nbcell = 200),
@@ -40,12 +42,12 @@ gm_report(
     list(category_label = 0.6, gene_label = 0.7)),
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
-    "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_dimplot", "exp_metrics",
-    "exp_pop", "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2",
-    "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
-    "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
-    "module_term_barplot_1", "module_term_barplot_2", "module_term_network_circ",
-    "term_table"),
+    "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_pca", "exp_elbow",
+    "exp_umap", "exp_metrics", "exp_pop", "exp_pop_table", "exp_spatial_dist",
+    "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2", "module_spatial",
+    "module_heatmap", "module_iheatmap", "module_umap", "module_violin", "module_genes",
+    "module_cell_annot_IA", "module_term_network", "module_term_barplot_1",
+    "module_term_barplot_2", "module_term_network_circ", "term_table"),
   quiet = FALSE
 )
 }
@@ -88,6 +90,9 @@ rg.Dm.eg.db, org.Dr.eg.db, org.Sc.sgd.db, org.Ce.eg.db...). If NULL, module anal
 \item{smp_organ}{The sample organ (free text). E.g. 'tonsil'.}
 
 \item{smp_region}{A region in the organ. E.g. 'whole' (which will merge as 'whole tonsil').}
+
+\item{sample_gg_heatmap}{If true, apply cell/spot sample using subsample_by_ident() not only to interactive heatmap but also heatmaps produced by plot_ggheatmap().
+It helps reduce the memory footprints.}
 
 \item{rmd_dir}{A path where to find the templates for creating the book.}
 
@@ -167,6 +172,8 @@ gm_report(cs[1:2,],
                 smp_stage="adult", 
                 annotation_src="CC",
                 is_spatial_exp=TRUE,
+                sample_gg_heatmap=TRUE,
+                subsample_by_ident_params=list(nbcell=20),
                 bioc_org_db="org.Hs.eg.db",
                 api_key=NULL) # Object was created with an older seurat version
 }
