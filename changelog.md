@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.11
+
+* Added sample_gg_heatmap arg to gm_report
+
+## v2.0.10
+
+* Fix an issue with percent.mt in gm_report().
+
 ## v2.0.9
 
 * Various improvement for gm_report(): pca, elbow plot, table format...

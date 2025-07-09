@@ -362,12 +362,27 @@ DT::datatable(
 knitr::asis_output("### Module heatmap") 
 ``` 
 
-```{r, section_gen_info_34, eval="exp_heatmap" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_34, eval="exp_heatmap" %in% section & !sample_gg_heatmap, echo=FALSE, results = "asis"} 
 knitr::asis_output("A heatmap displaying representative genes (top genes) of each gene module.") 
 ``` 
 
-```{r section_gen_info_35, echo=FALSE, eval="exp_heatmap" %in% section}
+```{r, section_gen_info_34b, eval="exp_heatmap" %in% section & sample_gg_heatmap, echo=FALSE, results = "asis"} 
+knitr::asis_output(paste0("A heatmap displaying representative genes (top genes) of each gene module. The subsample_by_ident() function has been used to select only ", subsample_by_ident_params$nbcell ," cells from each population."))
+``` 
+
+
+
+```{r section_gen_info_35, echo=FALSE, eval="exp_heatmap" %in% section & !sample_gg_heatmap}
 scigenex::plot_ggheatmap(cluster_set, 
+                         use_top_genes = TRUE, 
+                         hide_gene_name = TRUE, 
+                         ident = Idents(seurat_object))
+```
+
+```{r section_gen_info_35b, echo=FALSE, eval="exp_heatmap" %in% section & sample_gg_heatmap}
+scigenex::plot_ggheatmap(scigenex::subsample_by_ident(cluster_set, 
+                                                      nbcell = subsample_by_ident_params$nbcell,
+                                                      ident = Idents(seurat_object)), 
                          use_top_genes = TRUE, 
                          hide_gene_name = TRUE, 
                          ident = Idents(seurat_object))
