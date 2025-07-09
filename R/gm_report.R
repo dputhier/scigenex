@@ -26,6 +26,8 @@
 #' @param smp_stage Development stage of the sample (free text). E.g. 'adult'.
 #' @param smp_organ The sample organ (free text). E.g. 'tonsil'.
 #' @param smp_region A region in the organ. E.g. 'whole' (which will merge as 'whole tonsil').
+#' @param sample_gg_heatmap If true, apply cell/spot sample using subsample_by_ident() not only to interactive heatmap but also heatmaps produced by plot_ggheatmap().
+#' It helps reduce the memory footprints.
 #' @param rmd_dir A path where to find the templates for creating the book.
 #' @param add_module_score_params Some parameters for Seurat::add_module_score() function.
 #' @param plot_profiles_params Some parameters for plot_profiles() function
@@ -83,6 +85,8 @@
 #'                 smp_stage="adult", 
 #'                 annotation_src="CC",
 #'                 is_spatial_exp=TRUE,
+#'                 sample_gg_heatmap=TRUE,
+#'                 subsample_by_ident_params=list(nbcell=20),
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL) # Object was created with an older seurat version
 #' @importFrom fs path_home
@@ -133,6 +137,7 @@ gm_report <- function(cluster_set = NULL,
                             smp_stage=NULL,
                             smp_organ=NULL,
                             smp_region=NULL,
+                            sample_gg_heatmap=TRUE,
                             rmd_dir = file.path(system.file(package = "scigenex"), 
                                                 "rmarkdown"),
                             add_module_score_params=list(nbin = 16,
