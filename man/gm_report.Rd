@@ -28,11 +28,11 @@ gm_report(
   rmd_dir = file.path(system.file(package = "scigenex"), "rmarkdown"),
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
   plot_profiles_params = list(to_lin = TRUE, averaged = TRUE),
-  plot_multi_profiles_params = list(legend_name = "Gene\\nModule"),
+  plot_multi_profiles_params = list(legend_name = "Gene\\nModule", center = FALSE),
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
-  SpatialDimPlot_params = list(pt.size.factor = 1.7, label = T, repel = T, label.size =
-    4),
+  SpatialDimPlot_params = list(pt.size.factor = 1.7),
+  DimPlot_params = list(label = TRUE, label.size = 4, repel = TRUE),
   plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
     "Cells/Spots", ylab = "Genes"),
   subsample_by_ident_params = list(nbcell = 200),
@@ -107,6 +107,8 @@ It helps reduce the memory footprints.}
 \item{SpatialFeaturePlot_params}{Some parameters for Seurat::SpatialFeaturePlot() function.}
 
 \item{SpatialDimPlot_params}{Some parameters for Seurat::SpatialDimPlot() function.}
+
+\item{DimPlot_params}{Some parameters for Seurat::DimPlot() function.}
 
 \item{plot_ggheatmap_params}{Some parameters for plot_ggheatmap() function.}
 
