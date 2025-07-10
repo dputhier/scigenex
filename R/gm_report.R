@@ -35,6 +35,7 @@
 #' @param FeaturePlot_params Some parameters for Seurat::FeaturePlot() function.
 #' @param SpatialFeaturePlot_params Some parameters for Seurat::SpatialFeaturePlot() function.
 #' @param SpatialDimPlot_params Some parameters for Seurat::SpatialDimPlot() function.
+#' @param DimPlot_params Some parameters for Seurat::DimPlot() function.
 #' @param plot_ggheatmap_params Some parameters for plot_ggheatmap() function.
 #' @param subsample_by_ident_params The number of cell to take per cell type when subsampling the data for plotting interactive heatmap.
 #' Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.
@@ -145,13 +146,14 @@ gm_report <- function(cluster_set = NULL,
                                                          name = "MOD_",
                                                          slot = "data"),
                             plot_profiles_params=list(to_lin=TRUE, averaged = TRUE),
-                            plot_multi_profiles_params=list(legend_name="Gene\nModule"),
+                            plot_multi_profiles_params=list(legend_name="Gene\nModule",
+                                                            center=TRUE),
                             FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu")),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
-                            SpatialDimPlot_params=list(pt.size.factor = 1.7, 
-                                                       label = T, 
-                                                       repel = T, 
-                                                       label.size = 4),
+                            SpatialDimPlot_params=list(pt.size.factor = 1.7),
+                            DimPlot_params=list(label = TRUE,  
+                                                label.size = 4, 
+                                                repel = TRUE),
                             plot_ggheatmap_params=list(use_top_genes=FALSE, 
                                                        hide_gene_name=TRUE,
                                                        xlab = "Cells/Spots",
