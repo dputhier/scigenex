@@ -32,7 +32,8 @@ gm_report(
   FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
   SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
-  DimPlot_params = list(label = TRUE, label.size = 4, repel = TRUE),
+  DimPlot_params = list(label = TRUE, label.size = 4, repel = TRUE, split.by =
+    "orig.ident"),
   plot_ggheatmap_params = list(use_top_genes = FALSE, hide_gene_name = TRUE, xlab =
     "Cells/Spots", ylab = "Genes"),
   subsample_by_ident_params = list(nbcell = 200),

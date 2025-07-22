@@ -103,8 +103,8 @@ plot_profiles <- function(data = NULL,
   
   colnames(m) <- c("Cluster", "Cell", "Intensity")
   m$Cluster <- factor(
-    paste0("Cluster: ", m$Cluster),
-    levels = paste0("Cluster: ", unique(m$Cluster)),
+    paste0("Module: ", m$Cluster),
+    levels = paste0("Module: ", unique(m$Cluster)),
     ordered = T
   )
   
@@ -141,7 +141,7 @@ plot_profiles <- function(data = NULL,
   }
 
   
-  df_text$Cluster <- factor(paste0("Cluster: ", 
+  df_text$Cluster <- factor(paste0("Module: ", 
                                    rownames(centers)),
                             ordered = T)
 

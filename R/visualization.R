@@ -728,7 +728,7 @@ setMethod(
     p <- p + ggplot2::theme_bw()
     p <- p + ggplot2::scale_fill_gradientn(
       colours = color.ramp,
-      name = "Signal"
+      name = "Scaled\nsignal"
     )
     
     nb_cell_classes <- length(table(m_melt$cell_clusters))
