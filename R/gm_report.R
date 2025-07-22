@@ -106,6 +106,7 @@
 #' @importFrom dplyr mutate
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 scale_fill_manual
 #' @importFrom clusterProfiler enrichGO
 #' @importFrom enrichplot pairwise_termsim
 #' @importFrom enrichplot dotplot
@@ -118,6 +119,7 @@
 #' @importFrom pander pander
 #' @importFrom GOSemSim godata
 #' @importFrom htmlwidgets JS
+#' @importFrom scales hue_pal
 #' @export
 gm_report <- function(cluster_set = NULL,
                             seurat_object=NULL,
@@ -184,6 +186,8 @@ gm_report <- function(cluster_set = NULL,
                                       "exp_metrics",
                                       "exp_pop",
                                       "exp_pop_table",
+                                      "exp_pop_by_ori",
+                                      "exp_pop_table_by_ori",
                                       "exp_spatial_dist",
                                       "exp_spatial_dimplot",
                                       "exp_mean_1",

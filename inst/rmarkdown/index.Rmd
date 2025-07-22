@@ -232,7 +232,7 @@ knitr::asis_output("The size of each cell population.")
 ```{r section_gen_info_17f, echo=FALSE, eval="exp_pop" %in% section, echo=FALSE, results = "asis"}
 df <- as.data.frame(table(Seurat::Idents(seurat_object)))
 colnames(df) <- c("Cell_Identity", "Count")
-df$Cell_Identity <- factor(df$Cell_Identity, levels=df$Cell_Identity[order(df$Count, decreasing = FALSE)])
+df$Cell_Identity <- factor(df$Cell_Identity)
 Cell_Identity <- Count <- NULL
 ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, y=Count, fill=Cell_Identity)) +
               ggplot2::geom_col() +
@@ -253,7 +253,7 @@ knitr::asis_output("The size of each cell population as a table.")
 ```{r section_gen_info_17f, echo=FALSE, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"}
 df <- as.data.frame(table(Seurat::Idents(seurat_object)))
 colnames(df) <- c("Cell_Identity", "Count")
-df$Cell_Identity <- factor(df$Cell_Identity, levels=df$Cell_Identity[order(df$Count, decreasing = FALSE)])
+df$Cell_Identity <- factor(df$Cell_Identity)
 DT::datatable(
     df,
     extensions = 'Buttons', 
@@ -264,6 +264,69 @@ DT::datatable(
                 extend = 'csv',
                 title = "cell_population_size"))))
 ```
+
+
+
+```{r, section_gen_info_17d_1, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Population size by origin") 
+``` 
+
+```{r, section_gen_info_17e_1, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The size of each cell population.") 
+``` 
+
+```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"}
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
+colnames(df) <- c("Origin", "Cell_Identity")
+df$Origin <- factor(df$Origin)
+df$Cell_Identity <- factor(df$Cell_Identity)
+Cell_Identity <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+              ggplot2::geom_bar() +
+              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::theme_minimal() +
+              ggplot2::coord_flip() +
+              ggplot2::theme(legend.position = "none") 
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
+colnames(df) <- c("Origin", "Cell_Identity")
+df$Origin <- factor(df$Origin)
+df$Cell_Identity <- factor(df$Cell_Identity)
+Cell_Identity <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+              ggplot2::geom_bar(position="fill") +
+              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::theme_minimal() +
+              ggplot2::coord_flip() +
+              ggplot2::theme(legend.position = "none") 
+```
+
+```{r, section_gen_info_17d_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Population table") 
+``` 
+
+```{r, section_gen_info_17e_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("The size of each cell population as a table.") 
+``` 
+
+```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
+colnames(df) <- c("Origin", "Cell_Identity")
+df <- table(df$Cell_Identity, df$Origin)
+DT::datatable(
+    df,
+    extensions = 'Buttons', 
+    options = list(
+        dom = 'Bfrtip',
+        buttons =
+            list(list(
+                extend = 'csv',
+                title = "cell_population_size_by_ori"))))
+```
+
+
+
+
 
 
 ```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
