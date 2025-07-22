@@ -40,6 +40,7 @@ knitr::asis_output("# Module MODULE_NUMBER ")
 
 ```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
+knitr::asis_output(paste0("Module size: ", length(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
 ``` 
 
 ```{r, level_1_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
@@ -138,7 +139,7 @@ knitr::asis_output("### Violon plot ")
 ``` 
 
 ```{r, violin_3_MOD_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"}
-knitr::asis_output("Display the distribution of gene module mean expression levels across cell/spot populations.") 
+knitr::asis_output("Display the distribution module expression score across cell/spot populations. The score is computed using Seurat::AddModuleScore() function. The module score is the average expression of the genes in the module, normalized by the average expression of a set of control genes. The violin plot shows the distribution of this score across cell/spot populations.") 
 ``` 
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }

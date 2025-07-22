@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.14
+
+* Added population proportion in gm_report()
+
 ## v2.0.13
 
 * Population stats by origin in gm_report()

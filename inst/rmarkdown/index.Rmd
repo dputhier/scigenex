@@ -272,7 +272,7 @@ knitr::asis_output("### Population size by origin")
 ``` 
 
 ```{r, section_gen_info_17e_1, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("The size of each cell population.") 
+knitr::asis_output("The size of each cell population according to the corresponding sample/origin. Raw counts") 
 ``` 
 
 ```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"}
@@ -299,14 +299,27 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none") 
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
+colnames(df) <- c("Origin", "Cell_Identity")
+df$Origin <- factor(df$Origin)
+df$Cell_Identity <- factor(df$Cell_Identity)
+Cell_Identity <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Origin)) +
+              ggplot2::geom_bar(position="fill") +
+              ggplot2::labs(x="fill", y="Cell_Identity") +
+              ggplot2::theme_minimal() +
+  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 ```
 
+
+
 ```{r, section_gen_info_17d_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### Population table") 
+knitr::asis_output("### Population table by origin") 
 ``` 
 
 ```{r, section_gen_info_17e_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("The size of each cell population as a table.") 
+knitr::asis_output("The size of each cell population according to the corresponding sample/origin. Raw counts") 
 ``` 
 
 ```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}

@@ -120,6 +120,7 @@
 #' @importFrom GOSemSim godata
 #' @importFrom htmlwidgets JS
 #' @importFrom scales hue_pal
+#' @importFrom ggstats StatProp
 #' @export
 gm_report <- function(cluster_set = NULL,
                             seurat_object=NULL,
