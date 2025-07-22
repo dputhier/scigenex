@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.12
+
+* Various minor modif including split.by in Dimplot
+
 ## v2.0.11
 
 * Added sample_gg_heatmap arg to gm_report
