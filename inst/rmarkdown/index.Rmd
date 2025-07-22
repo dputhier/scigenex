@@ -147,7 +147,7 @@ knitr::asis_output("A 2D plot showing the first and second components of the PCA
 ``` 
 
 ```{r section_gen_info_14c, echo=FALSE, eval="exp_pca" %in% section, echo=FALSE, results = "asis"}
-Seurat::DimPlot(seurat_object, reduction = "pca")
+Seurat::DimPlot(seurat_object, reduction = "pca", label = TRUE,  label.size = 4, repel = TRUE)
 ```
 
 ```{r, section_gen_info_14d, eval="exp_elbow" %in% section, echo=FALSE, results = "asis"} 
@@ -171,9 +171,31 @@ knitr::asis_output("A UMAP showing the cell/spot classes.")
 ``` 
 
 ```{r section_gen_info_17, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
-Seurat::DimPlot(seurat_object)
+DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
+for(i in names(DimPlot_params)){
+  DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
+DimPlot_used_params$object <- seurat_object
+DimPlot_used_params$split.by <- NULL
+DimPlot_used_params$group.by <- NULL
+print(base::do.call(Seurat::DimPlot, DimPlot_used_params))
 ```
 
+
+```{r, section_gen_info_15_1, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dimplot (by origin)") 
+``` 
+
+```{r, section_gen_info_16_1, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A UMAP showing the cell/spot classes according to origin.") 
+``` 
+
+```{r section_gen_info_17_1, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
+DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
+for(i in names(DimPlot_params)){
+  DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
+DimPlot_used_params$object <- seurat_object
+print(base::do.call(Seurat::DimPlot, DimPlot_used_params))
+```
 
 
 ```{r, section_gen_info_17a, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"} 

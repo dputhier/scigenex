@@ -184,18 +184,18 @@ knitr::asis_output("What Gemini tells us about the likely cell identity or under
 ``` 
 
 ```{r, cell_annot_IA_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
-prompt <- paste0("\n\nGiven that you are a biologist working with ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage. ",
+prompt <- paste0("\n\nGiven a biological sample from ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage. ",
                   "This biological sample was analyzed using transcriptomic analysis.",
                   " You found a list of co-regulated genes that contains :",
-                  paste0(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters), collapse=", "),
+                  paste0(sort(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters)), collapse=", "),
                   ". What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3, #4) and 'rational'\n\n.", collapse=" ")
 
 knitr::asis_output("#### Prompt")
 
 knitr::asis_output(prompt)
-
+cat("\n\n")
 knitr::asis_output("#### IA Answer")
-
+cat("\n\n")
 suppressMessages(gemini.R::setAPI("APIKEY"))
 answer <- NULL
 try_err <- try(suppressMessages(gemini.R::gemini_chat(prompt)))
@@ -204,7 +204,7 @@ if(inherits(try_err, "try-error")){
    cat("\n\nSeems we have an issue with Gemini...\n\n") 
 }else{
   if(!is.null(try_err) )
-    knitr::asis_output(try_err$outputs )
+    knitr::asis_output(paste0("\n\n", try_err$outputs, "\n\n"))
 }
 
 cat("\n\n")
