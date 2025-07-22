@@ -307,7 +307,7 @@ df$Cell_Identity <- factor(df$Cell_Identity)
 Cell_Identity <- Origin <- Count <- NULL
 ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Origin)) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="fill", y="Cell_Identity") +
+              ggplot2::labs(x="Origin", y="Cell_Identity") +
               ggplot2::theme_minimal() +
   ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 ```
