@@ -44,11 +44,13 @@ gm_report(
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_pca", "exp_elbow",
-    "exp_umap", "exp_metrics", "exp_pop", "exp_pop_table", "exp_spatial_dist",
-    "exp_spatial_dimplot", "exp_mean_1", "exp_mean_2", "module_spatial",
-    "module_heatmap", "module_iheatmap", "module_umap", "module_violin", "module_genes",
-    "module_cell_annot_IA", "module_term_network", "module_term_barplot_1",
-    "module_term_barplot_2", "module_term_network_circ", "term_table"),
+    "exp_umap", "exp_metrics", "exp_pop", "exp_pop_table", "exp_pop_by_ori",
+    "exp_pop_table_by_ori", "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1",
+    "exp_mean_2", "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
+    "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
+    "module_term_barplot_1", "module_term_barplot_2", 
+     "module_term_network_circ",
+    "term_table"),
   quiet = FALSE
 )
 }
