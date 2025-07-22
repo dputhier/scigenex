@@ -184,7 +184,7 @@ knitr::asis_output("What Gemini tells us about the likely cell identity or under
 ``` 
 
 ```{r, cell_annot_IA_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
-prompt <- paste0("\n\nGiven that you are a biologist working with ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage. ",
+prompt <- paste0("\n\nGiven a biological sample from ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage. ",
                   "This biological sample was analyzed using transcriptomic analysis.",
                   " You found a list of co-regulated genes that contains :",
                   paste0(sort(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters)), collapse=", "),

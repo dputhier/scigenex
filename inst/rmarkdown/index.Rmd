@@ -175,6 +175,25 @@ DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
 for(i in names(DimPlot_params)){
   DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
 DimPlot_used_params$object <- seurat_object
+DimPlot_used_params$split.by <- NULL
+DimPlot_used_params$group.by <- NULL
+print(base::do.call(Seurat::DimPlot, DimPlot_used_params))
+```
+
+
+```{r, section_gen_info_15_1, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dimplot (by origin)") 
+``` 
+
+```{r, section_gen_info_16_1, eval="exp_umap" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("A UMAP showing the cell/spot classes according to origin.") 
+``` 
+
+```{r section_gen_info_17_1, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
+DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
+for(i in names(DimPlot_params)){
+  DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
+DimPlot_used_params$object <- seurat_object
 print(base::do.call(Seurat::DimPlot, DimPlot_used_params))
 ```
 
