@@ -293,12 +293,13 @@ colnames(df) <- c("Origin", "Cell_Identity")
 df$Origin <- factor(df$Origin)
 df$Cell_Identity <- factor(df$Cell_Identity)
 Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin, by = Cell_Identity)) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::labs(x="Cell Identity", y="Fraction") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
-              ggplot2::theme(legend.position = "none") 
+              ggplot2::theme(legend.position = "none") +
+  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
 colnames(df) <- c("Origin", "Cell_Identity")
