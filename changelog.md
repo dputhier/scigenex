@@ -1,8 +1,12 @@
 # Changelog
 
+## v2.0.13
+
+* Population stats by origin in gm_report()
+
 ## v2.0.12
 
-* Various minor modif including split.by in Dimplot
+* Various minor modif including split.by in Dimplot (gm_report()).
 
 ## v2.0.11
 
