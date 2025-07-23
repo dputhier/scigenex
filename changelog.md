@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.0
+
+- Refactored usage of do.call() in gm_report().
+
 ## v2.0.14
 
 * Added population proportion in gm_report()
