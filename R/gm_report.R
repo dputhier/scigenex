@@ -74,8 +74,8 @@
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL,
 #'                 is_spatial_exp=TRUE,
-#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
-#'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
+#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000), # adapt the point size as
+#'                 SpatialDimPlot_params=list(pt.size.factor = 3000))     # the object was created with an older seurat version
 #' set_verbosity(3)
 #' markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
 #' cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj=0.001, assay="Spatial")
@@ -90,7 +90,9 @@
 #'                 sample_gg_heatmap=TRUE,
 #'                 subsample_by_ident_params=list(nbcell=20),
 #'                 bioc_org_db="org.Hs.eg.db",
-#'                 api_key=NULL) # Object was created with an older seurat version
+#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000), # adapt the point size as
+#'                 SpatialDimPlot_params=list(pt.size.factor = 3000),     # the object was created with an older seurat version
+#'                 api_key=NULL) 
 #' @importFrom fs path_home
 #' @importFrom bookdown render_book
 #' @importFrom xaringanExtra use_panelset
