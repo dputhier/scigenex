@@ -39,7 +39,7 @@ knitr::asis_output("# Module MODULE_NUMBER ")
 ``` 
 
 ```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
+knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters), "\n\n"))
 knitr::asis_output(paste0("Module size: ", length(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
 ``` 
 
@@ -193,7 +193,7 @@ DT::datatable(
                 title = "gene_list_MOD_MODULE_NUMBER"))))
 ```
 
-```{r, level_2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
+```{r, level_2_MOD_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("## Functional Annotation (IA-based) {.panelset}")
 ``` 
 
