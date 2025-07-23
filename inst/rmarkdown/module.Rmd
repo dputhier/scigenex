@@ -39,7 +39,7 @@ knitr::asis_output("# Module MODULE_NUMBER ")
 ``` 
 
 ```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
+knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters), "\n\n"))
 knitr::asis_output(paste0("Module size: ", length(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
 ``` 
 
@@ -60,13 +60,10 @@ knitr::asis_output("In this section we compute the average expression levels of 
 ``` 
 
 ```{r, spatial_2_MOD_MODULE_NUMBER, eval="module_spatial" %in% section, echo=FALSE, results = "asis"} 
-SpatialFeaturePlot_used_params <- as.list(formals(Seurat::SpatialFeaturePlot))
-for(i in names(SpatialFeaturePlot_params)){SpatialFeaturePlot_used_params[[i]] <- SpatialFeaturePlot_params[[i]]}
 
-SpatialFeaturePlot_used_params$object <- seurat_object
-SpatialFeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
-
-base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params)
+SpatialFeaturePlot_params$object <- seurat_object
+SpatialFeaturePlot_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_params)
 ``` 
 
 ```{r, heatmap_3_MOD_MODULE_NUMBER, eval="module_heatmap" %in% section, echo=FALSE, results = "asis"} 
@@ -78,12 +75,9 @@ knitr::asis_output("A heatmap with cells/spots as columns and genes as rows.")
 ``` 
 
 ```{r heatmap_5_MOD_MODULE_NUMBER, echo=FALSE, eval="module_heatmap" %in% section }
-plot_ggheatmap_used_params <- as.list(formals(scigenex::plot_ggheatmap))
-for(i in names(plot_ggheatmap_params)){plot_ggheatmap_used_params[[i]] <- plot_ggheatmap_params[[i]]}
-
-plot_ggheatmap_used_params$object <- cluster_set[MODULE_NUMBER,]
-plot_ggheatmap_used_params$ident <- Idents(seurat_object)
-base::do.call(scigenex::plot_ggheatmap, plot_ggheatmap_used_params)
+plot_ggheatmap_params$object <- cluster_set[MODULE_NUMBER,]
+plot_ggheatmap_params$ident <- Idents(seurat_object)
+base::do.call(scigenex::plot_ggheatmap, plot_ggheatmap_params)
 
 ```
 <br>
@@ -98,17 +92,13 @@ knitr::asis_output(paste0("An interactive heatmap with cells/spots as columns an
 ``` 
 
 ```{r iheatmap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_iheatmap" %in% section }
-subsample_by_ident_used_params <- as.list(formals(scigenex::subsample_by_ident))
-for(i in names(subsample_by_ident_params)){subsample_by_ident_used_params[[i]] <- subsample_by_ident_params[[i]]}
-subsample_by_ident_used_params$object <- cluster_set[MODULE_NUMBER,]
-subsample_by_ident_used_params$ident <- Seurat::Idents(seurat_object)
 
-plot_heatmap_used_params <- as.list(formals(scigenex::plot_heatmap))
-for(i in names(plot_heatmap_params)){plot_heatmap_used_params[[i]] <- plot_heatmap_params[[i]]}
+subsample_by_ident_params$object <- cluster_set[MODULE_NUMBER,]
+subsample_by_ident_params$ident <- Seurat::Idents(seurat_object)
 
-plot_heatmap_used_params$object <- base::do.call(scigenex::subsample_by_ident, subsample_by_ident_used_params)
-plot_heatmap_used_params$cell_clusters <- Idents(seurat_object)
-base::do.call(scigenex::plot_heatmap, plot_heatmap_used_params)
+plot_heatmap_params$object <- base::do.call(scigenex::subsample_by_ident, subsample_by_ident_params)
+plot_heatmap_params$cell_clusters <- Idents(seurat_object)
+base::do.call(scigenex::plot_heatmap, plot_heatmap_params)
 
 ```
 
@@ -122,15 +112,28 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 
 ```{r iumap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap" %in% section }
 
-FeaturePlot_used_params <- as.list(formals(Seurat::FeaturePlot))
-FeaturePlot_used_params <- FeaturePlot_used_params[!names(FeaturePlot_used_params) %in%  "sort.cell"] # deprecated
+FeaturePlot_params$object <- seurat_object
+FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
+FeaturePlot_params$split.by <- NULL
+base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
 
-for(i in names(FeaturePlot_params)){FeaturePlot_used_params[[i]] <- FeaturePlot_params[[i]]}
+```
 
-FeaturePlot_used_params$object <- seurat_object
-FeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
 
-base::do.call(Seurat::FeaturePlot, FeaturePlot_used_params)
+
+```{r, iumap_2_1_MOD_MODULE_NUMBER, eval="module_umap_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### UMAP Mapping (by origin)")
+``` 
+
+```{r, iumap_3_1_MOD_MODULE_NUMBER, eval="module_umap_by_ori" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each cell/spot. The umap is splitted base on the origin of the cells/spots.") 
+``` 
+
+```{r iumap_4_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap_by_ori" %in% section }
+
+FeaturePlot_params$object <- seurat_object
+FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
 
 ```
 
@@ -143,9 +146,28 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
-Seurat::VlnPlot(seurat_object, feature="MOD_MODULE_NUMBER")
+
+vlnPlot_params$object <- seurat_object
+vlnPlot_params$features <- "MOD_MODULE_NUMBER"
+vlnPlot_params$split.by <- NULL
+base::do.call(Seurat::VlnPlot, vlnPlot_params)
+
 ```
 
+```{r, violin_by_ori_2_MOD_MODULE_NUMBER, eval="module_violin_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Violon plot (by origin)")
+``` 
+
+```{r, violin_by_ori_3_MOD_MODULE_NUMBER, eval="module_violin_by_ori" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Display the distribution module expression score across cell/spot populations. The score is computed using Seurat::AddModuleScore() function. The module score is the average expression of the genes in the module, normalized by the average expression of a set of control genes. The violin plot shows the distribution of this score across cell/spot populations. Here the diagram is splitted based on sample origins") 
+``` 
+
+```{r violin_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin_by_ori" %in% section }
+vlnPlot_params$object <- seurat_object
+vlnPlot_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::VlnPlot, vlnPlot_params)
+
+```
 
 ```{r, gene_info_1_MOD_MODULE_NUMBER, eval="module_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Gene list ")
@@ -156,8 +178,7 @@ knitr::asis_output("The genes related to that module.")
 ``` 
 
 ```{r gene_info_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
-df <- data.frame(Module=setNames(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,]), NULL),
-         gene=names(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,])))
+df <- data.frame(gene=names(scigenex::gene_cluster(cluster_set[MODULE_NUMBER,])))
 ```
 
 ```{r gene_info_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_genes" %in% section}
@@ -172,12 +193,12 @@ DT::datatable(
                 title = "gene_list_MOD_MODULE_NUMBER"))))
 ```
 
-```{r, level_2_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Cell Annotation {.panelset}")
+```{r, level_2_MOD_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("## Functional Annotation (IA-based) {.panelset}")
 ``` 
 
 ```{r, cell_annot_IA_1_MOD_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("### IA-based annotation")
+knitr::asis_output("### Gemini-based annotation")
 ``` 
 
 ```{r, cell_annot_IA_2_MOD_MODULE_NUMBER, eval="module_cell_annot_IA" %in% section, echo=FALSE, results = "asis"}
@@ -185,11 +206,10 @@ knitr::asis_output("What Gemini tells us about the likely cell identity or under
 ``` 
 
 ```{r, cell_annot_IA_3_MOD_MODULE_NUMBER, echo=FALSE, eval="module_cell_annot_IA" %in% section }
-prompt <- paste0("\n\nGiven a biological sample from ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage. ",
-                  "This biological sample was analyzed using transcriptomic analysis.",
-                  " You found a list of co-regulated genes that contains :",
+prompt <- paste0("\n\nA biological sample from ", smp_region, " cell compartment from ", smp_organ, " at ",  smp_stage , " stage was analyzed using transcriptomic analysis.",
+                  " A list of co-regulated genes that contains :",
                   paste0(sort(unlist(cluster_set[MODULE_NUMBER,]@gene_clusters)), collapse=", "),
-                  ". What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3, #4) and 'rational'\n\n.", collapse=" ")
+                  " was found. What could be the cells, functions or pathways most likely related to theses genes ? The answers (n=4 in total) should be ordered by likelyhood and formatted as a list with the following item : 'infered cell type/function/pathway' (#1, #2, #3, #4) and 'rational'\n\n.", collapse=" ")
 
 knitr::asis_output("#### Prompt")
 
@@ -249,23 +269,12 @@ for(ann in annotation_src){
     cat("\n\n### Cnetplot (fdp)\n\n")
     cat("\n\nThe cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.\n\n") 
     
-    cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-  for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-  # These guys are deprecated...
-  cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                   "colorEdge",
-                                                                                   "color_category",
-                                                                                   "color_gene",
-                                                                                   "cex_category",
-                                                                                   "cex_gene",
-                                                                                   "cex_label_category",
-                                                                                   "cex_label_gene")]
-  cnetplot_used_params$x <- edo
-  cnetplot_used_params$circular <- FALSE
+  cnetplot_params$x <- edo
+  cnetplot_params$circular <- FALSE
   
   if(nrow(edo) > 0){
     
-    try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
+    try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_params) + 
                      Seurat::NoLegend(), silent = TRUE)
     
     if(inherits(try_err, "try-error")){
@@ -283,23 +292,13 @@ for(ann in annotation_src){
     cat("\n\n### Cnetplot (circular)\n\n")
     cat("\n\nThe cnetplot() function from the clusterProfiler R package is used to visualize enriched functional categories (e.g., here GO BP) as a concept-gene network. It helps interpret the relationships between genes and the biological functions or pathways they are associated with. The cnetplot() function generates a bipartite network plot where nodes represent genes and terms (e.g., GO terms, pathways). Edges connect genes to the terms they are annotated with. The network helps illustrate how multiple terms share common genes, and how individual genes may be involved in multiple functions.\n\n") 
   
-    cnetplot_used_params <- as.list(formals(enrichplot:::cnetplot.enrichResult))
-    for(i in names(cnetplot_params)){cnetplot_used_params[[i]] <- cnetplot_params[[i]]}
-    # These guys are deprecated...
-    cnetplot_used_params <- cnetplot_used_params[!names(cnetplot_used_params) %in% c("foldChange", 
-                                                                                     "colorEdge",
-                                                                                     "color_category",
-                                                                                     "color_gene",
-                                                                                     "cex_category",
-                                                                                     "cex_gene",
-                                                                                     "cex_label_category",
-                                                                                     "cex_label_gene")]
-    cnetplot_used_params$x <- edo
-    cnetplot_used_params$circular <- TRUE
+    
+    cnetplot_params$x <- edo
+    cnetplot_params$circular <- TRUE
     
     if(nrow(edo) > 0){
       
-      try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_used_params) + 
+      try_err <- try(base::do.call(enrichplot:::cnetplot.enrichResult, cnetplot_params) + 
                        Seurat::NoLegend(), silent = TRUE)
       
       if(inherits(try_err, "try-error")){
@@ -406,8 +405,6 @@ for(ann in annotation_src){
         
   }
 }
-
-
 
 ``` 
 

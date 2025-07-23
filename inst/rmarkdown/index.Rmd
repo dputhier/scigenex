@@ -50,7 +50,7 @@ DT::datatable(NULL)
 ```
 
 ```{r, section_gen_info_1, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("# All Modules ")
+knitr::asis_output("# General information")
 ``` 
 
 ```{r, section_gen_info_2, eval="exp_info" %in% section, echo=FALSE, results = "asis"} 
@@ -135,7 +135,7 @@ if(nrow(workflow_params) > 0)
 
 
 ```{r, section_gen_info_14, eval=TRUE, echo=FALSE, results = "asis"} 
-knitr::asis_output("## Experiment information {.panelset}") 
+knitr::asis_output("## Cell/spot populations {.panelset}") 
 ``` 
 
 ```{r, section_gen_info_14a, eval="exp_pca" %in% section, echo=FALSE, results = "asis"} 
@@ -172,6 +172,12 @@ knitr::asis_output("A UMAP showing the cell/spot classes.")
 
 ```{r section_gen_info_17, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
 DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
+for(i in names(DimPlot_used_params)){
+  if(is.null(DimPlot_used_params[[i]]) || as.character(DimPlot_used_params[[i]])[1] == "deprecated"){
+    DimPlot_used_params <- DimPlot_used_params[names(DimPlot_used_params) != i]
+  }
+}
+
 for(i in names(DimPlot_params)){
   DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
 DimPlot_used_params$object <- seurat_object
@@ -191,6 +197,12 @@ knitr::asis_output("A UMAP showing the cell/spot classes according to origin.")
 
 ```{r section_gen_info_17_1, echo=FALSE, eval="exp_umap" %in% section, echo=FALSE, results = "asis"}
 DimPlot_used_params <- as.list(formals(Seurat::DimPlot))
+for(i in names(DimPlot_used_params)){
+  if(is.null(DimPlot_used_params[[i]]) || as.character(DimPlot_used_params[[i]])[1] == "deprecated"){
+    DimPlot_used_params <- DimPlot_used_params[names(DimPlot_used_params) != i]
+  }
+}
+
 for(i in names(DimPlot_params)){
   DimPlot_used_params[[i]] <- DimPlot_params[[i]]}
 DimPlot_used_params$object <- seurat_object
@@ -293,12 +305,13 @@ colnames(df) <- c("Origin", "Cell_Identity")
 df$Origin <- factor(df$Origin)
 df$Cell_Identity <- factor(df$Cell_Identity)
 Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin, by = Cell_Identity)) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::labs(x="Cell Identity", y="Fraction") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
-              ggplot2::theme(legend.position = "none") 
+              ggplot2::theme(legend.position = "none") +
+  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
 colnames(df) <- c("Origin", "Cell_Identity")
@@ -307,24 +320,23 @@ df$Cell_Identity <- factor(df$Cell_Identity)
 Cell_Identity <- Origin <- Count <- NULL
 ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Origin)) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="fill", y="Cell_Identity") +
+              ggplot2::labs(x="Origin", y="Cell_Identity") +
               ggplot2::theme_minimal() +
   ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 ```
 
 
 
-```{r, section_gen_info_17d_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_17d_2, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Population table by origin") 
 ``` 
 
-```{r, section_gen_info_17e_1, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
+```{r, section_gen_info_17e_2, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("The size of each cell population according to the corresponding sample/origin. Raw counts") 
 ``` 
 
-```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+```{r section_gen_info_17f_2, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
+df <-  data.frame(Origin=seurat_object@meta.data$orig.ident, Cell_Identity=Idents(seurat_object))
 df <- table(df$Cell_Identity, df$Origin)
 DT::datatable(
     df,
@@ -339,9 +351,6 @@ DT::datatable(
 
 
 
-
-
-
 ```{r, section_gen_info_18, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Spatial distribution") 
 ``` 
@@ -351,11 +360,8 @@ knitr::asis_output("The spatial distribution of counts and features.")
 ``` 
 
 ```{r section_gen_info_20, echo=FALSE, eval="exp_spatial_dist" %in% section, echo=FALSE, results = "asis"}
-SpatialFeaturePlot_used_params <- as.list(formals(Seurat::SpatialFeaturePlot))
-for(i in names(SpatialFeaturePlot_params)){
-  SpatialFeaturePlot_used_params[[i]] <- SpatialFeaturePlot_params[[i]]}
 
-SpatialFeaturePlot_used_params$object <- seurat_object
+SpatialFeaturePlot_params$object <- seurat_object
 
 if(length(grep("^[Mm][Tt]-", rownames(seurat_object))) > 0 )
   seurat_object[["pctMito"]] <- PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
@@ -366,8 +372,8 @@ if(length(grep("^[Rr][Pp][Ll]", rownames(seurat_object))) > 0)
 var_qc <- grep("(^nFeature)|(^nCount)|(^pctMito)|(^pctRibo)", colnames(seurat_object@meta.data), perl = TRUE, value = TRUE)
 
 for(feat in var_qc){
-  SpatialFeaturePlot_used_params$features <- feat
-  tryerror <- try(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_used_params)) # got some Error in `FetchData()`...
+  SpatialFeaturePlot_params$features <- feat
+  tryerror <- try(base::do.call(Seurat::SpatialFeaturePlot, SpatialFeaturePlot_params)) # got some Error in `FetchData()`...
     if(!inherits(tryerror, "try-error")){
       print(tryerror)
   }
@@ -387,15 +393,10 @@ identities <- grep("seurat_clusters",
                       colnames(seurat_object@meta.data), perl=TRUE, val=TRUE)
 
 if(length(identities)){
-    SpatialDimPlot_used_params <- as.list(formals(Seurat::SpatialDimPlot))
-    
-  for(i in names(SpatialDimPlot_params)){
-    SpatialDimPlot_used_params[[i]] <- SpatialDimPlot_params[[i]]
-  }
   
-  SpatialDimPlot_used_params$object <- seurat_object
+  SpatialDimPlot_params$object <- seurat_object
   
-  print(base::do.call(Seurat::SpatialDimPlot, SpatialDimPlot_used_params))
+  print(base::do.call(Seurat::SpatialDimPlot, SpatialDimPlot_params))
   
 }
 
@@ -431,7 +432,6 @@ scigenex::plot_cluster_stats(df)
 ```{r, section_gen_info_29, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Module genes") 
 ``` 
-
 
 
 ```{r, section_gen_info_30, eval="exp_genes" %in% section, echo=FALSE, results = "asis"} 
@@ -497,14 +497,10 @@ knitr::asis_output("Mean expression of gene across cell/spot populations for eac
 
 ```{r section_gen_info_38, echo=FALSE, eval="exp_mean_1" %in% section}
 
-plot_multi_profiles_used_params <- as.list(formals(plot_multi_profiles))
-for(i in names(plot_multi_profiles_params))
-  plot_multi_profiles_used_params[[i]] <- plot_multi_profiles_params[[i]]
+plot_multi_profiles_params$data <- cluster_set
+plot_multi_profiles_params$ident <- Idents(seurat_object)
 
-plot_multi_profiles_used_params$data <- cluster_set
-plot_multi_profiles_used_params$ident <- Idents(seurat_object)
-
-print(base::do.call(plot_multi_profiles, plot_multi_profiles_used_params))
+print(base::do.call(plot_multi_profiles, plot_multi_profiles_params))
 ```
 
 ```{r, section_gen_info_39, eval="exp_mean_2" %in% section, echo=FALSE, results = "asis"} 
@@ -516,10 +512,8 @@ knitr::asis_output("Mean expression of gene across cell/spot populations for eac
 ``` 
 
 ```{r section_gen_info_41, echo=FALSE, eval="exp_mean_2" %in% section}
-plot_profiles_used_params <- as.list(formals(plot_profiles))
-for(i in names(plot_profiles_params))
-  plot_profiles_used_params[[i]] <- plot_profiles_params[[i]]
-plot_profiles_used_params$data <- cluster_set
-plot_profiles_used_params$ident <- Idents(seurat_object)
-print(base::do.call(plot_profiles, plot_profiles_used_params))
+
+plot_profiles_params$data <- cluster_set
+plot_profiles_params$ident <- Idents(seurat_object)
+print(base::do.call(plot_profiles, plot_profiles_params))
 ```

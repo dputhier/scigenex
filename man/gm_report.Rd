@@ -29,8 +29,9 @@ gm_report(
   add_module_score_params = list(nbin = 16, ctrl = 100, name = "MOD_", slot = "data"),
   plot_profiles_params = list(to_lin = TRUE, averaged = TRUE),
   plot_multi_profiles_params = list(legend_name = "Gene\\nModule", center = FALSE),
-  FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu")),
-  SpatialFeaturePlot_params = list(pt.size.factor = 1.7),
+  FeaturePlot_params = list(cols = RColorBrewer::brewer.pal(3, "BuPu"), label = TRUE,
+    label.size = 4, repel = TRUE, split.by = "orig.ident"),
+  SpatialFeaturePlot_params = list(pt.size.factor = 1.7, label.size = 4, repel = TRUE),
   SpatialDimPlot_params = list(pt.size.factor = 1.7),
   DimPlot_params = list(label = TRUE, label.size = 4, repel = TRUE, split.by =
     "orig.ident"),
@@ -41,16 +42,17 @@ gm_report(
     TRUE, line_size_horizontal = 1, label_size = 7),
   cnetplot_params = list(color.params = list(edge = TRUE), showCategory = 6, cex.params =
     list(category_label = 0.6, gene_label = 0.7)),
+  vlnPlot_params = list(split.by = "orig.ident"),
   rm_tmpdir = TRUE,
   section = c("exp_info", "exp_metadata", "exp_experimenters", "exp_sample",
     "exp_params", "exp_stats", "exp_genes", "exp_heatmap", "exp_pca", "exp_elbow",
     "exp_umap", "exp_metrics", "exp_pop", "exp_pop_table", "exp_pop_by_ori",
     "exp_pop_table_by_ori", "exp_spatial_dist", "exp_spatial_dimplot", "exp_mean_1",
     "exp_mean_2", "module_spatial", "module_heatmap", "module_iheatmap", "module_umap",
-    "module_violin", "module_genes", "module_cell_annot_IA", "module_term_network",
-    "module_term_barplot_1", "module_term_barplot_2", 
-     "module_term_network_circ",
-    "term_table"),
+    "module_umap_by_ori", "module_violin", "module_violin_by_ori", "module_genes",
+    "module_cell_annot_IA", "module_term_network", 
+     "module_term_barplot_1",
+    "module_term_barplot_2", "module_term_network_circ", "term_table"),
   quiet = FALSE
 )
 }
@@ -121,6 +123,8 @@ Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Other
 \item{plot_heatmap_params}{Some parameters for plot_heatmap() function.}
 
 \item{cnetplot_params}{Some parameters for enrichplot:::cnetplot.enrichResult() function.}
+
+\item{vlnPlot_params}{The parameters for Seurat::VlnPlot().}
 
 \item{rm_tmpdir}{Whether to delete temporary directory.}
 

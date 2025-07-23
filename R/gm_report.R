@@ -41,6 +41,7 @@
 #' Reduce this number if you have a large dataset (e.g. > 10000 cells/spots). Otherwise the dataset will be too large to be handled by the web browser.
 #' @param plot_heatmap_params Some parameters for plot_heatmap() function.
 #' @param cnetplot_params Some parameters for enrichplot:::cnetplot.enrichResult() function.
+#' @param vlnPlot_params The parameters for Seurat::VlnPlot().
 #' @param rm_tmpdir Whether to delete temporary directory.
 #' @param section Which section to activate/deactivate.
 #' @param quiet Whether to run bookdown::render_book() quietly.
@@ -73,8 +74,8 @@
 #'                 bioc_org_db="org.Hs.eg.db",
 #'                 api_key=NULL,
 #'                 is_spatial_exp=TRUE,
-#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000),
-#'                 SpatialDimPlot_params=list(pt.size.factor = 3000)) # Object was created with an older seurat version
+#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000), # adapt the point size as
+#'                 SpatialDimPlot_params=list(pt.size.factor = 3000))     # the object was created with an older seurat version
 #' set_verbosity(3)
 #' markers <- Seurat::FindAllMarkers(lymph_node_tiny_2, only.pos = TRUE)
 #' cs <- cluster_set_from_seurat(lymph_node_tiny_2, markers, p_val_adj=0.001, assay="Spatial")
@@ -89,7 +90,9 @@
 #'                 sample_gg_heatmap=TRUE,
 #'                 subsample_by_ident_params=list(nbcell=20),
 #'                 bioc_org_db="org.Hs.eg.db",
-#'                 api_key=NULL) # Object was created with an older seurat version
+#'                 SpatialFeaturePlot_params=list(pt.size.factor = 3000), # adapt the point size as
+#'                 SpatialDimPlot_params=list(pt.size.factor = 3000),     # the object was created with an older seurat version
+#'                 api_key=NULL) 
 #' @importFrom fs path_home
 #' @importFrom bookdown render_book
 #' @importFrom xaringanExtra use_panelset
@@ -151,7 +154,11 @@ gm_report <- function(cluster_set = NULL,
                             plot_profiles_params=list(to_lin=TRUE, averaged = TRUE),
                             plot_multi_profiles_params=list(legend_name="Gene\nModule",
                                                             center=FALSE),
-                            FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu")),
+                            FeaturePlot_params=list(cols=RColorBrewer::brewer.pal(3, "BuPu"), 
+                                                    label = TRUE,
+                                                    label.size = 4,
+                                                    repel = TRUE,
+                                                    split.by = "orig.ident"),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
                             SpatialDimPlot_params=list(pt.size.factor = 1.7),
                             DimPlot_params=list(label = TRUE,  
@@ -172,6 +179,7 @@ gm_report <- function(cluster_set = NULL,
                                                  showCategory = 6, 
                                                  cex.params = list(category_label = 0.6, 
                                                                    gene_label = 0.7)),
+                            vlnPlot_params=list(split.by = "orig.ident"),
                             rm_tmpdir = TRUE,
                             section=c("exp_info",
                                       "exp_metadata",
@@ -197,7 +205,9 @@ gm_report <- function(cluster_set = NULL,
                                       "module_heatmap",
                                       "module_iheatmap",
                                       "module_umap",
+                                      "module_umap_by_ori",
                                       "module_violin",
+                                      "module_violin_by_ori",
                                       "module_genes",
                                       "module_cell_annot_IA",
                                       "module_term_network",
@@ -264,10 +274,17 @@ gm_report <- function(cluster_set = NULL,
   
   print_msg("Computing module scores...", msg_type = "INFO")
   add_module_score_used_params <- as.list(formals(Seurat:::AddModuleScore.Seurat))
+  for(i in names(add_module_score_used_params)){
+    if(is.null(add_module_score_used_params[[i]]) || as.character(add_module_score_used_params[[i]])[1] == "deprecated"){
+      add_module_score_used_params <- add_module_score_used_params[names(add_module_score_used_params) != i]
+    }
+  }
   
   for(i in names(add_module_score_params)){
     add_module_score_used_params[[i]] <- add_module_score_params[[i]]
   }
+  
+  print_msg("Calling AddModuleScore()...", msg_type = "DEBUG")
   
   add_module_score_used_params$object <- seurat_object
   add_module_score_used_params$features <- lapply(cluster_set@gene_clusters, gsub, pattern = "~[0-9]+$", replacement = "_")
