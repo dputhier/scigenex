@@ -69,7 +69,7 @@ One also can install MCL from source using the following code.
     cd mcl-xx-xxx
     ./configure
     make
-    sudo make install
+    make install
     # You should get mcl in your path
     mcl -h
 
