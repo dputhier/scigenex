@@ -345,12 +345,16 @@ knitr::asis_output("### Population table by origin")
 ``` 
 
 ```{r, section_gen_info_17e_2, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"} 
-knitr::asis_output("The size of each cell population according to the corresponding sample/origin. Raw counts") 
+knitr::asis_output("The size and frequency of each cell population according to the corresponding sample/origin.") 
 ``` 
 
 ```{r section_gen_info_17f_2, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
-df <-  data.frame(Origin=seurat_object@meta.data$orig.ident, Cell_Identity=Idents(seurat_object))
-df <- table(df$Cell_Identity, df$Origin)
+df <-  data.frame(Origin=seurat_object@meta.data$orig.ident, Population=Seurat::Idents(seurat_object))
+Population <- Origin <- Freq <- NULL
+df <- dplyr::count(df, Origin, Population, name = "Freq")
+df <- dplyr::mutate(df, "Percent Total" = round(100* Freq/ sum(Freq), 3))
+df <- dplyr::group_by(df, Origin)
+df <- dplyr::mutate(df, "Percent Origin" = round(100* Freq/ sum(Freq), 3))
 DT::datatable(
     df,
     extensions = 'Buttons', 
