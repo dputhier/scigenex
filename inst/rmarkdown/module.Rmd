@@ -40,7 +40,7 @@ knitr::asis_output("# Module MODULE_NUMBER ")
 
 ```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters), "\n\n"))
-knitr::asis_output(paste0("Module size: ", length(cluster_set[MODULE_NUMBER, ]@gene_clusters)))
+knitr::asis_output(paste0("Module size: ", length(cluster_set@gene_clusters[[MODULE_NUMBER]])))
 ``` 
 
 ```{r, level_1_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
