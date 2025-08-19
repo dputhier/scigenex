@@ -289,41 +289,53 @@ knitr::asis_output("The size of each cell population according to the correspond
 ``` 
 
 ```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"}
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin)) +
               ggplot2::geom_bar() +
-              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::labs(x="Population", y="Count") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
-              ggplot2::theme(legend.position = "none") 
+              ggplot2::theme(legend.position = "top") 
 
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin, by = Cell_Identity)) +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin, by = Population)) +
+              ggplot2::geom_hline(yintercept = 0.5) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Cell Identity", y="Fraction") +
+              ggplot2::labs(x="Cell Identity", y="Fraction of Total") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none") +
-  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
+              ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Origin)) +
-              ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Origin", y="Cell_Identity") +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin)) +
+              ggplot2::geom_bar(position="dodge", ggplot2::aes(y = ggplot2::after_stat(prop*100), group = Origin)) +
+              ggplot2::labs(x="Population", y="Percent of Origin") +
               ggplot2::theme_minimal() +
-  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
+              ggplot2::coord_flip()
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
+df$Origin <- factor(df$Origin)
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Population, by = Origin)) +
+              ggplot2::geom_bar(position="fill") +
+              ggplot2::labs(x="Origin", y="Population") +
+              ggplot2::theme_minimal() +
+              ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 ```
 
 
