@@ -264,11 +264,12 @@ knitr::asis_output("The size of each cell population as a table.")
 
 ```{r section_gen_info_17f, echo=FALSE, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"}
 df <- as.data.frame(table(Seurat::Idents(seurat_object)))
-colnames(df) <- c("Cell_Identity", "Count")
-df$Cell_Identity <- factor(df$Cell_Identity)
+colnames(df) <- c("Population", "Count")
+df$Population <- factor(df$Population)
 DT::datatable(
     df,
-    extensions = 'Buttons', 
+    extensions = 'Buttons',
+    rownames = FALSE,
     options = list(
         dom = 'Bfrtip',
         buttons =
