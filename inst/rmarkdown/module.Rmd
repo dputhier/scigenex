@@ -112,11 +112,11 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 
 ```{r iumap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap" %in% section }
 
-FeaturePlot_params$object <- seurat_object
-FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
-FeaturePlot_params$split.by <- NULL
-base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
-
+FeaturePlot_used_params <- FeaturePlot_params
+FeaturePlot_used_params$object <- seurat_object
+FeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
+FeaturePlot_used_params$split.by <- NULL
+base::do.call(Seurat::FeaturePlot, FeaturePlot_used_params)
 ```
 
 
@@ -131,10 +131,10 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 
 ```{r iumap_4_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap_by_ori" %in% section }
 
-FeaturePlot_params$object <- seurat_object
-FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
-base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
-
+FeaturePlot_used_params <- FeaturePlot_params
+FeaturePlot_used_params$object <- seurat_object
+FeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::FeaturePlot, FeaturePlot_used_params)
 ```
 
 ```{r, violin_2_MOD_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"} 
@@ -147,11 +147,11 @@ knitr::asis_output("Display the distribution module expression score across cell
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
 
-vlnPlot_params$object <- seurat_object
-vlnPlot_params$features <- "MOD_MODULE_NUMBER"
-vlnPlot_params$split.by <- NULL
-base::do.call(Seurat::VlnPlot, vlnPlot_params)
-
+vlnPlot_used_params <- vlnPlot_params
+vlnPlot_used_params$object <- seurat_object
+vlnPlot_used_params$features <- "MOD_MODULE_NUMBER"
+vlnPlot_used_params$split.by <- NULL
+base::do.call(Seurat::VlnPlot, vlnPlot_used_params)
 ```
 
 ```{r, violin_by_ori_2_MOD_MODULE_NUMBER, eval="module_violin_by_ori" %in% section, echo=FALSE, results = "asis"} 
@@ -163,10 +163,11 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin_by_ori" %in% section }
-vlnPlot_params$object <- seurat_object
-vlnPlot_params$features <- "MOD_MODULE_NUMBER"
-base::do.call(Seurat::VlnPlot, vlnPlot_params)
 
+vlnPlot_used_params <- vlnPlot_params
+vlnPlot_used_params$object <- seurat_object
+vlnPlot_used_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::VlnPlot, vlnPlot_used_params)
 ```
 
 ```{r, gene_info_1_MOD_MODULE_NUMBER, eval="module_genes" %in% section, echo=FALSE, results = "asis"} 
