@@ -312,7 +312,7 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin, by = Popul
               ggplot2::labs(x="Cell Identity", y="Fraction of Total") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
-              ggplot2::theme(legend.position = "none") +
+              ggplot2::theme(legend.position = "top") +
               ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
@@ -324,6 +324,7 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin)) +
               ggplot2::geom_bar(position="dodge", ggplot2::aes(y = ggplot2::after_stat(prop*100), group = Origin)) +
               ggplot2::labs(x="Population", y="Percent of Origin") +
               ggplot2::theme_minimal() +
+              ggplot2::theme(legend.position = "top") +
               ggplot2::coord_flip()
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
