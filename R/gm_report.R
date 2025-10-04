@@ -262,7 +262,7 @@ gm_report <- function(cluster_set = NULL,
                                   "module_spatial"))
   }
   
-  if(is.null(api_key)){
+  if(is.null(api_key) | api_key == ""){
     print_msg("No Gemini key provided...", msg_type = "INFO")
     print_msg("Canceling IA-based cell type annotation.", msg_type = "INFO")
     section <- setdiff(section, c("exp_spatial",
