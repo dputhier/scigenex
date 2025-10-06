@@ -104,7 +104,7 @@ plot_heatmap <- function(object,
     print_msg("Extracting cell identity.", msg_type="INFO")
     cell_clusters <- cell_clusters[names(cell_clusters) %in% colnames(object@data)] 
     if(inherits(cell_clusters, "factor"))
-       cell_clusters <- droplevels(cell_clusters)
+      cell_clusters <- droplevels(cell_clusters)
   }
   
   # Ensure there are enough colors
@@ -127,13 +127,13 @@ plot_heatmap <- function(object,
     names(cell_clusters) <- names_cell_clusters
     cell_clusters <- as.factor(cell_clusters)
   }
-
+  
   print_msg(paste0("Color palette for cells: ", paste0(colors_cell_clusters, collapse=", ")),
             msg_type = "DEBUG")
   
-
   
-    
+  
+  
   m <- as.matrix(object@data)
   
   # Centering
@@ -154,7 +154,7 @@ plot_heatmap <- function(object,
   }  
   
   gene_to_clust <- gene_cluster(object)
-
+  
   if(is.null(cell_clusters)){
     print_msg("Ordering cells/columns using hierarchical clustering.",
               msg_type = "INFO")
@@ -184,7 +184,7 @@ plot_heatmap <- function(object,
   }
   
   # Add blank row to separate gene clusters in the heatmap
-
+  
   if(length(table(as.character(gene_to_clust))) > 1){
     
     blank_row <- matrix(NA, nrow = line_size_horizontal, ncol = ncol(m))
@@ -211,7 +211,7 @@ plot_heatmap <- function(object,
     m_blank <-  do.call(rbind, m_split)
     m <- as.matrix(m_blank)
   }
-
+  
   if(!is.null(cell_clusters) & length(table(as.character(cell_clusters))) > 1){
     
     # Add blank col to separate cell clusters in the heatmap
@@ -227,7 +227,7 @@ plot_heatmap <- function(object,
     cell_clusters <- sort(cell_clusters)
     m <- m[ , names(cell_clusters)]
     nb_NA_row <- 1
-
+    
     for(i in 1:(length(m_split)-1)){
       print_msg(paste0("Adding blank lines for cell cluster ", i), 
                 msg_type = "DEBUG")
@@ -237,19 +237,19 @@ plot_heatmap <- function(object,
       nb_NA_row <- nb_NA_row + line_size_vertical
       m_split[[i]] <- as.matrix(rbind(m_split[[i]], blank_col))
     }
-      
-      m_blank <-  do.call(rbind, m_split)
-      # Now correct also the names that have been 
-      # changed by do.call()...
-      row.names(m_blank) <- gsub("^[^.]+.", "", rownames(m_blank), perl=T)
-      m <- as.matrix(m_blank)
-      # These rownames are in fact colnames (it will be transposed).
-      # later on we will need the colnames to be used as rownames 
-      # of the annotation_col dataframe. So we need colnames
-      # to be unique. We wil add 1, 2 (...) space char... (" ").
-      pos_NA <- grep("^NA\\.[0-9]+$", rownames(m), perl=T)
-      row.names(m)[pos_NA] <- unlist(lapply(mapply(rep, ' ', 1:length(pos_NA)), paste0, collapse=""))
-      m <- t(m)
+    
+    m_blank <-  do.call(rbind, m_split)
+    # Now correct also the names that have been 
+    # changed by do.call()...
+    row.names(m_blank) <- gsub("^[^.]+.", "", rownames(m_blank), perl=T)
+    m <- as.matrix(m_blank)
+    # These rownames are in fact colnames (it will be transposed).
+    # later on we will need the colnames to be used as rownames 
+    # of the annotation_col dataframe. So we need colnames
+    # to be unique. We wil add 1, 2 (...) space char... (" ").
+    pos_NA <- grep("^NA\\.[0-9]+$", rownames(m), perl=T)
+    row.names(m)[pos_NA] <- unlist(lapply(mapply(rep, ' ', 1:length(pos_NA)), paste0, collapse=""))
+    m <- t(m)
   }
   
   # Now correct also the rownames that have been 
@@ -258,7 +258,7 @@ plot_heatmap <- function(object,
     row.names(m) <- gsub("^[0-9]+\\.", "", rownames(m), perl=T)
     row.names(m)[grep("^NA\\.[0-9]+$", rownames(m), perl=T)] <- " "
   }
-
+  
   if(is.null(cell_clusters)) {
     # This condition, if(interactive), 
     # may seem weird. In fact interactive 
@@ -267,7 +267,7 @@ plot_heatmap <- function(object,
     # different requirement regarding 
     # column sorting
     if(interactive)
-    m <- m[, hclust_cells_order]
+      m <- m[, hclust_cells_order]
   }
   
   # Preparing a data.frame containing cell annotations
@@ -280,7 +280,7 @@ plot_heatmap <- function(object,
     cell_clusters_anno <- data.frame("Ident."=column)
     rownames(cell_clusters_anno) <- colnames(m)
   }
-
+  
   ####### Heatmap #######
   # Main heatmap
   print_msg("Plotting heatmap.", msg_type="INFO")
@@ -293,9 +293,9 @@ plot_heatmap <- function(object,
     print_msg("Plot is interactive...")
     
     htmp <- iheatmapr::main_heatmap(data = m,
-                                   name = colorbar_name,
-                                   show_colorbar = show_legend,
-                                   colors = colors)
+                                    name = colorbar_name,
+                                    show_colorbar = show_legend,
+                                    colors = colors)
     
     htmp <- htmp %>% iheatmapr::modify_layout(list(margin = list(t=20, 
                                                                  r=10, 
@@ -317,7 +317,7 @@ plot_heatmap <- function(object,
       # pass it 3 times the same color wich fix the bug...
       if(length(colors_cell_clusters) == 1)
         colors_cell_clusters <- rep(colors_cell_clusters, 3)
-
+      
       htmp <- htmp %>% iheatmapr::add_col_annotation(cell_clusters_anno, 
                                                      colors = list("Ident." = colors_cell_clusters))
     }
@@ -325,18 +325,18 @@ plot_heatmap <- function(object,
     if(show_dendro & is.null(cell_clusters)) {
       htmp <- htmp %>% iheatmapr::add_col_dendro(hclust_cells, reorder = FALSE)
     }
-
+    
     print_msg("Adding Titles.", msg_type="DEBUG")
     
     if(!is.null(ylab)){
       htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))
-      }
+    }
     if(!is.null(xlab)){
       htmp <- htmp %>% add_col_title(xlab, side="top", font = list(size = 12))
-      }
+    }
     if(!is.null(name)){
       htmp <- htmp %>% add_col_title(name, side="top", font = list(size = 24))
-      }
+    }
   }else{
     # Reorder rows to get the same order as the interactive heatmap
     #m <- m[order(nrow(m):1),]
@@ -349,25 +349,25 @@ plot_heatmap <- function(object,
         cluster_cols <- hclust_cells
       }
     }
-
+    
     if(!is.null(cell_clusters)){
       annotation_col <- cell_clusters_anno
     }
-
+    
     htmp <- pheatmap::pheatmap(mat = m, 
-                     annotation_legend = show_legend, legend = show_legend,
-                     color = colorRampPalette(colors)(100),
-                     cluster_rows = FALSE, 
-                     cluster_cols = cluster_cols, 
-                     fontsize_row= label_size,
-                     show_rownames = row_labels, 
-                     show_colnames = col_labels, 
-                     annotation_col = annotation_col,
-                     border_color = NA, 
-                     scale = "none", 
-                     annotation_colors=list("Ident."=setNames(colors_cell_clusters, 
-                                                                    unique(as.character(sort(cell_clusters))))),
-                     na_col = "white")
+                               annotation_legend = show_legend, legend = show_legend,
+                               color = colorRampPalette(colors)(100),
+                               cluster_rows = FALSE, 
+                               cluster_cols = cluster_cols, 
+                               fontsize_row= label_size,
+                               show_rownames = row_labels, 
+                               show_colnames = col_labels, 
+                               annotation_col = annotation_col,
+                               border_color = NA, 
+                               scale = "none", 
+                               annotation_colors=list("Ident."=setNames(colors_cell_clusters, 
+                                                                        unique(as.character(sort(cell_clusters))))),
+                               na_col = "white")
     
     if(!is.null(ylab)){
       htmp <- htmp %>% add_row_title(ylab, side="right", font = list(size = 12))
@@ -381,7 +381,7 @@ plot_heatmap <- function(object,
     
   }
   
-
+  
   return(htmp)
 }
 
@@ -487,12 +487,15 @@ plot_dist <- function(object,
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param ident A named vector containing the cell type identities for each cell.
+#' @param split_by Split the heatmap by this variable (typically cell/spot origin). A named vector containing the cell origin for each cell.
 #' Typically the result from the Idents() function on a Seurat object (see Seurat library).
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param color_ident A vector containing colors for the cell classes as. 
-#' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
+#' @param color_split_by A vector containing colors for 'split_by'.
+#' @param swap Whether to swap the cell annotation and origin strips (i.e. facet annotation).
+#' @param independent One of "none", "x", "y", "all". A character(1) determining whether scales can vary within a row or column of panels. See ggh4x::facet_grid2.#' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
 #' @param xlab A name for the x axis.
@@ -519,15 +522,18 @@ plot_dist <- function(object,
 #' @export
 #' @noRd
 setGeneric("plot_ggheatmap",
-           
            function(object,
                     to_log2 = FALSE,
                     use_top_genes=TRUE,
                     ident=NULL,
+                    split_by=NULL,
                     panel_spacing=0.05,
                     colors = colors_for_gradient("Ju1"),
                     standardizing = FALSE,
                     color_ident=NULL,
+                    color_split_by=NULL,
+                    swap=FALSE,
+                    independent=c("none", "x", "y", "all"),
                     ceil=1,
                     floor=-1,
                     centering = TRUE,
@@ -549,11 +555,15 @@ setGeneric("plot_ggheatmap",
 #' @param to_log2 Whether data should be transform in logarithm base 2 (+ 0.1 as a pseudocount).
 #' @param use_top_genes A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.
 #' @param ident A named vector containing the cell type identities for each cell.
+#' @param split_by Split the heatmap by this variable (typically cell/spot origin). A named vector containing the cell origin for each cell.
 #' Typically the result from the Idents() function on a Seurat object (see Seurat library).
 #' @param panel_spacing Spacing between facets/panels ("line" units).
 #' @param colors A vector of colors for the gradient.
 #' @param standardizing Whether rows should be divided by standard deviation.
 #' @param color_ident A vector containing colors for the cell classes as. 
+#' @param color_split_by A vector containing colors for 'split_by'.
+#' @param swap Whether to swap the cell annotation and origin strips (i.e. facet annotation).
+#' @param independent One of "none", "x", "y", "all". A character(1) determining whether scales can vary within a row or column of panels. See ggh4x::facet_grid2.
 #' @param ceil A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.
 #' @param floor A value for flooring (NULL for no flooring). Flooring is performed after log transformation, centering and standardization.
 #' @param centering Whether rows should be centered. 
@@ -564,9 +574,6 @@ setGeneric("plot_ggheatmap",
 #' @param pseudocount A value for the pseudocount added before log transformation.
 #' @param coord_flip Whether to flip the coordinates.
 #' @return A ggplot diagram.
-#' @importFrom reshape2 melt
-#' @importFrom ggh4x facet_grid2 strip_themed elem_list_rect
-#' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid element_blank element_rect element_text
 #' @examples
 #' library(Seurat)
 #' # Load datasets
@@ -585,6 +592,10 @@ setGeneric("plot_ggheatmap",
 #' # to get balanced classes
 #' sub_obj <- subsample_by_ident(new_obj, nbcell=10, ident=ident_pbmc3k)
 #' plot_ggheatmap(sub_obj, ident=ident_pbmc3k)
+#' @importFrom reshape2 melt
+#' @importFrom ggh4x facet_grid2 strip_themed elem_list_rect
+#' @importFrom ggplot2 ggplot geom_raster theme_bw scale_fill_gradientn theme facet_grid element_blank element_rect element_text
+#' @importFrom Seurat DiscretePalette
 #' @export
 setMethod(
   "plot_ggheatmap",
@@ -593,10 +604,14 @@ setMethod(
            to_log2 = FALSE,
            use_top_genes=TRUE,
            ident=NULL,
+           split_by=NULL,
            panel_spacing=0.05,
            colors = colors_for_gradient("Ju1"),
            standardizing = FALSE,
            color_ident=NULL,
+           color_split_by=NULL,
+           swap=FALSE,
+           independent=c("none", "x", "y", "all"),
            ceil=1,
            floor=-1,
            centering = TRUE,
@@ -608,27 +623,71 @@ setMethod(
            coord_flip=FALSE) {
     
     check_format_cluster_set(object)
+    
+    gg_color_hue <- function(n) {
+      hues = seq(15, 375, length = n + 1)
+      hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    
+    nb <- nclust(object)
+    if(nb == 0)
+      print_msg("No gene cluster found.", msg_type = "STOP")
+    
     print_msg("getting matrix", msg_type="DEBUG")
     
-    if(length(ident) == 0 | is.null(ident)){
-      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
+    
+    
+    if(!is.null(ident)){
+      nb_cell_classes <- length(table(ident))
+      name_idents <- names(ident)
+      
+      if(length(which(name_idents == "")) != 0 || is.null(name_idents)){
+        print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
+      }
+     
+      
+      print_msg("Subsetting the object with cells from 'Ident'.", msg_type = "DEBUG")
+      name_idents <- intersect(name_idents, col_names(object))
+      object <- object[, name_idents, drop=FALSE]
+      ident <- ident[name_idents]
+      
+      if(is.null(color_ident)){
+        color_ident <- gg_color_hue(nb_cell_classes)
+      }else{
+        if(length(color_ident) != nb_cell_classes){
+          print_msg("Need as many colors as cell classes", msg_type = "STOP")
+        }
+      }
+      
+    }else{
+      color_ident <- NULL
     }
     
-    name_idents <- names(ident)
     
-    if(is.null(name_idents)){
-      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
+    if(!is.null(split_by)){
+      
+      nb_sources <- length(table(split_by))
+      name_split_by<- names(split_by)
+      
+      if(length(which(name_split_by == "")) != 0 || is.null(name_split_by)){
+        print_msg("The 'split_by' argument needs a named vector.", msg_type = "STOP")
+      }
+      
+      print_msg("Subsetting the object with cells defined in 'split_by' argument.", msg_type = "DEBUG")
+      name_split_by <- intersect(name_split_by, col_names(object))
+      object <- object[, name_split_by, drop=FALSE]
+      split_by <- split_by[name_split_by]
+      
+      if(is.null(color_split_by)){
+        color_split_by <- Seurat::DiscretePalette(nb_sources, palette = "alphabet", shuffle = FALSE)
+      }else{
+        if(length(color_split_by) != nb_sources){
+          print_msg("Need as many colors as cell origin.", msg_type = "STOP")
+        }
+      }
+    }else{
+      color_split_by <- NULL
     }
-    
-    if(length(which(name_idents == "")) != 0){
-      print_msg("The 'ident' argument needs a named vector.", msg_type = "STOP")
-    }
-    
-    print_msg("Subsetting the object with cells from 'Ident'.", msg_type = "DEBUG")
-    name_idents <- intersect(name_idents, col_names(object))
-    object <- object[, name_idents, drop=FALSE]
-    ident <- ident[name_idents]
-    nb <- nclust(object)
     
     if(use_top_genes){
       if(length(object@top_genes) == 0)
@@ -638,35 +697,11 @@ setMethod(
       m <- object@data
     }
     
-    
-    if(to_log2) {
-      m <- log2(m + pseudocount)
-    }
-    
-    ## median-centering of row
-    if (centering) {
-      print_msg("Median-centering rows.", msg_type="DEBUG")
-      mean_row <- apply(m, 1, mean)
-      m <- sweep(m, MARGIN = 1, STATS = mean_row, FUN = "-")
-    }
-    
-    ## Standardizing row
-    if (standardizing) {
-      print_msg("Standardizing rows.", msg_type="DEBUG")
-      sd_row <- apply(m, 1, sd)
-      m <- sweep(m, MARGIN = 1, STATS = sd_row, FUN = "/")
-    }
-    
-    ## Ceiling / flooring
-    if(!is.null(ceil)){
-      print_msg("Ceiling matrix.", msg_type="DEBUG")
-      m[m > ceil] <- ceil
-    }
-    
-    if(!is.null(floor)){
-      print_msg("Flooring matrix.", msg_type="DEBUG")
-      m[m < floor] <- floor
-    }
+    m <- transform_mat(m, to_log2=to_log2, 
+                       pseudocount=pseudocount, 
+                       centering=centering, 
+                       standardizing=standardizing, 
+                       ceil=ceil, floor=floor)
     
     ## melting
     print_msg("Melting matrix.", msg_type="DEBUG")
@@ -676,7 +711,7 @@ setMethod(
     match_gclust <- match(m_melt$genes, names(gclust))
     
     lev_clust <- suppressWarnings(sort(unique(as.numeric(gclust))))
-
+    
     if(length(lev_clust) == 0){
       lev_clust <- unique(gclust)
       m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
@@ -684,22 +719,27 @@ setMethod(
       m_melt$gene_clusters <- factor(gclust[match_gclust], levels = lev_clust, ordered = TRUE)
     }
     
-
     if(!all(m_melt$cell %in% names(ident))){
       print_msg("All cell need a target cluster when using 'ident'.", msg_type = "STOP")
     }
-  
-    m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
-  
+    
+    if(!is.null(ident)){
+      m_melt$cell_clusters <- factor(ident[m_melt$samples], ordered = TRUE)
+    }
+    
+    if(!is.null(split_by)){
+      m_melt$cell_src <- factor(split_by[m_melt$samples], ordered = TRUE)
+    }
+    
     ## plotting
     # Note that samples, value, gene, cluster
     # may appear as undefined variable to "R check" command.
     # A workaround is to define them as NULL first...
-    samples <- values <- genes <- cell_clusters <- gene_clusters <- NULL
-
+    samples <- values <- genes <- cell_clusters <- gene_clusters <- cell_src <- NULL
+    
     print_msg("Preparing diagram (tile).", msg_type="DEBUG")
     print_msg(paste0("Matrix columns :", colnames(m_melt)), msg_type="DEBUG")
-
+    
     if(!coord_flip){
       p <- ggplot2::ggplot(
         data = m_melt,
@@ -719,8 +759,7 @@ setMethod(
         )
       )
     }
-
-
+    
     print_msg("Preparing color palette.", msg_type="DEBUG")
     color.ramp <- grDevices::colorRampPalette(colors)(10)
     
@@ -732,7 +771,7 @@ setMethod(
     )
     
     nb_cell_classes <- length(table(m_melt$cell_clusters))
-
+    
     if(!coord_flip){
       p <- p + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
     }else{
@@ -776,64 +815,156 @@ setMethod(
     
     print_msg("Adding facets.", msg_type="DEBUG")
     
-    gg_color_hue <- function(n) {
-      hues = seq(15, 375, length = n + 1)
-      hcl(h = hues, l = 65, c = 100)[1:n]
-    }
-    
-    
     if(!is.null(ident)){
-      
-      print_msg("Adding facets. Using cell identity.", msg_type="DEBUG")
-      
-      if(!is.list(ident)){
-        
-        if(is.null(color_ident)){
-          color_ident <- gg_color_hue(nb_cell_classes)
-        }else{
-          if(length(color_ident) != nb_cell_classes){
-            print_msg("Need as many colors as cell classes", msg_type = "STOP")
+      if(!is.null(split_by)){
+          if(!coord_flip){
+            if(!swap){
+              p <- p + ggh4x::facet_grid2(gene_clusters ~  cell_clusters + cell_src,
+                                          scales = "free", 
+                                          space = "free",
+                                          independent=independent,
+                                          strip = ggh4x::strip_nested(background_x = ggh4x::elem_list_rect(fill = append(color_ident, 
+                                                                                                                         rep(color_split_by, 
+                                                                                                                             length(color_ident))))))
+            }else{
+              p <- p + ggh4x::facet_grid2(gene_clusters ~  cell_src + cell_clusters,
+                                          scales = "free", 
+                                          space = "free",
+                                          independent=independent,
+                                          strip = ggh4x::strip_nested(background_x = ggh4x::elem_list_rect(fill = append(color_split_by, 
+                                                                                                                         rep(color_ident, 
+                                                                                                                             length(color_split_by))))))
+            }
+
+          }else{
+            if(!swap){
+            p <- p + ggh4x::facet_grid2(cell_clusters + cell_src ~ gene_clusters ,
+                                        scales = "free",
+                                        space = "free",
+                                        independent=independent,
+                                        strip = ggh4x::strip_nested(background_y = ggh4x::elem_list_rect(fill = append(color_ident, 
+                                                                                                                       rep(color_split_by, 
+                                                                                                                           length(color_ident))))))
+            }else{
+              p <- p + ggh4x::facet_grid2(cell_clusters + cell_src ~ gene_clusters ,
+                                          scales = "free",
+                                          space = "free",
+                                          independent=independent,
+                                          strip = ggh4x::strip_nested(background_y = ggh4x::elem_list_rect(fill = append(color_ident, 
+                                                                                                                         rep(color_split_by, 
+                                                                                                                             length(color_ident)/length(color_split_by))))))
+            }
+          }
+      }else{
+          if(!coord_flip){
+            p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters,
+                                        scales = "free", 
+                                        space = "free",
+                                        independent=independent,
+                                        strip = ggh4x::strip_nested(background_x = ggh4x::elem_list_rect(fill = color_ident)))
+          }else{
+            p <- p + ggh4x::facet_grid2(cell_clusters ~ gene_clusters,
+                                        scales = "free", 
+                                        space = "free",
+                                        independent=independent,
+                                        strip = ggh4x::strip_nested(background_y = ggh4x::elem_list_rect(fill = color_ident)))
           }
         }
-          
-        
-        
-        if(!coord_flip){
-          colored_strip <- ggh4x::strip_themed(background_x = ggh4x::elem_list_rect(fill = color_ident))
-          p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_clusters, 
-                                      scales = "free", space = "free",
-                                      strip=colored_strip)
-        }else{
-          colored_strip <- ggh4x::strip_themed(background_y = ggh4x::elem_list_rect(fill = color_ident))
-          p <- p + ggh4x::facet_grid2(cell_clusters ~ gene_clusters, 
-                                      scales = "free", space = "free",
-                                      strip=colored_strip)
-        }
-
       }else{
-        print_msg("Adding facets. No cell identity.", msg_type="DEBUG")
-        
-        if(!coord_flip){
-          p <- p + ggplot2::facet_grid(as.formula(paste0("gene_clusters ~ ",  paste0(names(ident), collapse = " + "))), 
-                                    scales = "free", space = "free")
+        if(!is.null(split_by)){
+              if(!coord_flip){
+                p <- p + ggh4x::facet_grid2(gene_clusters ~ cell_src, 
+                                            scales = "free", 
+                                            space = "free",
+                                            independent=independent,
+                                            strip = ggh4x::strip_nested(background_x = ggh4x::elem_list_rect(fill = color_split_by)))
+              }else{
+                p <- p + ggh4x::facet_grid2(cell_src ~ gene_clusters, 
+                                            scales = "free", 
+                                            space = "free",
+                                            independent=independent,
+                                            strip = ggh4x::strip_nested(background_y = ggh4x::elem_list_rect(fill = color_split_by)))
+              }
         }else{
-          
-          p <- p + ggplot2::facet_grid(as.formula(paste0(names(ident), collapse = " + "), paste0("~ gene_clusters")), 
-                                       scales = "free", space = "free")
+            if(!coord_flip){
+              p <- p + ggh4x::facet_grid2(gene_clusters ~ . , 
+                                          scales = "free", 
+                                          space = "free",
+                                          independent=independent,)
+            }else{
+              p <- p + ggh4x::facet_grid2(. ~ gene_clusters, 
+                                          scales = "free", 
+                                          space = "free",
+                                          independent=independent,)
+            }
         }
-      }
-
-                                  
-    }else{
-      if(!coord_flip){
-        p <- p + ggplot2::facet_grid(gene_clusters ~ ., scales = "free", space = "free")
-      }else{
-        p <- p + ggplot2::facet_grid(. ~ gene_clusters, scales = "free", space = "free") 
-      }
     }
-    
-    p <- p + ggplot2::theme(panel.background = ggplot2::element_blank(), 
+      
+  print_msg("Adding theme", msg_type="DEBUG")
+  
+  p <- p + ggplot2::theme(panel.background = ggplot2::element_blank(), 
                           panel.grid = ggplot2::element_blank())
-    
-    return(p)
-})
+  
+  return(p)
+  })
+
+
+# -------------------------------------------------------------------------
+# Transform a matrix  -----------------------------------------------------
+# -------------------------------------------------------------------------
+#' Transform a matrix
+#' @description
+#' This function applies a series of transformations to a matrix, including log2 transformation, centering, standardizing, ceiling, and flooring.
+#' @param m A numeric matrix to be transformed.
+#' @param to_log2 A logical indicating whether to apply log2 transformation (default is FALSE).
+#' @param pseudocount A numeric value to be added to each element before log2 transformation (default is 1).
+#' @param centering A logical indicating whether to center the rows by subtracting the mean (default is TRUE).
+#' @param standardizing A logical indicating whether to standardize the rows by dividing by the standard deviation (default is FALSE).
+#' @param ceil A numeric value for ceiling (default is NULL, meaning no ceiling is applied).
+#' @param floor A numeric value for flooring (default is NULL, meaning no flooring is applied).
+#' @return The transformed matrix.
+#' @examples
+#' #' # Create a sample matrix
+#' mat <- matrix(1:12, nrow=3)
+#' #' # Transform the matrix
+#' transformed_mat <- transform_mat(mat, to_log2=TRUE, centering=TRUE, standardizing=TRUE, ceil=2, floor=-2)
+#' @export
+transform_mat <- function(m, 
+                          to_log2=FALSE, 
+                          pseudocount=1, 
+                          centering=TRUE, 
+                          standardizing=FALSE, 
+                          ceil=NULL, 
+                          floor=NULL){
+  ## Log2 transformation
+  if(to_log2) {
+    m <- log2(m + pseudocount)
+  }
+  
+  ## median-centering of row
+  if (centering) {
+    print_msg("Median-centering rows.", msg_type="DEBUG")
+    mean_row <- apply(m, 1, mean)
+    m <- sweep(m, MARGIN = 1, STATS = mean_row, FUN = "-")
+  }
+  
+  ## Standardizing row
+  if (standardizing) {
+    print_msg("Standardizing rows.", msg_type="DEBUG")
+    sd_row <- apply(m, 1, sd)
+    m <- sweep(m, MARGIN = 1, STATS = sd_row, FUN = "/")
+  }
+  
+  ## Ceiling / flooring
+  if(!is.null(ceil)){
+    print_msg("Ceiling matrix.", msg_type="DEBUG")
+    m[m > ceil] <- ceil
+  }
+  
+  if(!is.null(floor)){
+    print_msg("Flooring matrix.", msg_type="DEBUG")
+    m[m < floor] <- floor
+  }
+  return(m)
+}
+
