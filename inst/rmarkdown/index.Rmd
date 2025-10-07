@@ -242,12 +242,14 @@ knitr::asis_output("The size of each cell population.")
 ``` 
 
 ```{r section_gen_info_17f, echo=FALSE, eval="exp_pop" %in% section, echo=FALSE, results = "asis"}
-df <- as.data.frame(table(Seurat::Idents(seurat_object)))
-colnames(df) <- c("Cell_Identity", "Count")
+df <-  data.frame(seurat_object@meta.data$orig.ident, 
+                           Idents(seurat_object))
+colnames(df) <- c("Origin", "Cell_Identity")
+df$Origin <- factor(df$Origin)
 df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, y=Count, fill=Cell_Identity)) +
-              ggplot2::geom_col() +
+Cell_Identity <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Cell_Identity)) +
+              ggplot2::geom_bar() +
               ggplot2::labs(x="Cell Identity", y="Count") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
@@ -298,7 +300,8 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
               ggplot2::labs(x="Cell Identity", y="Count") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
-              ggplot2::theme(legend.position = "none") 
+              ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_fill_manual(values = color_split)
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
 colnames(df) <- c("Origin", "Cell_Identity")
@@ -311,7 +314,8 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin, by = Ce
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none") +
-  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
+  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2) +
+  ggplot2::scale_fill_manual(values = color_split)
 
 df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
 colnames(df) <- c("Origin", "Cell_Identity")
@@ -322,7 +326,7 @@ ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Or
               ggplot2::geom_bar(position="fill") +
               ggplot2::labs(x="Origin", y="Cell_Identity") +
               ggplot2::theme_minimal() +
-  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2)
+  ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2) 
 ```
 
 
