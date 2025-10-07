@@ -111,11 +111,11 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 ``` 
 
 ```{r iumap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap" %in% section }
-
-FeaturePlot_params$object <- seurat_object
-FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
-FeaturePlot_params$split.by <- NULL
-base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
+FeaturePlot_params_cp <- FeaturePlot_params
+FeaturePlot_params_cp$object <- seurat_object
+FeaturePlot_params_cp$features <- "MOD_MODULE_NUMBER"
+FeaturePlot_params_cp$split.by <- NULL
+base::do.call(Seurat::FeaturePlot, FeaturePlot_params_cp)
 
 ```
 
@@ -130,11 +130,12 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 ``` 
 
 ```{r iumap_4_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap_by_ori" %in% section }
-
-FeaturePlot_params$object <- seurat_object
-FeaturePlot_params$features <- "MOD_MODULE_NUMBER"
-base::do.call(Seurat::FeaturePlot, FeaturePlot_params)
-
+FeaturePlot_params_cp <- FeaturePlot_params
+FeaturePlot_params_cp$object <- seurat_object
+FeaturePlot_params_cp$features <- "MOD_MODULE_NUMBER"
+FeaturePlot_params_cp$combine <- FALSE
+plot <- base::do.call(Seurat::FeaturePlot, FeaturePlot_params_cp)
+patchwork::wrap_plots(plot)
 ```
 
 ```{r, violin_2_MOD_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"} 
@@ -146,11 +147,12 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
-
-vlnPlot_params$object <- seurat_object
-vlnPlot_params$features <- "MOD_MODULE_NUMBER"
-vlnPlot_params$split.by <- NULL
-base::do.call(Seurat::VlnPlot, vlnPlot_params)
+vlnPlot_params_cp <- vlnPlot_params
+vlnPlot_params_cp$object <- seurat_object
+vlnPlot_params_cp$features <- "MOD_MODULE_NUMBER"
+vlnPlot_params_cp$split.by <- NULL
+p <- base::do.call(Seurat::VlnPlot, vlnPlot_params_cp)
+p + ggplot2::coord_flip()
 
 ```
 
@@ -163,11 +165,47 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin_by_ori" %in% section }
-vlnPlot_params$object <- seurat_object
-vlnPlot_params$features <- "MOD_MODULE_NUMBER"
-base::do.call(Seurat::VlnPlot, vlnPlot_params)
+vlnPlot_params_cp <- vlnPlot_params
+vlnPlot_params_cp$object <- seurat_object
+vlnPlot_params_cp$features <- "MOD_MODULE_NUMBER"
+p <- base::do.call(Seurat::VlnPlot, vlnPlot_params_cp)
+p + ggplot2::coord_flip()
+```
+
+```{r, dotplot_2_MOD_MODULE_NUMBER, eval="module_dotplot" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dot plot plot ")
+``` 
+
+```{r, dotplot_3_MOD_MODULE_NUMBER, eval="module_dotplot" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Intuitive way of visualizing how feature expression changes across different cell/spot populations. The size of the dot encodes the percentage of cells/spots within a class, while the color encodes the AverageExpression level across all cells within a class.") 
+``` 
+
+```{r dotplot_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_dotplot" %in% section }
+DotPlot_params_cp <- DotPlot_params
+DotPlot_params_cp$object <- seurat_object
+DotPlot_params_cp$features <- "MOD_MODULE_NUMBER"
+DotPlot_params_cp$split.by <- NULL
+p <- base::do.call(Seurat::DotPlot, DotPlot_params_cp)
+p + ggplot2::coord_flip()
 
 ```
+
+```{r, dotplot_by_ori_2_MOD_MODULE_NUMBER, eval="module_dotplot_by_ori" %in% section, echo=FALSE, results = "asis"} 
+knitr::asis_output("### Dot plot plot (by origin)")
+``` 
+
+```{r, dotplot_by_ori_3_MOD_MODULE_NUMBER, eval="module_dotplot_by_ori" %in% section, echo=FALSE, results = "asis"}
+knitr::asis_output("Intuitive way of visualizing how feature expression changes across different cell/spot populations. The size of the dot encodes the percentage of cells/spots within a class, while the color encodes the AverageExpression level across all cells within a class") 
+``` 
+
+```{r dotplot_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_dotplot_by_ori" %in% section }
+DotPlot_params_cp <- DotPlot_params
+DotPlot_params_cp$object <- seurat_object
+DotPlot_params_cp$features <- "MOD_MODULE_NUMBER"
+p <- base::do.call(Seurat::DotPlot, DotPlot_params_cp)
+p + ggplot2::coord_flip()
+```
+
 
 ```{r, gene_info_1_MOD_MODULE_NUMBER, eval="module_genes" %in% section, echo=FALSE, results = "asis"} 
 knitr::asis_output("### Gene list ")

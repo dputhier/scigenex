@@ -471,10 +471,11 @@ knitr::asis_output(paste0("A heatmap displaying representative genes (top genes)
 
 
 ```{r section_gen_info_35, echo=FALSE, eval="exp_heatmap" %in% section & !sample_gg_heatmap}
-scigenex::plot_ggheatmap(cluster_set, 
-                         use_top_genes = TRUE, 
-                         hide_gene_name = TRUE, 
-                         ident = Idents(seurat_object))
+plot_ggheatmap_params$object <- cluster_set
+plot_ggheatmap_params$use_top_genes <- TRUE
+plot_ggheatmap_params$hide_gene_name <- TRUE 
+plot_ggheatmap_params$ident <- Idents(seurat_object)
+base::do.call(scigenex::plot_ggheatmap, plot_ggheatmap_params)
 ```
 
 ```{r section_gen_info_35b, echo=FALSE, eval="exp_heatmap" %in% section & sample_gg_heatmap}
