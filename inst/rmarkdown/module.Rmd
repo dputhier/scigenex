@@ -169,7 +169,7 @@ knitr::asis_output("Display the distribution module expression score across cell
 vlnPlot_params_cp <- vlnPlot_params
 vlnPlot_params_cp$object <- seurat_object
 vlnPlot_params_cp$features <- "MOD_MODULE_NUMBER"
-vlnPlot_params_cp$cols <- color_splits
+vlnPlot_params_cp$cols <- color_split
 vlnPlot_params_cp$pt.size <- 0
 p <- base::do.call(Seurat::VlnPlot, vlnPlot_params_cp)
 p + ggplot2::coord_flip()
