@@ -183,7 +183,7 @@ knitr::asis_output("Intuitive way of visualizing how feature expression changes 
 ```{r dotplot_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_dotplot" %in% section }
 DotPlot_params_cp <- DotPlot_params
 DotPlot_params_cp$object <- seurat_object
-DotPlot_params_cp$features <- object@top_genes[[MODULE_NUMBER]]
+DotPlot_params_cp$features <- cluster_set@top_genes[[MODULE_NUMBER]]
 DotPlot_params_cp$split.by <- NULL
 p <- base::do.call(Seurat::DotPlot, DotPlot_params_cp)
 p + ggplot2::coord_flip()
@@ -201,7 +201,7 @@ knitr::asis_output("Intuitive way of visualizing how feature expression changes 
 ```{r dotplot_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_dotplot_by_ori" %in% section }
 DotPlot_params_cp <- DotPlot_params
 DotPlot_params_cp$object <- seurat_object
-DotPlot_params_cp$features <- object@top_genes[[MODULE_NUMBER]]
+DotPlot_params_cp$features <- cluster_set@top_genes[[MODULE_NUMBER]]
 p <- base::do.call(Seurat::DotPlot, DotPlot_params_cp)
 p + ggplot2::coord_flip()
 ```
