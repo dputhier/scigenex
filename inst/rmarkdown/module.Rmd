@@ -78,7 +78,6 @@ knitr::asis_output("A heatmap with cells/spots as columns and genes as rows.")
 plot_ggheatmap_params$object <- cluster_set[MODULE_NUMBER,]
 plot_ggheatmap_params$ident <- Idents(seurat_object)
 base::do.call(scigenex::plot_ggheatmap, plot_ggheatmap_params)
-
 ```
 <br>
 
