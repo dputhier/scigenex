@@ -5,7 +5,7 @@
 \title{The gene clusters stored in a ClusterSet.
 gene_cluster}
 \usage{
-\S4method{gene_cluster}{ClusterSet}(object, cluster = 0, as_string = FALSE)
+\S4method{gene_cluster}{ClusterSet}(object, cluster = NULL, as_string = FALSE, as_list = FALSE)
 }
 \arguments{
 \item{object}{a ClusterSet object.}
@@ -13,6 +13,8 @@ gene_cluster}
 \item{cluster}{The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.}
 
 \item{as_string}{Return cluster names as strings.}
+
+\item{as_list}{Return the result as a list.}
 }
 \description{
 Returns a named vector (gene as names) and cluster
