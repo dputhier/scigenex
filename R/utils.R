@@ -428,7 +428,6 @@ install_mcl <- function(conf_arg=NULL){
                         " ; make"))
         }
         
-        
         print_msg("MCL program installed.", 
                   msg_type = "INFO")
       
