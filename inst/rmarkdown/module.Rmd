@@ -40,7 +40,11 @@ knitr::asis_output("# Module MODULE_NUMBER ")
 
 ```{r, level_0b_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
 knitr::asis_output(paste0("Module name: ", names(cluster_set[MODULE_NUMBER, ]@gene_clusters), "\n\n"))
+<<<<<<< HEAD
 knitr::asis_output(paste0("Module size: ", length(cluster_set[MODULE_NUMBER, ]@gene_clusters[[1]])))
+=======
+knitr::asis_output(paste0("Module size: ", length(cluster_set@gene_clusters[[MODULE_NUMBER]])))
+>>>>>>> 802939eb00a214623981e9019fc9d9afd89eb5ce
 ``` 
 
 ```{r, level_1_MOD_MODULE_NUMBER, eval=TRUE, echo=FALSE, results = "asis"} 
@@ -110,11 +114,20 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 ``` 
 
 ```{r iumap_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap" %in% section }
+<<<<<<< HEAD
 FeaturePlot_params_cp <- FeaturePlot_params
 FeaturePlot_params_cp$object <- seurat_object
 FeaturePlot_params_cp$features <- "MOD_MODULE_NUMBER"
 FeaturePlot_params_cp$split.by <- NULL
 base::do.call(Seurat::FeaturePlot, FeaturePlot_params_cp)
+=======
+
+FeaturePlot_used_params <- FeaturePlot_params
+FeaturePlot_used_params$object <- seurat_object
+FeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
+FeaturePlot_used_params$split.by <- NULL
+base::do.call(Seurat::FeaturePlot, FeaturePlot_used_params)
+>>>>>>> 802939eb00a214623981e9019fc9d9afd89eb5ce
 ```
 
 
@@ -128,6 +141,7 @@ knitr::asis_output("A UMAP in which mean gene module intensity is mapped to each
 ``` 
 
 ```{r iumap_4_1_MOD_MODULE_NUMBER, echo=FALSE, eval="module_umap_by_ori" %in% section }
+<<<<<<< HEAD
 FeaturePlot_params_cp <- FeaturePlot_params
 FeaturePlot_params_cp$object <- seurat_object
 FeaturePlot_params_cp$features <- "MOD_MODULE_NUMBER"
@@ -136,6 +150,13 @@ plot <- base::do.call(Seurat::FeaturePlot, FeaturePlot_params_cp)
 patchwork::wrap_plots(lapply(plot, 
                              "+", 
                              ggplot2::theme(legend.position="none")))
+=======
+
+FeaturePlot_used_params <- FeaturePlot_params
+FeaturePlot_used_params$object <- seurat_object
+FeaturePlot_used_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::FeaturePlot, FeaturePlot_used_params)
+>>>>>>> 802939eb00a214623981e9019fc9d9afd89eb5ce
 ```
 
 ```{r, violin_2_MOD_MODULE_NUMBER, eval="module_violin" %in% section, echo=FALSE, results = "asis"} 
@@ -147,6 +168,7 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin" %in% section }
+<<<<<<< HEAD
 vlnPlot_params_cp <- vlnPlot_params
 vlnPlot_params_cp$object <- seurat_object
 vlnPlot_params_cp$features <- "MOD_MODULE_NUMBER"
@@ -154,6 +176,14 @@ vlnPlot_params_cp$split.by <- NULL
 p <- base::do.call(Seurat::VlnPlot, vlnPlot_params_cp)
 p + ggplot2::coord_flip()
 
+=======
+
+vlnPlot_used_params <- vlnPlot_params
+vlnPlot_used_params$object <- seurat_object
+vlnPlot_used_params$features <- "MOD_MODULE_NUMBER"
+vlnPlot_used_params$split.by <- NULL
+base::do.call(Seurat::VlnPlot, vlnPlot_used_params)
+>>>>>>> 802939eb00a214623981e9019fc9d9afd89eb5ce
 ```
 
 ```{r, violin_by_ori_2_MOD_MODULE_NUMBER, eval="module_violin_by_ori" %in% section, echo=FALSE, results = "asis"} 
@@ -165,6 +195,7 @@ knitr::asis_output("Display the distribution module expression score across cell
 ``` 
 
 ```{r violin_by_ori_4_MOD_MODULE_NUMBER, echo=FALSE, eval="module_violin_by_ori" %in% section }
+<<<<<<< HEAD
 vlnPlot_params_cp <- vlnPlot_params
 vlnPlot_params_cp$object <- seurat_object
 vlnPlot_params_cp$features <- "MOD_MODULE_NUMBER"
@@ -191,7 +222,13 @@ p <- base::do.call(Seurat::DotPlot, DotPlot_params_cp)
 p + ggplot2::theme(axis.text.x =  ggplot2::element_text(size=6, 
                                                         angle=45, vjust = 0.5), 
                    axis.text.y =  ggplot2::element_text(size=6)) 
+=======
+>>>>>>> 802939eb00a214623981e9019fc9d9afd89eb5ce
 
+vlnPlot_used_params <- vlnPlot_params
+vlnPlot_used_params$object <- seurat_object
+vlnPlot_used_params$features <- "MOD_MODULE_NUMBER"
+base::do.call(Seurat::VlnPlot, vlnPlot_used_params)
 ```
 
 ```{r, dotplot_by_ori_2_MOD_MODULE_NUMBER, eval="module_dotplot_by_ori" %in% section, echo=FALSE, results = "asis"} 

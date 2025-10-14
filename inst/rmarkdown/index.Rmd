@@ -212,7 +212,7 @@ knitr::asis_output("### QC Metrics")
 knitr::asis_output("Seurat provides a convenient framework for exploring quality control (QC) metrics and filtering cells based on user-defined criteria. A commonly used QC metrics is the the number of unique genes detected per cell. Low-quality cells or empty droplets typically show very few genes, while doublets or multiplets may display abnormally high gene counts (but also proliferating cells !!). Another key metric is the total number of molecules detected per cell, which strongly correlates with the number of unique genes. The proportion of reads mapping to the mitochondrial genome is also often used, as low-quality or dying cells tend to exhibit elevated mitochondrial content. To compute this, Seurat’s PercentageFeatureSet() function can be used to calculate the percentage of counts originating from a specified set of features, typically using all genes that begin with 'MT-' (or 'mt-') to represent mitochondrial genes. An interesting control is also provided by ribosomal protein genes that are expected to be expressed in all cells. The percentage of counts from ribosomal genes can be calculated similarly to mitochondrial genes, using the pattern '[Rr][Pp][LlSs][0-9]+'. These QC metrics can be visualized using the VlnPlot() function, which generates violin plots for each metric, allowing for easy comparison across cell populations.") 
 ```
 
-```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis"}
+```{r section_gen_info_17c, echo=FALSE, eval="exp_metrics" %in% section, echo=FALSE, results = "asis", warning=FALSE}
 if(length(grep("^[Mm][Tt]-", rownames(seurat_object))) > 0 ){
     seurat_object[["percent.mt"]] <- Seurat::PercentageFeatureSet(seurat_object, pattern = "^[Mm][Tt]-")
 }
@@ -260,11 +260,12 @@ knitr::asis_output("The size of each cell population as a table.")
 
 ```{r section_gen_info_17f, echo=FALSE, eval="exp_pop_table" %in% section, echo=FALSE, results = "asis"}
 df <- as.data.frame(table(Seurat::Idents(seurat_object)))
-colnames(df) <- c("Cell_Identity", "Count")
-df$Cell_Identity <- factor(df$Cell_Identity)
+colnames(df) <- c("Population", "Count")
+df$Population <- factor(df$Population)
 DT::datatable(
     df,
-    extensions = 'Buttons', 
+    extensions = 'Buttons',
+    rownames = FALSE,
     options = list(
         dom = 'Bfrtip',
         buttons =
@@ -282,56 +283,78 @@ knitr::asis_output("The size of each cell population according to the correspond
 ```
 
 ```{r section_gen_info_17f_1, echo=FALSE, eval="exp_pop_by_ori" %in% section, echo=FALSE, results = "asis"}
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin)) +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin)) +
               ggplot2::geom_bar() +
-              ggplot2::labs(x="Cell Identity", y="Count") +
+              ggplot2::labs(x="Population", y="Count") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none") +
   ggplot2::scale_fill_manual(values = color_split)
 
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Cell_Identity, fill=Origin, by = Cell_Identity)) +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin, by = Population)) +
+              ggplot2::geom_hline(yintercept = 0.5) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Cell Identity", y="Fraction") +
+              ggplot2::labs(x="Cell Identity", y="Fraction of Total") +
               ggplot2::theme_minimal() +
               ggplot2::coord_flip() +
               ggplot2::theme(legend.position = "none") +
   ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2) +
   ggplot2::scale_fill_manual(values = color_split)
 
-df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, Idents(seurat_object)))
-colnames(df) <- c("Origin", "Cell_Identity")
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
 df$Origin <- factor(df$Origin)
-df$Cell_Identity <- factor(df$Cell_Identity)
-Cell_Identity <- Origin <- Count <- NULL
-ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Cell_Identity, by = Origin)) +
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Population, fill=Origin)) +
+              ggplot2::geom_bar(position="dodge", ggplot2::aes(y = ggplot2::after_stat(prop*100), group = Origin)) +
+              ggplot2::labs(x="Population", y="Percent of Origin") +
+              ggplot2::theme_minimal() +
+              ggplot2::theme(legend.position = "top") +
+              ggplot2::coord_flip()
+
+df <-  as.data.frame(cbind(seurat_object@meta.data$orig.ident, as.character(Seurat::Idents(seurat_object))))
+colnames(df) <- c("Origin", "Population")
+df$Origin <- factor(df$Origin)
+df$Population <- factor(df$Population, levels = rev(levels(Seurat::Idents(seurat_object))))
+Population <- Origin <- Count <- NULL
+ggplot2::ggplot(df, mapping = ggplot2::aes(x=Origin, fill=Population, by = Origin)) +
               ggplot2::geom_bar(position="fill") +
-              ggplot2::labs(x="Origin", y="Cell_Identity") +
+              ggplot2::labs(x="Origin", y="Population") +
               ggplot2::theme_minimal() +
   ggplot2::geom_text(stat = ggstats::StatProp, position = ggplot2::position_fill(.5), size=2) 
+
 ```
 
 ```{r, section_gen_info_17d_2, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("### Population table by origin") 
 ```
 
+
 ```{r, section_gen_info_17e_2, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
 knitr::asis_output("The size of each cell population according to the corresponding sample/origin. Raw counts") 
 ```
 
+
 ```{r section_gen_info_17f_2, echo=FALSE, eval="exp_pop_table_by_ori" %in% section, echo=FALSE, results = "asis"}
-df <-  data.frame(Origin=seurat_object@meta.data$orig.ident, Cell_Identity=Idents(seurat_object))
-df <- table(df$Cell_Identity, df$Origin)
+df <-  data.frame(Origin=seurat_object@meta.data$orig.ident, Population=Seurat::Idents(seurat_object))
+Population <- Origin <- Freq <- NULL
+df <- dplyr::count(df, Origin, Population, name = "Freq")
+df <- dplyr::mutate(df, "Percent Total" = round(100* Freq/ sum(Freq), 3))
+df <- dplyr::group_by(df, Origin)
+df <- dplyr::mutate(df, "Percent Origin" = round(100* Freq/ sum(Freq), 3))
 DT::datatable(
     df,
     extensions = 'Buttons', 
