@@ -4,7 +4,13 @@
 \alias{install_mcl}
 \title{Install MCL}
 \usage{
-install_mcl()
+install_mcl(conf_arg = NULL)
+}
+\arguments{
+\item{conf_arg}{Some arguments for ./configure. E.g 'CC=gcc CFLAGS="-O2 -Wall -fcommon"'.}
+}
+\value{
+None.
 }
 \description{
 This function installs the MCL (Markov Cluster) program, which is required for
