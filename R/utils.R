@@ -392,13 +392,14 @@ check_format_cluster_set <- function(object) {
 #' This function installs the MCL (Markov Cluster) program, which is required for
 #' the main functions of the scigenex package. MCL is a cluster
 #' algorithm that uses stochastic flow simulation to cluster graphs.
-#'
+#' @param conf_arg Some arguments for ./configure. E.g 'CC=gcc CFLAGS="-O2 -Wall -fcommon"'.
+#' @returns None.
 #' @importFrom utils download.file
 #' @examples
 #' # Install MCL
 #' install_mcl()
 #' @export
-install_mcl <- function(){
+install_mcl <- function(conf_arg=NULL){
   
   
   if (.Platform$OS.type == "windows") {
@@ -419,7 +420,13 @@ install_mcl <- function(){
         mcl_version <- dir(pattern = "mcl*")
         setwd(mcl_version)
         print_msg("Installing MCL.", msg_type = "INFO")
-        system("make clean; sh configure --prefix=$PWD; make")
+        if(is.null(conf_arg)){
+          system("make clean; sh configure --prefix=$PWD; make")
+        }else{
+          system(paste0("make clean; sh configure --prefix=$PWD ",
+                        conf_arg,
+                        " ; make"))
+        }
         
         print_msg("MCL program installed.", 
                   msg_type = "INFO")

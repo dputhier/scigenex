@@ -23,5 +23,5 @@ p <- plot_stratum(strat[[1]], gene_name="CCL19", polar = TRUE,
                   colours_stratum = rev(discrete_palette(5, "De1")))
 
 test_that("Check plot_stratum() is working.", {
-  testthat::expect_true(ggplot2::is.ggplot(p))
+  testthat::expect_true(ggplot2::is_ggplot(p))
 })

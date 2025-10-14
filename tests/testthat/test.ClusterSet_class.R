@@ -125,7 +125,7 @@ test_that("Check 'rename' is working.", {
   expect_true(nclust(rename_clust(gn, 1:nclust(gn))) == nclust(gn))
   expect_true(all(names(rename_clust(gn, nclust(gn):1)@gene_clusters) == 15:1))
   rn <- rename_clust(gn, letters[1:nclust(gn)])
-  expect_true(ggplot2::is.ggplot(plot_profiles(rn, ident = Seurat::Idents(pbmc3k_medium))))
+  expect_true(ggplot2::is_ggplot(plot_profiles(rn, ident = Seurat::Idents(pbmc3k_medium))))
 })
 
 set_verbosity(0)
