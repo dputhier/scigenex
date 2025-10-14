@@ -472,6 +472,7 @@ setMethod("centers", signature("ClusterSet"),
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @param as_string Return cluster names as strings.
 #' @param as_list Return the result as a list.
+#' @param uniqueness A boolean. If FALSE, any "~[1-9]+$" suffix is removed from gene names to make them unique.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -482,7 +483,8 @@ setGeneric("gene_cluster",
            function(object,
                     cluster = NULL,
                     as_string = FALSE,
-                    as_list=FALSE)
+                    as_list=FALSE,
+                    uniqueness=TRUE)
              standardGeneric("gene_cluster"))
 
 #' @title The gene clusters stored in a ClusterSet.
@@ -494,6 +496,7 @@ setGeneric("gene_cluster",
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @param as_string Return cluster names as strings.
 #' @param as_list Return the result as a list.
+#' @param uniqueness A boolean. If FALSE, any "~[1-9]+$" suffix is removed from gene names to make them unique.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -503,7 +506,8 @@ setMethod("gene_cluster", signature("ClusterSet"),
           function(object,
                    cluster = NULL,
                    as_string = FALSE, 
-                   as_list=FALSE) {
+                   as_list=FALSE,
+                   uniqueness=FALSE) {
             
             check_format_cluster_set(object)    
             
@@ -511,7 +515,16 @@ setMethod("gene_cluster", signature("ClusterSet"),
               object <- object[cluster, ]
 
             if(as_list){
-              return(object@gene_clusters)
+              if(uniqueness){
+                return(object@gene_clusters)
+              }else{
+                tmp <- object@gene_clusters
+                for(i in 1:length(tmp)){
+                  tmp[[i]] <- sub("~[1-9]+$", "", tmp[[i]], perl=TRUE)
+                }
+                return(tmp)
+              }
+              
             }
             
             gc <- object@gene_clusters

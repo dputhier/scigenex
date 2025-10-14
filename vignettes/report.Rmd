@@ -65,25 +65,6 @@ suppressMessages(suppressWarnings(library(org.Hs.eg.db, quietly = TRUE)))
 library(scigenex)
 library(Seurat)
 library(org.Hs.eg.db)
-
-# Create a temporary directory for the report output
-tmp_dir <- tempdir()
-
-# Load example gene module clusters and Seurat object for spatial data
-load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-load_example_dataset("7870305/files/lymph_node_tiny_2")
-
-# Run gm_report() for spatial transcriptomics data
-gm_report(
-  cluster_set = lymph_node_tiny_clusters_2[1:2,],
-  seurat_object = lymph_node_tiny_2,
-  annotation_src = "CC",
-  bioc_org_db = "org.Hs.eg.db",
-  is_spatial_exp = TRUE,
-  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
-  SpatialDimPlot_params = list(pt.size.factor = 3000),
-  out_dir = file.path(tmp_dir, "spatial_report")
-)
 ```
 
 ## Some examples
@@ -96,7 +77,7 @@ We will demonstrate with built-in example datasets from the **scigenex** package
 
 The report will be saved in the folder specified by `out_dir`. Open `index.html` in your browser to view it.
 
-```{r spt, message=FALSE, eval=FALSE}
+```{r spt, message=FALSE, eval=FALSE, message=FALSE, warning=FALSE}
 
 # Unset verbosity to avoid cluttering the output
 set_verbosity(0)
@@ -235,3 +216,30 @@ The `gm_report()`function accepts many parameters to tailor the analysis and app
 The `gm_report()` function in Scigenex offers a powerful way to analyze and document gene modules using Seurat and clusterSet objects. It supports spatial transcriptomics, functional annotation, and AI-based interpretation.  
 For more information, please refer to the [Scigenex documentation](https://scigenex.github.io/scigenex/).
 
+
+
+
+```{r loading2, echo=FALSE, eval=FALSE}
+library(scigenex)
+library(Seurat)
+library(org.Hs.eg.db)
+
+# Create a temporary directory for the report output
+tmp_dir <- tempdir()
+
+# Load example gene module clusters and Seurat object for spatial data
+load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
+load_example_dataset("7870305/files/lymph_node_tiny_2")
+
+# Run gm_report() for spatial transcriptomics data
+gm_report(
+  cluster_set = lymph_node_tiny_clusters_2[1:2,],
+  seurat_object = lymph_node_tiny_2,
+  annotation_src = "CC",
+  bioc_org_db = "org.Hs.eg.db",
+  is_spatial_exp = TRUE,
+  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
+  SpatialDimPlot_params = list(pt.size.factor = 3000),
+  out_dir = file.path(tmp_dir, "spatial_report")
+)
+```
