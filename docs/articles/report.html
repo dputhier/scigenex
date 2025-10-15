@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.0</span>
       </span>
     </div>
 
@@ -90,11 +90,11 @@ Puthier</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette demonstrates how to generate a detailled gene module
+<p>This vignette demonstrates how to generate detailled gene module
 reports using the <code><a href="../reference/gm_report.html">gm_report()</a></code> function from the
-<strong>scigenex</strong> R package. The reports are created in
-<strong>Bookdown</strong> format and provide an integrated view of gene
-module analysis from any Seurat supported technology:</p>
+<strong>scigenex</strong> R package. The reports are using dynamic
+<strong>bookdown</strong> template and provide an integrated view of
+gene module analysis from any Seurat supported technology:</p>
 <ul>
 <li>Single-cell RNA-seq experiments</li>
 <li>Spatial transcriptomics (ST) experiments (Visium, Xenium,
@@ -228,6 +228,7 @@ view it.</p>
 <span>  out_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">tmp_dir</span>, <span class="st">"pbmc_report"</span><span class="op">)</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## /usr/local/bin/pandoc +RTS -K512m -RTS _main.knit.md --to html4 --from markdown+autolink_bare_uris+tex_math_single_backslash --output _main.html --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/rmarkdown/lua/custom-environment.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/pagebreak.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/latex-div.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/table-classes.lua --lua-filter /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/rmarkdown/rmarkdown/lua/anchor-sections.lua --metadata-file /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpmV8NvX/file7f66707a2220 --wrap preserve --standalone --section-divs --table-of-contents --toc-depth 2 --template /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/library/bookdown/templates/gitbook.html --highlight-style pygments --css style.css --mathjax --include-in-header /var/folders/zy/wl3dj2_n76zfc8sdvny1q06c0000gn/T//RtmpmV8NvX/rmarkdown-str7f66114cb2b5.html</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="running-gm_report-from-a-seurat-single-cell-experiment-and-corresponding-seurat-markers">Running gm_report() from a Seurat single-cell experiment and
