@@ -158,13 +158,15 @@ gm_report <- function(cluster_set = NULL,
                                                     label = TRUE,
                                                     label.size = 4,
                                                     repel = TRUE,
+                                                    reduction = "umap",
                                                     split.by = "orig.ident"),
                             SpatialFeaturePlot_params=list(pt.size.factor = 1.7),
                             SpatialDimPlot_params=list(pt.size.factor = 1.7),
                             DimPlot_params=list(label = TRUE,  
                                                 label.size = 4, 
                                                 repel = TRUE,
-                                                split.by = "orig.ident"),
+                                                split.by = "orig.ident",
+                                                reduction = "umap"),
                             plot_ggheatmap_params=list(use_top_genes=FALSE, 
                                                        hide_gene_name=TRUE,
                                                        xlab = "Cells/Spots",
@@ -179,7 +181,12 @@ gm_report <- function(cluster_set = NULL,
                                                  showCategory = 6, 
                                                  cex.params = list(category_label = 0.6, 
                                                                    gene_label = 0.7)),
-                            vlnPlot_params=list(split.by = "orig.ident"),
+                            vlnPlot_params=list(split.by = "orig.ident",
+                                                pt.size = 0),
+                            DotPlot_params=list(split.by = "orig.ident",
+                                                cols=c("yellow3", "red")),
+                            color_split=RColorBrewer::brewer.pal(length(unique(seurat_object@meta.data$orig.ident)), 
+                                                                 name = "Set1"),
                             rm_tmpdir = TRUE,
                             section=c("exp_info",
                                       "exp_metadata",
@@ -208,6 +215,8 @@ gm_report <- function(cluster_set = NULL,
                                       "module_umap_by_ori",
                                       "module_violin",
                                       "module_violin_by_ori",
+                                      "module_dotplot",
+                                      "module_dotplot_by_ori",
                                       "module_genes",
                                       "module_cell_annot_IA",
                                       "module_term_network",
@@ -262,7 +271,7 @@ gm_report <- function(cluster_set = NULL,
                                   "module_spatial"))
   }
   
-  if(is.null(api_key)){
+  if(is.null(api_key) || api_key == ""){
     print_msg("No Gemini key provided...", msg_type = "INFO")
     print_msg("Canceling IA-based cell type annotation.", msg_type = "INFO")
     section <- setdiff(section, c("exp_spatial",
@@ -287,7 +296,9 @@ gm_report <- function(cluster_set = NULL,
   print_msg("Calling AddModuleScore()...", msg_type = "DEBUG")
   
   add_module_score_used_params$object <- seurat_object
-  add_module_score_used_params$features <- lapply(cluster_set@gene_clusters, gsub, pattern = "~[0-9]+$", replacement = "_")
+  add_module_score_used_params$features <- gene_cluster(cluster_set, 
+                                                               as_list=TRUE, 
+                                                               uniq=FALSE)
   add_module_score_used_params$name <- "MOD_"
   seurat_object <- do.call(Seurat::AddModuleScore, add_module_score_used_params)
   

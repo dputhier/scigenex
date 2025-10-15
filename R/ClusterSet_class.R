@@ -471,6 +471,8 @@ setMethod("centers", signature("ClusterSet"),
 #' @param object a ClusterSet object.
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @param as_string Return cluster names as strings.
+#' @param as_list Return the result as a list.
+#' @param uniqueness A boolean. If FALSE, any "~[1-9]+$" suffix is removed from gene names to make them unique.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -479,8 +481,10 @@ setMethod("centers", signature("ClusterSet"),
 #' @noRd
 setGeneric("gene_cluster",
            function(object,
-                    cluster = 0,
-                    as_string = FALSE)
+                    cluster = NULL,
+                    as_string = FALSE,
+                    as_list=FALSE,
+                    uniqueness=TRUE)
              standardGeneric("gene_cluster"))
 
 #' @title The gene clusters stored in a ClusterSet.
@@ -491,6 +495,8 @@ setGeneric("gene_cluster",
 #' @param object a ClusterSet object.
 #' @param cluster The cluster of interest. 0 means all cluster. Otherwise a non-null integer value.
 #' @param as_string Return cluster names as strings.
+#' @param as_list Return the result as a list.
+#' @param uniqueness A boolean. If FALSE, any "~[1-9]+$" suffix is removed from gene names to make them unique.
 #' @examples
 #' # load a dataset
 #' load_example_dataset('7871581/files/pbmc3k_medium_clusters')
@@ -498,71 +504,38 @@ setGeneric("gene_cluster",
 #' @export
 setMethod("gene_cluster", signature("ClusterSet"),
           function(object,
-                   cluster = 0,
-                   as_string = FALSE) {
-            if (!is.null(object@gene_clusters)) {
-              nb_clust <- length(object@gene_clusters)
-            } else{
-              print_msg("There is no cluster in this object.",
-                        msg_type = 'STOP')
-            }
+                   cluster = NULL,
+                   as_string = FALSE, 
+                   as_list=FALSE,
+                   uniqueness=FALSE) {
             
-            if (!is.numeric(cluster))
-              print_msg("Please provide a numeric value.",
-                        msg_type = 'STOP')
+            check_format_cluster_set(object)    
             
-            cluster <- unique(cluster)
-            
-            if (!all(cluster - floor(cluster) == 0) |
-                any(cluster < 0 | any(cluster > nb_clust)))
-              print_msg(
-                "Please provide a zero (all clusters) or positive integer in the required range.",
-                msg_type = 'STOP'
-              )
-            
-            if (length(cluster) == 1) {
-              if (cluster == 0) {
-                cluster <- 1:length(object@gene_clusters)
-              }
-            }
-            
-            if (length(cluster) > 1) {
-              if (length(cluster[cluster == 0]))
-                print_msg("Zero is out of range.",
-                          msg_type = 'STOP')
-            }
-            
-            
-            if (nb_clust) {
-              if (!as_string) {
-                cluster_as_int <- unlist(mapply(
-                  rep,
-                  cluster,
-                  lapply(object@gene_clusters[cluster], length),
-                  SIMPLIFY = TRUE
-                ))
-                cluster_as_int <-
-                  as.vector(as.matrix(cluster_as_int))
-                names(cluster_as_int) <-
-                  unlist(object@gene_clusters[cluster])
-                return(cluster_as_int)
-              } else{
-                cluster_as_str <- unlist(mapply(
-                  rep,
-                  clust_names(object)[cluster],
-                  lapply(object@gene_clusters[cluster], length),
-                  SIMPLIFY = TRUE
-                ))
-                cluster_as_str <-
-                  as.vector(as.matrix(cluster_as_str))
-                names(cluster_as_str) <-
-                  unlist(object@gene_clusters[cluster])
-                return(cluster_as_str)
+            if(!is.null(cluster))
+              object <- object[cluster, ]
+
+            if(as_list){
+              if(uniqueness){
+                return(object@gene_clusters)
+              }else{
+                tmp <- object@gene_clusters
+                for(i in 1:length(tmp)){
+                  tmp[[i]] <- sub("~[1-9]+$", "", tmp[[i]], perl=TRUE)
+                }
+                return(tmp)
               }
               
-            } else{
-              return(NULL)
             }
+            
+            gc <- object@gene_clusters
+            cn <- clust_names(object)
+            gc_list <- unlist(gc, use.names = FALSE)
+            clust <- rep(cn, 
+                         times = sapply(gc, length))
+            if(!as_string)
+              clust <- as.integer(clust)
+            return(setNames(clust, gc_list))
+
           })
 
 

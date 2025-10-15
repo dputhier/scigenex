@@ -9,10 +9,14 @@
   to_log2 = FALSE,
   use_top_genes = TRUE,
   ident = NULL,
+  split_by = NULL,
   panel_spacing = 0.05,
   colors = colors_for_gradient("Ju1"),
   standardizing = FALSE,
   color_ident = NULL,
+  color_split_by = NULL,
+  swap = FALSE,
+  independent = c("none", "x", "y", "all"),
   ceil = 1,
   floor = -1,
   centering = TRUE,
@@ -31,7 +35,9 @@
 
 \item{use_top_genes}{A logical to indicate whether to use highly similar genes in the slot top_genes of ClusterSet.}
 
-\item{ident}{A named vector containing the cell type identities for each cell.
+\item{ident}{A named vector containing the cell type identities for each cell.}
+
+\item{split_by}{Split the heatmap by this variable (typically cell/spot origin). A named vector containing the cell origin for each cell.
 Typically the result from the Idents() function on a Seurat object (see Seurat library).}
 
 \item{panel_spacing}{Spacing between facets/panels ("line" units).}
@@ -41,6 +47,12 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 \item{standardizing}{Whether rows should be divided by standard deviation.}
 
 \item{color_ident}{A vector containing colors for the cell classes as.}
+
+\item{color_split_by}{A vector containing colors for 'split_by'.}
+
+\item{swap}{Whether to swap the cell annotation and origin strips (i.e. facet annotation).}
+
+\item{independent}{One of "none", "x", "y", "all". A character(1) determining whether scales can vary within a row or column of panels. See ggh4x::facet_grid2.}
 
 \item{ceil}{A value for ceiling (NULL for no ceiling). Ceiling is performed after log transformation, centering and standardization.}
 
