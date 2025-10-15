@@ -12,7 +12,7 @@ vignette: >
 
 ## Introduction
 
-This vignette demonstrates how to generate a detailled gene module reports using the `gm_report()` function from the **scigenex** R package. The reports are created in **Bookdown** format and provide an integrated view of gene module analysis from any Seurat supported technology:
+This vignette demonstrates how to generate detailled gene module reports using the `gm_report()` function from the **scigenex** R package. The reports are using dynamic **bookdown** template and provide an integrated view of gene module analysis from any Seurat supported technology:
 
 - Single-cell RNA-seq experiments
 - Spatial transcriptomics (ST) experiments (Visium, Xenium, Merscope...)
