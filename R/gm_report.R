@@ -296,7 +296,9 @@ gm_report <- function(cluster_set = NULL,
   print_msg("Calling AddModuleScore()...", msg_type = "DEBUG")
   
   add_module_score_used_params$object <- seurat_object
-  add_module_score_used_params$features <- lapply(cluster_set@gene_clusters, gsub, pattern = "~[0-9]+$", replacement = "_")
+  add_module_score_used_params$features <- gene_cluster(cluster_set, 
+                                                               as_list=TRUE, 
+                                                               uniq=FALSE)
   add_module_score_used_params$name <- "MOD_"
   seurat_object <- do.call(Seurat::AddModuleScore, add_module_score_used_params)
   

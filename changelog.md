@@ -1,6 +1,10 @@
 # Changelog
 
-## v2.1.0
+## v2.3.0
+
+- Added uniqueness argument to gene_cluster()
+
+## v2.2.0
 
 - Fix #182. MCL compilation issue.
 - Refactored gene_cluster() function. Added as_list argument. The default value for cluster is now NULL (0 previously).
