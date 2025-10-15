@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0</span>
       </span>
     </div>
 
@@ -68,10 +68,14 @@
 <span>  to_log2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  use_top_genes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ident <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  split_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_spacing <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  colors <span class="op">=</span> <span class="fu"><a href="colors_for_gradient.html">colors_for_gradient</a></span><span class="op">(</span><span class="st">"Ju1"</span><span class="op">)</span>,</span>
 <span>  standardizing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  color_ident <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  color_split_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  swap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"all"</span><span class="op">)</span>,</span>
 <span>  ceil <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  floor <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
 <span>  centering <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -101,7 +105,11 @@
 
 
 <dt id="arg-ident">ident<a class="anchor" aria-label="anchor" href="#arg-ident"></a></dt>
-<dd><p>A named vector containing the cell type identities for each cell.
+<dd><p>A named vector containing the cell type identities for each cell.</p></dd>
+
+
+<dt id="arg-split-by">split_by<a class="anchor" aria-label="anchor" href="#arg-split-by"></a></dt>
+<dd><p>Split the heatmap by this variable (typically cell/spot origin). A named vector containing the cell origin for each cell.
 Typically the result from the Idents() function on a Seurat object (see Seurat library).</p></dd>
 
 
@@ -119,6 +127,18 @@ Typically the result from the Idents() function on a Seurat object (see Seurat l
 
 <dt id="arg-color-ident">color_ident<a class="anchor" aria-label="anchor" href="#arg-color-ident"></a></dt>
 <dd><p>A vector containing colors for the cell classes as.</p></dd>
+
+
+<dt id="arg-color-split-by">color_split_by<a class="anchor" aria-label="anchor" href="#arg-color-split-by"></a></dt>
+<dd><p>A vector containing colors for 'split_by'.</p></dd>
+
+
+<dt id="arg-swap">swap<a class="anchor" aria-label="anchor" href="#arg-swap"></a></dt>
+<dd><p>Whether to swap the cell annotation and origin strips (i.e. facet annotation).</p></dd>
+
+
+<dt id="arg-independent">independent<a class="anchor" aria-label="anchor" href="#arg-independent"></a></dt>
+<dd><p>One of "none", "x", "y", "all". A character(1) determining whether scales can vary within a row or column of panels. See ggh4x::facet_grid2.</p></dd>
 
 
 <dt id="arg-ceil">ceil<a class="anchor" aria-label="anchor" href="#arg-ceil"></a></dt>

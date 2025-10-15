@@ -18,7 +18,7 @@ as value."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scigenex</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.2.0</span>
       </span>
     </div>
 
@@ -65,7 +65,13 @@ as value.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'ClusterSet'</span></span>
-<span><span class="fu">gene_cluster</span><span class="op">(</span><span class="va">object</span>, cluster <span class="op">=</span> <span class="fl">0</span>, as_string <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">gene_cluster</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  cluster <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  as_string <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  as_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  uniqueness <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -82,6 +88,14 @@ as value.</p>
 
 <dt id="arg-as-string">as_string<a class="anchor" aria-label="anchor" href="#arg-as-string"></a></dt>
 <dd><p>Return cluster names as strings.</p></dd>
+
+
+<dt id="arg-as-list">as_list<a class="anchor" aria-label="anchor" href="#arg-as-list"></a></dt>
+<dd><p>Return the result as a list.</p></dd>
+
+
+<dt id="arg-uniqueness">uniqueness<a class="anchor" aria-label="anchor" href="#arg-uniqueness"></a></dt>
+<dd><p>A boolean. If FALSE, any "~[1-9]+$" suffix is removed from gene names to make them unique.</p></dd>
 
 </dl></div>
 

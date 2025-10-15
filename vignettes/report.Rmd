@@ -55,13 +55,13 @@ A `ClusterSet` can be built in several ways:
 
 To use the `gm_report()` function, you need to load the **scigenex**, **Seurat**, an organism-related packages (here the **org.Hs.eg.db** packages). 
 
-```{r loading1, echo=FALSE, eval=FALSE, warning=FALSE, results='hide', message=FALSE}
+```{r loading1, echo=FALSE, eval=TRUE, warning=FALSE, results='hide', message=FALSE}
 suppressMessages(suppressWarnings(library(scigenex, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(Seurat, quietly = TRUE)))
 suppressMessages(suppressWarnings(library(org.Hs.eg.db, quietly = TRUE)))
 ```
 
-```{r loading2, echo=FALSE, eval=FALSE}
+```{r loading2, echo=TRUE, eval=FALSE, warning=FALSE, results='hide', message=FALSE}
 library(scigenex)
 library(Seurat)
 library(org.Hs.eg.db)
@@ -77,7 +77,7 @@ We will demonstrate with built-in example datasets from the **scigenex** package
 
 The report will be saved in the folder specified by `out_dir`. Open `index.html` in your browser to view it.
 
-```{r spt, message=FALSE, eval=FALSE, message=FALSE, warning=FALSE}
+```{r chunk, eval=TRUE, message=FALSE, warning=FALSE}
 
 # Unset verbosity to avoid cluttering the output
 set_verbosity(0)
@@ -109,7 +109,7 @@ gm_report(
 
 As indicated previously, `gm_report()`can be run from a Seurat object together with on cell-specific marker genes obtained from `Seurat::FindAllMarkers()`. This represent a convenient way to create a Seurat analysis report. In this case we need first to run the `cluster_set_from_seurat()` function.
 
-```{r , eval=FALSE}
+```{r chunk2, eval=TRUE, message=FALSE, warning=FALSE}
 # Unset verbosity to avoid cluttering the output
 set_verbosity(0)
 
@@ -130,7 +130,7 @@ gm_report(
   report_subtitle = "PBMC 3k Medium Dataset",
   report_author = "scigenex Vignette",
   out_dir = file.path(tmp_dir, "pbmc_report"),
-  quiet = FALSE
+  quiet = TRUE
 )
 ```
 
@@ -138,7 +138,7 @@ gm_report(
 
 When running the `gm_report()` function on spatial transcriptomics data, you can visualize gene modules in the context of tissue architecture. The function supports Seurat objects with spatial data and can generate spatial plots.  Here we will use a tiny subset of the 10X genomics lymph_node VISIUM (V1) dataset.
 
-```{r , eval=FALSE}
+```{r chunk3, eval=TRUE, message=FALSE, warning=FALSE}
 # Create a temporary directory for the report output
 tmp_dir <- tempdir()
 
@@ -155,7 +155,8 @@ gm_report(
   is_spatial_exp = TRUE,
   SpatialFeaturePlot_params = list(pt.size.factor = 3000),
   SpatialDimPlot_params = list(pt.size.factor = 3000),
-  out_dir = file.path(tmp_dir, "spatial_report")
+  out_dir = file.path(tmp_dir, "spatial_report"),
+  quiet=TRUE
 )
 ```
 
@@ -163,7 +164,7 @@ gm_report(
 
 In the same way, we can apply `gm_report()`with spatial transcriptomics data and markers identified using the `Seurat::FindAllMarkers()` function.
 
-```{r , eval=FALSE}
+```{r chunk4, eval=TRUE, message=FALSE, warning=FALSE}
 # Create a temporary directory for the report output
 tmp_dir <- tempdir()
 
@@ -187,7 +188,8 @@ gm_report(
   is_spatial_exp = TRUE,
   SpatialFeaturePlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
   SpatialDimPlot_params = list(pt.size.factor = 3000),  # Object was created with an older seurat version
-  out_dir = file.path(tmp_dir, "spatial_report")
+  out_dir = file.path(tmp_dir, "spatial_report"),
+  quiet=TRUE
 )
 ```
 
@@ -217,29 +219,3 @@ The `gm_report()` function in Scigenex offers a powerful way to analyze and docu
 For more information, please refer to the [Scigenex documentation](https://scigenex.github.io/scigenex/).
 
 
-
-
-```{r loading2, echo=FALSE, eval=FALSE}
-library(scigenex)
-library(Seurat)
-library(org.Hs.eg.db)
-
-# Create a temporary directory for the report output
-tmp_dir <- tempdir()
-
-# Load example gene module clusters and Seurat object for spatial data
-load_example_dataset("7870305/files/lymph_node_tiny_clusters_2")
-load_example_dataset("7870305/files/lymph_node_tiny_2")
-
-# Run gm_report() for spatial transcriptomics data
-gm_report(
-  cluster_set = lymph_node_tiny_clusters_2[1:2,],
-  seurat_object = lymph_node_tiny_2,
-  annotation_src = "CC",
-  bioc_org_db = "org.Hs.eg.db",
-  is_spatial_exp = TRUE,
-  SpatialFeaturePlot_params = list(pt.size.factor = 3000),
-  SpatialDimPlot_params = list(pt.size.factor = 3000),
-  out_dir = file.path(tmp_dir, "spatial_report")
-)
-```
