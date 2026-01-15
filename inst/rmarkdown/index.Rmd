@@ -27,6 +27,11 @@ params:
 library(knitr)
 options(width=400)
 scigenex::set_verbosity(0)
+
+# Disable tutorial exercise checking to prevent chunks ending in
+# '-check' from being interpreted as learnr exercise check chunks
+options(tutorial.exercise.checker = NULL)
+
 knitr::opts_chunk$set(
   fig.path="all_",
   fig.align = "center", 
