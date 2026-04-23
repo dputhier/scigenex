@@ -9,6 +9,13 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
+```{r setup, include=FALSE}
+# Disable tutorial exercise checking to prevent any chunks ending in
+# '-check' from being interpreted as learnr exercise check chunks
+options(tutorial.exercise.checker = NULL)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 # Guided tutorial
 
 The easiest way to use scigenex is to perform the following steps using the Seurat R package:
