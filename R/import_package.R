@@ -21,8 +21,6 @@
 #' @importFrom AnnotationDbi select
 #' @importFrom clusterProfiler enrichGO
 #' @importFrom qlcMatrix corSparse cosSparse
-#' @import org.Hs.eg.db
-#' @import org.Mm.eg.db
 #' @importFrom amap hcluster Dist
 #' @import SeuratObject
 #' @importFrom Seurat DimPlot

@@ -59,6 +59,10 @@ setMethod("enrich_go",
                         msg_type = "STOP")}
             
             if (species == "Hsapiens") {
+
+              if (!requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+                stop("Package 'org.Hs.eg.db' is needed for this function.Install it with: BiocManager::install('org.Hs.eg.db')")}
+
               org_db <- org.Hs.eg.db::org.Hs.eg.db
               go_name <- "org.Hs.eg.db"
               print_msg(msg_type = "INFO",
@@ -66,6 +70,9 @@ setMethod("enrich_go",
             }
             
             if (species == "Mmusculus") {
+              if (!requireNamespace("org.Mm.eg.db", quietly = TRUE)) {
+                stop("Package 'org.Mm.eg.db' is needed for this function. Install it with: BiocManager::install('org.Mm.eg.db')")
+}
               org_db <- org.Mm.eg.db::org.Mm.eg.db
               go_name <- "org.Mm.eg.db"
               print_msg(msg_type = "INFO",
